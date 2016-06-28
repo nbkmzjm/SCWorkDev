@@ -437,6 +437,10 @@ app.post('/delTaskOption', middleware.requireAuthentication, function(req, res){
 })
 
 
+
+
+
+
 app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 
 	db.user.findAll({
