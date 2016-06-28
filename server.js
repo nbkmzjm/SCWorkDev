@@ -437,6 +437,67 @@ app.post('/delTaskOption', middleware.requireAuthentication, function(req, res){
 })
 
 
+app.post('/memoOpt', middleware.requireAuthentication, function(req, res) {
+	var optFilter = req.body.optFilter
+	var description = req.body.description
+	if(optFilter=="all"){
+		db.taskOptMemo.findAll({
+		include:[{model:db.taskOption}]
+		}).then(function(taskOptMemos) {
+			console.log(JSON.stringify(taskOptMemos, null, 4))
+			res.json({taskOptMemos:taskOptMemos})
+		
+		}).catch(function(e) {
+			console.log(e)
+			res.render('error', {
+				error: e.toString()
+			})
+		});
+
+
+	}else if(optFilter=="category"){
+		db.taskOptMemo.findAll({
+			include:[{
+				model:db.taskOption,
+				where:{
+					category:description
+				}
+			}]
+		}).then(function(taskOptMemos) {
+			console.log(JSON.stringify(taskOptMemos, null, 4))
+			res.json({taskOptMemos:taskOptMemos})
+		
+		}).catch(function(e) {
+			console.log(e)
+			res.render('error', {
+				error: e.toString()
+			})
+		});
+
+	}else if(optFilter=="individual"){
+		db.taskOptMemo.findAll({
+			include:[{
+				model:db.taskOption,
+				where:{
+					description:description
+				}
+			}]
+		}).then(function(taskOptMemos) {
+			console.log(JSON.stringify(taskOptMemos, null, 4))
+			res.json({taskOptMemos:taskOptMemos})
+		
+		}).catch(function(e) {
+			console.log(e)
+			res.render('error', {
+				error: e.toString()
+			})
+		});
+
+	}
+	
+});
+
+
 
 
 

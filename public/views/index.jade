@@ -14,7 +14,7 @@ block content
 	#container
 		//- #test
 		div(class='collapse row container-fluid' id='taskOptionDiv')
-		div(class='collapse row container-fluid' id='taskOptMemoDiv')
+		div(class='row container-fluid' id='taskOptMemoDiv')
 			//- ul(class="col-sm-2" role="menu" id='menuTaskOption')
 
 			//- ul(class="col-sm-4" role="menu")
@@ -759,7 +759,7 @@ append scripts
 						ul.appendChild(li)
 
 					arrCate[key].forEach(function(val){
-						taskOptionFct(val, ul)
+						taskOptionFct(val, key, ul)
 					})
 					$('#taskOptionUL').append(ul)	
 
@@ -781,7 +781,7 @@ append scripts
 
 							var j = i*taskOpListLength
 							for(x=j-taskOpListLength;x<j;x++){
-								taskOptionFct(arrCate[key][x], ul)
+								taskOptionFct(arrCate[key][x], key , ul)
 							}
 							$('#taskOptionUL').append(ul)
 					}
@@ -792,7 +792,7 @@ append scripts
 			//- $.each(Rdata.taskOption, taskOptionFct);
 			
 			//- function to list taskOption from return data
-			function taskOptionFct(taskOptionDes, ul){
+			function taskOptionFct(taskOptionDes, category, ul){
 				var arrayTitle = ['Admin', 'Manager']
 				arrayTitle.indexOf(curUserTitle)
 				var curUserTitle = Rdata.curUserTitle;
@@ -808,7 +808,10 @@ append scripts
 					radio.setAttribute('type','radio');
 					radio.setAttribute('name','PTO');
 					radio.setAttribute('value',taskOptionDes);
-				
+				li.addEventListener('click', function(){
+					console.log(taskOptionDes+'-'+category)
+					memoOptDiv("category",category);
+				})
 				if(taskOptionDes=='SELECT'){
 					
 					
@@ -820,6 +823,8 @@ append scripts
 						$('#memo').hide()
 						$('#taskOption').length>0?$('#taskOption').remove():''
 						activeOptionText(taskOptionDes)
+						
+
 					})
 					li.appendChild(radio);
 					li.appendChild(document.createTextNode(taskOptionDes));
@@ -987,18 +992,36 @@ append scripts
 			}
 		});
 
-		memoOptDiv();
+		
 
-		function memoOptDiv(optFilter, optText){
+		function memoOptDiv(optFilter, description){
 			$.post('/memoOpt',{
 				optFilter:optFilter,
-				optText:optText
+				description:description
 			}).done(function(Rdata){
 				console.log(Rdata)
-			}
+				var ul = document.createElement('ul')
+				ul.setAttribute('role', 'menu')
+				ul.className = 'col-sm-12'
 
-
-
+				Rdata.taskOptMemos.forEach(function(taskOptMemo){
+					var li = document.createElement('li')
+					//- li.style.color = 'blue'
+					//- li.style.textDecoration= 'underline'
+					li.style.width = '300px'
+					li.style.listStyle = 'none'
+					//- li.style.fontWeight = 'bold'
+					
+						var input = document.createElement('input')
+						input.type = 'checkbox'
+						input.className = "checkedMemo"
+						input.value = taskOptMemo.memo
+						li.appendChild(input)
+						li.appendChild(document.createTextNode(taskOptMemo.memo))
+					ul.appendChild(li)
+				})
+				$('#taskOptMemoDiv').html(ul)
+			})
 		}
 
 

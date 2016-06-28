@@ -137,6 +137,11 @@
 	top: 100px;
 }
 
+#taskOptMemoDiv{
+	position: relative;
+	top: 100px;
+}
+
 #SCNoteDiv{
 	z-index: 1;
 	position: fixed;

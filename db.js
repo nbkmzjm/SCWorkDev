@@ -46,6 +46,11 @@ db.assign.hasMany(db.assignTracer, {
 db.assignTracer.belongsTo(db.user);
 db.user.hasMany(db.assignTracer);
 
-
+db.taskOptMemo.belongsTo(db.taskOption,{
+	 onDelete: 'CASCADE'
+});
+db.taskOption.hasMany(db.taskOptMemo, {
+	 onDelete: 'CASCADE'
+});
 
 module.exports = db;
