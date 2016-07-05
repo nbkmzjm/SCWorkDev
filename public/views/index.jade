@@ -567,16 +567,26 @@ append scripts
 									}else if (taskSC=="PTO-R" && 
 									selDate.isBefore(lockoutDate) && 
 									arrayTitle_manager.indexOf(curUserTitle) == -1){
-										if(selDate.isBefore(lockoutDate) && arrayTitle_manager.indexOf(curUserTitle) == -1){
-											SCNote.innerHTML = 'PTO input will not be available for dates before '+ lockoutDate.format('MM-DD-YYYY')
-											$('#SCNoteDiv').html('')
-											$('#SCNoteDiv').html(SCNote)
-											$('#SCNote').fadeIn(1000, function(){
-													setTimeout(function(){
-													$('#SCNote').fadeOut()
-												}, 3000)
-											})
-										}
+										SCNote.innerHTML = 'PTO input will not be available for dates before '+ lockoutDate.format('MM-DD-YYYY')
+										$('#SCNoteDiv').html('')
+										$('#SCNoteDiv').html(SCNote)
+										$('#SCNote').fadeIn(1000, function(){
+												setTimeout(function(){
+												$('#SCNote').fadeOut()
+											}, 3000)
+										})
+									}else if (taskSC=="AVBL" && 
+									selDate.isBefore(today) && 
+									arrayTitle_manager.indexOf(curUserTitle) == -1){
+										
+										SCNote.innerHTML = 'PTO input will not be available for dates before '+ lockoutDate.format('MM-DD-YYYY')
+										$('#SCNoteDiv').html('')
+										$('#SCNoteDiv').html(SCNote)
+										$('#SCNote').fadeIn(1000, function(){
+												setTimeout(function(){
+												$('#SCNote').fadeOut()
+											}, 3000)
+										})
 									
 									}else{
 										dateSCSubmit(memo, userId, dateSC, taskSC, td)
@@ -672,6 +682,7 @@ append scripts
 		taskOptionGen('SWIT-R','PTO', arrayOption)
 		taskOptionGen('SWIT-A','PTO', arrayOption)
 		taskOptionGen('SWIT-X','PTO', arrayOption)
+		taskOptionGen('AVBL','GENERAL', arrayOption)
 		
 
 		var i = 0
@@ -929,7 +940,7 @@ append scripts
 					})
 					li.appendChild(radio);
 					li.appendChild(document.createTextNode(taskOptionDes));
-				}else if(['SWIT-R','PTO-R','SWIT-X','SWIT-A'].indexOf(taskOptionDes)!=-1){
+				}else if(['SWIT-R','PTO-R','SWIT-X','SWIT-A','AVBL'].indexOf(taskOptionDes)!=-1){
 					li.addEventListener('click', function(){
 						activeOptionText(taskOptionDes)
 						
