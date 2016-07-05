@@ -513,16 +513,27 @@ append scripts
 										}else if ((taskSC=="PTO-R" || taskSC=="DELETE") && 
 										selDate.isBefore(lockoutDate) && 
 										arrayTitle_manager.indexOf(curUserTitle) == -1){
-											if(selDate.isBefore(lockoutDate) && arrayTitle_manager.indexOf(curUserTitle) == -1){
-												SCNote.innerHTML = 'PTO input will not be available for dates before '+ lockoutDate.format('MM-DD-YYYY')
-												$('#SCNoteDiv').html('')
-												$('#SCNoteDiv').html(SCNote)
-												$('#SCNote').fadeIn(1000, function(){
-													setTimeout(function(){
-													$('#SCNote').fadeOut()
-													}, 3000)
-												})
-											}
+											
+											SCNote.innerHTML = 'PTO input will not be available for dates before '+ lockoutDate.format('MM-DD-YYYY')
+											$('#SCNoteDiv').html('')
+											$('#SCNoteDiv').html(SCNote)
+											$('#SCNote').fadeIn(1000, function(){
+												setTimeout(function(){
+												$('#SCNote').fadeOut()
+												}, 3000)
+											})
+										}else if (taskSC=="AVBL" && 
+										selDate.isBefore(today) && 
+										arrayTitle_manager.indexOf(curUserTitle) == -1){
+										
+										SCNote.innerHTML = 'Changes is not allowed for dates before '+ today.format('MM-DD-YYYY')
+										$('#SCNoteDiv').html('')
+										$('#SCNoteDiv').html(SCNote)
+										$('#SCNote').fadeIn(1000, function(){
+												setTimeout(function(){
+												$('#SCNote').fadeOut()
+											}, 3000)
+										})
 										
 										}else{
 											dateSCSubmit(memo, userId, dateSC, taskSC, td)
@@ -579,7 +590,7 @@ append scripts
 									selDate.isBefore(today) && 
 									arrayTitle_manager.indexOf(curUserTitle) == -1){
 										
-										SCNote.innerHTML = 'PTO input will not be available for dates before '+ lockoutDate.format('MM-DD-YYYY')
+										SCNote.innerHTML = 'Changes is not allowed for dates before '+ today.format('MM-DD-YYYY')
 										$('#SCNoteDiv').html('')
 										$('#SCNoteDiv').html(SCNote)
 										$('#SCNote').fadeIn(1000, function(){
