@@ -497,9 +497,29 @@ app.post('/memoOpt', middleware.requireAuthentication, function(req, res) {
 	
 });
 
+app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
+	var memoChbx = req.body.memoChbx
+	var taskOptionDes = req.body.taskOptionDes
+	console.log(memoChbx+'-'+taskOptionDes)
 
+	db.taskOption.findOne({
+		where: {
+			description:taskOptionDes
+		}
+	}).then(function(taskOption){
+		console.log(JSON.stringify(taskOption, null, 4))
+		return db.taskOptMemo.create({
+			memo:memoChbx,
+			taskOptionId:taskOption.id
+		})
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
 
-
+})
 
 
 app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {

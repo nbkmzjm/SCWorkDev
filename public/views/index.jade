@@ -832,7 +832,7 @@ append scripts
 					radio.setAttribute('value',taskOptionDes);
 				li.addEventListener('click', function(){
 					console.log(taskOptionDes+'-'+category)
-					memoOptDiv("category",category);
+					memoOptDiv("individual",taskOptionDes);
 				})
 				if(taskOptionDes=='SELECT'){
 					
@@ -1021,7 +1021,7 @@ append scripts
 				optFilter:optFilter,
 				description:description
 			}).done(function(Rdata){
-				console.log(Rdata)
+				
 				var ul = document.createElement('ul')
 				ul.setAttribute('role', 'menu')
 				ul.className = 'col-sm-12'
@@ -1042,6 +1042,21 @@ append scripts
 						li.appendChild(document.createTextNode(taskOptMemo.memo))
 					ul.appendChild(li)
 				})
+					var input = document.createElement('input')
+					input.type = 'text'
+					input.id = 'memoChbx'
+					input.placeholder = 'Add Memo Checkbox'
+					console.log(description)
+					input.addEventListener('blur', function(){
+
+						$.post('/memoChbx',{
+						memoChbx:$('#memoChbx').val(),
+						taskOptionDes:description
+						}).done(function(pData){
+						
+						});
+					})
+					ul.appendChild(input)
 				$('#taskOptMemoDiv').html(ul)
 			})
 		}
