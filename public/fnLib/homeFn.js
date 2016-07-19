@@ -248,7 +248,7 @@ function clearEvent(sDate, eDate){
 
 function dateSCSubmit(memo, userId, dateSC, taskSC, td){
 
-
+	
 	$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memo}}).done(function(pData){
 		if(!!pData.Note){
 			td.innerHTML=pData.Note;

@@ -444,7 +444,6 @@ app.post('/memoOpt', middleware.requireAuthentication, function(req, res) {
 		db.taskOptMemo.findAll({
 		include:[{model:db.taskOption}]
 		}).then(function(taskOptMemos) {
-			console.log(JSON.stringify(taskOptMemos, null, 4))
 			res.json({taskOptMemos:taskOptMemos})
 		
 		}).catch(function(e) {
@@ -512,6 +511,10 @@ app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 			memo:memoChbx,
 			taskOptionId:taskOption.id
 		})
+	}).then(function(taskOption){
+		res.json({
+			taskOption:taskOption
+		})
 	}).catch(function(e) {
 		console.log(e)
 		res.render('error', {
@@ -519,6 +522,47 @@ app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 		})
 	});
 
+})
+
+app.post('/checkedMemoUpd', middleware.requireAuthentication, function(req, res) {
+	var checkedMemoValue = req.body.checkedMemoValue
+	var checkedMemoId = req.body.checkedMemoId
+	console.log(checkedMemoValue+'-'+checkedMemoId)
+
+	db.taskOptMemo.update({
+		checked:checkedMemoValue
+	}, {
+		where:{id:checkedMemoId}
+	}).then(function(updated){
+		res.json({
+			updated:updated
+		})
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+})
+
+
+app.post('/checkedMemoDel', middleware.requireAuthentication, function(req, res) {
+	var checkedMemoValue = req.body.checkedMemoValue
+	var checkedMemoId = req.body.checkedMemoId
+	console.log(checkedMemoValue+'-'+checkedMemoId)
+
+	db.taskOptMemo.destroy({
+		where:{id:checkedMemoId}
+	}).then(function(deleted){
+		res.json({
+			deleted:deleted
+		})
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
 })
 
 

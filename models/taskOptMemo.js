@@ -5,13 +5,15 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.INTEGER, 
             autoIncrement: true,
             primaryKey: true
-    	},
-        memo: {
-            type: DataTypes.STRING, 
-            allowNull: false
-      	}
-      	
-
+    },
+    memo: {
+        type: DataTypes.STRING, 
+        allowNull: false
+  	},
+    checked:{
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    } 
 	}, { timestamps: false})
 
 };      

@@ -536,7 +536,15 @@ append scripts
 										})
 										
 										}else{
-											dateSCSubmit(memo, userId, dateSC, taskSC, td)
+											var memoCheckOpts = document.getElementsByClassName('checkedMemo')
+
+											
+											for(var i = 0; i<memoCheckOpts.length;i++){
+													dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
+											}
+											
+											
+											
 										}
 									}
 								}(assign[x], userId))
@@ -831,7 +839,6 @@ append scripts
 					radio.setAttribute('name','PTO');
 					radio.setAttribute('value',taskOptionDes);
 				li.addEventListener('click', function(){
-					console.log(taskOptionDes+'-'+category)
 					memoOptDiv("individual",taskOptionDes);
 				})
 				if(taskOptionDes=='SELECT'){
@@ -1037,9 +1044,49 @@ append scripts
 						var input = document.createElement('input')
 						input.type = 'checkbox'
 						input.className = "checkedMemo"
+						input.checked = taskOptMemo.checked|| false
 						input.value = taskOptMemo.memo
+
+						input.addEventListener('click', function(){
+							var checkValue = 0
+							input.checked == false?checkValue=false:checkValue=true
+							console.log(checkValue)
+							$.post('/checkedMemoUpd',{
+								checkedMemoValue:checkValue,
+								checkedMemoId:taskOptMemo.id
+							}).done(function(Rdata){
+								console.log(Rdata)
+							})
+						})
 						li.appendChild(input)
 						li.appendChild(document.createTextNode(taskOptMemo.memo))
+						li.addEventListener('click', function(){
+
+							if (li.childNodes.length >2){
+							li.removeChild(li.childNodes[2])
+							}
+							var span = document.createElement('span')
+							span.innerHTML = '';
+							span.style.color = 'red'
+							span.className = "glyphicon glyphicon-remove-circle"
+							span.id = 'delGly';
+							//- click the 'x' to remove from list
+							span.addEventListener('click', function(){
+								$.post('/checkedMemoDel',{
+									checkedMemoId:taskOptMemo.id
+								}).done(function(Rdata){
+									ul.removeChild(li)
+								})
+								
+							});
+							li.appendChild(span)
+							li.addEventListener('mouseleave',function(){
+								if ($('#delGly').length>0){
+									li.removeChild(document.getElementById('delGly'))
+								}
+							})
+						
+						})
 					ul.appendChild(li)
 				})
 					var input = document.createElement('input')
@@ -1048,13 +1095,21 @@ append scripts
 					input.placeholder = 'Add Memo Checkbox'
 					console.log(description)
 					input.addEventListener('blur', function(){
+						if ($('#memoChbx').val().length>0){
+							$.post('/memoChbx',{
+							memoChbx:$('#memoChbx').val(),
+							taskOptionDes:description
+							}).done(function(pData){
+								console.log(JSON.stringify(pData, null, 4))
+									var li = document.createElement('li')
+									li.style.width = '300px'
+									li.style.listStyle = 'none'
 
-						$.post('/memoChbx',{
-						memoChbx:$('#memoChbx').val(),
-						taskOptionDes:description
-						}).done(function(pData){
-						
-						});
+									li.appendChild(document.createTextNode(pData.taskOption.memo+ "-Added"))
+								ul.appendChild(li)
+								
+							});
+						}
 					})
 					ul.appendChild(input)
 				$('#taskOptMemoDiv').html(ul)
