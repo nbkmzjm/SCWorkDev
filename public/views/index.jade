@@ -536,13 +536,18 @@ append scripts
 										})
 										
 										}else{
-											var memoCheckOpts = document.getElementsByClassName('checkedMemo')
-
-											
-											for(var i = 0; i<memoCheckOpts.length;i++){
-													dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
+											var memoCheckOpts = document.getElementsByClassName('checkedMemo')||false
+											console.log(userId)
+											console.log(dateSC)
+											console.log(taskSC)
+											console.log(memoCheckOpts)
+											if (memoCheckOpts.length!=0){
+												for(var i = 0; i<memoCheckOpts.length;i++){
+														dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
+												}
+											}else{
+												dateSCSubmit("", userId, dateSC, taskSC, td)
 											}
-											
 											
 											
 										}
@@ -608,7 +613,46 @@ append scripts
 										})
 									
 									}else{
-										dateSCSubmit(memo, userId, dateSC, taskSC, td)
+										var memoCheckOpts = document.getElementsByClassName('checkedMemo')||false
+										console.log(userId)
+										console.log(dateSC)
+										console.log(taskSC)
+										console.log(memoCheckOpts)
+										if (memoCheckOpts.length!=0){
+
+											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memoCheckOpts[0].value}}).done(function(pData){
+												if(!!pData.Note){
+													td.innerHTML=pData.Note;
+													td.style.backgroundColor = 'yellow'
+													for(var i = 1; i<memoCheckOpts.length;i++){
+													console.log(memoCheckOpts[i].value)
+													dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
+													}
+												} 
+
+											});
+
+											//- for(var i = 0; i<memoCheckOpts.length;i++){
+											//- 		dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
+											//- }
+										}else{
+											dateSCSubmit("", userId, dateSC, taskSC, td)
+										}
+											
+											//- var i = 0;
+											//- function loopArrMemoOpt (arr){
+
+											//- 	//- console.log(memoCheckOpts[i].value)
+											//- 	dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
+
+											//- 	i++
+											//- 	if (i < arr.length){
+											//- 		loopArrMemoOpt(arr);
+											//- 	}
+
+											//- }
+											//- loopArrMemoOpt(memoCheckOpts)
+
 									}
 
 								}
@@ -669,26 +713,26 @@ append scripts
 			return arrayList
 		} 
 
-		function inputMemo(ul, lix){
-			var li = document.createElement('li')
+		//- function inputMemo(ul, lix){
+		//- 	var li = document.createElement('li')
 			
-			li.style.textDecoration= 'underline'
-			li.style.width = '200px'
-			li.style.listStyle = 'none'
-			//- li.setAttribute('style','z-index:-1;')
+		//- 	li.style.textDecoration= 'underline'
+		//- 	li.style.width = '200px'
+		//- 	li.style.listStyle = 'none'
+		//- 	//- li.setAttribute('style','z-index:-1;')
 
-				var inputMemo = document.createElement('input');
-				//- inputMemo.className = "col-sm-12"
-				inputMemo.setAttribute('style','z-index:-1')
-				inputMemo.style.backgroundColor = 'black'
-				inputMemo.style.color = 'white'
-				inputMemo.setAttribute('placeholder','Add Memo');
-				inputMemo.setAttribute('type','text');
-				inputMemo.setAttribute('id','memo');
-			li.appendChild(inputMemo)
-			ul.insertBefore(li,lix)
+		//- 		var inputMemo = document.createElement('input');
+		//- 		//- inputMemo.className = "col-sm-12"
+		//- 		inputMemo.setAttribute('style','z-index:-1')
+		//- 		inputMemo.style.backgroundColor = 'black'
+		//- 		inputMemo.style.color = 'white'
+		//- 		inputMemo.setAttribute('placeholder','Add Memo');
+		//- 		inputMemo.setAttribute('type','text');
+		//- 		inputMemo.setAttribute('id','memo');
+		//- 	li.appendChild(inputMemo)
+		//- 	ul.insertBefore(li,lix)
 
-		}
+		//- }
 
 
 		var arrayOption = []
@@ -844,12 +888,10 @@ append scripts
 				if(taskOptionDes=='SELECT'){
 					
 					
-					$('#memo').hide()
 					activeOptionText(taskOptionDes)
 					radio.id = 'SELECT'
 					radio.setAttribute('checked', 'checked')
 					li.addEventListener('click', function(){
-						$('#memo').hide()
 						$('#taskOption').length>0?$('#taskOption').remove():''
 						activeOptionText(taskOptionDes)
 						
@@ -860,13 +902,12 @@ append scripts
 				}else if(taskOptionDes=='NEW'){
 					if(arrayTitle.indexOf(curUserTitle)!=-1){
 						li.addEventListener('click', function(){
-							$('#memo').hide()
 							activeOptionText(taskOptionDes)
 							$('#taskOption').length>0?$('#taskOption').remove():''
 							var taskOptionLI = document.createElement('li')
 							taskOptionLI.style.color = 'blue'
 							taskOptionLI.style.textDecoration= 'underline'
-							taskOptionLI.style.width = '200px'
+							taskOptionLI.style.width = '50px'
 							taskOptionLI.style.listStyle = 'none'	
 							
 
@@ -880,7 +921,7 @@ append scripts
 									var inputAddOpCateLI = document.createElement('li')
 									inputAddOpCateLI.style.color = 'blue'
 									inputAddOpCateLI.style.textDecoration= 'underline'
-									inputAddOpCateLI.style.width = '200px'
+									inputAddOpCateLI.style.width = '50px'
 									inputAddOpCateLI.style.listStyle = 'none'
 
 										var inputAddOpCate = document.createElement('input');
@@ -906,7 +947,7 @@ append scripts
 															li = document.createElement('li')
 															li.style.color = 'blue'
 															li.style.textDecoration= 'underline'
-															li.style.width = '200px'
+															li.style.width = '100px'
 															li.style.listStyle = 'none'
 															li.style.fontWeight = 'bold'
 															li.appendChild(document.createTextNode('NEW'))
@@ -963,7 +1004,6 @@ append scripts
 						activeOptionText(taskOptionDes)
 						
 						$('#memo').length?$('#memo').remove():''
-						inputMemo(ul, li)
 						//- ul.appendChild(li)
 
 						$('#taskOption').hide()
@@ -979,7 +1019,6 @@ append scripts
 							activeOptionText(taskOptionDes)
 							$('#taskOption').hide()
 							$('#memo').length?$('#memo').remove():''
-							inputMemo(ul, li)
 						})
 						li.appendChild(radio);
 						li.appendChild(document.createTextNode(taskOptionDes));
@@ -1031,6 +1070,7 @@ append scripts
 				
 				var ul = document.createElement('ul')
 				ul.setAttribute('role', 'menu')
+				ul.id = "ulCheckedMemo"
 				ul.className = 'col-sm-12'
 
 				Rdata.taskOptMemos.forEach(function(taskOptMemo){
@@ -1043,8 +1083,10 @@ append scripts
 					
 						var input = document.createElement('input')
 						input.type = 'checkbox'
-						input.className = "checkedMemo"
+						
 						input.checked = taskOptMemo.checked|| false
+						input.checked == true?input.className = "checkedMemo":""
+						
 						input.value = taskOptMemo.memo
 
 						input.addEventListener('click', function(){

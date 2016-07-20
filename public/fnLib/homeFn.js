@@ -115,7 +115,7 @@ function calendarPick(){
 			
 		var refesh = document.createElement('li');
 				var a = document.createElement('a')
-				a.appendChild(document.createTextNode('MY'))
+				a.appendChild(document.createTextNode('SELECT'))
 				// a.href = "#"
 				refesh.appendChild(a)
 					var span = document.createElement('span');
@@ -127,6 +127,8 @@ function calendarPick(){
 			$('#eventActionTable').remove():'';
 			document.getElementById('SELECT').checked = true
 				activeOptionText('SELECT')
+			$("#ulCheckedMemo").remove()
+
 			var date = moment(dateCalender.value,'MM-DD-YYYY');
 			
 			dateCalender.value = date.format('MM-DD-YYYY')
