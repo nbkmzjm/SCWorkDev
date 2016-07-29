@@ -541,13 +541,13 @@ append scripts
 											console.log(dateSC)
 											console.log(taskSC)
 											console.log(memoCheckOpts)
-											if (memoCheckOpts.length!=0){
-												for(var i = 0; i<memoCheckOpts.length;i++){
-														dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
-												}
-											}else{
-												dateSCSubmit("", userId, dateSC, taskSC, td)
+											//- if (memoCheckOpts.length!=0){
+											for(var i = 0; i<memoCheckOpts.length;i++){
+													dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
 											}
+											//- }else{
+											//- 	dateSCSubmit("", userId, dateSC, taskSC, td)
+											//- }
 											
 											
 										}
@@ -632,11 +632,7 @@ append scripts
 
 											});
 
-											//- for(var i = 0; i<memoCheckOpts.length;i++){
-											//- 		dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
-											//- }
-										}else{
-											dateSCSubmit("", userId, dateSC, taskSC, td)
+											
 										}
 											
 											//- var i = 0;
@@ -1101,7 +1097,7 @@ append scripts
 							})
 						})
 						li.appendChild(input)
-						li.appendChild(document.createTextNode(taskOptMemo.memo))
+						li.appendChild(document.createTextNode(taskOptMemo.memo+'--'+ taskOptMemo.type))
 						li.addEventListener('click', function(){
 
 							if (li.childNodes.length >2){
@@ -1138,20 +1134,44 @@ append scripts
 					console.log(description)
 					input.addEventListener('blur', function(){
 						if ($('#memoChbx').val().length>0){
-							$.post('/memoChbx',{
-							memoChbx:$('#memoChbx').val(),
-							taskOptionDes:description
-							}).done(function(pData){
-								console.log(JSON.stringify(pData, null, 4))
-									var li = document.createElement('li')
-									li.style.width = '300px'
-									li.style.listStyle = 'none'
+							var select = document.createElement('select')
+							select.id = 'selectType'
+							select.className = "form-control"
+							var arrType =['SELECT ONE', 'CANCEL ENTRY', 'SCHEDULE','TASK', 'MESSAGE']
+							arrType.forEach(function(type){
+								var option = document.createElement('option')
+								option.value = type
+								option.innerHTML = type
+								select.appendChild(option)
+							})
+							select.addEventListener('change', function(){
 
-									li.appendChild(document.createTextNode(pData.taskOption.memo+ "-Added"))
-								ul.appendChild(li)
+
+								$.post('/memoChbx',{
+								memoChbx:$('#memoChbx').val(),
+								taskOptionDes:description,
+								type:select.value
+								}).done(function(pData){
+									console.log(JSON.stringify(pData, null, 4))
+										var li = document.createElement('li')
+										li.style.width = '300px'
+										li.style.listStyle = 'none'
+
+										li.appendChild(document.createTextNode(pData.taskOption.memo+ "-Added"))
+									ul.appendChild(li)
+									
+								});
 								
-							});
+								
+							})
+								
+							
+							ul.appendChild(select)
+							
+
+							
 						}
+						
 					})
 					ul.appendChild(input)
 				$('#taskOptMemoDiv').html(ul)

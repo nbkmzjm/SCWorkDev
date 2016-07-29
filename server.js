@@ -499,7 +499,8 @@ app.post('/memoOpt', middleware.requireAuthentication, function(req, res) {
 app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 	var memoChbx = req.body.memoChbx
 	var taskOptionDes = req.body.taskOptionDes
-	console.log(memoChbx+'-'+taskOptionDes)
+	var type = req.body.type
+	console.log(memoChbx+'-'+taskOptionDes+'-'+type)
 
 	db.taskOption.findOne({
 		where: {
@@ -509,7 +510,8 @@ app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 		console.log(JSON.stringify(taskOption, null, 4))
 		return db.taskOptMemo.create({
 			memo:memoChbx,
-			taskOptionId:taskOption.id
+			taskOptionId:taskOption.id,
+			type:type
 		})
 	}).then(function(taskOption){
 		res.json({

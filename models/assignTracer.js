@@ -32,7 +32,12 @@ module.exports = function(sequelize, DataTypes) {
 		Read:{
 			type: DataTypes.BOOLEAN,
 			defaultValue: false
-		}
+		},
+		type:{
+	        type:DataTypes.STRING,
+	        defaultValue: 'SCHEDULE',
+	        allowNull: false
+	    }
 		
 
 

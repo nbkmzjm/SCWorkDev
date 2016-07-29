@@ -13,7 +13,13 @@ module.exports = function(sequelize, DataTypes) {
     checked:{
         type: DataTypes.BOOLEAN,
         defaultValue: false
-    } 
+    } ,
+    type:{
+        type:DataTypes.STRING,
+        defaultValue: 'NONE',
+        allowNull: false
+    }
+
 	}, { timestamps: false})
 
 };      
