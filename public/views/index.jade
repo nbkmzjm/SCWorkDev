@@ -625,7 +625,7 @@ append scripts
 													td.innerHTML=pData.Note;
 													td.style.backgroundColor = 'yellow'
 													for(var i = 1; i<memoCheckOpts.length;i++){
-													console.log(memoCheckOpts[i].value)
+													console.log(memoCheckOpts[i].name)
 													dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
 													}
 												} 
@@ -1079,7 +1079,7 @@ append scripts
 					
 						var input = document.createElement('input')
 						input.type = 'checkbox'
-						
+						input.name = taskOptMemo.type
 						input.checked = taskOptMemo.checked|| false
 						input.checked == true?input.className = "checkedMemo":""
 						
