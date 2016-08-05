@@ -476,11 +476,16 @@ app.post('/memoOpt', middleware.requireAuthentication, function(req, res) {
 	}else if(optFilter=="individual"){
 		db.taskOptMemo.findAll({
 			include:[{
-				model:db.taskOption,
-				where:{
-					description:description
-				}
+				model:db.taskOptDetail,
+				include:[{
+					model:db.taskOption,
+					where:{
+						description:description
+					}
+				}]
 			}]
+			
+			
 		}).then(function(taskOptMemos) {
 			console.log(JSON.stringify(taskOptMemos, null, 4))
 			res.json({taskOptMemos:taskOptMemos})

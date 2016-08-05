@@ -22,6 +22,7 @@ db.assign = sequelize.import(__dirname + '/models/assign.js')
 db.assignTracer = sequelize.import(__dirname + '/models/assignTracer.js');
 db.taskOption = sequelize.import(__dirname + '/models/taskOption.js');
 db.taskOptMemo = sequelize.import(__dirname + '/models/taskOptMemo.js');
+db.taskOptDetail = sequelize.import(__dirname + '/models/taskOptDetail.js');
 db.sysObj = sequelize.import(__dirname + '/models/sysObj.js');
 
 db.user = sequelize.import(__dirname + '/models/user.js');
@@ -50,6 +51,13 @@ db.taskOptMemo.belongsTo(db.taskOption,{
 	 onDelete: 'CASCADE'
 });
 db.taskOption.hasMany(db.taskOptMemo, {
+	 onDelete: 'CASCADE'
+});
+
+db.taskOptDetail.belongsTo(db.taskOptMemo,{
+	 onDelete: 'CASCADE'
+});
+db.taskOptMemo.hasMany(db.taskOptDetail, {
 	 onDelete: 'CASCADE'
 });
 
