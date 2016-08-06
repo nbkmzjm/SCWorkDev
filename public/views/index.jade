@@ -1073,7 +1073,7 @@ append scripts
 					var li = document.createElement('li')
 					//- li.style.color = 'blue'
 					//- li.style.textDecoration= 'underline'
-					li.style.width = '600px'
+					li.style.width = '1000px'
 					li.style.listStyle = 'none'
 					//- li.style.fontWeight = 'bold'
 					
@@ -1123,8 +1123,8 @@ append scripts
 								li.removeChild(document.getElementById('delGly'))
 							}
 						})
-						
-					})
+
+						$('#nestedOlCheckedTask').length>0?$('#nestedOlCheckedTask').remove():""
 						var nestedOl = document.createElement('ol')
 						nestedOl.setAttribute('role', 'menu')
 						nestedOl.id = "nestedOlCheckedTask"
@@ -1133,13 +1133,27 @@ append scripts
 							var li = document.createElement('li')
 							//- li.style.color = 'blue'
 							//- li.style.textDecoration= 'underline'
-							li.style.width = '500px'
+							li.style.width = '800px'
 							li.style.listStyle = 'none'
 							li.appendChild(document.createTextNode(taskOptDetail.taskDescription))
 						
 						nestedOl.appendChild(li)
 						})
-					li.appendChild(nestedOl)
+						li.appendChild(nestedOl)
+
+						
+							
+						
+
+						
+
+
+						
+
+
+						
+					})
+						
 
 
 					ul.appendChild(li)
