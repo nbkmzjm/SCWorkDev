@@ -1134,28 +1134,46 @@ append scripts
 							//- li.style.color = 'blue'
 							//- li.style.textDecoration= 'underline'
 							li.style.width = '800px'
-							li.style.listStyle = 'none'
+							//- li.style.listStyle = 'none'
 							li.appendChild(document.createTextNode(taskOptDetail.taskDescription))
 						
-						nestedOl.appendChild(li)
+							nestedOl.appendChild(li)
 						})
+						nestedOl.focus()
+
+							$('#memoChbxDetail').length>0?$('#memoChbxDetail').remove():""
+							var inputDetail = document.createElement('input')
+							inputDetail.type = 'text'
+							inputDetail.id = 'memoChbxDetail'
+							inputDetail.className = 'typeahead'
+							inputDetail.placeholder = 'Add Memo Detail'
+							//- console.log(description)
+							//- inputDetail.addEventListener('blur', function(){
+								//- console.log($('#memoChbxDetail').val()+'-'+taskOptMemo.id)
+								//- if ($('#memoChbxDetail').val().length>0){
+								//- 	$.post('/memoChbxDetail',{
+								//- 	memoChbx:$('#memoChbxDetail').val(),
+								//- 	taskOptionDes:description,
+								//- 	type:select.value
+								//- 	}).done(function(pData){
+								//- 		console.log(JSON.stringify(pData, null, 4))
+								//- 		var li = document.createElement('li')
+								//- 		li.style.width = '300px'
+								//- 		li.style.listStyle = 'none'
+
+								//- 		li.appendChild(document.createTextNode(pData.taskOption.memo+ "-Added"))
+								//- 		ul.appendChild(li)
+								//- 	});
+								//- }
+								
+							//- })
+							nestedOl.appendChild(inputDetail)
+
+
 						li.appendChild(nestedOl)
 
 						
-							
-						
-
-						
-
-
-						
-
-
-						
 					})
-						
-
-
 					ul.appendChild(li)
 				})
 
