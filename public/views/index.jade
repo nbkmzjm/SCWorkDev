@@ -1073,7 +1073,7 @@ append scripts
 					var li = document.createElement('li')
 					//- li.style.color = 'blue'
 					//- li.style.textDecoration= 'underline'
-					li.style.width = '300px'
+					li.style.width = '600px'
 					li.style.listStyle = 'none'
 					//- li.style.fontWeight = 'bold'
 					
@@ -1096,77 +1096,90 @@ append scripts
 								console.log(Rdata)
 							})
 						})
-						li.appendChild(input)
-						li.appendChild(document.createTextNode(taskOptMemo.memo+'--'+ taskOptMemo.type))
-						li.addEventListener('click', function(){
+					li.appendChild(input)
+					li.appendChild(document.createTextNode(taskOptMemo.memo+'--'+ taskOptMemo.type))
+					li.addEventListener('click', function(){
 
-							if (li.childNodes.length >2){
-							li.removeChild(li.childNodes[2])
-							}
-							var span = document.createElement('span')
-							span.innerHTML = '';
-							span.style.color = 'red'
-							span.className = "glyphicon glyphicon-remove-circle"
-							span.id = 'delGly';
-							//- click the 'x' to remove from list
-							span.addEventListener('click', function(){
-								$.post('/checkedMemoDel',{
-									checkedMemoId:taskOptMemo.id
-								}).done(function(Rdata){
-									ul.removeChild(li)
-								})
-								
-							});
-							li.appendChild(span)
-							li.addEventListener('mouseleave',function(){
-								if ($('#delGly').length>0){
-									li.removeChild(document.getElementById('delGly'))
-								}
+						if (li.childNodes.length >2){
+						li.removeChild(li.childNodes[2])
+						}
+						var span = document.createElement('span')
+						span.innerHTML = '';
+						span.style.color = 'red'
+						span.className = "glyphicon glyphicon-remove-circle"
+						span.id = 'delGly';
+						//- click the 'x' to remove from list
+						span.addEventListener('click', function(){
+							$.post('/checkedMemoDel',{
+								checkedMemoId:taskOptMemo.id
+							}).done(function(Rdata){
+								ul.removeChild(li)
 							})
-						
+							
+						});
+						li.appendChild(span)
+						li.addEventListener('mouseleave',function(){
+							if ($('#delGly').length>0){
+								li.removeChild(document.getElementById('delGly'))
+							}
 						})
+						
+					})
+						var nestedOl = document.createElement('ol')
+						nestedOl.setAttribute('role', 'menu')
+						nestedOl.id = "nestedOlCheckedTask"
+						//- nestedOl.className = 'col-sm-8'
+						taskOptMemo.taskOptDetails.forEach(function(taskOptDetail){
+							var li = document.createElement('li')
+							//- li.style.color = 'blue'
+							//- li.style.textDecoration= 'underline'
+							li.style.width = '500px'
+							li.style.listStyle = 'none'
+							li.appendChild(document.createTextNode(taskOptDetail.taskDescription))
+						
+						nestedOl.appendChild(li)
+						})
+					li.appendChild(nestedOl)
+
+
 					ul.appendChild(li)
 				})
+
+
+
+				var select = document.createElement('select')
+				select.id = 'selectType'
+				select.className = "form-control"
+				var arrType =['SELECT ONE', 'CANCEL ENTRY', 'SCHEDULE','TASK', 'MESSAGE']
+				arrType.forEach(function(type){
+					var option = document.createElement('option')
+					option.value = type
+					option.innerHTML = type
+					select.appendChild(option)
+				})
+				select.addEventListener('change', function(){
 					var input = document.createElement('input')
 					input.type = 'text'
 					input.id = 'memoChbx'
+					input.className = 'typeahead'
 					input.placeholder = 'Add Memo Checkbox'
 					console.log(description)
 					input.addEventListener('blur', function(){
 						if ($('#memoChbx').val().length>0){
-							var select = document.createElement('select')
-							select.id = 'selectType'
-							select.className = "form-control"
-							var arrType =['SELECT ONE', 'CANCEL ENTRY', 'SCHEDULE','TASK', 'MESSAGE']
-							arrType.forEach(function(type){
-								var option = document.createElement('option')
-								option.value = type
-								option.innerHTML = type
-								select.appendChild(option)
-							})
-							select.addEventListener('change', function(){
+							$.post('/memoChbx',{
+							memoChbx:$('#memoChbx').val(),
+							taskOptionDes:description,
+							type:select.value
+							}).done(function(pData){
+								console.log(JSON.stringify(pData, null, 4))
+								var li = document.createElement('li')
+								li.style.width = '300px'
+								li.style.listStyle = 'none'
 
-
-								$.post('/memoChbx',{
-								memoChbx:$('#memoChbx').val(),
-								taskOptionDes:description,
-								type:select.value
-								}).done(function(pData){
-									console.log(JSON.stringify(pData, null, 4))
-										var li = document.createElement('li')
-										li.style.width = '300px'
-										li.style.listStyle = 'none'
-
-										li.appendChild(document.createTextNode(pData.taskOption.memo+ "-Added"))
-									ul.appendChild(li)
-									
-								});
-								
-								
-							})
-								
-							
-							ul.appendChild(select)
+								li.appendChild(document.createTextNode(pData.taskOption.memo+ "-Added"))
+								ul.appendChild(li)
+						
+							});
 							
 
 							
@@ -1174,7 +1187,45 @@ append scripts
 						
 					})
 					ul.appendChild(input)
+					$.post('/taskOptMemo',{
+					type:select.value
+					}).done(function(pData){
+						
+					})
+					// constructs the suggestion engine
+					var states = new Bloodhound({
+					  datumTokenizer: Bloodhound.tokenizers.whitespace,
+					  queryTokenizer: Bloodhound.tokenizers.whitespace,
+					  // `states` is an array of state names defined in "The Basics"
+					  local: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California','Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia']
+									
+					});
+
+					$('#memoChbx').typeahead({
+					  hint: true,
+					  highlight: true,
+					  minLength: 1
+					},
+					{
+					  name: 'states',
+					  source: states
+					});
+
+						
+						
+						
+					})
+						
+				
+				ul.appendChild(select)
+
+
+					
+					
 				$('#taskOptMemoDiv').html(ul)
+
+
+				
 			})
 		}
 
