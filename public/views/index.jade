@@ -1098,7 +1098,7 @@ append scripts
 						})
 					li.appendChild(input)
 					li.appendChild(document.createTextNode(taskOptMemo.memo+'--'+ taskOptMemo.type))
-					li.addEventListener('click', function(){
+					li.addEventListener('mouseenter', function(){
 
 						if (li.childNodes.length >2){
 						li.removeChild(li.childNodes[2])
@@ -1129,17 +1129,7 @@ append scripts
 						nestedOl.setAttribute('role', 'menu')
 						nestedOl.id = "nestedOlCheckedTask"
 						//- nestedOl.className = 'col-sm-8'
-						taskOptMemo.taskOptDetails.forEach(function(taskOptDetail){
-							var li = document.createElement('li')
-							//- li.style.color = 'blue'
-							//- li.style.textDecoration= 'underline'
-							li.style.width = '800px'
-							//- li.style.listStyle = 'none'
-							li.appendChild(document.createTextNode(taskOptDetail.taskDescription))
-						
-							nestedOl.appendChild(li)
-						})
-						nestedOl.focus()
+
 
 							$('#memoChbxDetail').length>0?$('#memoChbxDetail').remove():""
 							var inputDetail = document.createElement('input')
@@ -1148,33 +1138,55 @@ append scripts
 							inputDetail.className = 'typeahead'
 							inputDetail.placeholder = 'Add Memo Detail'
 							//- console.log(description)
-							//- inputDetail.addEventListener('blur', function(){
-								//- console.log($('#memoChbxDetail').val()+'-'+taskOptMemo.id)
-								//- if ($('#memoChbxDetail').val().length>0){
-								//- 	$.post('/memoChbxDetail',{
-								//- 	memoChbx:$('#memoChbxDetail').val(),
-								//- 	taskOptionDes:description,
-								//- 	type:select.value
-								//- 	}).done(function(pData){
-								//- 		console.log(JSON.stringify(pData, null, 4))
-								//- 		var li = document.createElement('li')
-								//- 		li.style.width = '300px'
-								//- 		li.style.listStyle = 'none'
+							inputDetail.addEventListener('blur', function(){
+								console.log($('#memoChbxDetail').val()+'-'+taskOptMemo.id)
+								if ($('#memoChbxDetail').val().length>0){
+									$.post('/memoChbxDetailCreate',{
+									memoChbxDetail:$('#memoChbxDetail').val(),
+									taskOptMemoId:taskOptMemo.id
+									}).done(function(pData){
+										console.log(JSON.stringify(pData, null, 4))
+										var li = document.createElement('li')
+										li.style.width = '600px'
+										
 
-								//- 		li.appendChild(document.createTextNode(pData.taskOption.memo+ "-Added"))
-								//- 		ul.appendChild(li)
-								//- 	});
-								//- }
+										li.appendChild(document.createTextNode(pData.memoChbxDetail.taskDescription))
+										nestedOl.appendChild(li)
+									});
+								}
 								
-							//- })
-							nestedOl.appendChild(inputDetail)
+							})
+						nestedOl.appendChild(inputDetail)
 
+						taskOptMemo.taskOptDetails.forEach(function(taskOptDetail){
+							var li = document.createElement('li')
+							//- li.style.color = 'blue'
+							//- li.style.textDecoration= 'underline'
+							li.style.width = '800px'
+								var input = document.createElement('input')
+								input.type = 'hidden'
+								input.name = taskOptMemo.id
+							li.appendChild(input)
+							//- li.style.listStyle = 'none'
+							li.appendChild(document.createTextNode(taskOptDetail.taskDescription))
+							li.addEventListener('dblclick', function(){
+								$.post('/memoChbxDetailDel',{
+									memoChbxDetailId:taskOptDetail.id
+								}).done(function(Rdata){
+									nestedOl.removeChild(li)
+								})
 
+							})
+						
+							nestedOl.appendChild(li)
+						})
 						li.appendChild(nestedOl)
-
+						inputDetail.focus()
 						
 					})
 					ul.appendChild(li)
+
+
 				})
 
 

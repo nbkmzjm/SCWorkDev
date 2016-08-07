@@ -595,6 +595,48 @@ app.post('/checkedMemoDel', middleware.requireAuthentication, function(req, res)
 })
 
 
+app.post('/memoChbxDetailCreate', middleware.requireAuthentication, function(req, res) {
+	var memoChbxDetail = req.body.memoChbxDetail
+	var taskOptMemoId = req.body.taskOptMemoId
+	console.log(memoChbxDetail+'-'+taskOptMemoId)
+
+	db.taskOptDetail.create({
+		taskDescription:memoChbxDetail,
+		taskOptMemoId:taskOptMemoId
+		
+	}).then(function(memoChbxDetail){
+		res.json({
+			memoChbxDetail:memoChbxDetail
+		})
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+
+})
+
+app.post('/memoChbxDetailDel', middleware.requireAuthentication, function(req, res) {
+	var memoChbxDetailId = req.body.memoChbxDetailId
+	console.log(memoChbxDetailId)
+
+	db.taskOptDetail.destroy({
+		where:{id:memoChbxDetailId}
+	}).then(function(deleted){
+		res.json({
+			deleted:deleted
+		})
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+})
+
+
+
 app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 
 	db.user.findAll({
