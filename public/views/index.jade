@@ -537,10 +537,8 @@ append scripts
 										
 										}else{
 											var memoCheckOpts = document.getElementsByClassName('checkedMemo')||false
-											console.log(userId)
-											console.log(dateSC)
-											console.log(taskSC)
-											console.log(memoCheckOpts)
+											
+											console.log(memoCheckOpts[1])
 											//- if (memoCheckOpts.length!=0){
 											for(var i = 0; i<memoCheckOpts.length;i++){
 													dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
@@ -1098,40 +1096,14 @@ append scripts
 						})
 					li.appendChild(input)
 					li.appendChild(document.createTextNode(taskOptMemo.memo+'--'+ taskOptMemo.type))
-					li.addEventListener('mouseenter', function(){
-
-						if (li.childNodes.length >2){
-						li.removeChild(li.childNodes[2])
-						}
-						var span = document.createElement('span')
-						span.innerHTML = '';
-						span.style.color = 'red'
-						span.className = "glyphicon glyphicon-remove-circle"
-						span.id = 'delGly';
-						//- click the 'x' to remove from list
-						span.addEventListener('click', function(){
-							$.post('/checkedMemoDel',{
-								checkedMemoId:taskOptMemo.id
-							}).done(function(Rdata){
-								ul.removeChild(li)
-							})
-							
-						});
-						li.appendChild(span)
-						li.addEventListener('mouseleave',function(){
-							if ($('#delGly').length>0){
-								li.removeChild(document.getElementById('delGly'))
-							}
-						})
-
-						$('#nestedOlCheckedTask').length>0?$('#nestedOlCheckedTask').remove():""
+					if (input.checked == true){
 						var nestedOl = document.createElement('ol')
 						nestedOl.setAttribute('role', 'menu')
-						nestedOl.id = "nestedOlCheckedTask"
+						nestedOl.id = "nestedOlCheckedTask"f
 						//- nestedOl.className = 'col-sm-8'
 
 
-							$('#memoChbxDetail').length>0?$('#memoChbxDetail').remove():""
+							//- $('#memoChbxDetail').length>0?$('#memoChbxDetail').remove():""
 							var inputDetail = document.createElement('input')
 							inputDetail.type = 'text'
 							inputDetail.id = 'memoChbxDetail'
@@ -1148,7 +1120,6 @@ append scripts
 										console.log(JSON.stringify(pData, null, 4))
 										var li = document.createElement('li')
 										li.style.width = '600px'
-										
 
 										li.appendChild(document.createTextNode(pData.memoChbxDetail.taskDescription))
 										nestedOl.appendChild(li)
@@ -1156,7 +1127,9 @@ append scripts
 								}
 								
 							})
+
 						nestedOl.appendChild(inputDetail)
+
 
 						taskOptMemo.taskOptDetails.forEach(function(taskOptDetail){
 							var li = document.createElement('li')
@@ -1180,10 +1153,43 @@ append scripts
 						
 							nestedOl.appendChild(li)
 						})
-						li.appendChild(nestedOl)
-						inputDetail.focus()
+					li.appendChild(nestedOl)
+						//- inputDetail.focus()
+					}
+
+					li.addEventListener('mouseenter', function(){
+
+						//- if (li.childNodes.length >2){
+						//- li.removeChild(li.childNodes[2])
+						//- }
+						var span = document.createElement('span')
+						span.innerHTML = '';
+						span.style.color = 'red'
+						span.className = "glyphicon glyphicon-remove-circle"
+						span.id = 'delGly';
+						//- click the 'x' to remove from list
+						span.addEventListener('click', function(){
+							$.post('/checkedMemoDel',{
+								checkedMemoId:taskOptMemo.id
+							}).done(function(Rdata){
+								ul.removeChild(li)
+							})
+							
+						});
+						li.appendChild(span)
+						li.addEventListener('mouseleave',function(){
+							if ($('#delGly').length>0){
+								li.removeChild(document.getElementById('delGly'))
+							}
+						})
+
+						//- $('#nestedOlCheckedTask').length>0?$('#nestedOlCheckedTask').remove():""
+						
+
+						
 						
 					})
+					
 					ul.appendChild(li)
 
 
