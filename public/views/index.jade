@@ -538,10 +538,17 @@ append scripts
 										}else{
 											var memoCheckOpts = document.getElementsByClassName('checkedMemo')||false
 											
-											console.log(memoCheckOpts[1])
+											//- console.log(memoCheckOpts[1].parentNode.childNodes[2])
 											//- if (memoCheckOpts.length!=0){
 											for(var i = 0; i<memoCheckOpts.length;i++){
-													dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
+
+												var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
+												for(var u = 0; u<detailList.length;u++){
+													console.log(detailList[u].innerHTML)
+
+												}
+												
+													//- dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
 											}
 											//- }else{
 											//- 	dateSCSubmit("", userId, dateSC, taskSC, td)
@@ -1099,7 +1106,7 @@ append scripts
 					if (input.checked == true){
 						var nestedOl = document.createElement('ol')
 						nestedOl.setAttribute('role', 'menu')
-						nestedOl.id = "nestedOlCheckedTask"f
+						nestedOl.id = "nestedOlCheckedTask"
 						//- nestedOl.className = 'col-sm-8'
 
 
@@ -1111,20 +1118,21 @@ append scripts
 							inputDetail.placeholder = 'Add Memo Detail'
 							//- console.log(description)
 							inputDetail.addEventListener('blur', function(){
-								console.log($('#memoChbxDetail').val()+'-'+taskOptMemo.id)
-								if ($('#memoChbxDetail').val().length>0){
+								console.log(inputDetail.value+'-'+taskOptMemo.id)
+								//- if ($('#memoChbxDetail').val().length>0){
 									$.post('/memoChbxDetailCreate',{
-									memoChbxDetail:$('#memoChbxDetail').val(),
+									memoChbxDetail:inputDetail.value,
 									taskOptMemoId:taskOptMemo.id
 									}).done(function(pData){
 										console.log(JSON.stringify(pData, null, 4))
+										inputDetail.value= ""
 										var li = document.createElement('li')
 										li.style.width = '600px'
 
 										li.appendChild(document.createTextNode(pData.memoChbxDetail.taskDescription))
 										nestedOl.appendChild(li)
 									});
-								}
+								//- }
 								
 							})
 
@@ -1135,11 +1143,7 @@ append scripts
 							var li = document.createElement('li')
 							//- li.style.color = 'blue'
 							//- li.style.textDecoration= 'underline'
-							li.style.width = '800px'
-								var input = document.createElement('input')
-								input.type = 'hidden'
-								input.name = taskOptMemo.id
-							li.appendChild(input)
+							
 							//- li.style.listStyle = 'none'
 							li.appendChild(document.createTextNode(taskOptDetail.taskDescription))
 							li.addEventListener('dblclick', function(){

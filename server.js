@@ -338,14 +338,14 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 			res.json({
 					Note: taskSC
 				});
-			return db.assignTracer.create(body).then(function(assignTracer){
-				curUser.addAssignTracer(assignTracer).then(function(){})
-				assign[0].addAssignTracer(assignTracer).then(function(){})
+			return [db.assignTracer.create(body), curUser, assign]
 
-			})
+		}).spread(function(assignTracer, curUser, assign){
 
+			curUser.addAssignTracer(assignTracer).then(function(){})
+			assign[0].addAssignTracer(assignTracer).then(function(){})
 
-			
+				
 		}).catch(function(e) {
 			console.log("eeroorr" + e);
 
