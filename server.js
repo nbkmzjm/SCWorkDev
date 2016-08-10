@@ -269,6 +269,8 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var dateSC = req.body.postdata.dateSC;
 	var taskSC = req.body.postdata.taskSC;
 	var memo = req.body.postdata.memo;
+	var detailListArr = req.body.postdata.detailListArr;
+
 	var curUser = req.user
 
 	// console.log('dateSC: '+dateSC)
@@ -293,13 +295,9 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				user
 			];
 		}).spread(function(assign, user) {
-			// console.log(assign[0]+'--'+assign[1])
 			user.addAssign(assign[0]).then(function() {
-
+				return assign[0].reload()
 			});
-
-		// console.log(taskSC)	
-
 
 			if (taskSC=='DELETE'){
 				var updatePara = {
@@ -329,7 +327,6 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				, assign
 			];
 		}).spread(function(assignUpdated, curUser, assign) {
-			// console.log('updateeee new taskSC: ' + JSON.stringify(curUser,null,4));
 			var body = {
 				Note:taskSC,
 				Memo:memo||''
@@ -342,9 +339,26 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 
 		}).spread(function(assignTracer, curUser, assign){
 
-			curUser.addAssignTracer(assignTracer).then(function(){})
-			assign[0].addAssignTracer(assignTracer).then(function(){})
+			curUser.addAssignTracer(assignTracer).then(function(){
+				return assignTracer.reload()
+			})
+			assign[0].addAssignTracer(assignTracer).then(function(){
+				return assignTracer.reload()
+			})
 
+			var data = []
+			detailListArr.forEach(function(memoDetail){
+				data.push({
+					Description:memoDetail,
+					assignTracerId:assignTracer.id
+				})
+			})
+			console.log(JSON.stringify(data, null, 4))
+			
+
+			return[db.assignTracerDetail.bulkCreate(data)]
+		}).then(function(assignTracerDetails){
+			console.log(JSON.stringify(assignTracerDetails, null, 4))
 				
 		}).catch(function(e) {
 			console.log("eeroorr" + e);

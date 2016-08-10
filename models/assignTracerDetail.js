@@ -16,29 +16,36 @@ module.exports = function(sequelize, DataTypes) {
 		// },
 		Description: {
 			type: DataTypes.STRING,
+			allowNull: false,
 			validate: {
-				len: [1, 255]	
+				len: [1, 99]	
 			}
 			
 		},
 
 		Value: {
 			type: DataTypes.STRING,
-			
+			defaultValue: '',
+			validate: {
+				len: [1, 99]	
+			}
 			
 		},
 		Comments: {
 			type: DataTypes.STRING,
-			
-			
-		},
-		Admin Note: {
-			type: DataTypes.STRING,
-			
+			defaultValue: '',
+			validate: {
+				len: [1, 255]	
+			}
 			
 		},
+		
 		CompletedBy:{
 			type: DataTypes.STRING,
+			defaultValue: '0',
+			validate: {
+				len: [1, 25]	
+			}
 		}
 		
 

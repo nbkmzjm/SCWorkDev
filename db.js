@@ -20,9 +20,11 @@ if (env === 'production'){
 var db = {};	
 db.assign = sequelize.import(__dirname + '/models/assign.js')
 db.assignTracer = sequelize.import(__dirname + '/models/assignTracer.js');
+db.assignTracerDetail = sequelize.import(__dirname + '/models/assignTracerDetail.js');
 db.taskOption = sequelize.import(__dirname + '/models/taskOption.js');
 db.taskOptMemo = sequelize.import(__dirname + '/models/taskOptMemo.js');
 db.taskOptDetail = sequelize.import(__dirname + '/models/taskOptDetail.js');
+
 db.sysObj = sequelize.import(__dirname + '/models/sysObj.js');
 
 db.user = sequelize.import(__dirname + '/models/user.js');
@@ -41,6 +43,13 @@ db.assignTracer.belongsTo(db.assign, {
 	 onDelete: 'CASCADE'
 });
 db.assign.hasMany(db.assignTracer, {
+	 onDelete: 'CASCADE'
+});
+
+db.assignTracerDetail.belongsTo(db.assignTracer, {
+	 onDelete: 'CASCADE'
+});
+db.assignTracer.hasMany(db.assignTracerDetail, {
 	 onDelete: 'CASCADE'
 });
 

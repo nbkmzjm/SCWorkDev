@@ -541,14 +541,13 @@ append scripts
 											//- console.log(memoCheckOpts[1].parentNode.childNodes[2])
 											//- if (memoCheckOpts.length!=0){
 											for(var i = 0; i<memoCheckOpts.length;i++){
-
+												var detailListArr = []
 												var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
 												for(var u = 0; u<detailList.length;u++){
-													console.log(detailList[u].innerHTML)
-
+													detailListArr.push(detailList[u].innerHTML)
 												}
-												
-													//- dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
+													detailListArr.length>0?
+													dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td,detailListArr):""
 											}
 											//- }else{
 											//- 	dateSCSubmit("", userId, dateSC, taskSC, td)
@@ -623,20 +622,32 @@ append scripts
 										console.log(dateSC)
 										console.log(taskSC)
 										console.log(memoCheckOpts)
+										
 										if (memoCheckOpts.length!=0){
+											var detailListArr0 = []
+											var detailList = memoCheckOpts[0].parentNode.childNodes[2].getElementsByTagName('li')
+											for(var u = 0; u<detailList.length;u++){
+												detailListArr0.push(detailList[u].innerHTML)
+											}
+											if (detailListArr0.length>0){
+												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memoCheckOpts[0].value,detailListArr0}}).done(function(pData){
+													if(!!pData.Note){
+														td.innerHTML=pData.Note;
+														td.style.backgroundColor = 'yellow'
+														for(var i = 1; i<memoCheckOpts.length;i++){
+															var detailListArr = []
+															var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
+															for(var u = 0; u<detailList.length;u++){
+																detailListArr.push(detailList[u].innerHTML)
+															}
+																detailListArr.length>0?		dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td,detailListArr):""
+														}
+													} 
 
-											$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memoCheckOpts[0].value}}).done(function(pData){
-												if(!!pData.Note){
-													td.innerHTML=pData.Note;
-													td.style.backgroundColor = 'yellow'
-													for(var i = 1; i<memoCheckOpts.length;i++){
-													console.log(memoCheckOpts[i].name)
-													dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
-													}
-												} 
-
-											});
-
+												});
+											}else{
+												alert("Checked Option does not have detail. Please add")
+											}
 											
 										}
 											
