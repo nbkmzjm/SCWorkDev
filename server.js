@@ -209,7 +209,11 @@ app.post('/assignTracerReadDay', middleware.requireAuthentication, function(req,
 			model:db.assignTracer,
 			include:[{
 				model:db.user
+
+			},{
+				model:db.assignTracerDetail
 			}]
+						
 		}],
 		where: {
 				id: assignId
@@ -218,7 +222,7 @@ app.post('/assignTracerReadDay', middleware.requireAuthentication, function(req,
 				[db.assignTracer,'createdAt', 'DESC']
 			]
 	}).then(function(assign) {
-		// console.log(JSON.stringify(assign, null, 4))
+		console.log(JSON.stringify(assign, null, 4))
 			res.json({
 				assign: assign
 			});
