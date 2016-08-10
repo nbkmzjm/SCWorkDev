@@ -126,7 +126,21 @@
 }
 
 #eventActionTable{
-	width: 80%;
+	width: 90%;
+	border: 6px groove #ABF7FE;
+	margin: 0 auto;
+
+}
+
+#taskDetailTable{
+	width: 90%;
+	border: 6px groove #ABF7FE;
+	margin: 0 auto;
+
+}
+
+#taskDetailTable td{
+	width: 40%;
 	border: 6px groove #ABF7FE;
 	margin: 0 auto;
 

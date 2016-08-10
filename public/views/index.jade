@@ -174,7 +174,11 @@ append scripts
 
 					lockoutDate.add(28, 'days')
 
-					$.post('/sysObjUpdate', {pData:{name:'lockoutDate', value:lockoutDate.format('MM-DD-YYYY')}}).done(function(rData){
+					$.post('/sysObjUpdate', {
+						pData:{
+							name:'lockoutDate', value:lockoutDate.format('MM-DD-YYYY')
+						}
+					}).done(function(rData){
 						
 						//- output lock out Note
 						
@@ -445,6 +449,35 @@ append scripts
 															window['tr' + i] = document.createElement('tr')
 																var td = document.createElement('td')
 																td.innerHTML = tracer
+																td.addEventListener('click', function(){
+																	$('#eventActionTable').hide()
+																	var table = document.createElement('table');
+																	table.setAttribute('id', 'taskDetailTable');
+																	table.draggable = true
+																		var tr = document.createElement("tr")
+																			var headerArr = ['Task','Comments', 'Value','Completed By', 'Completed At']
+																			headerArr.forEach(function(header, i){
+																				var td = document.createElement('td')
+																				td.innerHTML = header
+																				tr.appendChild(td)
+																			})
+																			
+																		table.appendChild(tr)
+																	table.addEventListener('click',function(){
+																		$('#eventAction').stop()
+																	})
+																	
+
+																	$('#eventAction').on('mouseleave', function(){
+																		$('#delGly').remove()
+																	})
+																	$('#eventAction').append(table)
+
+
+
+
+
+																})
 																window['tr' + i].appendChild(td)
 																var td1 = document.createElement('td')
 																	var input = document.createElement('input')
