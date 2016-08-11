@@ -454,15 +454,38 @@ append scripts
 																	var table = document.createElement('table');
 																	table.setAttribute('id', 'taskDetailTable');
 																	table.draggable = true
-																		var tr = document.createElement("tr")
+																		var trHead = document.createElement('tr')
+																			//- var tdHead = document.createElement('td')
+																			trHead.innerHTML = assignTracer.Memo
+																			//- trHead.appendChild(tdHead)
+																		table.appendChild(trHead)
+																		var trTitle = document.createElement("tr")
 																			var headerArr = ['Task','Comments', 'Value','Completed By', 'Completed At']
 																			headerArr.forEach(function(header, i){
 																				var td = document.createElement('td')
 																				td.innerHTML = header
-																				tr.appendChild(td)
+																				trTitle.appendChild(td)
 																			})
+																		table.appendChild(trTitle)
+
+																		assignTracer.assignTracerDetails.forEach(function(assignTracerDetail){
+																			var trContent = document.createElement('tr')
+																				console.log(assignTracerDetail)
+																				var contentArr = [assignTracerDetail.Description,assignTracerDetail.Comments, assignTracerDetail.Value,assignTracerDetail.CompletedBy, assignTracerDetail.createdAt]
+																				contentArr.forEach(function(content, i){
+																					var tdContent = document.createElement('td')
+																					tdContent.innerHTML = content
+																					trContent.appendChild(tdContent)
+																				})
+																			table.appendChild(trContent)
+																		})
+
+
+
 																			
-																		table.appendChild(tr)
+																		
+																		
+																		
 																	table.addEventListener('click',function(){
 																		$('#eventAction').stop()
 																	})
