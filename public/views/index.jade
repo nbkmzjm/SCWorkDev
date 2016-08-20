@@ -460,7 +460,7 @@ append scripts
 																			//- trHead.appendChild(tdHead)
 																		table.appendChild(trHead)
 																		var trTitle = document.createElement("tr")
-																			var headerArr = ['Task','Comments', 'Value','Completed By', 'Completed At']
+																			var headerArr = ['Task','Comments', 'Value','Completed By', 'Updated At']
 																			headerArr.forEach(function(header, i){
 																				var td = document.createElement('td')
 																				td.innerHTML = header
@@ -468,13 +468,45 @@ append scripts
 																			})
 																		table.appendChild(trTitle)
 
-																		assignTracer.assignTracerDetails.forEach(function(assignTracerDetail){
+																		assignTracer.assignTracerDetails.forEach(function(assignTracerDetail, j){
 																			var trContent = document.createElement('tr')
 																				console.log(assignTracerDetail)
-																				var contentArr = [assignTracerDetail.Description,assignTracerDetail.Comments, assignTracerDetail.Value,assignTracerDetail.CompletedBy, assignTracerDetail.createdAt]
+																				var contentArr = [assignTracerDetail.Description,assignTracerDetail.Comments, assignTracerDetail.Value,assignTracerDetail.CompletedBy, assignTracerDetail.updatedAt]
 																				contentArr.forEach(function(content, i){
 																					var tdContent = document.createElement('td')
-																					tdContent.innerHTML = content
+																					if (content=="" && i==1){
+																						var input = document.createElement('input')
+																						input.id = 'taskComment'+ j
+																						input.type = 'text'
+																						tdContent.appendChild(input)
+																					}else if (content=="" && i==2){
+																						var input = document.createElement('input')
+																						input.id = 'taskValue' + j
+																						input.type = 'text'
+																						tdContent.appendChild(input)
+																					}else if (content==0 && i==3){
+																						var input = document.createElement('input')
+																						input.type = 'checkbox'
+																						input.addEventListener('click', function(){
+																							console.log(curUser.name)
+																							$.post('/assignTracerDetailUpd',{
+																								comments:$("#taskComment"+j).val(),
+																								value:$("#taskValue"+j).val(),
+																								assignTracerDetailId:assignTracerDetail.id,
+																								curUserName:curUser.name
+																							}).done(function(Rdata){
+																								if(Rdata.updated==1){
+																									input.checked = true
+																									input.disabled = true
+																								}
+																							})
+
+																						})
+																						tdContent.appendChild(input)
+
+																					}else {
+																						tdContent.innerHTML = content
+																					}
 																					trContent.appendChild(tdContent)
 																				})
 																			table.appendChild(trContent)
@@ -684,9 +716,11 @@ append scripts
 											var detailList = memoCheckOpts[0].parentNode.childNodes[2].getElementsByTagName('li')
 											for(var u = 0; u<detailList.length;u++){
 												detailListArr0.push(detailList[u].innerHTML)
+
 											}
+											console.log(detailListArr0)
 											if (detailListArr0.length>0){
-												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memoCheckOpts[0].value,detailListArr0}}).done(function(pData){
+												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memoCheckOpts[0].value, detailListArr:detailListArr0}}).done(function(pData){
 													if(!!pData.Note){
 														td.innerHTML=pData.Note;
 														td.style.backgroundColor = 'yellow'
@@ -702,7 +736,7 @@ append scripts
 
 												});
 											}else{
-												alert("Checked Option does not have detail. Please add")
+												alert("Checked Option does not have detail. Please add or uncheck Option")
 											}
 											
 										}
@@ -1158,6 +1192,7 @@ append scripts
 						input.value = taskOptMemo.memo
 
 						input.addEventListener('click', function(){
+
 							var checkValue = 0
 							input.checked == false?checkValue=false:checkValue=true
 							console.log(checkValue)
@@ -1167,6 +1202,77 @@ append scripts
 							}).done(function(Rdata){
 								console.log(Rdata)
 							})
+
+							if(input.checked == true){
+								var nestedOl = document.createElement('ol')
+								nestedOl.setAttribute('role', 'menu')
+								nestedOl.id = "nestedOlCheckedTask"
+								//- nestedOl.className = 'col-sm-8'
+
+
+									//- $('#memoChbxDetail').length>0?$('#memoChbxDetail').remove():""
+									var inputDetail = document.createElement('input')
+									inputDetail.type = 'text'
+									inputDetail.id = 'memoChbxDetail'
+									inputDetail.className = 'typeahead'
+									inputDetail.placeholder = 'Add Memo Detail'
+									//- console.log(description)
+									inputDetail.addEventListener('blur', function(){
+										console.log(inputDetail.value+'-'+taskOptMemo.id)
+										//- if ($('#memoChbxDetail').val().length>0){
+											$.post('/memoChbxDetailCreate',{
+											memoChbxDetail:inputDetail.value,
+											taskOptMemoId:taskOptMemo.id
+											}).done(function(pData){
+												console.log(JSON.stringify(pData, null, 4))
+												inputDetail.value= ""
+												var li = document.createElement('li')
+												li.style.width = '600px'
+
+												li.appendChild(document.createTextNode(pData.memoChbxDetail.taskDescription))
+												nestedOl.appendChild(li)
+											});
+										//- }
+										
+									})
+
+								nestedOl.appendChild(inputDetail)
+
+
+								taskOptMemo.taskOptDetails.forEach(function(taskOptDetail){
+									var li = document.createElement('li')
+									//- li.style.color = 'blue'
+									//- li.style.textDecoration= 'underline'
+									
+									//- li.style.listStyle = 'none'
+									li.appendChild(document.createTextNode(taskOptDetail.taskDescription))
+									li.addEventListener('dblclick', function(){
+										$.post('/memoChbxDetailDel',{
+											memoChbxDetailId:taskOptDetail.id
+										}).done(function(Rdata){
+											nestedOl.removeChild(li)
+										})
+
+									})
+								
+									nestedOl.appendChild(li)
+								})
+								li.appendChild(nestedOl)
+								//- inputDetail.focus()
+							}else{
+								console.log(li)
+								for(var i = 2; i < li.childNodes.length; i++){
+
+									if(li.childNodes[i].nodeName!="SPAN"){
+								    	li.removeChild(li.childNodes[i]);
+									}
+								    //- li.removeChild(li.childNodes[3]);
+								}
+								
+
+
+							}
+
 						})
 					li.appendChild(input)
 					li.appendChild(document.createTextNode(taskOptMemo.memo+'--'+ taskOptMemo.type))
@@ -1228,7 +1334,7 @@ append scripts
 						//- inputDetail.focus()
 					}
 
-					li.addEventListener('mouseenter', function(){
+					li.addEventListener('click', function(){
 
 						//- if (li.childNodes.length >2){
 						//- li.removeChild(li.childNodes[2])
@@ -1247,7 +1353,7 @@ append scripts
 							})
 							
 						});
-						li.appendChild(span)
+						li.insertBefore(span, li.childNodes[2])
 						li.addEventListener('mouseleave',function(){
 							if ($('#delGly').length>0){
 								li.removeChild(document.getElementById('delGly'))

@@ -276,6 +276,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var detailListArr = req.body.postdata.detailListArr;
 
 	var curUser = req.user
+	console.log(JSON.stringify(detailListArr, null, 4))
 
 	// console.log('dateSC: '+dateSC)
 	if (taskSC=='SELECT' ||taskSC=='NEW'){
@@ -652,6 +653,33 @@ app.post('/memoChbxDetailDel', middleware.requireAuthentication, function(req, r
 		})
 	});
 })
+
+
+app.post('/assignTracerDetailUpd', middleware.requireAuthentication, function(req, res) {
+	var comments = req.body.comments
+	var value = req.body.value
+	var curUserName = req.body.curUserName
+	var assignTracerDetailId = req.body.assignTracerDetailId
+	console.log(comments+'-'+value+'-'+assignTracerDetailId)
+
+	db.assignTracerDetail.update({
+		Comments:comments,
+		Value:value,
+		CompletedBy:curUserName
+	}, {
+		where:{id:assignTracerDetailId}
+	}).then(function(updated){
+		res.json({
+			updated:updated
+		})
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+})
+
 
 
 
