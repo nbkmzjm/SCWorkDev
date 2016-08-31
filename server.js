@@ -537,9 +537,20 @@ app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 			type:type
 		})
 	}).then(function(taskOption){
+		return db.taskOptMemo.max('updatedAt',{
+			include:[{
+				model:db.taskOptDetail,
+			}]
+		})
+		
+	}).then(function(maxUpdated){
+		console.log('Max is: '+ JSON.stringify(maxUpdated, null, 4))
+
+		
 		res.json({
 			taskOption:taskOption
 		})
+
 	}).catch(function(e) {
 		console.log(e)
 		res.render('error', {

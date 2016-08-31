@@ -1422,7 +1422,7 @@ append scripts
 								return taskOpt.memo;
 								});
 							// constructs the suggestion engine
-							var states = new Bloodhound({
+							var taskOptMemos = new Bloodhound({
 							  datumTokenizer: Bloodhound.tokenizers.whitespace,
 							  queryTokenizer: Bloodhound.tokenizers.whitespace,
 							  // `states` is an array of state names defined in "The Basics"
@@ -1437,14 +1437,14 @@ append scripts
 							},
 							{
 							  name: 'states',
-							  source: states
+							  source: taskOptMemos
 							});
 
 							
 						})
 
 					}
-					console.log(taskOptionSearch())
+					taskOptionSearch()
 					
 					
 						
