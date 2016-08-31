@@ -555,11 +555,12 @@ app.post('/taskOptMemo', middleware.requireAuthentication, function(req, res) {
 	console.log(type)
 
 	db.taskOptMemo.findAll({
+		
 		where: {
 			type:type
 		}
 	}).then(function(taskOptMemos){
-	
+		console.log(JSON.stringify(taskOptMemos, null, 4))
 		res.json({
 			taskOptMemos:taskOptMemos
 		})
