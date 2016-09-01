@@ -525,30 +525,54 @@ app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 	var type = req.body.type
 	console.log(memoChbx+'-'+taskOptionDes+'-'+type)
 
-	db.taskOption.findOne({
-		where: {
-			description:taskOptionDes
-		}
-	}).then(function(taskOption){
-		console.log(JSON.stringify(taskOption, null, 4))
-		return db.taskOptMemo.create({
+	
+	db.taskOptMemo.max('updatedAt').then(function(maxUpdated){
+		console.log('Max is: '+ JSON.stringify(maxUpdated, null, 4))
+		return db.taskOptMemo.findOne({
+			where:{
+				updatedAt:maxUpdated
+			},
+			include:[{
+				model:db.taskOptDetail,
+			}]	
+		})
+
+	}).then(function(taskOptionMemo){
+		console.log('Max row is: '+ JSON.stringify(taskOptionMemo, null, 4))	
+		console.log(taskOptionDes)
+
+
+		return [db.taskOption.findOne({
+			where: {
+				description:taskOptionDes
+			}
+		}), taskOptionMemo.taskOptDetails]
+	}).spread(function(taskOption, taskOptDetails){
+		console.log('taskOption is:'+JSON.stringify(taskOption, null, 4))
+		console.log('taskOptDetails is:'+JSON.stringify(taskOptDetails, null, 4))
+		
+		
+		return [db.taskOptMemo.create({
 			memo:memoChbx,
 			taskOptionId:taskOption.id,
 			type:type
-		})
-	}).then(function(taskOption){
-		return db.taskOptMemo.max('updatedAt',{
-			include:[{
-				model:db.taskOptDetail,
-			}]
-		})
-		
-	}).then(function(maxUpdated){
-		console.log('Max is: '+ JSON.stringify(maxUpdated, null, 4))
+		}),taskOptDetails]
+	}).spread(function(taskOptionMemo, taskOptDetails){
+		console.log('createdtaskMemo:'+JSON.stringify(taskOptionMemo, null, 4))
+		var mapTaskDescription = taskOptDetails.map(function(taskOpt) {
+			return {
+				taskDescription:taskOpt.taskDescription,
+				taskOptMemoId:taskOptionMemo.id
+			}
+		});
 
-		
+
+
+		if(!!mapTaskDescription){
+			db.taskOptDetail.bulkCreate(mapTaskDescription)
+		}
 		res.json({
-			taskOption:taskOption
+			taskOptionMemo:taskOptionMemo
 		})
 
 	}).catch(function(e) {
