@@ -526,61 +526,91 @@ app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 	console.log(memoChbx+'-'+taskOptionDes+'-'+type)
 
 	
-	db.taskOptMemo.max('updatedAt').then(function(maxUpdated){
-		console.log('Max is: '+ JSON.stringify(maxUpdated, null, 4))
-		return db.taskOptMemo.findOne({
-			where:{
-				updatedAt:maxUpdated
-			},
-			include:[{
-				model:db.taskOptDetail,
-			}]	
-		})
-
+	// db.taskOptMemo.max('updatedAt').then(function(maxUpdated){
+	// 	console.log('Max is: '+ JSON.stringify(maxUpdated, null, 4))
+	// 	return 
+	db.taskOptMemo.findOne({
+		where:{
+			memo:memoChbx
+		},
+		order:[
+			['updatedAt', 'DESC']
+		],
+		limit:1,
+		include:[{
+			model:db.taskOptDetail,
+		}]	
 	}).then(function(taskOptionMemo){
 		console.log('Max row is: '+ JSON.stringify(taskOptionMemo, null, 4))	
 		console.log(taskOptionDes)
+		if (!!taskOptionMemo){
 
-
-		return [db.taskOption.findOne({
-			where: {
-				description:taskOptionDes
-			}
-		}), taskOptionMemo.taskOptDetails]
-	}).spread(function(taskOption, taskOptDetails){
-		console.log('taskOption is:'+JSON.stringify(taskOption, null, 4))
-		console.log('taskOptDetails is:'+JSON.stringify(taskOptDetails, null, 4))
-		
-		
-		return [db.taskOptMemo.create({
-			memo:memoChbx,
-			taskOptionId:taskOption.id,
-			type:type
-		}),taskOptDetails]
-	}).spread(function(taskOptionMemo, taskOptDetails){
-		console.log('createdtaskMemo:'+JSON.stringify(taskOptionMemo, null, 4))
-		var mapTaskDescription = taskOptDetails.map(function(taskOpt) {
-			return {
-				taskDescription:taskOpt.taskDescription,
-				taskOptMemoId:taskOptionMemo.id
-			}
-		});
+			db.taskOption.findOne({
+					where: {
+						description:taskOptionDes
+					}
+			}).then(function(taskOption){
+				console.log('taskOption is:'+JSON.stringify(taskOption, null, 4))
+				
+				
+				return db.taskOptMemo.create({
+					memo:memoChbx,
+					taskOptionId:taskOption.id,
+					type:type
+				})
+			}).then(function(createdTaskOptionMemo){
+				console.log('createdtaskMemo:'+JSON.stringify(createdTaskOptionMemo, null, 4))
+				var mapTaskDescription = taskOptionMemo.taskOptDetails.map(function(taskOpt) {
+					return {
+						taskDescription:taskOpt.taskDescription,
+						taskOptMemoId:createdTaskOptionMemo.id
+					}
+				});
 
 
 
-		if(!!mapTaskDescription){
-			db.taskOptDetail.bulkCreate(mapTaskDescription)
+				if(!!mapTaskDescription){
+					db.taskOptDetail.bulkCreate(mapTaskDescription)
+				}
+				res.json({
+					taskOptionMemo:createdTaskOptionMemo
+				})
+
+			}).catch(function(e) {
+				console.log(e)
+				res.render('error', {
+					error: e.toString()
+				})
+			});
+		} else{
+
+
+			db.taskOption.findOne({
+					where: {
+						description:taskOptionDes
+					}
+			}).then(function(taskOption){
+
+				return db.taskOptMemo.create({
+					memo:memoChbx,
+					taskOptionId:taskOption.id,
+					type:type
+				})
+			}).then(function(createdTaskOptionMemo){
+				res.json({
+					taskOptionMemo:createdTaskOptionMemo
+				})
+
+			}).catch(function(e) {
+				console.log(e)
+				res.render('error', {
+					error: e.toString()
+				})
+			});
+
 		}
-		res.json({
-			taskOptionMemo:taskOptionMemo
-		})
+	})
 
-	}).catch(function(e) {
-		console.log(e)
-		res.render('error', {
-			error: e.toString()
-		})
-	});
 
 })
 
