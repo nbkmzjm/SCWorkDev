@@ -438,6 +438,7 @@ append scripts
 													})
 													table.appendChild(tr)
 													$.post('/assignTracerReadDay',{
+														type:'TASK',
 														assignId:assign.id,
 													}).done(function(Rdata){
 														assignTracers = Rdata.assign.assignTracers
@@ -624,18 +625,27 @@ append scripts
 										})
 										
 										}else{
+											alert('delete')
 											var memoCheckOpts = document.getElementsByClassName('checkedMemo')||false
 											
 											//- console.log(memoCheckOpts[1].parentNode.childNodes[2])
-											//- if (memoCheckOpts.length!=0){
-											for(var i = 0; i<memoCheckOpts.length;i++){
-												var detailListArr = []
-												var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
-												for(var u = 0; u<detailList.length;u++){
-													detailListArr.push(detailList[u].innerHTML)
+											if (memoCheckOpts.length!=0){
+												for(var i = 0; i<memoCheckOpts.length;i++){
+													var detailListArr = []
+													alert(memoCheckOpts[i].name)
+													var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
+													if (detailList.length!=0){
+														for(var u = 0; u<detailList.length;u++){
+															detailListArr.push(detailList[u].innerHTML)
+														}
+														
+														dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name,userId, dateSC, taskSC, td,detailListArr)
+
+													}else{
+														dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name,userId, dateSC, taskSC, td,null)
+													}
+													
 												}
-													detailListArr.length>0?
-													dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td,detailListArr):""
 											}
 											//- }else{
 											//- 	dateSCSubmit("", userId, dateSC, taskSC, td)
@@ -714,31 +724,58 @@ append scripts
 										if (memoCheckOpts.length!=0){
 											var detailListArr0 = []
 											var detailList = memoCheckOpts[0].parentNode.childNodes[2].getElementsByTagName('li')
-											for(var u = 0; u<detailList.length;u++){
-												detailListArr0.push(detailList[u].innerHTML)
+											console.log('detailList is: '+ detailList)
+											if(detailList.length!=0){
+												for(var u = 0; u<detailList.length;u++){
+													detailListArr0.push(detailList[u].innerHTML)
 
-											}
-											console.log(detailListArr0)
-											if (detailListArr0.length>0){
-												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memoCheckOpts[0].value, detailListArr:detailListArr0}}).done(function(pData){
+												}
+												console.log(detailListArr0)
+												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memoCheckOpts[0].value, type:memoCheckOpts[0].name, detailListArr:detailListArr0}}).done(function(pData){
 													if(!!pData.Note){
 														td.innerHTML=pData.Note;
 														td.style.backgroundColor = 'yellow'
 														for(var i = 1; i<memoCheckOpts.length;i++){
 															var detailListArr = []
 															var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
-															for(var u = 0; u<detailList.length;u++){
-																detailListArr.push(detailList[u].innerHTML)
+															if (detailList.length!=0){
+																for(var u = 0; u<detailList.length;u++){
+																	detailListArr.push(detailList[u].innerHTML)
+																}
+																
+																dateSCSubmit(memoCheckOpts[i].value,memoCheckOpts[i].name, userId, dateSC, taskSC, td,detailListArr)
+
+															}else{
+																dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name, userId, dateSC, taskSC, td,null)
 															}
-																detailListArr.length>0?		dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td,detailListArr):""
 														}
 													} 
 
 												});
 											}else{
-												alert("Checked Option does not have detail. Please add or uncheck Option")
+												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memoCheckOpts[0].value, type:memoCheckOpts[0].name, detailListArr:null}}).done(function(pData){
+													if(!!pData.Note){
+														td.innerHTML=pData.Note;
+														td.style.backgroundColor = 'yellow'
+														for(var i = 1; i<memoCheckOpts.length;i++){
+															var detailListArr = []
+															var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
+															if (detailList.length!=0){
+																for(var u = 0; u<detailList.length;u++){
+																	detailListArr.push(detailList[u].innerHTML)
+																}
+																
+																dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name, userId, dateSC, taskSC, td,detailListArr)
+
+															}else{
+																dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name, userId, dateSC, taskSC, td,null)
+															}
+														}
+													}
+												})
+
+
 											}
-											
 										}
 											
 											//- var i = 0;
@@ -1377,7 +1414,7 @@ append scripts
 				var select = document.createElement('select')
 				select.id = 'selectType'
 				select.className = "form-control"
-				var arrType =['SELECT ONE', 'CANCEL ENTRY', 'SCHEDULE','TASK', 'MESSAGE']
+				var arrType =['SELECT ONE', 'TASK', 'MESSAGE']
 				arrType.forEach(function(type){
 					var option = document.createElement('option')
 					option.value = type
@@ -1385,35 +1422,37 @@ append scripts
 					select.appendChild(option)
 				})
 				select.addEventListener('change', function(){
-					var input = document.createElement('input')
-					input.type = 'text'
-					input.id = 'memoChbx'
-					input.className = 'typeahead'
-					input.placeholder = 'Add Memo Checkbox'
-					console.log(description)
-					input.addEventListener('blur', function(){
-						if ($('#memoChbx').val().length>0){
-							$.post('/memoChbx',{
-							memoChbx:$('#memoChbx').val(),
-							taskOptionDes:description,
-							type:select.value
-							}).done(function(pData){
-								console.log(JSON.stringify(pData, null, 4))
-								var li = document.createElement('li')
-								li.style.width = '300px'
-								li.style.listStyle = 'none'
-
-								li.appendChild(document.createTextNode(pData.taskOptionMemo.memo+ "-Added"))
-								ul.appendChild(li)
+					$('#memoChbx').length>0?$('#memoChbx').remove():''
+					if(select.value!='SELECT ONE'){
 						
-							});
-							
+						var input = document.createElement('input')
+						input.type = 'text'
+						input.id = 'memoChbx'
+						input.className = 'typeahead'
+						input.placeholder = 'Add Memo Checkbox'
+						console.log(description)
+						input.addEventListener('blur', function(){
+							if ($('#memoChbx').val().length>0){
+								$.post('/memoChbx',{
+								memoChbx:$('#memoChbx').val(),
+								taskOptionDes:description,
+								type:select.value
+								}).done(function(pData){
+									console.log(JSON.stringify(pData, null, 4))
+									var li = document.createElement('li')
+									li.style.width = '300px'
+									li.style.listStyle = 'none'
 
+									li.appendChild(document.createTextNode(pData.taskOptionMemo.memo+ "-Added"))
+									$('#memoChbx').val('')
+									ul.appendChild(li)
 							
-						}
-						
-					})
-					ul.appendChild(input)
+								});
+							}
+							
+						})
+						ul.appendChild(input)
+					}
 					function taskOptionSearch (){
 						$.post('/taskOptMemo',{
 						type:select.value

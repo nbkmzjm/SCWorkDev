@@ -248,7 +248,7 @@ function clearEvent(sDate, eDate){
 
 }
 
-function dateSCSubmit(memo, userId, dateSC, taskSC, td, detailListArr){
+function dateSCSubmit(memo, type, userId, dateSC, taskSC, td, detailListArr){
 
 	
 	$.post('/dateSC', {
@@ -257,6 +257,7 @@ function dateSCSubmit(memo, userId, dateSC, taskSC, td, detailListArr){
 			dateSC:dateSC, 
 			taskSC:taskSC, 
 			memo:memo,
+			type:type,
 			detailListArr:detailListArr
 		}
 	}).done(function(pData){
