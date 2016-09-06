@@ -214,11 +214,13 @@ app.post('/assignTracerReadDay', middleware.requireAuthentication, function(req,
 			},{
 				model:db.assignTracerDetail
 			}]
+			// where:{
+			// 	type:type
+			// }
 						
 		}],
 		where: {
-				id: assignId,
-				type:type
+				id: assignId
 		},
 		order:[
 				[db.assignTracer,'createdAt', 'DESC']
