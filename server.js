@@ -283,12 +283,10 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var curUser = req.user
 	console.log(JSON.stringify(detailListArr, null, 4))
 
-	// console.log('dateSC: '+dateSC)
+	
 	if (taskSC=='SELECT' ||taskSC=='NEW'){
 
-	// }else if (userId != curUser.id && (curUser.title != 'Admin' && curUser.title != 'Manager')&& taskSC!="SWIT-R"){
-		
-	// 	res.json({authorized: false});
+	
 	} else {
 		db.user.findOne({
 			where: {
@@ -309,22 +307,11 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				return assign[0].reload()
 			});
 
-			if (taskSC=='DELETE'){
-				var updatePara = {
-					Note: '',
-					Memo: ''
-				}
-			} else {
-				var updatePara = {
-					Note: taskSC,
-					Memo: memo
-
-				}
-			}
 			return [
-				db.assign.update(
-					updatePara
-				, {
+				db.assign.update({
+					Note: taskSC
+				},
+				{
 					where: {
 						userId: user.id,
 						datePos: dateSC
@@ -385,6 +372,61 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 			});
 		});
 	}
+});
+
+app.post('/dateSCDel', middleware.requireAuthentication, function(req, res) {
+	var userId = req.body.postdata.userId;
+	var dateSC = req.body.postdata.dateSC;
+	var taskSC = req.body.postdata.taskSC;
+	var memo = req.body.postdata.memo;
+	var type = req.body.postdata.type;
+
+	var curUser = req.user
+	
+	db.assign.update(
+		{
+			Note:''	
+		},{
+			where: {
+				userId: userId,
+				datePos: dateSC
+			}
+		},{
+			returning:true
+		}
+
+	).then(function(updated){
+		
+		res.json({
+			updated: updated
+		});
+		return db.assign.findOne({
+			where: {
+				userId: userId,
+				datePos: dateSC
+			}
+		})
+
+	}).then(function(assign){
+		return db.assignTracer.update({
+			Read:'X by ' + curUser.name
+		},{
+			where:{
+				assignId:assign.id
+			}
+		})
+	}).then(function(assignTracers){
+
+		console.log(JSON.stringify(assignTracers, null, 4))
+
+	}).catch(function(e) {
+		console.log("eeroorr" + e);
+
+		res.render('error', {
+			error: e.toString()
+		});
+	});
+	
 });
 
 app.post('/clearEvent', middleware.requireAuthentication, function(req,res){

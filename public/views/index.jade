@@ -300,13 +300,9 @@ append scripts
 										
 										var arrayTitle_manager = ['Admin', 'Manager']
 
-
 										
 										//- &&(curUserId==assign.userId || arrayTitle_UserTab.indexOf(curUserTitle) != -1)
 										if (taskSC=='SELECT'){
-											
-											
-
 											
 											console.log(JSON.stringify(userTitle, null, 4))
 											if(assign.userId==curUserId){
@@ -569,38 +565,7 @@ append scripts
 																window['tr' + i] = document.createElement('tr')
 																	var td = document.createElement('td')
 																	td.innerHTML = tracer
-																	td.addEventListener('click', function(){
-																		$('#eventActionTable').hide()
-																		var table = document.createElement('table');
-																		table.setAttribute('id', 'taskDetailTable');
-																		table.draggable = true
-																			var trHead = document.createElement('tr')
-																				//- var tdHead = document.createElement('td')
-																				trHead.innerHTML = assignTracer.Memo
-																				//- trHead.appendChild(tdHead)
-																			table.appendChild(trHead)
-																			var trTitle = document.createElement("tr")
-																				var headerArr = ['Task','Comments', 'Value','Completed By', 'Updated At']
-																				headerArr.forEach(function(header, i){
-																					var td = document.createElement('td')
-																					td.innerHTML = header
-																					trTitle.appendChild(td)
-																				})
-																			table.appendChild(trTitle)
-
-																			
-																			
-																			
-																		table.addEventListener('click',function(){
-																			$('#eventAction').stop()
-																		})
-																		
-
-																		$('#eventAction').on('mouseleave', function(){
-																			$('#delGly').remove()
-																		})
-																		$('#eventAction').append(table)
-																	})
+																	
 																	window['tr' + i].appendChild(td)
 																	var td1 = document.createElement('td')
 																		var input = document.createElement('input')
@@ -691,9 +656,22 @@ append scripts
 												$('#SCNote').fadeOut()
 											}, 3000)
 										})
+
+										}else if (taskSC=="DELETE"){
+											$.post('/dateSCDel', {
+												postdata:{
+													userId: userId, 
+													dateSC:dateSC
+													
+												}
+											}).done(function(pData){
+												if(pData.updated>0){
+													
+													td.style.backgroundColor = 'red'
+												} 
+											});
 										
 										}else{
-											alert('delete')
 											var memoCheckOpts = document.getElementsByClassName('checkedMemo')||false
 											
 											//- console.log(memoCheckOpts[1].parentNode.childNodes[2])
@@ -1381,6 +1359,8 @@ append scripts
 						})
 					li.appendChild(input)
 					li.appendChild(document.createTextNode(taskOptMemo.memo+'--'+ taskOptMemo.type))
+
+
 					if (input.checked == true){
 						var nestedOl = document.createElement('ol')
 						nestedOl.setAttribute('role', 'menu')
