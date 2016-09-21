@@ -403,16 +403,7 @@ append scripts
 											}else{
 												if(arrayTitle_manager.indexOf(curUserTitle) != -1||userTitle=="Admin"){
 													$('#eventAction').html('')
-													//- var table = document.createElement('table');
-													//- table.setAttribute('id', 'eventActionTable');
-													//- table.draggable = true
-													//- table.addEventListener('click',function(){
-													//- 	$('#eventAction').stop()
-													//- })
-
-													//- $('#eventAction').on('mouseleave', function(){
-													//- 	$('#delGly').remove()
-													//- })
+													
 													
 													$.post('/assignTracerReadDay',{
 														type:'TASK',
@@ -423,11 +414,12 @@ append scripts
 														var table = document.createElement('table');
 														table.setAttribute('id', 'taskTable');
 														table.draggable = true
-														table.addEventListener('click',function(){
-															$('#eventAction').stop()
-														})
+														table.ondragstart = function(ev){
+															ev.dataTransfer.setData("tableId", ev.target.id);
+														}
 
-														$('#eventAction').on('mouseleave', function(){
+
+														$('#taskTable').on('mouseleave', function(){
 															$('#delGly').remove()
 														})
 
@@ -455,10 +447,17 @@ append scripts
 																	$('#taskTable').hide()
 																	var table = document.createElement('table');
 																	table.setAttribute('id', 'taskDetailTable');
+																	
 																	table.draggable = true
+																	table.ondragstart = function(ev){
+																		ev.dataTransfer.setData("tableId", ev.target.id);
+																	}
 																		var trHead = document.createElement('tr')
 																			//- var tdHead = document.createElement('td')
 																			trHead.innerHTML = assignTracer.Memo
+																			trHead.addEventListener('click',function(){
+																				alert('back')
+																			})
 																			//- trHead.appendChild(tdHead)
 																		table.appendChild(trHead)
 																		var trTitle = document.createElement("tr")
@@ -562,7 +561,9 @@ append scripts
 
 															
 														})
-														$('#eventAction').append(table, $('#eventAction').fadeOut(4000, function(){}))
+														$('#eventAction').append(table
+														//- , $('#eventAction').fadeOut(4000, function(){})
+														)
 													})
 
 													$.post('/assignTracerReadDay',{
@@ -574,6 +575,10 @@ append scripts
 														var table = document.createElement('table');
 														table.setAttribute('id', 'eventTable');
 														table.draggable = true
+														table.ondragstart = function(ev){
+															
+															ev.dataTransfer.setData("tableId", ev.target.id);
+														}
 														table.addEventListener('click',function(){
 															$('#eventAction').stop()
 														})
@@ -581,7 +586,6 @@ append scripts
 														$('#eventAction').on('mouseleave', function(){
 															$('#delGly').remove()
 														})
-
 
 														var tr = document.createElement('tr')
 														var arrayField = ['Event Changes for '+ assign.datePos, 'Acknowledged']
@@ -636,26 +640,28 @@ append scripts
 															
 															table.appendChild(window['tr' + i])
 														})
-														$('#eventAction').append(table, $('#eventAction').fadeOut(4000, function(){
-															//- $('#eventAction').fadeIn()
-														}))
+														$('#eventAction').append(table
+														//- , $('#eventAction').fadeOut(4000, function(){
+															
+														//- })
+														)
 													})
 												}
 											}
 											
 											
 											
-											document.ondragover = function(event){
-												event.preventDefault()
+											document.ondragover = function(ev){
+												ev.preventDefault()
+												
+												
 											}
 
-											document.ondrop = function(){
+											document.ondrop = function(ev){
 												event.preventDefault();
-												document.ondragover = function(){};
-												$('#eventActionTable').length>0 ? 
-												$('#eventActionTable').remove():'';
-												$('#delGly').remove()
-												
+												var data = ev.dataTransfer.getData("tableId");
+												$('#'+data).length>0 ? 
+												$('#'+data).remove():'';
 											}
 										}else if (taskSC=="NEW"){ 
 
