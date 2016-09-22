@@ -444,7 +444,7 @@ append scripts
 																var td = document.createElement('td')
 																td.innerHTML = tracer
 																td.addEventListener('click', function(){
-																	$('#taskTable').hide()
+																	
 																	var table = document.createElement('table');
 																	table.setAttribute('id', 'taskDetailTable');
 																	
@@ -456,7 +456,9 @@ append scripts
 																			//- var tdHead = document.createElement('td')
 																			trHead.innerHTML = assignTracer.Memo
 																			trHead.addEventListener('click',function(){
-																				alert('back')
+																				$('#taskTable').show()
+																				$('#taskDetailTable').remove()
+																				
 																			})
 																			//- trHead.appendChild(tdHead)
 																		table.appendChild(trHead)
