@@ -409,7 +409,7 @@ app.post('/dateSCDel', middleware.requireAuthentication, function(req, res) {
 
 	}).then(function(assign){
 		return db.assignTracer.update({
-			Read:'X by ' + curUser.name
+			Read:'DELETED'
 		},{
 			where:{
 				assignId:assign.id
@@ -428,6 +428,32 @@ app.post('/dateSCDel', middleware.requireAuthentication, function(req, res) {
 	});
 	
 });
+
+app.post('/assignTracerDel', middleware.requireAuthentication, function(req, res){
+
+	var assignTracerId = req.body.assignTracerId;
+	db.assignTracer.update({
+			Read:'Deleted'
+		},{
+			where:{
+				id:assignTracerId
+			}
+		
+	}).then(function(updated){
+
+		
+		res.json({
+			updated: updated
+		});
+	}).catch(function(e) {
+		console.log("eeroorr" + e);
+
+		res.render('error', {
+			error: e.toString()
+		});
+	});
+
+})
 
 app.post('/clearEvent', middleware.requireAuthentication, function(req,res){
 	var sDate = req.body.sDate
