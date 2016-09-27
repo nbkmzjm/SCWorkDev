@@ -857,8 +857,9 @@ append scripts
 										if (memoCheckOpts.length!=0){
 											var detailListArr0 = []
 											var detailList = memoCheckOpts[0].parentNode.childNodes[2].getElementsByTagName('li')
-											console.log('detailList is: '+ detailList)
+											console.log(memoCheckOpts[0].name)
 											if(detailList.length!=0){
+												console.log('in loop:'+memoCheckOpts[0].name)
 												for(var u = 0; u<detailList.length;u++){
 													detailListArr0.push(detailList[u].innerHTML)
 
@@ -871,7 +872,7 @@ append scripts
 														for(var i = 1; i<memoCheckOpts.length;i++){
 															var detailListArr = []
 															var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
-															if (detailList.length!=0){
+															if (detailList.length!=0 ){
 																for(var u = 0; u<detailList.length;u++){
 																	detailListArr.push(detailList[u].innerHTML)
 																}
@@ -886,6 +887,7 @@ append scripts
 
 												});
 											}else{
+
 												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memoCheckOpts[0].value, type:memoCheckOpts[0].name, detailListArr:null}}).done(function(pData){
 													if(!!pData.Note){
 														td.innerHTML=pData.Note;
@@ -1378,7 +1380,7 @@ append scripts
 							})
 
 							if(input.checked == true){
-								//- input.className = "checkedMemo"
+								input.className = "checkedMemo"
 								var nestedOl = document.createElement('ol')
 								nestedOl.setAttribute('role', 'menu')
 								nestedOl.id = "nestedOlCheckedTask"
