@@ -1378,64 +1378,65 @@ append scripts
 							}).done(function(Rdata){
 								console.log(Rdata)
 							})
-
+							input.className = "checkedMemo"
 							if(input.checked == true){
-								input.className = "checkedMemo"
-								var nestedOl = document.createElement('ol')
-								nestedOl.setAttribute('role', 'menu')
-								nestedOl.id = "nestedOlCheckedTask"
-								//- nestedOl.className = 'col-sm-8'
+								//- if(taskOptMemo.type==="TASK"){
+									var nestedOl = document.createElement('ol')
+									nestedOl.setAttribute('role', 'menu')
+									nestedOl.id = "nestedOlCheckedTask"
+									//- nestedOl.className = 'col-sm-8'
 
-
-									//- $('#memoChbxDetail').length>0?$('#memoChbxDetail').remove():""
-									var inputDetail = document.createElement('input')
-									inputDetail.type = 'text'
-									inputDetail.id = 'memoChbxDetail'
-									inputDetail.className = 'typeahead'
-									inputDetail.placeholder = 'Add Memo Detail'
-									//- console.log(description)
-									inputDetail.addEventListener('blur', function(){
-										console.log(inputDetail.value+'-'+taskOptMemo.id)
-										//- if ($('#memoChbxDetail').val().length>0){
-											$.post('/memoChbxDetailCreate',{
-											memoChbxDetail:inputDetail.value,
-											taskOptMemoId:taskOptMemo.id
-											}).done(function(pData){
-												console.log(JSON.stringify(pData, null, 4))
-												inputDetail.value= ""
-												var li = document.createElement('li')
-												li.style.width = '600px'
+										if (taskOptMemo.type==="TASK"){
+											//- $('#memoChbxDetail').length>0?$('#memoChbxDetail').remove():""
+											var inputDetail = document.createElement('input')
+											inputDetail.type = 'text'
+											inputDetail.id = 'memoChbxDetail'
+											inputDetail.className = 'typeahead'
+											inputDetail.placeholder = 'Add Memo Detail'
+											//- console.log(description)
+											inputDetail.addEventListener('blur', function(){
+												console.log(inputDetail.value+'-'+taskOptMemo.id)
+												//- if ($('#memoChbxDetail').val().length>0){
+													$.post('/memoChbxDetailCreate',{
+													memoChbxDetail:inputDetail.value,
+													taskOptMemoId:taskOptMemo.id
+													}).done(function(pData){
+														console.log(JSON.stringify(pData, null, 4))
+														inputDetail.value= ""
+														var li = document.createElement('li')
+														li.style.width = '600px'
+														
+														li.appendChild(document.createTextNode(pData.memoChbxDetail.taskDescription))
+														nestedOl.appendChild(li)
+													});
+												//- }
 												
-												li.appendChild(document.createTextNode(pData.memoChbxDetail.taskDescription))
-												nestedOl.appendChild(li)
-											});
-										//- }
+											})
+											nestedOl.appendChild(inputDetail)
+										}
+
+
+									taskOptMemo.taskOptDetails.forEach(function(taskOptDetail){
+										var li = document.createElement('li')
+										//- li.style.color = 'blue'
+										//- li.style.textDecoration= 'underline'
 										
-									})
+										//- li.style.listStyle = 'none'
+										li.appendChild(document.createTextNode(taskOptDetail.taskDescription))
+										li.addEventListener('dblclick', function(){
+											$.post('/memoChbxDetailDel',{
+												memoChbxDetailId:taskOptDetail.id
+											}).done(function(Rdata){
+												nestedOl.removeChild(li)
+											})
 
-								nestedOl.appendChild(inputDetail)
-
-
-								taskOptMemo.taskOptDetails.forEach(function(taskOptDetail){
-									var li = document.createElement('li')
-									//- li.style.color = 'blue'
-									//- li.style.textDecoration= 'underline'
-									
-									//- li.style.listStyle = 'none'
-									li.appendChild(document.createTextNode(taskOptDetail.taskDescription))
-									li.addEventListener('dblclick', function(){
-										$.post('/memoChbxDetailDel',{
-											memoChbxDetailId:taskOptDetail.id
-										}).done(function(Rdata){
-											nestedOl.removeChild(li)
 										})
-
+									
+										nestedOl.appendChild(li)
 									})
-								
-									nestedOl.appendChild(li)
-								})
-								li.appendChild(nestedOl)
-								//- inputDetail.focus()
+									li.appendChild(nestedOl)
+									//- inputDetail.focus()
+								//- }
 							}else{
 								console.log(li)
 								for(var i = 2; i < li.childNodes.length; i++){
@@ -1463,32 +1464,33 @@ append scripts
 
 
 							//- $('#memoChbxDetail').length>0?$('#memoChbxDetail').remove():""
-							var inputDetail = document.createElement('input')
-							inputDetail.type = 'text'
-							inputDetail.id = 'memoChbxDetail'
-							inputDetail.className = 'typeahead'
-							inputDetail.placeholder = 'Add Memo Detail'
-							//- console.log(description)
-							inputDetail.addEventListener('blur', function(){
-								console.log(inputDetail.value+'-'+taskOptMemo.id)
-								//- if ($('#memoChbxDetail').val().length>0){
-									$.post('/memoChbxDetailCreate',{
-									memoChbxDetail:inputDetail.value,
-									taskOptMemoId:taskOptMemo.id
-									}).done(function(pData){
-										console.log(JSON.stringify(pData, null, 4))
-										inputDetail.value= ""
-										var li = document.createElement('li')
-										li.style.width = '600px'
+							if (taskOptMemo.type==="TASK"){
+								var inputDetail = document.createElement('input')
+								inputDetail.type = 'text'
+								inputDetail.id = 'memoChbxDetail'
+								inputDetail.className = 'typeahead'
+								inputDetail.placeholder = 'Add Memo Detail'
+								inputDetail.addEventListener('blur', function(){
+									console.log(inputDetail.value+'-'+taskOptMemo.id)
+										$.post('/memoChbxDetailCreate',{
+										memoChbxDetail:inputDetail.value,
+										taskOptMemoId:taskOptMemo.id
+										}).done(function(pData){
+											console.log(JSON.stringify(pData, null, 4))
+											inputDetail.value= ""
+											var li = document.createElement('li')
+											li.style.width = '600px'
 
-										li.appendChild(document.createTextNode(pData.memoChbxDetail.taskDescription))
-										nestedOl.appendChild(li)
-									});
-								//- }
-								
-							})
+											li.appendChild(document.createTextNode(pData.memoChbxDetail.taskDescription))
+											nestedOl.appendChild(li)
+										});
+									
+								})
+								nestedOl.appendChild(inputDetail)
 
-						nestedOl.appendChild(inputDetail)
+							}
+
+						
 
 
 						taskOptMemo.taskOptDetails.forEach(function(taskOptDetail){
