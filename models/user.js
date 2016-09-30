@@ -41,9 +41,7 @@ module.exports = function(sequelize, DataTypes) {
 			defaultValue: false
 			
 		},
-		groupId: {
-			type: DataTypes.INTEGER
-		},
+		
 		
 		salt: {
 			type: DataTypes.STRING,
