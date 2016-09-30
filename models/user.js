@@ -41,15 +41,9 @@ module.exports = function(sequelize, DataTypes) {
 			defaultValue: false
 			
 		},
-		// groupId: {
-		// 	type: DataTypes.INTEGER,
-
-		// 	references: {
-		// 		model: 'groups',
-		// 		key: 'id'
-		// 	}
-			
-		// },
+		groupId: {
+			type: DataTypes.INTEGER
+		},
 		
 		salt: {
 			type: DataTypes.STRING,

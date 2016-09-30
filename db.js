@@ -84,8 +84,8 @@ db.user.hasMany(db.mainPost, {
 	 onDelete: 'CASCADE'
 });
 
-// db.user.belongsTo(db.group,{onDelete: 'CASCADE'});
-// db.group.hasMany(db.user,{onDelete: 'CASCADE'});
+db.user.belongsTo(db.group);
+db.group.hasMany(db.user);
 
 
 
