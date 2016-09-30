@@ -33,14 +33,24 @@ module.exports = function(sequelize, DataTypes) {
 			}
 		},
 		title: {
-			type: DataTypes.STRING,
-			allowNull: false,
+			type: DataTypes.BOOLEAN,
+			defaultValue: false
 		},
 		active: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: false
 			
 		},
+		// groupId: {
+		// 	type: DataTypes.INTEGER,
+
+		// 	references: {
+		// 		model: 'groups',
+		// 		key: 'id'
+		// 	}
+			
+		// },
+		
 		salt: {
 			type: DataTypes.STRING,
 		},

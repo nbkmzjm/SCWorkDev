@@ -29,6 +29,8 @@ db.sysObj = sequelize.import(__dirname + '/models/sysObj.js');
 
 db.user = sequelize.import(__dirname + '/models/user.js');
 db.token = sequelize.import(__dirname + '/models/token.js');
+db.group = sequelize.import(__dirname + '/models/group.js');
+db.mainPost = sequelize.import(__dirname + '/models/mainPost.js');
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
@@ -39,12 +41,14 @@ db.user.hasMany(db.assign,{
 	 onDelete: 'CASCADE'
 });
 
+
 db.assignTracer.belongsTo(db.assign, {
 	 onDelete: 'CASCADE'
 });
 db.assign.hasMany(db.assignTracer, {
 	 onDelete: 'CASCADE'
 });
+
 
 db.assignTracerDetail.belongsTo(db.assignTracer, {
 	 onDelete: 'CASCADE'
@@ -53,8 +57,10 @@ db.assignTracer.hasMany(db.assignTracerDetail, {
 	 onDelete: 'CASCADE'
 });
 
+
 db.assignTracer.belongsTo(db.user);
 db.user.hasMany(db.assignTracer);
+
 
 db.taskOptMemo.belongsTo(db.taskOption,{
 	 onDelete: 'CASCADE'
@@ -63,11 +69,24 @@ db.taskOption.hasMany(db.taskOptMemo, {
 	 onDelete: 'CASCADE'
 });
 
+
 db.taskOptDetail.belongsTo(db.taskOptMemo,{
 	 onDelete: 'CASCADE'
 });
 db.taskOptMemo.hasMany(db.taskOptDetail, {
 	 onDelete: 'CASCADE'
 });
+
+db.mainPost.belongsTo(db.user,{
+	 onDelete: 'CASCADE'
+});
+db.user.hasMany(db.mainPost, {
+	 onDelete: 'CASCADE'
+});
+
+// db.user.belongsTo(db.group,{onDelete: 'CASCADE'});
+// db.group.hasMany(db.user,{onDelete: 'CASCADE'});
+
+
 
 module.exports = db;
