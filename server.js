@@ -877,6 +877,9 @@ var user = require('./server/serverUser.js');
 // var user = express.static(__dirname + '/server');
 app.use('/users', user);
 
+var notif = require('./server/serverNotif.js'); 
+app.use('/notif', notif)
+
 
 umzug.up().then(function (migrations) {
 	console.log(migrations)

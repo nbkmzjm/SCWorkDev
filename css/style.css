@@ -8,8 +8,10 @@
 }
 
 #container{
+	position: relative;
 	max-width:1200px;
 	margin:0 auto;
+	top: 50px;
 
 }
 
@@ -18,7 +20,7 @@
 #mainSC{
 	width: 100%;
 	position: relative;
-	top: 205px;
+	top: 150px;
 
 }
 
@@ -74,7 +76,8 @@
 #userContainer{
 	width: 100%;
 	position: relative;
-	top: 65px;
+	top: 15px;
+	
 }
 
 
@@ -148,12 +151,13 @@
 
 #taskOptionDiv{
 	position: relative;
-	top: 100px;
+	top: 50px;
 }
 
 #taskOptMemoDiv{
 	position: relative;
-	top: 100px;
+	top: 50px;
+	
 }
 
 #SCNoteDiv{
