@@ -14,7 +14,29 @@ block horMenu
 block content
 	#container
 		p this is feedpage
-		p #{JSONdata.notif}
+		//- p #{JSONdata.notif}
+
+append scripts 
+	script(src="public/fnLib/homeFn.js")
+	script.
+
+		$(function(){
+			var button = document.createElement('input')
+			button.type = 'button'
+			button.value = 'Click Me'
+			button.addEventListener('click',function(){
+
+				$.post('notif/test',{
+
+				}).done(function(Rdata){
+					console.log(Rdata.user)
+				})
+			})
+
+
+			$('#container').append(button)
+
+		})
 
 
 

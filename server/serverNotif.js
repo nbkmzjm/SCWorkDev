@@ -10,9 +10,7 @@ var middleware = require('../middleware.js')(db);
 router.get('/', middleware.requireAuthentication, function(req, res) {
 	var curUserTitle = req.user.title;
 	res.render('notif/notifHome', {
-			JSONdata: 
-			
-			{
+			JSONdata: {
 				notif: 'notif'
 			}
 			
@@ -26,13 +24,24 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 
 })
 
-router.get('/aboutuser', function(req, res) {
-	// res.send('abuot user')
-	res.redirect('/users')
-})
 
-router.get('/curUser', middleware.requireAuthentication, function(req, res) {
-	res.json({curUserName:req.user.name})
+
+router.post('/test', middleware.requireAuthentication, function(req, res) {
+	db.user.findOne({
+		where:{
+			id:1
+		}
+
+	}).then(function(user){
+		console.log('xxx:')
+		user.getGroups().then(function(groups){
+			console.log(JSON.stringify(groups, null, 4))
+		})
+		// console.log(JSON.stringify(user, null, 4))
+		res.json({user:user})
+	})
+
+	
 })
 
 
