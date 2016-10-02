@@ -27,19 +27,35 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 
 
 router.post('/test', middleware.requireAuthentication, function(req, res) {
-	db.user.findOne({
+	// db.user.findOne({
+	// 	where:{
+	// 		id:1
+	// 	}
+
+	// }).then(function(user){
+	// 	console.log('xxx:')
+	// 	group.addUser([1,2]).then(function(groups){
+	// 		console.log(JSON.stringify(groups, null, 4))
+	// 	})
+	// 	// console.log(JSON.stringify(user, null, 4))
+	// 	res.json({user:user})
+	// })
+
+db.group.findOne({
 		where:{
 			id:1
 		}
 
-	}).then(function(user){
+	}).then(function(group){
 		console.log('xxx:')
-		user.getGroups().then(function(groups){
-			console.log(JSON.stringify(groups, null, 4))
+		group.setUsers(3).then(function(users){
+			console.log(JSON.stringify(users, null, 4))
 		})
 		// console.log(JSON.stringify(user, null, 4))
 		res.json({user:user})
 	})
+
+
 
 	
 })
