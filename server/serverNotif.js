@@ -48,15 +48,13 @@ db.group.findOne({
 
 	}).then(function(group){
 		console.log('xxx:')
-		group.setUsers(3).then(function(users){
+		group.addUsers(3).then(function(users){
 			console.log(JSON.stringify(users, null, 4))
+			res.json({users:users})
 		})
 		// console.log(JSON.stringify(user, null, 4))
-		res.json({user:user})
+		
 	})
-
-
-
 	
 })
 

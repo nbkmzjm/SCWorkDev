@@ -31,6 +31,7 @@ db.user = sequelize.import(__dirname + '/models/user.js');
 db.token = sequelize.import(__dirname + '/models/token.js');
 db.group = sequelize.import(__dirname + '/models/group.js');
 db.mainPost = sequelize.import(__dirname + '/models/mainPost.js');
+db.userGroups = sequelize.import(__dirname + '/models/userGroups.js');
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
@@ -84,8 +85,8 @@ db.user.hasMany(db.mainPost, {
 	 onDelete: 'CASCADE'
 });
 
-db.user.belongsToMany(db.group, {through:'UserGroup'});
-db.group.belongsToMany(db.user, {through:'UserGroup'});
+db.user.belongsToMany(db.group, {through:'userGroups'});
+db.group.belongsToMany(db.user, {through:'userGroups'});
 
 
 
