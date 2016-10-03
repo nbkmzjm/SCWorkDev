@@ -21,6 +21,11 @@ append scripts
 	script.
 
 		$(function(){
+			$.post('notif/test',{
+
+				}).done(function(Rdata){
+					console.log(Rdata.user)
+				})
 			var button = document.createElement('input')
 			button.type = 'button'
 			button.value = 'Click Me'

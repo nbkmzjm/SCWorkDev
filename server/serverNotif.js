@@ -18,7 +18,7 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 	// var arrayTitle_UserTab = ['admin', 'manager']
 	// if (arrayTitle_UserTab.indexOf(curUserTitle) !== -1) {
 		
-	// } else {
+	// } else {fl
 	// 	res.render('index')
 	// }
 
@@ -27,34 +27,44 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 
 
 router.post('/test', middleware.requireAuthentication, function(req, res) {
+	db.mainPost.findAll({
+		include:[{
+			model:db.userGroups,
+			where:{
+				groupId:1
+			}
+		}]
+	}).then(function(posts){
+		console.log(JSON.stringify(posts, null, 4))
+	})
 	// db.user.findOne({
 	// 	where:{
 	// 		id:1
 	// 	}
 
 	// }).then(function(user){
-	// 	console.log('xxx:')
-	// 	group.addUser([1,2]).then(function(groups){
+	// 	console.log('xxx:'+ user.name)
+	// 	user.getGroups().then(function(groups){
 	// 		console.log(JSON.stringify(groups, null, 4))
+	// 		res.json({groups:groups})
 	// 	})
-	// 	// console.log(JSON.stringify(user, null, 4))
-	// 	res.json({user:user})
+		
 	// })
 
-db.group.findOne({
-		where:{
-			id:1
-		}
+// db.group.findOne({
+// 		where:{
+// 			id:1
+// 		}
 
-	}).then(function(group){
-		console.log('xxx:')
-		group.addUsers(3).then(function(users){
-			console.log(JSON.stringify(users, null, 4))
-			res.json({users:users})
-		})
-		// console.log(JSON.stringify(user, null, 4))
+// 	}).then(function(group){
+// 		console.log('xxx:')
+// 		group.addUsers(3).then(function(users){
+// 			console.log(JSON.stringify(users, null, 4))
+// 			res.json({users:users})
+// 		})
+// 		// console.log(JSON.stringify(user, null, 4))
 		
-	})
+// 	})
 	
 })
 
