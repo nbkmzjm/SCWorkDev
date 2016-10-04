@@ -36,6 +36,7 @@ router.get('/userGetGroups', middleware.requireAuthentication, function(req, res
 		}
 	}).then(function(user){
 		user.getGroups().then(function(groups){
+			console.log(JSON.stringify(groups, null, 4))
 			res.json({groupList:groups})
 		})
 	})

@@ -40,18 +40,37 @@ append scripts
 
 			ul = document.createElement('ul')
 			ul.className = 'list-group'
-			ul.classList.add('col-sm-4')
+			ul.classList.add('col-sm-3')
 
 			$.getJSON('/notif/userGetGroups').done(function(Rdata){
 				var groupList = Rdata.groupList
 				groupList.forEach(function(group,i){
 					li = document.createElement('li')
 					li.className = 'list-group-item'
-
 					li.innerHTML = group.name
+						var span = document.createElement('span')
+						span.style.float = 'right'
+						if (group.userGroups.status=='ACTIVE'){
+							span.style.color = '#2DC729'
+							span.className = "glyphicon glyphicon-ok"
+						}else if (group.userGroups.status=='PENDING'){
+							span.style.color = '#DC14EE'
+							span.className = "glyphicon glyphicon-hourglass"
+						}
+						
+						
+						li.appendChild(span)
+					li.addEventListener('click', function(){
+						var spanDel = document.createElement('span')
+						spanDel.style.float = 'right'
+						spanDel.style.color = 'red'
+						spanDel.className = "glyphicon glyphicon-remove"
+						li.insertBefore(spanDel, li.childNodes[0])
+						
+					})
 					ul.appendChild(li)
 				})
-
+				
 				var liAddGroup = document.createElement('li')
 				liAddGroup.className = 'list-group-item'
 					//- var inputgroup = document.createElement('div')
