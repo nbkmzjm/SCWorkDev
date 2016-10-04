@@ -15,19 +15,57 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 			}
 			
 		})
-	// var arrayTitle_UserTab = ['admin', 'manager']
-	// if (arrayTitle_UserTab.indexOf(curUserTitle) !== -1) {
-		
-	// } else {fl
-	// 	res.render('index')
-	// }
+	
 
 })
 
 
+router.post('/groupList', middleware.requireAuthentication, function(req, res){
+	db.group.findAll().then(function(groupList){
+		res.json({groupList:groupList})
+	})
+
+
+})
+
+router.get('/userGetGroups', middleware.requireAuthentication, function(req, res){
+	var curUserId = req.user.id
+	db.user.findOne({
+		where:{
+			id:curUserId
+		}
+	}).then(function(user){
+		user.getGroups().then(function(groups){
+			res.json({groupList:groups})
+		})
+	})
+			
+
+
+})
+
+router.post('/editGroup', middleware.requireAuthentication, function(req, res){
+	var curUserId = req.user.id
+	var action = req.body.action
+	var groupdSelected = req.body.groupdSelected
+	db.user.findOne({
+		where:{
+			id:curUserId
+		}
+	}).then(function(user){
+
+		user.addGroup(curUserId).then(function(group){
+			console.log(JSON.stringify(group, null, 4))
+			res.json({group:group})
+		})
+	})
+
+
+})
+
 
 router.post('/test', middleware.requireAuthentication, function(req, res) {
-	var curUser = 1
+	var curUser = 2
 	db.user.findOne({
 		where:{
 			id:curUser

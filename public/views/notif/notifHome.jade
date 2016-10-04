@@ -13,38 +13,147 @@ block horMenu
 
 block content
 	#container
-		p this is feedpage
-		//- p #{JSONdata.notif}
+		#userContainer
+			ul(class="nav nav-tabs")
+				li(class="active" id='userListTab')
+					a(data-toggle="tab" href="#Feeds") Feeds
+				li(id='userFormTab')
+					a(data-toggle="tab"  href="#Relationships") Relationships
 
-append scripts 
-	script(src="public/fnLib/homeFn.js")
-	script.
+			div(class="tab-content")
+				div(id="Feeds" class="tab-pane fade in active")
+					p this is feeding pages
 
-		$(function(){
-			$.post('notif/test',{
-
-				}).done(function(Rdata){
-					console.log(Rdata.user)
-				})
-			var button = document.createElement('input')
-			button.type = 'button'
-			button.value = 'Click Me'
-			button.addEventListener('click',function(){
-
-				$.post('notif/test',{
-
-				}).done(function(Rdata){
-					console.log(Rdata.user)
-				})
-			})
-
-
-			$('#container').append(button)
-
-		})
-
+				div(id="Relationships" class="tab-pane")
+					
+					
 
 
 		
 
+	
 
+append scripts 
+	script.
+
+		$(function(){
+
+			ul = document.createElement('ul')
+			ul.className = 'list-group'
+			ul.classList.add('col-sm-4')
+
+			$.getJSON('/notif/userGetGroups').done(function(Rdata){
+				var groupList = Rdata.groupList
+				groupList.forEach(function(group,i){
+					li = document.createElement('li')
+					li.className = 'list-group-item'
+
+					li.innerHTML = group.name
+					ul.appendChild(li)
+				})
+
+				var liAddGroup = document.createElement('li')
+				liAddGroup.className = 'list-group-item'
+					var inputgroup = document.createElement('div')
+					inputgroup.className = 'input-group'
+					
+					liAddGroup.appendChild(inputgroup)
+
+						var span = document.createElement('span')
+						span.className = 'input-group-btn'
+						//- span.id = 'basic-addon1'
+							var btn = document.createElement('button')
+							btn.className = 'btn btn-primary'
+							//- btn.type = 'button'
+							btn.innerHTML = 'ADD'
+							btn.addEventListener('click', function(){
+								if ($('#groupSearch').val().length>0){
+								$.post('/notif/editGroup',{
+								groupSelected:$('#groupSearch').val(),
+								action:'add'
+								}).done(function(pData){
+									console.log(JSON.stringify(pData, null, 4))
+									var li = document.createElement('li')
+									li.className = 'list-group-item'
+									
+
+									li.innerHTML = pData.group.name
+									$('#groupSearch').val('')
+									ul.appendChild(li)
+							
+								});
+							}
+							})
+							span.appendChild(btn)
+						
+
+						var input = document.createElement('input')
+						input.type = 'text'
+						
+						input.placeholder = 'Search Group'
+						input.className ='form-control'
+						input.id = 'groupSearch'
+						//- input.setAttribute("aria-describedby", "basic-addon1")
+						inputgroup.appendChild(input)
+						inputgroup.appendChild(span)
+
+				ul.appendChild(liAddGroup)
+
+
+
+
+				$('#Relationships').append(ul)
+
+				$.post('/notif/groupList').done(function(pData){
+					var result = pData.groupList.map(function(group) {
+						return group;
+						});
+					console.log(result)
+					// constructs the suggestion engine
+					var groupList = new Bloodhound({
+						identify: function(obj) { return obj.name; },
+					  	datumTokenizer: Bloodhound.tokenizers.whitespace,
+					  	queryTokenizer: Bloodhound.tokenizers.whitespace,
+					  // `states` is an array of state names defined in "The Basics"
+					  	local: result
+									
+					});
+					console.log(groupList)
+
+					function groupDefault(q, sync) {
+						if (q === '') {
+						    sync(groupList.get('BCP', 'ACH', 'APS'));
+						 }else {
+						    groupList.search(q, sync);
+						 }
+
+
+					}
+
+					$('#groupSearch').typeahead({
+					  hint: true,
+					  highlight: true,
+					  minLength: 0
+					},
+					{
+					  name: 'states',
+					  source: groupDefault
+					});
+
+					
+				})
+				
+				
+
+
+				$('#Relationships').append(ul)
+				$('#groupSearch').bind('typeahead:selected', function(obj, datum, name){
+					console.log(obj)
+					console.log(datum)
+					console.log(name)
+				})
+				
+				
+			})
+				
+		})
