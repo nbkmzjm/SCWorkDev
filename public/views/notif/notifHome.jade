@@ -54,48 +54,29 @@ append scripts
 
 				var liAddGroup = document.createElement('li')
 				liAddGroup.className = 'list-group-item'
-					var inputgroup = document.createElement('div')
-					inputgroup.className = 'input-group'
+					//- var inputgroup = document.createElement('div')
+					//- inputgroup.className = 'input-group'
 					
-					liAddGroup.appendChild(inputgroup)
+					//- liAddGroup.appendChild(inputgroup)
 
-						var span = document.createElement('span')
-						span.className = 'input-group-btn'
-						//- span.id = 'basic-addon1'
-							var btn = document.createElement('button')
-							btn.className = 'btn btn-primary'
-							//- btn.type = 'button'
-							btn.innerHTML = 'ADD'
-							btn.addEventListener('click', function(){
-								if ($('#groupSearch').val().length>0){
-								$.post('/notif/editGroup',{
-								groupSelected:$('#groupSearch').val(),
-								action:'add'
-								}).done(function(pData){
-									console.log(JSON.stringify(pData, null, 4))
-									var li = document.createElement('li')
-									li.className = 'list-group-item'
-									
-
-									li.innerHTML = pData.group.name
-									$('#groupSearch').val('')
-									ul.appendChild(li)
-							
-								});
-							}
-							})
-							span.appendChild(btn)
-						
+						//- var span = document.createElement('span')
+						//- span.className = 'input-group-btn'
+						//- //- span.id = 'basic-addon1'
+						//- 	var btn = document.createElement('button')
+						//- 	btn.className = 'btn btn-primary'
+						//- 	//- btn.type = 'button'
+						//- 	span.appendChild(btn)
+						//- inputgroup.appendChild(span)
 
 						var input = document.createElement('input')
 						input.type = 'text'
 						
-						input.placeholder = 'Search Group'
+						input.placeholder = 'Search and Select to ADD'
 						input.className ='form-control'
 						input.id = 'groupSearch'
 						//- input.setAttribute("aria-describedby", "basic-addon1")
-						inputgroup.appendChild(input)
-						inputgroup.appendChild(span)
+						liAddGroup.appendChild(input)
+						
 
 				ul.appendChild(liAddGroup)
 
@@ -130,37 +111,49 @@ append scripts
 
 					}
 
-					$('#groupSearch').typeahead(null,{
-					  name: 'states',
-					  display: 'name',
-					  source: groupDefault,
-					  templates: {
-					  	empty: [
-					      '<div class="empty-message">',
-					        'unable to find any Best Picture winners that match the current query',
-					      '</div>'
-					    ].join('\n')
-					    ,
-					    suggestion: function (data) {
-						        return '<p><strong>' + data.name + '</strong> - ' + data.active + '</p>';
-						    }
-
+					$('#groupSearch').typeahead({
+						hint: true,
+					  	highlight: true,
+					  	minLength: 0
+					},{
+					  	name: 'states',
+					  	display: 'name',
+					  	source: groupDefault,
+					  	templates: {
+						  	empty: [
+						      '<div class="empty-message">',
+						        'unable to find any group with current search',
+						      '</div>'
+						    ].join('\n')
+						    ,
+						    suggestion: function (data) {
+							        return '<p><strong>' + data.name + '</strong> - ' + data.active + '</p>';
+							    }
 					  }
-
 					});
-
-					
 				})
+				$('#groupSearch').bind('typeahead:selected', function(obj, group, name){
+					console.log(group.id)
+					$.post('/notif/editGroup',{
+					groupSelectedId:group.id,
+					action:'add'
+					}).done(function(pData){
+						console.log(JSON.stringify(pData, null, 4))
+						var li = document.createElement('li')
+						li.className = 'list-group-item'
+						
+
+						li.innerHTML = pData.group.name
+						$('#groupSearch').val('')
+						ul.appendChild(li)
 				
+					});
+				})
 				
 
 
 				$('#Relationships').append(ul)
-				$('#groupSearch').bind('typeahead:selected', function(obj, datum, name){
-					console.log(obj)
-					console.log(datum)
-					console.log(name)
-				})
+				
 				
 				
 			})

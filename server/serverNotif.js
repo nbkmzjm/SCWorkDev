@@ -47,15 +47,20 @@ router.get('/userGetGroups', middleware.requireAuthentication, function(req, res
 router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 	var curUserId = req.user.id
 	var action = req.body.action
-	var groupdSelected = req.body.groupdSelected
+	var groupSelectedId = req.body.groupSelectedId
 	db.user.findOne({
 		where:{
 			id:curUserId
 		}
 	}).then(function(user){
 
-		user.addGroup(curUserId).then(function(group){
-			console.log(JSON.stringify(group, null, 4))
+		user.addGroup(groupSelectedId).then(function(usergroup){
+			return db.group.findOne({
+				where:{
+					id:groupSelectedId
+				}
+			})
+		}).then(function(group){
 			res.json({group:group})
 		})
 	})
