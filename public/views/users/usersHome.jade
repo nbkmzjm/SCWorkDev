@@ -200,8 +200,9 @@ append scripts
 								td.appendChild(document.createTextNode(field))
 
 								if(i==0){
+										console.log(td)
 									td.addEventListener('click', function(){
-
+										console.log(td)
 										if (td.childNodes.length >2){
 											td.removeChild(td.childNodes[0])
 											td.removeChild(td.childNodes[1])
