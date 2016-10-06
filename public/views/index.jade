@@ -37,22 +37,6 @@ append scripts
 	script(src="public/fnLib/homeFn.js")
 	script.
 
-		$(function(){
-			var groups = [{name:'a'}, {name:'b'}, {name:'c'}]
-			ul = document.createElement('ul')
-			groups.forEach(function(group, i){
-				li = document.createElement('li')
-				li.appendChild(document.createTextNode(group.name))
-				console.log(li)
-				li.addEventListener('click', function(){
-					console.log(li)
-				})
-				ul.appendChild(li)
-				console.log(group.name)
-			})
-
-			$('#container').html(ul)
-		})
 		
 		$(function (){
 			//- var p = document.createElement('p')

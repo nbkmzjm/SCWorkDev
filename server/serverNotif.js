@@ -49,32 +49,45 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 	var curUserId = req.user.id
 	var action = req.body.action
 	var groupSelectedId = req.body.groupSelectedId
-	db.user.findOne({
-		where:{
-			id:curUserId
-		}
-	}).then(function(user){
 
-		user.addGroup(groupSelectedId).then(function(usergroup){
-			return db.group.findOne({
-				where:{
-					id:groupSelectedId
-				}
+	if(action==="add")
+		db.user.findOne({
+			where:{
+				id:curUserId
+			}
+		}).then(function(user){
+
+			user.addGroup(groupSelectedId).then(function(usergroup){
+				return db.group.findOne({
+					where:{
+						id:groupSelectedId
+					}
+				})
+			}).then(function(group){
+				res.json({group:group})
 			})
-		}).then(function(group){
-			res.json({group:group})
 		})
-	})
+	else if(action==="delete"){
+		db.userGroups.destroy({
+			where:{
+				groupId:groupSelectedId,
+				userId:curUserId
+			}
+		}).then(function(deleted){
+			console.log(JSON.stringify(deleted, null, 4))
+			res.json({deleted:deleted})
+		})
+	}
 
 
 })
 
 
-router.post('/test', middleware.requireAuthentication, function(req, res) {
-	var curUser = 2
+router.post('/mainPost', middleware.requireAuthentication, function(req, res) {
+	var curUserId = req.user.id
 	db.user.findOne({
 		where:{
-			id:curUser
+			id:req.user.id
 		}
 
 	}).then(function(user){
@@ -106,7 +119,7 @@ router.post('/test', middleware.requireAuthentication, function(req, res) {
 				db.mainPost.findAll({
 					where:{
 						$or:[{
-								userId:curUser
+								userId:req.user.id
 							},{
 								userId:{
 									$in:userIds

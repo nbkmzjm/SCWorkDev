@@ -13,190 +13,214 @@ block horMenu
 
 block content
 	#container
-		//- #userContainer
-		//- 	ul(class="nav nav-tabs")
-		//- 		li(class="active" id='userListTab')
-		//- 			a(data-toggle="tab" href="#Feeds") Feeds
-		//- 		li(id='userFormTab')
-		//- 			a(data-toggle="tab"  href="#Relationships") Relationships
+		#userContainer
+			ul(class="nav nav-tabs")
+				li(class="active" id='feedTab')
+					a(data-toggle="tab" href="#Feed") Feeds
+				li(id='RelationshipTab')
+					a(data-toggle="tab"  href="#Relationships") Relationships
 
-		//- 	div(class="tab-content")
-		//- 		div(id="Feeds" class="tab-pane fade in active")
-		//- 			p this is feeding pages
-
-		//- 		div(id="Relationships" class="tab-pane")
-					
+			div(class="tab-content")
+				div(id="Feed" class="tab-pane fade in active")
 					
 
-
-		
-
-	
-
+				div(id="Relationships" class="tab-pane")
 append scripts 
 	script(src="public/fnLib/homeFn.js")
 	script.
 
 		$(function(){
-			var groups = [{name:'a'}, {name:'b'}, {name:'c'}]
-			ul = document.createElement('ul')
-			groups.forEach(function(group, i){
-				li = document.createElement('li')
-				li.appendChild(document.createTextNode(group.name))
-				console.log(li)
-				li.addEventListener('click', function(){
-					console.log(li)
-				})
-				ul.appendChild(li)
-				console.log(group.name)
-			})
-
-
-			//- ul.className = 'list-group'
-			//- ul.classList.add('col-sm-3')
-
-			//- $.getJSON('/notif/userGetGroups').done(function(Rdata){
-			//- 	var groupList = Rdata.groupList
-			//- 	groupList.forEach(function(group,i){
-			//- 		li = document.createElement('li')
-			//- 		//- li.className = 'list-group-item'
-			//- 		li.appendChild(document.createTextNode(group.name))
-			//- 			var span = document.createElement('span')
-			//- 			span.style.float = 'right'
-			//- 			//- if (group.userGroups.status=='ACTIVE'){
-			//- 				span.style.color = '#2DC729'
-			//- 				span.className = "glyphicon glyphicon-ok"
-			//- 			//- }else if (group.userGroups.status=='PENDING'){
-			//- 			//- 	span.style.color = '#DC14EE'
-			//- 			//- 	span.className = "glyphicon glyphicon-hourglass"
-			//- 			//- }
-						
-						
-			//- 			//- li.appendChild(span)
-			//- 			console.log(li)
-			//- 		li.addEventListener('mouseenter', function(){
-			//- 			console.log(li)
-			//- 			var spanDel = document.createElement('span')
-			//- 			spanDel.innerHTML = ''
-			//- 			spanDel.style.float = 'right'
-			//- 			spanDel.style.color = 'red'
-			//- 			spanDel.className = "glyphicon glyphicon-remove"
-			//- 			//- spanDel.id = 'delGly';
-			//- 			li.appendChild(spanDel)
-						
-			//- 		})
-
-			//- 		ul.appendChild(li)
+			mainPost()
+			//- var groups = [{name:'a'}, {name:'b'}, {name:'c'}]
+			//- ul = document.createElement('ul')
+			//- groups.forEach(function(group, i){
+			//- 	li = document.createElement('li')
+			//- 	li.appendChild(document.createTextNode(group.name))
+			//- 	console.log(li)
+			//- 	li.addEventListener('click', function(){
+			//- 		console.log(li)
 			//- 	})
-				
-				//- var liAddGroup = document.createElement('li')
-				//- liAddGroup.className = 'list-group-item'
-				//- 	//- var inputgroup = document.createElement('div')
-				//- 	//- inputgroup.className = 'input-group'
-					
-				//- 	//- liAddGroup.appendChild(inputgroup)
-
-				//- 		//- var span = document.createElement('span')
-				//- 		//- span.className = 'input-group-btn'
-				//- 		//- //- span.id = 'basic-addon1'
-				//- 		//- 	var btn = document.createElement('button')
-				//- 		//- 	btn.className = 'btn btn-primary'
-				//- 		//- 	//- btn.type = 'button'
-				//- 		//- 	span.appendChild(btn)
-				//- 		//- inputgroup.appendChild(span)
-
-				//- 		var input = document.createElement('input')
-				//- 		input.type = 'text'
-						
-				//- 		input.placeholder = 'Search and Select to ADD'
-				//- 		input.className ='form-control'
-				//- 		input.id = 'groupSearch'
-				//- 		//- input.setAttribute("aria-describedby", "basic-addon1")
-				//- 		liAddGroup.appendChild(input)
-						
-
-				//- ul.appendChild(liAddGroup)
-
-
-
-
-				//- $('#Relationships').append(ul)
-
-				//- $.post('/notif/groupList').done(function(pData){
-				//- 	var result = pData.groupList.map(function(group) {
-				//- 		return group;
-				//- 		});
-				//- 	console.log(result)
-				//- 	// constructs the suggestion engine
-				//- 	var groupList = new Bloodhound({
-				//- 		identify: function(obj) { return obj.name; },
-				//- 	  	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-				//- 	  	queryTokenizer: Bloodhound.tokenizers.whitespace,
-				//- 	  // `states` is an array of state names defined in "The Basics"
-				//- 	  	local: result
-									
-				//- 	});
-				//- 	console.log(groupList)
-
-				//- 	function groupDefault(q, sync) {
-				//- 		if (q === '') {
-				//- 		    sync(groupList.get('BCP', 'ACH', 'APS'));
-				//- 		 }else {
-				//- 		    groupList.search(q, sync);
-				//- 		 }
-
-
-				//- 	}
-
-				//- 	$('#groupSearch').typeahead({
-				//- 		hint: true,
-				//- 	  	highlight: true,
-				//- 	  	minLength: 0
-				//- 	},{
-				//- 	  	name: 'states',
-				//- 	  	display: 'name',
-				//- 	  	source: groupDefault,
-				//- 	  	templates: {
-				//- 		  	empty: [
-				//- 		      '<div class="empty-message">',
-				//- 		        'unable to find any group with current search',
-				//- 		      '</div>'
-				//- 		    ].join('\n')
-				//- 		    ,
-				//- 		    suggestion: function (data) {
-				//- 			        return '<p><strong>' + data.name + '</strong> - ' + data.active + '</p>';
-				//- 			    }
-				//- 	  }
-				//- 	});
-				//- })
-				//- $('#groupSearch').bind('typeahead:selected', function(obj, group, name){
-				//- 	console.log(group.id)
-				//- 	$.post('/notif/editGroup',{
-				//- 	groupSelectedId:group.id,
-				//- 	action:'add'
-				//- 	}).done(function(pData){
-				//- 		console.log(JSON.stringify(pData, null, 4))
-				//- 		var li = document.createElement('li')
-				//- 		li.className = 'list-group-item'
-						
-
-				//- 		li.innerHTML = pData.group.name
-				//- 		$('#groupSearch').val('')
-				//- 		ul.appendChild(li)
-				
-				//- 	});
-				//- })
-				
-
-
-				
-				
-				
-				
+			//- 	ul.appendChild(li)
+			//- 	console.log(group.name)
 			//- })
+			$('#feedTab').on('click', mainPost)
+
+			function mainPost(){
+				var div = document.createElement('div')
+				div.className = 'input-group'
+				div.classList.add('col-sm-5')
+					var input = document.createElement('input')
+					input.className = 'form-control'
+					input.placeholder = 'Post announcement here'
+					div.appendChild(input)
+					var span = document.createElement('span')
+					span.className = 'input-group-btn'
+						var btn = document.createElement('button')
+						btn.className = 'btn btn-primary'
+						btn.innerHTML = 'POST'
+						span.appendChild(btn)
+					div.appendChild(span)
+				$('#Feed').html(div)
 
 
 
-			$('#container').append(ul)
+				$.post('/notif/mainPost').done(function(Rdata){
+					Rdata.posts.forEach(function(post, i){
+						console.log(post.postText)
+					})
+					
+				})
+			}
+
+
+
+
+			$('#RelationshipTab').on('click',function(){
+				console.log('Relationships')
+				ul = document.createElement('ul')
+				ul.className = 'list-group'
+				ul.classList.add('col-sm-4')
+				var addGroup
+				$.getJSON('/notif/userGetGroups').done(function(Rdata){
+					var groupList = Rdata.groupList
+					groupList.forEach(function(group,i){
+						addGroup = function (groupName){
+							li = document.createElement('li')
+							li.className = 'list-group-item'
+							li.appendChild(document.createTextNode(groupName))
+								var span = document.createElement('span')
+								span.style.float = 'right'
+								if (group.userGroups.status=='ACTIVE'){
+									span.style.color = '#2DC729'
+									span.className = "glyphicon glyphicon-ok"
+								}else if (group.userGroups.status=='PENDING'){
+									span.style.color = '#DC14EE'
+									span.className = "glyphicon glyphicon-hourglass"
+								}
+								
+								span.addEventListener('mousedown', function(){
+									var spanDel = document.createElement('span')
+									spanDel.style.float = 'right'
+									spanDel.style.color = 'red'
+									spanDel.id = 'spanDel'
+									spanDel.className = "glyphicon glyphicon-remove"
+									spanDel.innerHTML = "Release on icon to remove"
+									ul.appendChild(spanDel)
+
+								})
+								span.addEventListener('mousemove', function(){
+									$("#spanDel").remove()
+								})
+								span.addEventListener('mouseup', function(){
+									if(i!==0){
+										$.post('/notif/editGroup',{
+										groupSelectedId:group.id,
+										action:'delete'
+										}).done(function(pData){
+
+											ul.removeChild(span.parentNode)
+
+										})
+									}
+								})
+								li.appendChild(span)
+								
+								
+						}
+
+						addGroup(group.name)
+						ul.appendChild(li)
+
+					})
+					
+					var liAddGroup = document.createElement('li')
+					liAddGroup.className = 'list-group-item'
+						//- var inputgroup = document.createElement('div')
+						//- inputgroup.className = 'input-group'
+						
+						//- liAddGroup.appendChild(inputgroup)
+
+							//- var span = document.createElement('span')
+							//- span.className = 'input-group-btn'
+							//- //- span.id = 'basic-addon1'
+							//- 	var btn = document.createElement('button')
+							//- 	btn.className = 'btn btn-primary'
+							//- 	//- btn.type = 'button'
+							//- 	span.appendChild(btn)
+							//- inputgroup.appendChild(span)
+
+							var input = document.createElement('input')
+							input.type = 'text'
+							
+							input.placeholder = 'Search and Select to ADD'
+							input.className ='form-control'
+							input.id = 'groupSearch'
+							//- input.setAttribute("aria-describedby", "basic-addon1")
+							liAddGroup.appendChild(input)
+					ul.appendChild(liAddGroup)
+
+					$('#Relationships').append(ul)
+
+					$.post('/notif/groupList').done(function(pData){
+						var result = pData.groupList.map(function(group) {
+							return group;
+							});
+						// constructs the suggestion engine
+						var groupList = new Bloodhound({
+							identify: function(obj) { return obj.name; },
+						  	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+						  	queryTokenizer: Bloodhound.tokenizers.whitespace,
+						  // `states` is an array of state names defined in "The Basics"
+						  	local: result
+										
+						});
+
+						function groupDefault(q, sync) {
+							if (q === '') {
+							    sync(groupList.get('BCP', 'ACH', 'APS'));
+							 }else {
+							    groupList.search(q, sync);
+							 }
+						}
+
+						$('#groupSearch').typeahead({
+							hint: true,
+						  	highlight: true,
+						  	minLength: 0
+						},{
+						  	name: 'states',
+						  	display: 'name',
+						  	source: groupDefault,
+						  	templates: {
+							  	empty: [
+							      '<div class="empty-message">',
+							        'unable to find any group with current search',
+							      '</div>'
+							    ].join('\n')
+							    ,
+							    suggestion: function (data) {
+								        return '<p><strong>' + data.name + '</strong> - ' + data.active + '</p>';
+								    }
+						  }
+						});
+					})
+
+					$('#groupSearch').bind('typeahead:selected', function(obj, group, name){
+						$.post('/notif/editGroup',{
+						groupSelectedId:group.id,
+						action:'add'
+						}).done(function(pData){
+							console.log(JSON.stringify(pData, null, 4))
+							addGroup(pData.group.name)
+							ul.appendChild(li)
+							$('#groupSearch').val('')
+					
+						});
+					})
+				})
+				$('#Relationships').html(ul)
+			
+			})
+			
 				
 		})
