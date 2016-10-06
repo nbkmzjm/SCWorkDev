@@ -1,3 +1,3 @@
-function mainFeed(){
-	
+function mainPostDB(){
+	alert('main post')
 }

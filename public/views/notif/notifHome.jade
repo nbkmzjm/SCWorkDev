@@ -26,11 +26,11 @@ block content
 
 				div(id="Relationships" class="tab-pane")
 append scripts 
-	script(src="public/fnLib/homeFn.js")
+	script(src="public/fnLib/feedFn.js")
 	script.
 
 		$(function(){
-			mainPost()
+			feedHome()
 			//- var groups = [{name:'a'}, {name:'b'}, {name:'c'}]
 			//- ul = document.createElement('ul')
 			//- groups.forEach(function(group, i){
@@ -43,9 +43,9 @@ append scripts
 			//- 	ul.appendChild(li)
 			//- 	console.log(group.name)
 			//- })
-			$('#feedTab').on('click', mainPost)
+			$('#feedTab').on('click', feedHome)
 
-			function mainPost(){
+			function feedHome(){
 				var div = document.createElement('div')
 				div.className = 'input-group'
 				div.classList.add('col-sm-5')
@@ -58,6 +58,7 @@ append scripts
 						var btn = document.createElement('button')
 						btn.className = 'btn btn-primary'
 						btn.innerHTML = 'POST'
+						btn.onclick = mainPostDB
 						span.appendChild(btn)
 					div.appendChild(span)
 				$('#Feed').html(div)
