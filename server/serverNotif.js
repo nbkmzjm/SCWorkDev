@@ -83,11 +83,11 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 })
 
 
-router.post('/mainPost', middleware.requireAuthentication, function(req, res) {
+router.get('/mainFeed', middleware.requireAuthentication, function(req, res) {
 	var curUserId = req.user.id
 	db.user.findOne({
 		where:{
-			id:req.user.id
+			id:curUserId
 		}
 
 	}).then(function(user){
@@ -138,6 +138,39 @@ router.post('/mainPost', middleware.requireAuthentication, function(req, res) {
 		
 		
 	})
+
+router.post('/mainFeed', middleware.requireAuthentication, function(req, res) {
+	var curUserId = req.user.id
+	var postText = req.body.postText
+	db.user.findOne({
+		where:{
+			id:curUserId
+		}
+
+	}).then(function(user){
+		return [db.mainPost.create({
+			postText:postText,
+			userId:curUserId
+		}), user]
+
+	}).spread(function(post, user){
+		console.log('post:'+JSON.stringify(post, null, 4))
+		// console.log(JSON.stringify(user, null, 4))
+		res.json({
+			post:post,
+			user:user
+			
+		})
+
+
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+
+})
 
 // db.group.findOne({
 // 		where:{

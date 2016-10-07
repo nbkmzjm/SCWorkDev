@@ -50,27 +50,34 @@ append scripts
 				div.className = 'input-group'
 				div.classList.add('col-sm-5')
 					var input = document.createElement('input')
+					input.id = 'post'
+
 					input.className = 'form-control'
 					input.placeholder = 'Post announcement here'
+					
 					div.appendChild(input)
+
 					var span = document.createElement('span')
 					span.className = 'input-group-btn'
 						var btn = document.createElement('button')
 						btn.className = 'btn btn-primary'
 						btn.innerHTML = 'POST'
-						btn.onclick = mainPostDB
+						btn.addEventListener('click', function(){
+							postDB(input.value)
+
+						}) 
 						span.appendChild(btn)
 					div.appendChild(span)
 				$('#Feed').html(div)
 
+				console.log(getPostDB())
 
-
-				$.post('/notif/mainPost').done(function(Rdata){
-					Rdata.posts.forEach(function(post, i){
-						console.log(post.postText)
-					})
+				//- $.getJSON('/notif/mainFeed').done(function(Rdata){
+				//- 	Rdata.posts.forEach(function(post, i){
+				//- 		console.log(post.postText)
+				//- 	})
 					
-				})
+				//- })
 			}
 
 

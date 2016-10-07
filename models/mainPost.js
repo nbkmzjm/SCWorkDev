@@ -11,9 +11,10 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
       	},
         postTo:{
-            type: DataTypes.STRING,
-            allowNull: false
-
+            type: DataTypes.STRING
+        },
+        type:{
+            type: DataTypes.STRING
         }
 
 	})
