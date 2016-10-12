@@ -10,10 +10,21 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: false,
 			validate: {
-				len: [5, 30]	
+				len: [2, 30]	
 			},
 			set: function(value){
 				this.setDataValue('name', value.toUpperCase())
+			}
+		},
+
+		lastname: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			validate: {
+				len: [2, 20]	
+			},
+			set: function(value){
+				this.setDataValue('lastname', value.toUpperCase())
 			}
 		},
 		email: {
@@ -32,6 +43,8 @@ module.exports = function(sequelize, DataTypes) {
 				len: [5, 100]	
 			}
 		},
+
+
 		title: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: false

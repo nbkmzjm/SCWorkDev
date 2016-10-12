@@ -41,8 +41,10 @@ router.get('/newAccountForm', function(req, res) {
 
 
 router.post('/addUser', function(req, res) {
+	console.log('xxx'+req.body.lastname)
 	
-	req.check('name', 'Full Name must be within 5-30 characters').len(5, 30);
+	req.check('name', 'First name must be within 2-30 characters').len(2, 30);
+	req.check('lastname', 'Last name must be within 2-30 characters').len(2, 30);
 	req.check('email', 'Email is not valid').isEmail();
 	req.check('username', 'Username must be within 5-20 characters').len(5, 20)
 	req.check('title', 'Title must be assigned').len(3)
@@ -54,7 +56,7 @@ router.post('/addUser', function(req, res) {
 	var passreset = req.body.passreset
 		// res.redirect("/aboutuserx");
 
-	var body = _.pick(req.body, 'name', 'email', 'username', 'password', 'title', 'active')
+	var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'password', 'title', 'active')
 	console.log(JSON.stringify(id, null, 4))
 	if (errors) {
 		res.json({
@@ -63,13 +65,18 @@ router.post('/addUser', function(req, res) {
 	} else if (id == '0') {
 
 
-		db.user.create(body).then(function(user) {
-			console.log(JSON.stringify(id, null, 4))
+		db.user.create(body
+		).then(function(user){
+			var groupName = user.name+' '+user.lastname+'_'+user.id
+			db.group.create({
+				name:groupName,
+				userId:user.id
+
+			})
 			res.json({
 					redi: '/users'
 				})
-				// {JSONdata:JSON.stringify({tabx:'userList'})}
-		}, function(e) {
+		}).catch(function(e) {
 			console.log(JSON.stringify(e, null, 4))
 			res.json({
 				errors: "User cannot be created due to " + e
@@ -81,12 +88,12 @@ router.post('/addUser', function(req, res) {
 		console.log(passreset + '--' + req.body.password)
 		if (passreset==true) {
 			req.body.password = 'banner1234'
-			var body = _.pick(req.body, 'name', 'email', 'password', 'username', 'title', 'active')
+			var body = _.pick(req.body, 'name','lastname', 'email', 'password', 'username', 'title', 'active')
 		}else if (req.body.password !== ''){
-			var body = _.pick(req.body, 'name', 'email', 'password', 'username', 'title', 'active')
+			var body = _.pick(req.body, 'name','lastname', 'email', 'password', 'username', 'title', 'active')
 		}else {
 			console.log('ese')
-			var body = _.pick(req.body, 'name', 'email', 'username', 'title', 'active')
+			var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'title', 'active')
 		}
 
 		db.user.update(body, {
