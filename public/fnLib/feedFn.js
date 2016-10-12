@@ -12,14 +12,34 @@ function getPostDB(){
 	var plist = ['a','b']
 	$.getJSON('/notif/mainFeed').done(function(Rdata){
 		Rdata.posts.forEach(function(post, i){
-			plist.push(post.postText)
+			var div = document.createElement('div')
+			
+			div.className = 'panel panel-primary'
+			div.classList.add('col-sm-4')
+				var divBody = document.createElement('div')
+				divBody.className = 'panel-body'
+					var h3 = document.createElement('h3')
+					h3.innerHTML = post.postText
+					divBody.appendChild(h3)
+				div.appendChild(divBody)
+
+				var divTitle = document.createElement('div')
+				divTitle.className = 'panel-heading'
+				div.appendChild(divTitle)
+
+					var pUser = document.createElement('p')
+					pUser.innerHTML =  post.user.name + " posted " + moment(post.createdAt).fromNow()
+					divTitle.appendChild(pUser)
+
+			$('#Feed').append(div)
+
+
 		})
 
 	
-	console.log(plist)
-	return plist
+	
 	})
-	console.log(plist)
+	
 	
 	
 }

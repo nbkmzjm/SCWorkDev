@@ -64,13 +64,15 @@ append scripts
 						btn.innerHTML = 'POST'
 						btn.addEventListener('click', function(){
 							postDB(input.value)
+							//- input.value = ''
+							feedHome()
 
 						}) 
 						span.appendChild(btn)
 					div.appendChild(span)
 				$('#Feed').html(div)
 
-				console.log(getPostDB())
+				getPostDB()
 
 				//- $.getJSON('/notif/mainFeed').done(function(Rdata){
 				//- 	Rdata.posts.forEach(function(post, i){

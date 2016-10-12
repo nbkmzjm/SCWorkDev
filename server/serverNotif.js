@@ -117,6 +117,9 @@ router.get('/mainFeed', middleware.requireAuthentication, function(req, res) {
 				})
 				console.log('x: '+JSON.stringify(userIds, null, 4))
 				db.mainPost.findAll({
+					include:[{
+						model:db.user
+					}],
 					where:{
 						$or:[{
 								userId:req.user.id
@@ -127,7 +130,10 @@ router.get('/mainFeed', middleware.requireAuthentication, function(req, res) {
 
 							}]
 						
-					}
+					},
+					order:[
+						['createdAt', 'DESC']
+					] 
 				}).then(function(posts){
 					console.log(JSON.stringify(posts, null, 4))
 					res.json({posts:posts})
