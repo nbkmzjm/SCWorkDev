@@ -1,5 +1,5 @@
 function postDB(postText){
-	$.post('/notif/mainFeed',{
+	$.post('/notif/post',{
 		postText:postText
 	}).done(function(Rdata){
 		
@@ -9,8 +9,7 @@ function postDB(postText){
 }
 
 function getPostDB(){
-	var plist = ['a','b']
-	$.getJSON('/notif/mainFeed').done(function(Rdata){
+	$.post('/notif/getFeed').done(function(Rdata){
 		Rdata.posts.forEach(function(post, i){
 			var div = document.createElement('div')
 			

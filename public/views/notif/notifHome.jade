@@ -19,11 +19,14 @@ block content
 					a(data-toggle="tab" href="#Feed") Feeds
 				li(id='RelationshipTab')
 					a(data-toggle="tab"  href="#Relationships") Relationships
+				li(id='ProfileTab')
+					a(data-toggle="tab"  href="#Profile") Profile
 
 			div(class="tab-content")
 				div(id="Feed" class="tab-pane fade in active")
 					
 
+				div(id="Profile" class="tab-pane")
 				div(id="Relationships" class="tab-pane")
 append scripts 
 	script(src="public/fnLib/feedFn.js")
@@ -83,6 +86,34 @@ append scripts
 			}
 
 
+			$('#ProfileTab').on('click', function(){
+				alert('sdfsdf')
+				$.post('/notif/getUserPost').done(function(Rdata){
+					console.log(Rdata)
+					Rdata.user.mainPosts.forEach(function(post, i){
+					var div = document.createElement('div')
+					
+					div.className = 'panel panel-primary'
+					div.classList.add('col-sm-4')
+						var divBody = document.createElement('div')
+						divBody.className = 'panel-body'
+							var h3 = document.createElement('h3')
+							h3.innerHTML = post.postText
+							divBody.appendChild(h3)
+						div.appendChild(divBody)
+
+						var divTitle = document.createElement('div')
+						divTitle.className = 'panel-heading'
+						div.appendChild(divTitle)
+
+							var pUser = document.createElement('p')
+							pUser.innerHTML =  Rdata.user.name + " posted " + moment(post.createdAt).fromNow()
+							divTitle.appendChild(pUser)
+						$('#Profile').append(div)
+					})
+					
+				})
+			})
 
 
 			$('#RelationshipTab').on('click',function(){

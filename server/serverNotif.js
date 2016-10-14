@@ -83,7 +83,7 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 })
 
 
-router.get('/mainFeed', middleware.requireAuthentication, function(req, res) {
+router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	var curUserId = req.user.id
 	db.user.findOne({
 		where:{
@@ -145,7 +145,25 @@ router.get('/mainFeed', middleware.requireAuthentication, function(req, res) {
 		
 	})
 
-router.post('/mainFeed', middleware.requireAuthentication, function(req, res) {
+router.post('/getUserPost', middleware.requireAuthentication, function(req, res) {
+	db.user.findOne({
+		where:{
+			id:curUserId
+		},
+		include:[{
+			model:db.mainPost
+		}],
+		order:[
+			[db.mainPost, 'createdAt', 'DESC']
+		] 
+	}).then(function(user){
+		console.log(JSON.stringify(user, null, 4))
+		res.json({user:user})
+	})
+
+})
+
+router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var curUserId = req.user.id
 	var postText = req.body.postText
 	db.user.findOne({
