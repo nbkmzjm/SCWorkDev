@@ -21,7 +21,9 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 
 
 router.post('/groupList', middleware.requireAuthentication, function(req, res){
-	db.group.findAll().then(function(groupList){
+	db.group.findAll({
+
+	}).then(function(groupList){
 		res.json({groupList:groupList})
 	})
 
@@ -57,15 +59,42 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 			}
 		}).then(function(user){
 
-			user.addGroup(groupSelectedId).then(function(usergroup){
+			user.addGroup(groupSelectedId, {status:'PENDING'}).then(function(usergroup){
+
+
+
 				return db.group.findOne({
 					where:{
 						id:groupSelectedId
 					}
+					// include:[{
+					// 	model:db.user, as:'groupBLUser'
+					// }],
 				})
 			}).then(function(group){
-				res.json({group:group})
-			})
+				return db.user.findOne({
+					where:{
+						id:group.groupBLUserId
+					}
+				})
+				// res.json({group:group})
+			}).then(function(user){
+				console.log(JSON.stringify(user, null, 4))
+				return db.group.findOne({
+					groupBLUserId:curUserId
+				})
+			}).then(function(group){
+				return user.addGroup(group.id, {status:'REQUEST'}).then(function(usergroup){
+
+				})
+
+				
+			}).catch(function(e) {
+				console.log(e)
+				res.render('error', {
+					error: e.toString()
+				})
+			});
 		})
 	else if(action==="delete"){
 		db.userGroups.destroy({
@@ -74,6 +103,7 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 				userId:curUserId
 			}
 		}).then(function(deleted){
+
 			console.log(JSON.stringify(deleted, null, 4))
 			res.json({deleted:deleted})
 		})
@@ -106,7 +136,8 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				where:{
 					groupId:{
 						$in:groupIds
-					}
+					},
+					status:'OWNER'
 				}
 			}).then(function(userGroups){
 

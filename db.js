@@ -88,7 +88,7 @@ db.user.hasMany(db.mainPost, {
 db.user.belongsToMany(db.group, {through:'userGroups'});
 db.group.belongsToMany(db.user, {through:'userGroups'});
 
-db.group.belongsTo(db.user)
+db.group.belongsTo(db.user, {as:'groupBLUser'})
 
 
 

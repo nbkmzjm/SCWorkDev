@@ -15,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
             defaultValue: 'active'
             
         },
-        userId:{
+        groupBLUserId:{
             type: DataTypes.INTEGER
         }
 

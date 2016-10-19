@@ -64,15 +64,24 @@ router.post('/addUser', function(req, res) {
 		})
 	} else if (id == '0') {
 
-
-		db.user.create(body
-		).then(function(user){
-			var groupName = user.name+' '+user.lastname+'_'+user.id
-			db.group.create({
-				name:groupName,
-				userId:user.id
-
+		return db.sequelize.transaction(function (t) {
+			return db.user.create(body, {transaction:t}
+			).then(function(user){
+				var groupName = user.name+' '+user.lastname+'_'+user.id
+				
+				return db.group.create({
+					name:groupName,
+					userId:user.id
+				}, {transaction:t}).then(function(group){
+					return db.userGroups.create({
+						userId:user.id,
+						groupId:group.id,
+						status:'OWNER'
+					}, {transaction:t})
+				})
 			})
+		}).then(function(result){
+			console.log('result is:'+JSON.stringify(result, null, 4))
 			res.json({
 					redi: '/users'
 				})
@@ -82,6 +91,7 @@ router.post('/addUser', function(req, res) {
 				errors: "User cannot be created due to " + e
 			})
 		});
+		
 
 	} else if (id != '0' || id != '') {
 		console.log(typeof (req.body.password))

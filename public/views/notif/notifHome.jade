@@ -133,27 +133,40 @@ append scripts
 								span.style.float = 'right'
 								if (group.userGroups.status=='ACTIVE'){
 									span.style.color = '#2DC729'
-									span.className = "glyphicon glyphicon-ok"
+									span.className = "glyphicon glyphicon-link"
 								}else if (group.userGroups.status=='PENDING'){
-									span.style.color = '#DC14EE'
+									span.style.color = '#F0C20B'
 									span.className = "glyphicon glyphicon-hourglass"
+								}else if (group.userGroups.status=='OWNER'){
+									span.style.color = '#DC14EE'
+									span.className = "glyphicon glyphicon-user"
+								}else if (group.userGroups.status=='REQUEST'){
+									span.style.color = '#EE1414'
+									span.className = "glyphicon glyphicon-question-sign"
 								}
+
+								
 								
 								span.addEventListener('mousedown', function(){
-									var spanDel = document.createElement('span')
-									spanDel.style.float = 'right'
-									spanDel.style.color = 'red'
-									spanDel.id = 'spanDel'
-									spanDel.className = "glyphicon glyphicon-remove"
-									spanDel.innerHTML = "Release on icon to remove"
-									ul.appendChild(spanDel)
+									console.log(span.className)
+									if(span.className!=='glyphicon glyphicon-user'){
+										var spanDel = document.createElement('span')
+										spanDel.style.float = 'right'
+										spanDel.style.color = 'red'
+										spanDel.id = 'spanDel'
+										spanDel.className = "glyphicon glyphicon-remove"
+										spanDel.innerHTML = "Release on icon to remove"
+										ul.appendChild(spanDel)
+
+									}
+									
 
 								})
 								span.addEventListener('mousemove', function(){
 									$("#spanDel").remove()
 								})
 								span.addEventListener('mouseup', function(){
-									if(i!==0){
+									if(span.className!=='glyphicon glyphicon-user'){
 										$.post('/notif/editGroup',{
 										groupSelectedId:group.id,
 										action:'delete'
