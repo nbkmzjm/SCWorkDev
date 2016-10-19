@@ -79,11 +79,16 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 				})
 				// res.json({group:group})
 			}).then(function(user){
-				console.log(JSON.stringify(user, null, 4))
-				return db.group.findOne({
-					groupBLUserId:curUserId
-				})
-			}).then(function(group){
+				console.log('user'+ JSON.stringify(user, null, 4))
+				console.log('curuser'+ JSON.stringify(user, null, 4))
+				return [db.group.findOne({
+					where:{
+						groupBLUserId:curUserId
+					}
+				}), user]
+			}).spread(function(group, user){
+				console.log('user1'+JSON.stringify( user, null, 4))
+				console.log('group1'+ JSON.stringify(group, null, 4))
 				return user.addGroup(group.id, {status:'REQUEST'}).then(function(usergroup){
 
 				})
@@ -122,7 +127,22 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 
 	}).then(function(user){
 		console.log('xxx:'+ user.name)
-		user.getGroups().then(function(groups){
+		// user.getGroups({
+		// 	where:{
+		// 		userGroups.status:'OWNER'
+		// 	}
+		db.group.findAll({
+			include:[{
+				model:db.user
+			}],
+			through:{
+				
+				where:{
+					status:'OWNER'
+				}
+			}
+			
+		}).then(function(groups){
 		console.log(JSON.stringify(groups, null, 4))
 			var groupIds = []
 			groups.forEach(function(group, i){

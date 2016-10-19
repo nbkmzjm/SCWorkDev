@@ -18,6 +18,14 @@ module.exports = function(sequelize, DataTypes) {
 
 
 
-	}, { timestamps: false})
+	}, { timestamps: false},
+	{
+        defaultScope:{
+            where:{
+                status:'OWNER'
+            }
+        }, 
+        
+    })
 
 };
