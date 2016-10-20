@@ -133,16 +133,21 @@ append scripts
 								span.style.float = 'right'
 								if (group.userGroups.status=='ACTIVE'){
 									span.style.color = '#2DC729'
+									span.style.fontSize = '20px'
 									span.className = "glyphicon glyphicon-link"
 								}else if (group.userGroups.status=='PENDING'){
 									span.style.color = '#F0C20B'
+									span.style.fontSize = '20px'
 									span.className = "glyphicon glyphicon-hourglass"
 								}else if (group.userGroups.status=='OWNER'){
 									span.style.color = '#DC14EE'
+									span.style.fontSize = '20px'
 									span.className = "glyphicon glyphicon-user"
 								}else if (group.userGroups.status=='REQUEST'){
 									span.style.color = '#EE1414'
+									span.style.fontSize = '20px'
 									span.className = "glyphicon glyphicon-question-sign"
+									span.id = 'questionSign'
 								}
 
 								
@@ -151,58 +156,88 @@ append scripts
 
 								}
 								span.addEventListener('mousedown', function(){
-									//- console.log(span.className)
+									var mouseDown = true
 									if(span.className=='glyphicon glyphicon-user'){
 										
 									
 
 									}else if(span.className=='glyphicon glyphicon-question-sign'){
-											var spanOk = document.createElement('span')
-											spanOk.style.float = 'right'
-											spanOk.style.color = 'red'
-											spanOk.id = 'spanOk'
-											spanOk.className = "glyphicon glyphicon-ok"
-											
-											li.appendChild(spanOk)
+										$("#questionSign").hide()
+										console.log(span.parentNode)
 
-											spanOk.addEventListener('mousemove', myTest)
+										var spanOk = document.createElement('span')
+										spanOk.style.float = 'right'
+										spanOk.style.color = 'green'
+										spanOk.style.fontSize = '20px'
+										spanOk.id = 'spanOk'
+										spanOk.className = "glyphicon glyphicon-ok"
+										
+										span.parentNode.appendChild(spanOk)
 
+										var spanSpace = document.createElement('span')
+										spanSpace.style.float = 'right'
+										spanSpace.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp'
+										span.parentNode.appendChild(spanSpace)
+
+										var spanDeny = document.createElement('span')
+										spanDeny.style.float = 'right'
+										spanDeny.style.color = 'red'
+										spanDeny.style.fontSize = '20px'
+										spanDeny.id = 'spanOk'
+
+										spanDeny.className = "glyphicon glyphicon-remove"
+										
+										span.parentNode.appendChild(spanDeny)
 											
-									}else{
-										var spanDel = document.createElement('span')
-										spanDel.style.float = 'right'
-										spanDel.style.color = 'red'
-										spanDel.id = 'spanDel'
-										spanDel.className = "glyphicon glyphicon-remove"
-										spanDel.innerHTML = "Release on icon to remove"
-										ul.appendChild(spanDel)
-										console.log('down')
+									}else if (mouseDown==true){
+
+										
+
+										var spanSpace = document.createElement('span')
+										spanSpace.style.float = 'right'
+										spanSpace.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp'
+										span.parentNode.appendChild(spanSpace)
+
+										var spanDeny = document.createElement('span')
+										spanDeny.style.float = 'right'
+										spanDeny.style.color = 'red'
+										spanDeny.style.fontSize = '20px'
+										spanDeny.id = 'spanOk'
+
+										spanDeny.className = "glyphicon glyphicon-remove"
+										console.log(spanDeny.length)
+										span.parentNode.appendChild(spanDeny)
+										//- var spanDel = document.createElement('span')
+										//- spanDel.style.float = 'right'
+										//- spanDel.style.color = 'red'
+										//- spanDel.id = 'spanDel'
+										//- spanDel.className = "glyphicon glyphicon-remove"
+										//- spanDel.innerHTML = "Release on icon to remove"
+										//- ul.appendChild(spanDel)
+										
 
 									}
 								
 								})
-								span.addEventListener('mouseup', function(){
-									console.log(span.className)
-									li.removeEventListener('mousemove', myTest)
-									if(span.className==='glyphicon glyphicon-user'){
+								//- span.addEventListener('mouseup', function(){
+								//- 	if(span.className==='glyphicon glyphicon-user'){
 										
-									}else if(span.className==='glyphicon glyphicon-question-sign'){
-										console.log('?up')
-										$("#spanOk").remove()
-									}else if(span.className==='glyphicon glyphicon-ok'){
-										console.log('adding')
-									}else{
-										console.log('sfsf')
-										$.post('/notif/editGroup',{
-										groupSelectedId:group.id,
-										action:'delete'
-										}).done(function(pData){
+								//- 	}else if(span.className==='glyphicon glyphicon-question-sign'){
+										
+								//- 	}else if(span.className==='glyphicon glyphicon-ok'){
 
-											ul.removeChild(span.parentNode)
+								//- 	}else{
+								//- 		console.log('sfsf')
+								//- 		$.post('/notif/editGroup',{
+								//- 		groupSelectedId:group.id,
+								//- 		action:'delete'
+								//- 		}).done(function(pData){
 
-										})
-									}
-								})
+								//- 			ul.removeChild(span.parentNode)
+
+								//- 		})
+								//- 	}
+								//- })
 								li.appendChild(span)
 								
 								
