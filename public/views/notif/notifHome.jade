@@ -146,10 +146,29 @@ append scripts
 								}
 
 								
-								
-								span.addEventListener('mousedown', function(){
+								function myTest(){
 									console.log(span.className)
-									if(span.className!=='glyphicon glyphicon-user'){
+
+								}
+								span.addEventListener('mousedown', function(){
+									//- console.log(span.className)
+									if(span.className=='glyphicon glyphicon-user'){
+										
+									
+
+									}else if(span.className=='glyphicon glyphicon-question-sign'){
+											var spanOk = document.createElement('span')
+											spanOk.style.float = 'right'
+											spanOk.style.color = 'red'
+											spanOk.id = 'spanOk'
+											spanOk.className = "glyphicon glyphicon-ok"
+											
+											li.appendChild(spanOk)
+
+											spanOk.addEventListener('mousemove', myTest)
+
+											
+									}else{
 										var spanDel = document.createElement('span')
 										spanDel.style.float = 'right'
 										spanDel.style.color = 'red'
@@ -157,16 +176,23 @@ append scripts
 										spanDel.className = "glyphicon glyphicon-remove"
 										spanDel.innerHTML = "Release on icon to remove"
 										ul.appendChild(spanDel)
+										console.log('down')
 
 									}
-									
-
-								})
-								span.addEventListener('mousemove', function(){
-									$("#spanDel").remove()
+								
 								})
 								span.addEventListener('mouseup', function(){
-									if(span.className!=='glyphicon glyphicon-user'){
+									console.log(span.className)
+									li.removeEventListener('mousemove', myTest)
+									if(span.className==='glyphicon glyphicon-user'){
+										
+									}else if(span.className==='glyphicon glyphicon-question-sign'){
+										console.log('?up')
+										$("#spanOk").remove()
+									}else if(span.className==='glyphicon glyphicon-ok'){
+										console.log('adding')
+									}else{
+										console.log('sfsf')
 										$.post('/notif/editGroup',{
 										groupSelectedId:group.id,
 										action:'delete'

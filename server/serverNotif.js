@@ -118,84 +118,144 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 })
 
 
+// router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
+// 	var curUserId = req.user.id
+// 	db.user.findOne({
+// 		where:{
+// 			id:curUserId
+// 		}
+
+// 	}).then(function(user){
+// 		console.log('xxx:'+ user.name)
+// 		// user.getGroups({
+// 		// 	where:{
+// 		// 		userGroups.status:'OWNER'
+// 		// 	}
+// 		db.group.findAll({
+// 			include:[{
+// 				model:db.user,
+// 				where:{
+// 					id:curUserId
+// 				},
+// 				through:{
+// 					where:{
+// 						status:{
+// 							$in:['ACTIVE','OWNER']
+// 						}
+// 					}
+// 				}
+// 			}]
+			
+// 		}).then(function(groups){
+// 		console.log(JSON.stringify(groups, null, 4))
+// 			var groupIds = []
+// 			groups.forEach(function(group, i){
+				
+// 				groupIds.push(group.id)
+// 			})
+			
+    
+// 			console.log('x: '+JSON.stringify(groupIds, null, 4))
+// 			db.userGroups.findAll({
+// 				where:{
+// 					groupId:{
+// 						$in:groupIds
+// 					},
+// 					status:'OWNER'
+// 				}
+// 			}).then(function(userGroups){
+
+// 				var userIds = []
+// 				userGroups.forEach(function(userGroup, i){
+// 					userIds.indexOf(userGroup.userId)===-1?
+// 					userIds.push(userGroup.userId):""
+// 				})
+// 				console.log('x: '+JSON.stringify(userIds, null, 4))
+// 				db.mainPost.findAll({
+// 					include:[{
+// 						model:db.user
+// 					}],
+// 					where:{
+// 						$or:[{
+// 								// userId:req.user.id
+// 							},{
+// 								userId:{
+// 									$in:userIds
+// 								}
+
+// 							}]
+						
+// 					},
+// 					order:[
+// 						['createdAt', 'DESC']
+// 					] 
+// 				}).then(function(posts){
+// 					console.log(JSON.stringify(posts, null, 4))
+// 					res.json({posts:posts})
+// 				})
+				
+// 			})
+// 		})
+		
+		
+// 	})
 router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	var curUserId = req.user.id
-	db.user.findOne({
-		where:{
-			id:curUserId
-		}
-
-	}).then(function(user){
-		console.log('xxx:'+ user.name)
-		// user.getGroups({
-		// 	where:{
-		// 		userGroups.status:'OWNER'
-		// 	}
-		db.group.findAll({
+	
+	db.group.findAll({
+		include:[{
+			model:db.user,
+			where:{
+				id:curUserId
+			},
+			through:{
+				where:{
+					status:{
+						$in:['ACTIVE','OWNER']
+					}
+				}
+			}
+		}]
+		
+	}).then(function(groups){
+	console.log(JSON.stringify(groups, null, 4))
+		var userIds = []
+		groups.forEach(function(group, i){
+			
+			userIds.push(group.groupBLUserId)
+		})
+		
+		return db.mainPost.findAll({
 			include:[{
 				model:db.user
 			}],
-			through:{
-				
-				where:{
-					status:'OWNER'
-				}
-			}
-			
-		}).then(function(groups){
-		console.log(JSON.stringify(groups, null, 4))
-			var groupIds = []
-			groups.forEach(function(group, i){
-				
-				groupIds.push(group.id)
-			})
-			
-    
-			console.log('x: '+JSON.stringify(groupIds, null, 4))
-			db.userGroups.findAll({
-				where:{
-					groupId:{
-						$in:groupIds
-					},
-					status:'OWNER'
-				}
-			}).then(function(userGroups){
+			where:{
+				$or:[{
+						// userId:req.user.id
+					},{
+						userId:{
+							$in:userIds
+						}
 
-				var userIds = []
-				userGroups.forEach(function(userGroup, i){
-					userIds.indexOf(userGroup.userId)===-1?
-					userIds.push(userGroup.userId):""
-				})
-				console.log('x: '+JSON.stringify(userIds, null, 4))
-				db.mainPost.findAll({
-					include:[{
-						model:db.user
-					}],
-					where:{
-						$or:[{
-								userId:req.user.id
-							},{
-								userId:{
-									$in:userIds
-								}
-
-							}]
-						
-					},
-					order:[
-						['createdAt', 'DESC']
-					] 
-				}).then(function(posts){
-					console.log(JSON.stringify(posts, null, 4))
-					res.json({posts:posts})
-				})
+					}]
 				
-			})
+			},
+			order:[
+				['createdAt', 'DESC']
+			] 
+	}).then(function(posts){
+		console.log(JSON.stringify(posts, null, 4))
+		res.json({posts:posts})
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
 		})
+	});
+			
 		
 		
-	})
-
+})
 router.post('/getUserPost', middleware.requireAuthentication, function(req, res) {
 	db.user.findOne({
 		where:{
