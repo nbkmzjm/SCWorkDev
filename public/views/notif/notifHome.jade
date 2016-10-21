@@ -152,10 +152,19 @@ append scripts
 
 								
 								function myTest(){
-									console.log(span.className)
+									console.log('sfsf')
+										$.post('/notif/editGroup',{
+										groupSelectedId:group.id,
+										action:'delete'
+										}).done(function(pData){
+
+											ul.removeChild(span.parentNode)
+
+										})
 
 								}
-								span.addEventListener('mousedown', function(){
+								span.addEventListener('mousedown', function(e){
+									console.log(e)
 									var mouseDown = true
 									if(span.className=='glyphicon glyphicon-user'){
 										
@@ -186,6 +195,16 @@ append scripts
 										spanDeny.id = 'spanOk'
 
 										spanDeny.className = "glyphicon glyphicon-remove"
+										spanDeny.addEventListener('click',function(){
+											$.post('/notif/editGroup',{
+											groupSelectedId:group.id,
+											action:'delete'
+											}).done(function(pData){
+
+												ul.removeChild(span.parentNode)
+
+											})
+										})
 										
 										span.parentNode.appendChild(spanDeny)
 											
