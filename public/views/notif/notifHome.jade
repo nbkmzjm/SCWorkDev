@@ -180,6 +180,14 @@ append scripts
 										spanOk.style.fontSize = '20px'
 										spanOk.id = 'spanOk'
 										spanOk.className = "glyphicon glyphicon-ok"
+										spanOk.addEventListener('click',function(){
+											$.post('/notif/editGroup',{
+											groupSelectedId:group.id,
+											action:'accept'
+											}).done(function(pData){
+												ul.removeChild(span.parentNode)
+											})
+										})
 										
 										span.parentNode.appendChild(spanOk)
 
@@ -200,12 +208,9 @@ append scripts
 											groupSelectedId:group.id,
 											action:'delete'
 											}).done(function(pData){
-
 												ul.removeChild(span.parentNode)
-
 											})
 										})
-										
 										span.parentNode.appendChild(spanDeny)
 											
 									}else if (mouseDown==true){
@@ -224,7 +229,14 @@ append scripts
 										spanDeny.id = 'spanOk'
 
 										spanDeny.className = "glyphicon glyphicon-remove"
-										console.log(spanDeny.length)
+										spanDeny.addEventListener('click',function(){
+											$.post('/notif/editGroup',{
+											groupSelectedId:group.id,
+											action:'delete'
+											}).done(function(pData){
+												ul.removeChild(span.parentNode)
+											})
+										})
 										span.parentNode.appendChild(spanDeny)
 										//- var spanDel = document.createElement('span')
 										//- spanDel.style.float = 'right'
@@ -238,25 +250,7 @@ append scripts
 									}
 								
 								})
-								//- span.addEventListener('mouseup', function(){
-								//- 	if(span.className==='glyphicon glyphicon-user'){
-										
-								//- 	}else if(span.className==='glyphicon glyphicon-question-sign'){
-										
-								//- 	}else if(span.className==='glyphicon glyphicon-ok'){
-
-								//- 	}else{
-								//- 		console.log('sfsf')
-								//- 		$.post('/notif/editGroup',{
-								//- 		groupSelectedId:group.id,
-								//- 		action:'delete'
-								//- 		}).done(function(pData){
-
-								//- 			ul.removeChild(span.parentNode)
-
-								//- 		})
-								//- 	}
-								//- })
+								
 								li.appendChild(span)
 								
 								
@@ -344,7 +338,7 @@ append scripts
 						groupSelectedId:group.id,
 						action:'add'
 						}).done(function(pData){
-							console.log(JSON.stringify(pData, null, 4))
+							console.log("xx: "+JSON.stringify(group, null, 4))
 							addGroup(pData.group.name)
 							ul.appendChild(li)
 							$('#groupSearch').val('')

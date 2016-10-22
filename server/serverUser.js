@@ -71,7 +71,8 @@ router.post('/addUser', function(req, res) {
 				
 				return db.group.create({
 					name:groupName,
-					userId:user.id
+					userId:user.id,
+					groupBLUserId:user.id
 				}, {transaction:t}).then(function(group){
 					return db.userGroups.create({
 						userId:user.id,

@@ -72,28 +72,30 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 					// }],
 				})
 			}).then(function(group){
-				return db.user.findOne({
+				return [db.user.findOne({
 					where:{
 						id:group.groupBLUserId
 					}
-				})
-				// res.json({group:group})
-			}).then(function(user){
+				}),group]
+				
+			}).spread(function(user, group){
 				console.log('user'+ JSON.stringify(user, null, 4))
 				console.log('curuser'+ JSON.stringify(user, null, 4))
 				return [db.group.findOne({
 					where:{
 						groupBLUserId:curUserId
 					}
-				}), user]
-			}).spread(function(group, user){
+				}), user, group]
+			}).spread(function(group2, user, group){
 				console.log('user1'+JSON.stringify( user, null, 4))
 				console.log('group1'+ JSON.stringify(group, null, 4))
-				return user.addGroup(group.id, {status:'REQUEST'}).then(function(usergroup){
+				return [user.addGroup(group2.id, {status:'REQUEST'}).then(function(usergroup){
 
-				})
-
+				}), group]
 				
+
+			}).spread(function(group2, group){
+				res.json({group:group})
 			}).catch(function(e) {
 				console.log(e)
 				res.render('error', {
@@ -109,9 +111,60 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 			}
 		}).then(function(deleted){
 
-			console.log(JSON.stringify(deleted, null, 4))
+			return [db.userGroups.findOne({
+				where:{
+					userId:curUserId,
+					status:'OWNER'
+				}
+			}),
+			db.userGroups.findOne({
+				where:{
+					groupId:groupSelectedId,
+					status:'OWNER'
+				}
+			})
+			]
+
+			
+		}).spread(function(userGroup1, userGroup2){
+			console.log(userGroup1.groupId+':'+userGroup2.userId)
+			return db.userGroups.destroy({
+				where:{
+					groupId:userGroup1.groupId,
+					userId:userGroup2.userId
+				}
+			})
+		}).then(function(deleted){
 			res.json({deleted:deleted})
 		})
+	}else if(action==='accept'){
+		db.userGroups.findOne({
+				where:{
+					userId:curUserId,
+					status:'OWNER'
+				}
+		}).then(function(userGroup1){
+			return [db.userGroups.findOne({
+				where:{
+					groupId:groupSelectedId,
+					status:'OWNER'
+				}
+			}), userGroup1]
+		}).spread(function(userGroup2, userGroup1){
+			console.log(userGroup1.groupId+' x:'+userGroup2.userId)
+			db.userGroups.update({
+				status:'ACTIVE'
+			},{
+				where:{ 
+					$or:[
+						{userId:curUserId, groupId:groupSelectedId},
+						{userId:userGroup2.userId, groupId:userGroup1.groupId}
+					]
+				}
+			})
+
+		})
+
 	}
 
 
