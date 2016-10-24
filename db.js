@@ -30,6 +30,7 @@ db.sysObj = sequelize.import(__dirname + '/models/sysObj.js');
 db.user = sequelize.import(__dirname + '/models/user.js');
 db.token = sequelize.import(__dirname + '/models/token.js');
 db.group = sequelize.import(__dirname + '/models/group.js');
+db.feedSetting = sequelize.import(__dirname + '/models/feedSetting.js');
 db.mainPost = sequelize.import(__dirname + '/models/mainPost.js');
 db.userGroups = sequelize.import(__dirname + '/models/userGroups.js');
 db.sequelize = sequelize;
@@ -89,6 +90,13 @@ db.user.belongsToMany(db.group, {through:'userGroups'});
 db.group.belongsToMany(db.user, {through:'userGroups'});
 
 db.group.belongsTo(db.user, {as:'groupBLUser'})
+
+db.feedSetting.belongsTo(db.user, {
+	onDelete: 'CASCADE'
+})
+// db.user.hasMany(db.feedSetting , {
+// 	onDelete: 'CASCADE'
+// })
 
 
 
