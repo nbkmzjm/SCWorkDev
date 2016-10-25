@@ -170,6 +170,22 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 
 })
 
+router.post('/feedSetting', middleware.requireAuthentication, function(req, res){
+	var curUserId = req.user.id
+	db.feedSetting.create({
+		description:'I can view post from',
+		value:'friend',
+		userId:curUserId,
+	}).then(function(feedSetting){
+		console.log(JSON.stringify(feedSetting, null, 4))
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+})
+
 
 // router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 // 	var curUserId = req.user.id

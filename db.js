@@ -91,12 +91,13 @@ db.group.belongsToMany(db.user, {through:'userGroups'});
 
 db.group.belongsTo(db.user, {as:'groupBLUser'})
 
-db.feedSetting.belongsTo(db.user, {
+db.feedSetting.belongsTo(db.user,{
+	onDelete: 'CASCADE'
+
+})
+db.user.hasMany(db.feedSetting , {as:'settingUser'},{
 	onDelete: 'CASCADE'
 })
-// db.user.hasMany(db.feedSetting , {
-// 	onDelete: 'CASCADE'
-// })
 
 
 

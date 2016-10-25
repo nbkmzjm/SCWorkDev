@@ -21,6 +21,8 @@ block content
 					a(data-toggle="tab"  href="#Relationships") Relationships
 				li(id='ProfileTab')
 					a(data-toggle="tab"  href="#Profile") Profile
+				li(	id='SettingTab')
+					a(data-toggle="tab"  href="#Setting") Setting
 
 			div(class="tab-content")
 				div(id="Feed" class="tab-pane fade in active")
@@ -28,6 +30,7 @@ block content
 
 				div(id="Profile" class="tab-pane")
 				div(id="Relationships" class="tab-pane")
+				div(id="Setting" class="tab-pane")
 append scripts 
 	script(src="public/fnLib/feedFn.js")
 	script.
@@ -348,6 +351,13 @@ append scripts
 				})
 				$('#Relationships').html(ul)
 			
+			})
+
+			$('#SettingTab').on('click', function(){
+				console.log('setting')
+				$.post('/notif/feedSetting').done(function(){
+
+				})
 			})
 			
 				
