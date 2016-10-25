@@ -90,7 +90,7 @@ append scripts
 
 
 			$('#ProfileTab').on('click', function(){
-				alert('sdfsdf')
+				$('#Profile').html('')
 				$.post('/notif/getUserPost').done(function(Rdata){
 					console.log(Rdata)
 					Rdata.user.mainPosts.forEach(function(post, i){
@@ -354,10 +354,67 @@ append scripts
 			})
 
 			$('#SettingTab').on('click', function(){
-				console.log('setting')
-				$.post('/notif/feedSetting').done(function(){
+				$('#Setting').html('')
+				var settingList = ['I want to view post from', 'who can see my post']
+				$.post('/notif/getFeedSetting').done(function(Rdata){
 
+					Rdata.settings.forEach(function(setting){
+
+
+					
+						var div = document.createElement('div')
+						div.className = 'form-group col-sm-8'
+
+							var label = document.createElement('label')
+							label.className = 'col-sm-5'
+							label.innerHTML = setting.description
+							div.appendChild(label)
+
+							var divSelect = document.createElement('div')
+							divSelect.className = 'col-sm-3'
+
+
+								var select = document.createElement('select')
+								select.className = 'form-control'
+								select.name = 'viewPostFrom'
+								select.id = 'viewPostFrom'
+									var optionList = ['mine','friend', 'friend of friend', 'public']
+										var optionDB = document.createElement('option')
+										optionDB.value = setting.value
+										optionDB.innerHTML = setting.value
+										select.appendChild(optionDB)
+
+									optionList.forEach(function(item, i){
+										var option = document.createElement('option')
+										option.value = item
+										option.innerHTML = item
+										select.appendChild(option)
+
+									})
+								select.addEventListener('change', function(){
+
+									//- alert(select.value)
+									$.post('/notif/setFeedSetting',{
+										settingId:setting.id,
+										settingValue:select.value,
+										action:'update'
+									}).done(function(Rdata){
+
+									})
+								})
+								
+								divSelect.appendChild(select)
+
+							div.appendChild(divSelect)
+						$('#Setting').append(div)
+
+					})
 				})
+
+
+				
+					
+				
 			})
 			
 				

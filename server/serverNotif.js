@@ -170,20 +170,60 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 
 })
 
-router.post('/feedSetting', middleware.requireAuthentication, function(req, res){
+router.post('/getFeedSetting', middleware.requireAuthentication, function(req, res){
 	var curUserId = req.user.id
-	db.feedSetting.create({
-		description:'I can view post from',
-		value:'friend',
-		userId:curUserId,
-	}).then(function(feedSetting){
-		console.log(JSON.stringify(feedSetting, null, 4))
-	}).catch(function(e) {
-		console.log(e)
-		res.render('error', {
-			error: e.toString()
+	db.user.findOne({
+		where:{
+			id:curUserId
+		}
+	}).then(function(user){
+		return user.getSettingUser({
+			include:[{
+				model:db.user
+			}]
 		})
-	});
+	}).then(function(settings){
+		console.log(JSON.stringify(settings, null, 4))
+		res.json({settings:settings})
+	})
+})
+
+router.post('/setFeedSetting', middleware.requireAuthentication, function(req, res){
+	var curUserId = req.user.id
+	var settingId = req.body.settingId
+	var settingValue = req.body.settingValue
+	var action = req.body.action
+	if (action==='add'){
+
+		db.feedSetting.create({
+			description:'I can view post from',
+			value:'friend',
+			userId:curUserId,
+		}).then(function(feedSetting){
+			console.log(JSON.stringify(feedSetting, null, 4))
+		}).catch(function(e) {
+			console.log(e)
+			res.render('error', {
+				error: e.toString()
+			})
+		});
+	}else if (action==='update'){
+		db.feedSetting.update({
+			value:settingValue
+		}, {
+			where:{
+				id:settingId
+			}
+		}).then(function(feedSetting){
+			console.log(JSON.stringify(feedSetting, null, 4))
+		}).catch(function(e) {
+			console.log(e)
+			res.render('error', {
+				error: e.toString()
+			})
+		});
+
+	}
 })
 
 

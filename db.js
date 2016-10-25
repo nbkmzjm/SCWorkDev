@@ -95,7 +95,7 @@ db.feedSetting.belongsTo(db.user,{
 	onDelete: 'CASCADE'
 
 })
-db.user.hasMany(db.feedSetting , {as:'settingUser'},{
+db.user.hasMany(db.feedSetting , {as:'SettingUser'},{
 	onDelete: 'CASCADE'
 })
 
