@@ -319,15 +319,15 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 			},
 			through:{
 				where:{
-					status:{
-						$in:['ACTIVE','OWNER']
-					}
+					// status:{
+					// 	$in:['ACTIVE','OWNER']
+					// }
 				}
 			}
 		}]
 		
 	}).then(function(groups){
-	console.log(JSON.stringify(groups, null, 4))
+	console.log('xxx'+JSON.stringify(groups, null, 4))
 		var userIds = []
 		groups.forEach(function(group, i){
 			
