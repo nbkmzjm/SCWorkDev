@@ -10,6 +10,7 @@ function postDB(postText){
 
 function getPostDB(){
 	$.post('/notif/getFeed').done(function(Rdata){
+		console.log(Rdata)
 		Rdata.posts.forEach(function(post, i){
 			var div = document.createElement('div')
 			

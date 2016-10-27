@@ -1,17 +1,16 @@
 module.exports = function(sequelize, DataTypes) {
 
-	return sequelize.define('feedSetting', {
+	return sequelize.define('settingDescription', {
 		id:{
             type: DataTypes.INTEGER, 
             autoIncrement: true,
             primaryKey: true
     },
-   
-    value:{
-        type: DataTypes.STRING,
+    description: {
+        type: DataTypes.STRING, 
         allowNull: false
-    } 
-    
+  	}
+   
 
 	}, { timestamps: false})
 

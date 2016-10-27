@@ -31,6 +31,7 @@ db.user = sequelize.import(__dirname + '/models/user.js');
 db.token = sequelize.import(__dirname + '/models/token.js');
 db.group = sequelize.import(__dirname + '/models/group.js');
 db.feedSetting = sequelize.import(__dirname + '/models/feedSetting.js');
+db.settingDescription = sequelize.import(__dirname + '/models/settingDescription.js');
 db.mainPost = sequelize.import(__dirname + '/models/mainPost.js');
 db.userGroups = sequelize.import(__dirname + '/models/userGroups.js');
 db.sequelize = sequelize;
@@ -99,6 +100,6 @@ db.user.hasMany(db.feedSetting , {as:'SettingUser'},{
 	onDelete: 'CASCADE'
 })
 
-
-
+db.feedSetting.belongsTo(db.settingDescription)
+// db.settingDescription.hasMany(db.)
 module.exports = db;
