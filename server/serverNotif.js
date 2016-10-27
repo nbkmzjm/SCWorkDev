@@ -285,10 +285,13 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				}],
 				where:{
 					$or:[{
-							// userId:req.user.id
+							userId:req.user.id
 						},{
 							userId:{
 								$in:userIds
+							},
+							postTo:{
+								$notIn:['mine']
 							}
 
 						}]
@@ -361,11 +364,21 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							}],
 							where:{
 								$or:[{
-										// userId:req.user.id
-									},{
+										userId:req.user.id
+									},
+									{
 										userId:{
 											$in:userIds
 										}
+										,
+										postTo:{
+											$notIn:['mine'],
+
+										}
+										// ,
+										// postTo:{
+										// 	$in:['friend', 'friend of friend']
+										// }
 
 									}]
 								
