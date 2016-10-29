@@ -54,14 +54,51 @@ append scripts
 			function feedHome(){
 				var div = document.createElement('div')
 				div.className = 'input-group'
-				div.classList.add('col-sm-5')
+				div.classList.add('col-sm-8')
+					
+
+
+					//- span.classList.add('col-sm-3')
+					
+						var select = document.createElement('select')
+						select.className = 'form-control col-sm-1'
+
+						//- select.className = ''
+						select.name = 'postTo'
+						select.id = 'postTo'
+							var optionList = ['mine','friend', 'friend of friend', 'public']
+								//- var optionDB = document.createElement('option')
+								//- optionDB.value = setting.value
+								//- optionDB.innerHTML = setting.value
+								//- select.appendChild(optionDB)
+
+							optionList.forEach(function(item, i){
+								//- if(item !== setting.value){
+									var option = document.createElement('option')
+									option.value = item
+									option.innerHTML = item
+									select.appendChild(option)
+								//- }
+
+							})
+
+						
+						div.appendChild(select)
+
+						var span = document.createElement('span')
+						span.className = 'input-group-btn'
+						div.appendChild(span)
+					
+
+					
+
+
 					var input = document.createElement('input')
 					input.id = 'post'
-
 					input.className = 'form-control'
 					input.placeholder = 'Post announcement here'
-					
 					div.appendChild(input)
+
 
 					var span = document.createElement('span')
 					span.className = 'input-group-btn'
@@ -69,10 +106,10 @@ append scripts
 						btn.className = 'btn btn-primary'
 						btn.innerHTML = 'POST'
 						btn.addEventListener('click', function(){
-							postDB(input.value)
+							console.log(select.value)
+							input.value!==''?postDB(select.value, input.value):''
 							//- input.value = ''
 							feedHome()
-
 						}) 
 						span.appendChild(btn)
 					div.appendChild(span)
@@ -385,10 +422,12 @@ append scripts
 										select.appendChild(optionDB)
 
 									optionList.forEach(function(item, i){
-										var option = document.createElement('option')
-										option.value = item
-										option.innerHTML = item
-										select.appendChild(option)
+										if(item !== setting.value){
+											var option = document.createElement('option')
+											option.value = item
+											option.innerHTML = item
+											select.appendChild(option)
+										}
 
 									})
 								select.addEventListener('change', function(){

@@ -1,5 +1,6 @@
-function postDB(postText){
+function postDB(postTo, postText){
 	$.post('/notif/post',{
+		postTo:postTo,
 		postText:postText
 	}).done(function(Rdata){
 		

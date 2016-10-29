@@ -326,9 +326,9 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						},
 						through:{
 							where:{
-								// status:{
-								// 	$in:['ACTIVE','OWNER']
-								// }
+								status:{
+									$in:['ACTIVE','OWNER']
+								}
 							}
 						}
 					}]
@@ -336,9 +336,11 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				}).then(function(groups){
 				console.log(JSON.stringify(groups, null, 4))
 					var groupIds = []
+					var friendUserId = []
 					groups.forEach(function(group, i){
 						
 						groupIds.push(group.id)
+						friendUserId.push(group.groupBLUserId)
 					})
 					
 		    
@@ -347,8 +349,10 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						where:{
 							groupId:{
 								$in:groupIds
+							},
+							status:{
+								$in:['ACTIVE','OWNER']
 							}
-							// status:'OWNER'
 						}
 					}).then(function(userGroups){
 
@@ -358,6 +362,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							userIds.push(userGroup.userId):""
 						})
 						console.log('x: '+JSON.stringify(userIds, null, 4))
+						console.log('groupId:'+JSON.stringify(friendUserId, null, 4))
 						db.mainPost.findAll({
 							include:[{
 								model:db.user
@@ -365,21 +370,21 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							where:{
 								$or:[{
 										userId:req.user.id
-									},
-									{
+									},{
+										postTo:{
+											$in:['friend']
+										},
+										userId:{
+											$in:friendUserId
+										}
+									},{
 										userId:{
 											$in:userIds
 										}
 										,
 										postTo:{
-											$notIn:['mine'],
-
+											$notIn:['mine', 'friend'],
 										}
-										// ,
-										// postTo:{
-										// 	$in:['friend', 'friend of friend']
-										// }
-
 									}]
 								
 							},
@@ -387,7 +392,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 								['createdAt', 'DESC']
 							] 
 						}).then(function(posts){
-							console.log(JSON.stringify(posts, null, 4))
+							// console.log(JSON.stringify(posts, null, 4))
 							res.json({posts:posts})
 						})
 						
@@ -421,6 +426,7 @@ router.post('/getUserPost', middleware.requireAuthentication, function(req, res)
 router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var curUserId = req.user.id
 	var postText = req.body.postText
+	var postTo = req.body.postTo
 	db.user.findOne({
 		where:{
 			id:curUserId
@@ -429,6 +435,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	}).then(function(user){
 		return [db.mainPost.create({
 			postText:postText,
+			postTo:postTo,
 			userId:curUserId
 		}), user]
 
