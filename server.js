@@ -154,9 +154,21 @@ app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 
 app.post('/taskSC', middleware.requireAuthentication, function(req, res){
 	var curUser= req.user;
-	var eDate = moment(new Date(req.body.sDate)).add(7,'days').format('MM-DD-YYYY')
+	var datePosRange = [];
+	
 	var sDate = moment(new Date(req.body.sDate)).format('MM-DD-YYYY')
-
+	var eDate = moment(new Date(req.body.sDate)).add(7,'days').format('MM-DD-YYYY')
+	var datePos={
+			$between:[sDate,eDate]
+		}
+	console.log(JSON.stringify(sDate.slice(-1), null, 4))
+	console.log(JSON.stringify(eDate.slice(-1), null, 4))
+	if (sDate.slice(-1)!=eDate.slice(-1)){
+		for(var i = 0; i<7;i++){
+			datePosRange.push(moment(new Date(sDate)).add(i,'days').format('MM-DD-YYYY'))
+		}
+		datePos = {$in:datePosRange}
+	}
 	db.assign.findAll({
 		attributes:['id', 'datePos', 'Memo', 'userId', 'Note'],
 		include:[{
@@ -167,9 +179,7 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res){
 			
 		}],
 		where:{
-			datePos:{
-				$between:[sDate,eDate]
-			}
+			datePos
 		},
 		order:[
 				[db.assignTracer,'createdAt', 'DESC']

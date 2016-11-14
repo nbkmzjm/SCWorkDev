@@ -113,6 +113,16 @@ append scripts
 						}) 
 						span.appendChild(btn)
 					div.appendChild(span)
+
+					var input = document.createElement('input')
+					input.type = 'text'
+					
+					input.placeholder = 'Search Person'
+					input.className ='form-control'
+					input.id = 'friendSearch'
+					div.appendChild(input)
+
+
 				$('#Feed').html(div)
 
 				getPostDB()
@@ -332,11 +342,12 @@ append scripts
 					$.post('/notif/groupList').done(function(pData){
 						var result = pData.groupList.map(function(group) {
 							return group;
+							
 							});
 						// constructs the suggestion engine
 						var groupList = new Bloodhound({
-							identify: function(obj) { return obj.name; },
-						  	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+							identify: function(obj) { return obj.status; },
+						  	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('status'),
 						  	queryTokenizer: Bloodhound.tokenizers.whitespace,
 						  // `states` is an array of state names defined in "The Basics"
 						  	local: result
@@ -357,7 +368,7 @@ append scripts
 						  	minLength: 0
 						},{
 						  	name: 'states',
-						  	display: 'name',
+						  	display: 'status',
 						  	source: groupDefault,
 						  	templates: {
 							  	empty: [
@@ -367,7 +378,7 @@ append scripts
 							    ].join('\n')
 							    ,
 							    suggestion: function (data) {
-								        return '<p><strong>' + data.name + '</strong> - ' + data.active + '</p>';
+								        return '<p><strong>' + data.name + '</strong> - ' + data.status + '</p>';
 								    }
 						  }
 						});
