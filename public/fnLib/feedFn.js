@@ -40,6 +40,55 @@ function getPostDB(){
 	
 	
 	})
+}
+
+function BHUserList (typeaheadId) {
+
+	$.post('/notif/groupList').done(function(pData){
+		var result = pData.groupList.map(function(group) {
+			return group;
+			
+			});
+		// constructs the suggestion engine
+		var groupList = new Bloodhound({
+			identify: function(obj) { return obj.status; },
+		  	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('status'),
+		  	queryTokenizer: Bloodhound.tokenizers.whitespace,
+		  // `states` is an array of state names defined in "The Basics"
+		  	local: result
+						
+		});
+
+		function groupDefault(q, sync) {
+			if (q === '') {
+			    sync(groupList.get('BCP', 'ACH', 'APS'));
+			 }else {
+			    groupList.search(q, sync);
+			 }
+		}
+
+		$('#'+typeaheadId).typeahead({
+			hint: true,
+		  	highlight: true,
+		  	minLength: 0
+		},{
+		  	name: 'states',
+		  	display: 'status',
+		  	source: groupDefault,
+		  	templates: {
+			  	empty: [
+			      '<div class="empty-message">',
+			        'unable to find any group with current search',
+			      '</div>'
+			    ].join('\n')
+			    ,
+			    suggestion: function (data) {
+				        return '<p><strong>' + data.name + '</strong> - ' + data.status + '</p>';
+				    }
+		  }
+		});
+	})
+
 	
 	
 	

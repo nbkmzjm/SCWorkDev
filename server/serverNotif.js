@@ -273,6 +273,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					}
 				}]
 			}).then(function(groups){
+				console.log('friend Group:'+JSON.stringify(groups, null, 4))
 				var userIds = []
 				groups.forEach(function(group, i){
 					
@@ -302,7 +303,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				] 
 				})]
 			}).spread(function(posts){
-				console.log(JSON.stringify(posts, null, 4))
+				// console.log(JSON.stringify(posts, null, 4))
 				res.json({posts:posts})
 			}).catch(function(e) {
 				console.log(e)
