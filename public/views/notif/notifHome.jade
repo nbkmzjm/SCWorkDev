@@ -122,10 +122,28 @@ append scripts
 					input.id = 'friendSearch'
 					div.appendChild(input)
 
-
+					BHUserList("friendSearch")
+					var userSelected = []
+					var ul = document.createElement('ul')
+					ul.className = 'list-group'
+					ul.classList.add('col-sm-4')
+						var li = document.createElement('li')
+						li.innerHTML = 'ok'
+						ul.appendChild(li)
+					
 				$('#Feed').html(div)
-				BHUserList("friendSearch")
+				$('#Feed').append(ul)
+
+				
+				$('#groupSearch').bind('typeahead:selected', function(obj, group, name){
+					
+
+					$('#groupSearch').val('')
+				
+				
+				})
 				getPostDB()
+
 
 				//- $.getJSON('/notif/mainFeed').done(function(Rdata){
 				//- 	Rdata.posts.forEach(function(post, i){

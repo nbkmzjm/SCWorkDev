@@ -51,8 +51,8 @@ function BHUserList (typeaheadId) {
 			});
 		// constructs the suggestion engine
 		var groupList = new Bloodhound({
-			identify: function(obj) { return obj.status; },
-		  	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('status'),
+			identify: function(obj) { return obj.name; },
+		  	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
 		  	queryTokenizer: Bloodhound.tokenizers.whitespace,
 		  // `states` is an array of state names defined in "The Basics"
 		  	local: result
@@ -73,7 +73,7 @@ function BHUserList (typeaheadId) {
 		  	minLength: 0
 		},{
 		  	name: 'states',
-		  	display: 'status',
+		  	display: 'name',
 		  	source: groupDefault,
 		  	templates: {
 			  	empty: [
