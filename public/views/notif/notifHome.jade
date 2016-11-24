@@ -113,33 +113,42 @@ append scripts
 						}) 
 						span.appendChild(btn)
 					div.appendChild(span)
-
+					var userSelected = ['a', 'b', 'c']
 					var input = document.createElement('input')
 					input.type = 'text'
 					
 					input.placeholder = 'Search Person'
 					input.className ='form-control'
 					input.id = 'friendSearch'
+					input.setAttribute('href','#');
+					input.setAttribute('data-toggle','popover');
+					input.setAttribute('data-trigger','hover');
+					input.setAttribute('data-placement','auto');
+					input.style.fontWeight = 'bold'
+					input.setAttribute('title', 'Selected User');
+					
+					document.addEventListener('mousemove', function(){
+						input.setAttribute('data-content', JSON.stringify(userSelected, null, 4));
+						$('[data-toggle="popover"]').popover({html:true})
+						
+					})
+
 					div.appendChild(input)
 
 					BHUserList("friendSearch")
-					var userSelected = []
-					var ul = document.createElement('ul')
-					ul.className = 'list-group'
-					ul.classList.add('col-sm-4')
-						var li = document.createElement('li')
-						li.innerHTML = 'ok'
-						ul.appendChild(li)
+					
+					
 					
 				$('#Feed').html(div)
-				$('#Feed').append(ul)
+				
 
 				
-				$('#groupSearch').bind('typeahead:selected', function(obj, group, name){
-					
-
-					$('#groupSearch').val('')
-				
+				$('#friendSearch').bind('typeahead:selected', function(obj, group, name){
+					$('#friendSearch').typeahead('val', '')
+					userSelected.push(group.name)
+					console.log(obj)
+					console.log(group)
+					console.log(name)
 				
 				})
 				getPostDB()
@@ -360,6 +369,7 @@ append scripts
 					BHUserList("groupSearch")
 
 					$('#groupSearch').bind('typeahead:selected', function(obj, group, name){
+
 						$.post('/notif/editGroup',{
 						groupSelectedId:group.id,
 						action:'add'
@@ -368,6 +378,7 @@ append scripts
 							addGroup(pData.group.name)
 							ul.appendChild(li)
 							$('#groupSearch').val('')
+							
 					
 						});
 					})
