@@ -106,14 +106,40 @@ append scripts
 						btn.className = 'btn btn-primary'
 						btn.innerHTML = 'POST'
 						btn.addEventListener('click', function(){
-							console.log(select.value)
+							console.log(userSelected)
 							input.value!==''?postDB(select.value, input.value):''
 							//- input.value = ''
 							feedHome()
 						}) 
 						span.appendChild(btn)
 					div.appendChild(span)
-					var userSelected = ['a', 'b', 'c']
+
+
+
+					var divbtn = document.createElement('div')
+					divbtn. className = 'input-group-btn'
+						var btn = document.createElement('button')
+						btn.className = 'btn btn-primary dropdown-toggle'
+						btn.setAttribute('data-toggle', 'dropdown')
+						btn.innerHTML = 'include'
+							var span = document.createElement('span')
+							span.className = 'caret'
+							btn.appendChild(span)
+						btn.appendChild(divbtn)
+
+						var ul = document.createElement('ul')
+						ul.className = 'dropdown-menu'
+							var li = document.createElement('li')
+								var a = document.createElement('a')
+								a.href = 'www.yahoo.com'
+								a.innerHTML = 'YAHOO'
+								li.appendChild(a)
+							ul.appendChild(li)
+						divbtn.appendChild(ul)
+					div.appendChild(divbtn)
+
+
+					var userSelected = []
 					var input = document.createElement('input')
 					input.type = 'text'
 					
@@ -128,7 +154,7 @@ append scripts
 					input.setAttribute('title', 'Selected User');
 					
 					document.addEventListener('mousemove', function(){
-						input.setAttribute('data-content', JSON.stringify(userSelected, null, 4));
+						input.setAttribute('data-content', JSON.stringify(userSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
 						$('[data-toggle="popover"]').popover({html:true})
 						
 					})
@@ -145,7 +171,7 @@ append scripts
 				
 				$('#friendSearch').bind('typeahead:selected', function(obj, group, name){
 					$('#friendSearch').typeahead('val', '')
-					userSelected.push(group.name)
+					userSelected.push(group.name.substring(0,group.name.indexOf("_")))
 					console.log(obj)
 					console.log(group)
 					console.log(name)
