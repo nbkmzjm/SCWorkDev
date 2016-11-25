@@ -60,44 +60,70 @@ append scripts
 
 					//- span.classList.add('col-sm-3')
 					
-						var select = document.createElement('select')
-						select.className = 'form-control col-sm-1'
+					var select = document.createElement('select')
+					select.className = 'form-control col-sm-1'
 
-						//- select.className = ''
-						select.name = 'postTo'
-						select.id = 'postTo'
-							var optionList = ['mine','friend', 'friend of friend', 'public']
-								//- var optionDB = document.createElement('option')
-								//- optionDB.value = setting.value
-								//- optionDB.innerHTML = setting.value
-								//- select.appendChild(optionDB)
+					//- select.className = ''
+					select.name = 'postTo'
+					select.id = 'postTo'
+						var optionList = ['mine','friend', 'friend of friend', 'public']
 
-							optionList.forEach(function(item, i){
-								//- if(item !== setting.value){
-									var option = document.createElement('option')
-									option.value = item
-									option.innerHTML = item
-									select.appendChild(option)
-								//- }
+						optionList.forEach(function(item, i){
+							//- if(item !== setting.value){
+								var option = document.createElement('option')
+								option.value = item
+								option.innerHTML = item
+								select.appendChild(option)
+							//- }
 
-							})
-
-						
-						div.appendChild(select)
-
-						var span = document.createElement('span')
-						span.className = 'input-group-btn'
-						div.appendChild(span)
-					
+						})
 
 					
+					div.appendChild(select)
+
+					var span = document.createElement('span')
+					span.className = 'input-group-btn'
+					div.appendChild(span)
+
+					var selectFilter = document.createElement('select')
+					selectFilter.className = 'form-control col-sm-2'
+
+					//- select.className = ''
+					selectFilter.name = 'postTo'
+					selectFilter.id = 'postTo'
+						var optionList = ['include', 'exclude']
+
+						optionList.forEach(function(item, i){
+							//- if(item !== setting.value){
+								var option = document.createElement('option')
+								option.value = item
+								option.innerHTML = item
+								selectFilter.appendChild(option)
+							//- }
+
+						})
+
+					
+					div.appendChild(selectFilter)
+				
+					var span = document.createElement('span')
+					span.className = 'input-group-btn'
+					div.appendChild(span)
 
 
-					var input = document.createElement('input')
-					input.id = 'post'
-					input.className = 'form-control'
-					input.placeholder = 'Post announcement here'
-					div.appendChild(input)
+					
+
+
+				
+					var span = document.createElement('span')
+					span.className = 'input-group-btn'
+					div.appendChild(span)
+
+					var inputPost = document.createElement('input')
+					inputPost.id = 'post'
+					inputPost.className = 'form-control'
+					inputPost.placeholder = 'Post announcement here'
+					div.appendChild(inputPost)
 
 
 					var span = document.createElement('span')
@@ -106,8 +132,9 @@ append scripts
 						btn.className = 'btn btn-primary'
 						btn.innerHTML = 'POST'
 						btn.addEventListener('click', function(){
-							console.log(userSelected)
-							input.value!==''?postDB(select.value, input.value):''
+							console.log(inputPost.value)
+							console.log(userIdSelected)
+							input.value!==''?postDB(select.value, input.value, selectFilter,userIdSelected):''
 							//- input.value = ''
 							feedHome()
 						}) 
@@ -116,30 +143,31 @@ append scripts
 
 
 
-					var divbtn = document.createElement('div')
-					divbtn. className = 'input-group-btn'
-						var btn = document.createElement('button')
-						btn.className = 'btn btn-primary dropdown-toggle'
-						btn.setAttribute('data-toggle', 'dropdown')
-						btn.innerHTML = 'include'
-							var span = document.createElement('span')
-							span.className = 'caret'
-							btn.appendChild(span)
-						btn.appendChild(divbtn)
+					//- var divbtn = document.createElement('div')
+					//- divbtn.className = 'input-group-btn'
+					//- 	var btn = document.createElement('button')
+					//- 	btn.className = 'btn btn-primary dropdown-toggle'
+					//- 	btn.setAttribute('data-toggle', 'dropdown')
+					//- 	btn.innerHTML = 'include'
+					//- 		var span = document.createElement('span')
+					//- 		span.className = 'caret'
+					//- 		btn.appendChild(span)
+					//- 	divbtn.appendChild(btn)
 
-						var ul = document.createElement('ul')
-						ul.className = 'dropdown-menu'
-							var li = document.createElement('li')
-								var a = document.createElement('a')
-								a.href = 'www.yahoo.com'
-								a.innerHTML = 'YAHOO'
-								li.appendChild(a)
-							ul.appendChild(li)
-						divbtn.appendChild(ul)
-					div.appendChild(divbtn)
+					//- 	var ul = document.createElement('ul')
+					//- 	ul.className = 'dropdown-menu'
+					//- 		var li = document.createElement('li')
+					//- 			var a = document.createElement('a')
+					//- 			a.href = 'www.yahoo.com'
+					//- 			a.innerHTML = 'YAHOO'
+					//- 			li.appendChild(a)
+					//- 		ul.appendChild(li)
+					//- 	divbtn.appendChild(ul)
+					//- div.appendChild(divbtn)
 
 
 					var userSelected = []
+					var userIdSelected = []
 					var input = document.createElement('input')
 					input.type = 'text'
 					
@@ -172,6 +200,7 @@ append scripts
 				$('#friendSearch').bind('typeahead:selected', function(obj, group, name){
 					$('#friendSearch').typeahead('val', '')
 					userSelected.push(group.name.substring(0,group.name.indexOf("_")))
+					userIdSelected.push(group.id)
 					console.log(obj)
 					console.log(group)
 					console.log(name)

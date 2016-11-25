@@ -428,6 +428,8 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var curUserId = req.user.id
 	var postText = req.body.postText
 	var postTo = req.body.postTo
+	var filter = req.body.filter
+	var userArray = req.body.userArray
 	db.user.findOne({
 		where:{
 			id:curUserId
