@@ -298,7 +298,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							userId:{
 								$in:userIds
 							},
-							include:{
+							exclude:{
 								$notLike:'%'+curUserId+'%'
 							},
 							postTo:{
