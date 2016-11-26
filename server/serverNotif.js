@@ -301,10 +301,15 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							exclude:{
 								$notLike:'%'+curUserId+'%'
 							},
+								
 							postTo:{
 								$notIn:['mine']
 							}
 
+						},{
+							include:{
+							$like:'%'+curUserId+'%'
+							}
 						}]
 					
 				},
@@ -355,7 +360,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					})
 					
 		    
-					console.log('x: '+JSON.stringify(groupIds, null, 4))
+					console.log('group: '+JSON.stringify(groupIds, null, 4))
 					db.userGroups.findAll({
 						where:{
 							groupId:{
@@ -387,6 +392,9 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 										},
 										userId:{
 											$in:friendUserId
+										},
+										exclude:{
+											$notLike:'%'+curUserId+'%'
 										}
 									},{
 										userId:{
@@ -395,6 +403,10 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 										,
 										postTo:{
 											$notIn:['mine', 'friend'],
+										}
+									},{
+										include:{
+										$like:'%'+curUserId+'%'
 										}
 									}]
 								
@@ -440,8 +452,8 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var postTo = req.body.postTo
 	var filter = req.body.filter
 	var userArray = req.body.userArray
-	var userArrayIn
-	var userArrayEx
+	var userArrayIn = ""
+	var userArrayEx =""
 	if (filter ==="include"){
 		userArrayIn= userArray
 	}else{
