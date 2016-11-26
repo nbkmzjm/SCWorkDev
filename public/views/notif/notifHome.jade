@@ -134,7 +134,7 @@ append scripts
 						btn.addEventListener('click', function(){
 							console.log(inputPost.value)
 							console.log(userIdSelected)
-							input.value!==''?postDB(select.value, input.value, selectFilter,userIdSelected):''
+							inputPost.value!==''?postDB(select.value, inputPost.value, selectFilter.value,userIdSelected):''
 							//- input.value = ''
 							feedHome()
 						}) 
@@ -200,7 +200,7 @@ append scripts
 				$('#friendSearch').bind('typeahead:selected', function(obj, group, name){
 					$('#friendSearch').typeahead('val', '')
 					userSelected.push(group.name.substring(0,group.name.indexOf("_")))
-					userIdSelected.push(group.id)
+					userIdSelected.push(group.groupBLUserId)
 					console.log(obj)
 					console.log(group)
 					console.log(name)

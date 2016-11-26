@@ -15,13 +15,13 @@ module.exports = function(sequelize, DataTypes) {
         },
         type:{
             type: DataTypes.STRING
-        }
-        // include:{
-        //     type: DataTypes.STRING
-        // },
-        // exclude:{
-        //     type: DataTypes.STRING
-        // }   
+        },
+        include:{
+            type: DataTypes.STRING
+        },
+        exclude:{
+            type: DataTypes.STRING
+        }   
 
 	})
 

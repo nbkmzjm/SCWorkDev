@@ -1,10 +1,10 @@
 function postDB(postTo, postText, filter, userArray){
-	console.log(userArray)
+	var userArrayString = JSON.stringify(userArray,4, null)
 	$.post('/notif/post',{
 		postTo:postTo,
 		postText:postText,
 		filter:filter,
-		userArray:userArray
+		userArray:userArrayString
 	}).done(function(Rdata){
 		
 		console.log(Rdata)

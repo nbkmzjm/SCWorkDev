@@ -245,7 +245,14 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					model:db.user
 				}],
 				where:{
-					userId:curUserId
+					$or:[{
+						userId:curUserId
+					},{	
+						include:{
+							$like:'%'+curUserId+'%'
+						}
+					}]
+					
 				}
 			}).then(function(posts){
 				console.log(JSON.stringify(posts, null, 4))
@@ -290,6 +297,9 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						},{
 							userId:{
 								$in:userIds
+							},
+							include:{
+								$notLike:'%'+curUserId+'%'
 							},
 							postTo:{
 								$notIn:['mine']
@@ -430,6 +440,15 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var postTo = req.body.postTo
 	var filter = req.body.filter
 	var userArray = req.body.userArray
+	var userArrayIn
+	var userArrayEx
+	if (filter ==="include"){
+		userArrayIn= userArray
+	}else{
+		userArrayEx = userArray
+	}
+	
+	console.log('userArray:'+JSON.stringify(userArray, null, 4))
 	db.user.findOne({
 		where:{
 			id:curUserId
@@ -439,7 +458,9 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 		return [db.mainPost.create({
 			postText:postText,
 			postTo:postTo,
-			userId:curUserId
+			userId:curUserId,
+			include:userArrayIn,
+			exclude:userArrayEx,
 		}), user]
 
 	}).spread(function(post, user){
