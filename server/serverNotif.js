@@ -494,6 +494,21 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 
 })
 
+router.post('/getComment', middleware.requireAuthentication, function(req, res) {
+	var mainPostId = req.body.mainPostId
+	db.comment.findAll({
+		where:{
+			mainPostId:mainPostId
+		}
+	}).then(function(comments){
+		console.log(JSON.stringify(comments, null, 4))
+		res.json({
+			comments:comments
+		})
+	})
+
+})
+
 // db.group.findOne({
 // 		where:{
 // 			id:1

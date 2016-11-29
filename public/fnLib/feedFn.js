@@ -20,7 +20,7 @@ function getPostDB(){
 			var div = document.createElement('div')
 			
 			div.className = 'panel panel-primary'
-			div.classList.add('col-sm-4')
+			div.classList.add('col-md-4')
 				var divBody = document.createElement('div')
 				divBody.className = 'panel-body'
 				
@@ -44,11 +44,21 @@ function getPostDB(){
 					comment.setAttribute('data-target', '#comment'+post.id)
 					comment.innerHTML = 'comments'
 					comment.addEventListener('click', function(){
-						var divComment = document.createElement('div')
-						divComment.className='collapse'
-						divComment.id = 'comment'+post.id
-						divComment.innerHTML = 'this is post' + post.id
-						div.appendChild(divComment)
+						$.post('/notif/getComment',{
+							mainPostId:post.id
+						}).done(function(Rdata){
+							Rdata.comments.forEach(function(comment){
+								console.log(comment.comment)
+								
+								var divComment = document.createElement('div')
+								divComment.className='collapse'
+								divComment.id = 'comment'+post.id	
+								divComment.innerHTML = comment.comment
+								div.appendChild(divComment)
+							})
+							
+							
+						})
 					})
 
 					div.appendChild(comment)

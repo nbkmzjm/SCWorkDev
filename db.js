@@ -34,6 +34,7 @@ db.feedSetting = sequelize.import(__dirname + '/models/feedSetting.js');
 db.settingDescription = sequelize.import(__dirname + '/models/settingDescription.js');
 db.mainPost = sequelize.import(__dirname + '/models/mainPost.js');
 db.userGroups = sequelize.import(__dirname + '/models/userGroups.js');
+db.comment = sequelize.import(__dirname + '/models/comment.js');
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
@@ -103,3 +104,10 @@ db.user.hasMany(db.feedSetting , {as:'SettingUser'},{
 db.feedSetting.belongsTo(db.settingDescription)
 // db.settingDescription.hasMany(db.)
 module.exports = db;
+
+db.comment.belongsTo(db.mainPost,{
+	onDelete:'CASCADE'
+})
+db.mainPost.hasMany(db.comment,{
+	onDelete:'CASCADE'
+})
