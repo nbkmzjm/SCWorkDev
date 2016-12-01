@@ -6,9 +6,14 @@ module.exports = function(sequelize, DataTypes) {
 		// 	allowNull: false
 			
 		// },
+		// id:{
+  //           type: DataTypes.INTEGER, 
+  //           autoIncrement: true,
+  //           primaryKey: true
+  //       },
 		reaction: {
-			type: DataTypes.STRING,
-			allowNull: false			
+			type: DataTypes.STRING
+						
 			
 		},
 		comment: {

@@ -33,6 +33,7 @@ block content
 				div(id="Setting" class="tab-pane")
 append scripts 
 	script(src="public/fnLib/feedFn.js")
+
 	script.
 
 		$(function(){
@@ -50,7 +51,7 @@ append scripts
 			//- 	console.log(group.name)
 			//- })
 			$('#feedTab').on('click', feedHome)
-
+			
 			function feedHome(){
 				var div = document.createElement('div')
 				div.className = 'input-group'
@@ -119,11 +120,13 @@ append scripts
 					span.className = 'input-group-btn'
 					div.appendChild(span)
 
-					var inputPost = document.createElement('input')
+					var inputPost = document.createElement('textarea')
 					inputPost.id = 'post'
 					inputPost.className = 'form-control'
 					inputPost.placeholder = 'Post announcement here'
 					div.appendChild(inputPost)
+
+
 
 
 					var span = document.createElement('span')
@@ -194,6 +197,7 @@ append scripts
 					
 					
 				$('#Feed').html(div)
+				$('#post').autogrow({vertical: true, horizontal: false});
 				
 
 				

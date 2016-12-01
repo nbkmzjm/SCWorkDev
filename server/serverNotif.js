@@ -509,6 +509,30 @@ router.post('/getComment', middleware.requireAuthentication, function(req, res) 
 
 })
 
+router.post('/replyPost', middleware.requireAuthentication, function(req, res) {
+	var commentUser = req.user.id
+	var comment = req.body.comment
+	var mainPostId = req.body.mainPostId
+	console.log(mainPostId+"--"+comment)
+	// console.log(typeOf dfsdf)
+	db.comment.create({
+		comment:comment,
+		commentUser:commentUser,
+		mainPostId:55
+	}).then(function(comment){
+		console.log(JSON.stringify(comment, null, 4))
+		res.json({
+			comment:comment
+		})
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+
+})
+
 // db.group.findOne({
 // 		where:{
 // 			id:1

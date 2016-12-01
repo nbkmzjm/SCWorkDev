@@ -103,11 +103,14 @@ db.user.hasMany(db.feedSetting , {as:'SettingUser'},{
 
 db.feedSetting.belongsTo(db.settingDescription)
 // db.settingDescription.hasMany(db.)
-module.exports = db;
+
 
 db.comment.belongsTo(db.mainPost,{
 	onDelete:'CASCADE'
 })
+
 db.mainPost.hasMany(db.comment,{
 	onDelete:'CASCADE'
 })
+
+module.exports = db;
