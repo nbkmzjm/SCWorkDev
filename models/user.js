@@ -77,6 +77,10 @@ module.exports = function(sequelize, DataTypes) {
 				this.setDataValue('password_hash', hashedPassword);
 
 			}
+			,
+			get: function() {
+				return this.salt +' :XXX'
+		    }
 		}
 
 
