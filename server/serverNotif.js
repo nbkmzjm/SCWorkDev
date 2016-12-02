@@ -434,6 +434,7 @@ router.post('/getUserPost', middleware.requireAuthentication, function(req, res)
 			id:curUserId
 		},
 		include:[{
+
 			model:db.mainPost
 		}],
 		order:[
@@ -501,7 +502,8 @@ router.post('/getComment', middleware.requireAuthentication, function(req, res) 
 			mainPostId:mainPostId
 		},
 		include:[{
-			model:db.user
+			model:db.user,
+			attributes:['name','lastname']
 		}]
 	}).then(function(comments){
 		console.log(JSON.stringify(comments, null, 4))
@@ -520,6 +522,7 @@ router.post('/replyPost', middleware.requireAuthentication, function(req, res) {
 	// console.log(typeOf dfsdf)
 	db.comment.create({
 		comment:comment,
+		reaction:'',
 		commentUser:commentUser,
 		mainPostId:mainPostId
 	}).then(function(comment){

@@ -27,13 +27,9 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 
 router.get('/aboutuser', function(req, res) {
 	// res.send('abuot user')
-	db.user.findOne({
-		where:{
-			id:23
-		}
-	}).then(function(user){
-		console.log(JSON.stringify(user, null, 4))
-	})
+	var newDay = moment();
+	console.log(newDay.FullDate)
+	
 	res.redirect('/users')
 })
 

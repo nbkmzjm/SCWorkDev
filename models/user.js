@@ -77,10 +77,14 @@ module.exports = function(sequelize, DataTypes) {
 				this.setDataValue('password_hash', hashedPassword);
 
 			}
-			,
-			get: function() {
-				return this.salt +' :XXX'
-		    }
+			
+		}, 
+		fullName:{
+			type: DataTypes.VIRTUAL,
+			get: function(){
+				return this.get('name') +" "+ this.get('lastname')
+
+			}
 		}
 
 

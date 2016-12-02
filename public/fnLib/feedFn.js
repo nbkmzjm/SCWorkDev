@@ -60,7 +60,16 @@ function getPostDB(){
 								
 							Rdata1.comments.forEach(function(comment){
 								var divComment = document.createElement('div')
-								divComment.innerHTML = comment.comment
+									var pUser = document.createElement('p')
+									pUser.innerHTML = '<b>' +comment.user.fullName + ' </b> commented ' 
+									+ moment(comment.createdAt).fromNow()
+									divComment.appendChild(pUser)
+
+									var pComment = document.createElement('p')
+									pComment.innerHTML = comment.comment
+									divComment.appendChild(pComment)
+
+								
 								
 								divCommentContainer.appendChild(divComment)
 							

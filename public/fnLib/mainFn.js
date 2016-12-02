@@ -45,3 +45,6 @@ Date.prototype.toShortDate = function(){
 		}
 		return (d.day+'<br>'+d.month +'&nbsp'+d.date+', '+d.year)
 	};
+Moment.fn.FullDate = function () {
+	return "xxxx"
+}
