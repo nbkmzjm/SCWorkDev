@@ -23,12 +23,13 @@ module.exports = function(sequelize, DataTypes) {
 				len: [0, 999]	
 			}
 			
-		},
-		commentUser: {
-			type: DataTypes.INTEGER,
-			allowNull: false
-			
 		}
+		// ,
+		// commentUser: {
+		// 	type: DataTypes.INTEGER,
+		// 	allowNull: false
+			
+		// }
 
 
 

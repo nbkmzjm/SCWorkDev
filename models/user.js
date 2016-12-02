@@ -170,6 +170,19 @@ module.exports = function(sequelize, DataTypes) {
 		}
 
 
+	},{
+		getterMethods   : {
+		fullName       : function()  { return this.name + ' ' + this.lastname }
+		},
+		setterMethods   : {
+		fullName       : function(value) {
+		    var names = value.split(' ');
+
+		    this.setDataValue('name', names.slice(0, -1).join(' '));
+		    this.setDataValue('lastname', names.slice(-1).join(' '));
+			}
+		}
+
 	});
  	return user;
 };

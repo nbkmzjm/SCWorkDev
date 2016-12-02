@@ -499,7 +499,10 @@ router.post('/getComment', middleware.requireAuthentication, function(req, res) 
 	db.comment.findAll({
 		where:{
 			mainPostId:mainPostId
-		}
+		},
+		include:[{
+			model:db.user
+		}]
 	}).then(function(comments){
 		console.log(JSON.stringify(comments, null, 4))
 		res.json({
@@ -518,7 +521,7 @@ router.post('/replyPost', middleware.requireAuthentication, function(req, res) {
 	db.comment.create({
 		comment:comment,
 		commentUser:commentUser,
-		mainPostId:55
+		mainPostId:mainPostId
 	}).then(function(comment){
 		console.log(JSON.stringify(comment, null, 4))
 		res.json({
