@@ -518,12 +518,12 @@ router.post('/replyPost', middleware.requireAuthentication, function(req, res) {
 	var commentUser = req.user.id
 	var comment = req.body.comment
 	var mainPostId = req.body.mainPostId
-	console.log(mainPostId+"--"+comment)
+	console.log(mainPostId+"--"+comment+'--'+commentUser)
 	// console.log(typeOf dfsdf)
 	db.comment.create({
 		comment:comment,
 		reaction:'',
-		commentUser:commentUser,
+		userId:commentUser,
 		mainPostId:mainPostId
 	}).then(function(comment){
 		console.log(JSON.stringify(comment, null, 4))

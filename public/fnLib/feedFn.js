@@ -63,11 +63,46 @@ function getPostDB(){
 									var pUser = document.createElement('p')
 									pUser.innerHTML = '<b>' +comment.user.fullName + ' </b> commented ' 
 									+ moment(comment.createdAt).fromNow()
+										var spanEmoj = document.createElement('span')
+										spanEmoj.className = 'glyphicon glyphicon-bullhorn'
+										spanEmoj.id = 'spanEmoj'
+										spanEmoj.style.float = 'right'
+										spanEmoj.style.color = '#2DC729'
+										spanEmoj.style.fontSize = '20px'
+										spanEmoj.addEventListener('click', function(){
+											$('#spanEmoj').remove();
+											var spanRemove = document.createElement('span')
+											spanRemove.className = 'glyphicon glyphicon-remove-sign'
+											spanRemove. id = 'spanRemove'
+											spanRemove.style.float = 'right'
+											spanRemove.style.fontSize = '20px'
+											spanRemove.addEventListener('click', function(){
+												console.log('click')
+												$('#spanEmojDock').remove();
+												$('#spanRemove').remove();
+												pUser.appendChild(spanEmoj)
+												// $('#spanEmoj').html('')
+											})
+											pUser.appendChild(spanRemove)
+
+											var spanEmojDock = document.createElement('span')
+											spanEmojDock.className = 'glyphicon glyphicon-thumbs-up'
+											spanEmojDock.style.float = 'right'
+											spanEmojDock.id = 'spanEmojDock'
+											spanEmojDock.style.fontSize = '20px'
+											pUser.appendChild(spanEmojDock)
+
+											
+										}) 
+										pUser.appendChild(spanEmoj)
 									divComment.appendChild(pUser)
 
 									var pComment = document.createElement('p')
 									pComment.innerHTML = comment.comment
 									divComment.appendChild(pComment)
+
+									
+
 
 								
 								
