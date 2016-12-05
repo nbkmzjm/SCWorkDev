@@ -11,8 +11,9 @@ module.exports = function(sequelize, DataTypes) {
   //           autoIncrement: true,
   //           primaryKey: true
   //       },
-		reaction: {
+		commentEmoj: {
 			type: DataTypes.STRING
+
 						
 			
 		},

@@ -34,23 +34,23 @@ function getPostDB(){
 					var pUser = document.createElement('p')
 					pUser.innerHTML =  post.user.name + " posted " + moment(post.createdAt).fromNow()
 					divTitle.appendChild(pUser)
-				div.appendChild(divTitle)	
 
-				var divTitle = document.createElement('div')
-				divTitle.className = 'panel-heading'
-				div.appendChild(divTitle)
 					var comment = document.createElement('button')
 					comment.setAttribute('data-toggle', 'collapse')
 					comment.setAttribute('data-target', '#comment'+post.id)
-					comment.innerHTML = 'comments'
+					comment.innerHTML = 'Comments'
+						// var span = document.createElement('span')
+						// span.className = 'glyphicon glyphicon-comment'
+						// comment.appendChild(span)
+					comment.style.color = 'black'
 					comment.addEventListener('click', function(){
-						comment.innerHTML == 'comments'?comment.innerHTML = 'collapse':comment.innerHTML= 'comments'
+						comment.innerHTML == 'Comments'?comment.innerHTML = 'Collapse':comment.innerHTML= 'comments'
 					})
 					comment.addEventListener('mouseenter', function(){
 						console.log('before')
 						
 						
-						comment.innerHTML= 'comments'
+						comment.innerHTML= 'Comments'
 						$.post('/notif/getComment',{
 							mainPostId:post.id
 						}).done(function(Rdata1){
@@ -60,6 +60,27 @@ function getPostDB(){
 							var divCommentContainer = document.createElement('div')
 							divCommentContainer.className='collapse'
 							divCommentContainer.id = 'comment'+post.id	
+
+							function glyphiconColor(name){
+								switch(name){
+									case 'glyphicon glyphicon-thumbs-up':
+										return 'blue'
+										break
+									case 'glyphicon glyphicon-thumbs-down':
+										return 'purple'
+										break
+									case 'glyphicon glyphicon-heart':
+										return 'red'
+										break
+									case 'glyphicon glyphicon-remove-sign':
+										return 'gray'
+										break
+									case 'glyphicon glyphicon-star':
+										return 'yellow'
+										break
+									default:
+								} 
+							}
 								
 							Rdata1.comments.forEach(function(comment){
 								var divComment = document.createElement('div')
@@ -67,13 +88,23 @@ function getPostDB(){
 									pUser.innerHTML = '<b>' +comment.user.fullName + ' </b> commented ' 
 									+ moment(comment.createdAt).fromNow()
 										var spanEmoj = document.createElement('span')
-										spanEmoj.className = 'glyphicon glyphicon-bullhorn'
+										if(comment.commentEmoj !== ''){
+											spanEmoj.className = comment.commentEmoj
+											spanEmoj.style.color = glyphiconColor(comment.commentEmoj)
+										}else{
+											spanEmoj.className='glyphicon glyphicon-thumbs-up'
+											spanEmoj.style.color = 'gray'
+										}
+										
 										spanEmoj.id = 'spanEmoj'
 										spanEmoj.style.float = 'right'
-										spanEmoj.style.color = '#2DC729'
+										
 										spanEmoj.style.fontSize = '20px'
 										spanEmoj.addEventListener('click', function(){
 											spanEmoj.parentNode.removeChild(spanEmoj)
+
+
+
 											// $('#spanEmoj').remove();
 											// var spanRemove = document.createElement('span')
 											// spanRemove.className = 'glyphicon glyphicon-remove-sign'
@@ -107,6 +138,12 @@ function getPostDB(){
 													spanEmojDock.style.fontSize = '20px'
 													spanEmojDock.addEventListener('click', function () {
 														console.log(spanEmojDock.className)
+														$.post('/notif/replyEmoj',{
+															commentId:comment.id,
+															commentEmoj:spanEmojDock.className
+														}).done(function(Rdata){
+															console.log(Rdata)
+														})
 													})
 													divEmojDock.appendChild(spanEmojDock)
 
@@ -161,10 +198,11 @@ function getPostDB(){
 												comment:replyPost.value
 											}).done(function(Rdata){
 												if(!!Rdata){
-													var divComment = document.createElement('div')
-													divComment.innerHTML = Rdata.comment.comment
+													arguments.callee.caller
+													// var divComment = document.createElement('div')
+													// divComment.innerHTML = Rdata.comment.comment
 													
-													divCommentContainer.insertBefore(divComment, divCommentPost)
+													// divCommentContainer.insertBefore(divComment, divCommentPost)
 												}
 											})
 										}) 
@@ -172,11 +210,17 @@ function getPostDB(){
 									divCommentPost.appendChild(span)
 								divCommentContainer.appendChild(divCommentPost)
 							}
-							div.appendChild(divCommentContainer)
+							divTitle.appendChild(divCommentContainer)
 						})
 					})
 
-					div.appendChild(comment)
+					divTitle.appendChild(comment)
+				div.appendChild(divTitle)	
+
+				var divTitle = document.createElement('div')
+				divTitle.className = 'panel-heading'
+				div.appendChild(divTitle)
+					
 
 			$('#Feed').append(div)
 
