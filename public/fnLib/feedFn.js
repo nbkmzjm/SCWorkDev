@@ -12,6 +12,27 @@ function postDB(postTo, postText, filter, userArray){
 					
 }
 
+function glyphiconColor(name){
+	switch(name){
+		case 'glyphicon glyphicon-thumbs-up':
+			return 'blue'
+			break
+		case 'glyphicon glyphicon-thumbs-down':
+			return 'purple'
+			break
+		case 'glyphicon glyphicon-heart':
+			return 'red'
+			break
+		case 'glyphicon glyphicon-remove-sign':
+			return 'gray'
+			break
+		case 'glyphicon glyphicon-star':
+			return 'yellow'
+			break
+		default:
+	} 
+}
+
 function getPostDB(){
 	$.post('/notif/getFeed').done(function(Rdata){
 		console.log(Rdata)
@@ -59,28 +80,80 @@ function getPostDB(){
 							
 							var divCommentContainer = document.createElement('div')
 							divCommentContainer.className='collapse'
-							divCommentContainer.id = 'comment'+post.id	
+							divCommentContainer.id = 'comment'+post.id		
+								var spanPostEmoj = document.createElement('span')
+								// if(comment.commentEmoj !== ''){
+								// 		spanPostEmoj.className = comment.commentEmoj
+								// 		spanPostEmoj.style.color = glyphiconColor(comment.commentEmoj)
+								// 	}else{
+										spanPostEmoj.className='glyphicon glyphicon-thumbs-up'
+										spanPostEmoj.style.color = 'gray'
+									// }
+								
+								spanPostEmoj.id = 'spanPostEmoj'
+								spanPostEmoj.style.float = 'right'
+								
+								spanPostEmoj.style.fontSize = '20px'
+								spanPostEmoj.addEventListener('click', function(){
+									spanPostEmoj.parentNode.removeChild(spanPostEmoj)
 
-							function glyphiconColor(name){
-								switch(name){
-									case 'glyphicon glyphicon-thumbs-up':
-										return 'blue'
-										break
-									case 'glyphicon glyphicon-thumbs-down':
-										return 'purple'
-										break
-									case 'glyphicon glyphicon-heart':
-										return 'red'
-										break
-									case 'glyphicon glyphicon-remove-sign':
-										return 'gray'
-										break
-									case 'glyphicon glyphicon-star':
-										return 'yellow'
-										break
-									default:
-								} 
-							}
+
+
+									// $('#spanEmoj').remove();
+									// var spanRemove = document.createElement('span')
+									// spanRemove.className = 'glyphicon glyphicon-remove-sign'
+									// spanRemove. id = 'spanRemove'
+									// spanRemove.style.float = 'right'
+									// spanRemove.style.fontSize = '20px'
+									// spanRemove.addEventListener('click', function(){
+									// 	console.log('click')
+									// 	$('#spanEmojDock').remove();
+									// 	$('#spanRemove').remove();
+									// 	pUser.appendChild(spanEmoj)
+										// $('#spanEmoj').html('')
+									// })
+									// pUser.appendChild(spanRemove)
+									function glyphiconGen (name, color) {
+										this.name = name
+										this.color = color
+									}
+									var divEmojDock = document.createElement('div')
+										var glyphiconList = [
+											new glyphiconGen('glyphicon glyphicon-thumbs-up','blue'),
+											new glyphiconGen('glyphicon glyphicon-thumbs-down','purple'),
+											new glyphiconGen('glyphicon glyphicon-heart','red'),
+											new glyphiconGen('glyphicon glyphicon-star','yellow'),
+											new glyphiconGen('glyphicon glyphicon-remove-sign','gray') ]
+										glyphiconList.forEach(function(item){
+											var spanEmojDock = document.createElement('span')
+											spanEmojDock.className = item.name
+											spanEmojDock.style.color = item.color
+											// spanEmojDock.style.float = 'left'
+											spanEmojDock.style.fontSize = '20px'
+											spanEmojDock.addEventListener('click', function () {
+												console.log(spanEmojDock.className)
+												$.post('/notif/replyEmoj',{
+													commentId:comment.id,
+													commentEmoj:spanEmojDock.className
+												}).done(function(Rdata){
+													console.log(Rdata)
+												})
+											})
+											divEmojDock.appendChild(spanEmojDock)
+
+
+											var spanSpace = document.createElement('span')
+											// spanSpace.style.float = 'left'
+											spanSpace.innerHTML = '&nbsp&nbsp&nbsp'
+											divEmojDock.appendChild(spanSpace)
+											})
+									divCommentContainer.appendChild(divEmojDock)
+						
+
+						
+					}) 
+					divTitle.appendChild(spanPostEmoj)
+							
 								
 							Rdata1.comments.forEach(function(comment){
 								var divComment = document.createElement('div')
@@ -215,12 +288,11 @@ function getPostDB(){
 					})
 
 					divTitle.appendChild(comment)
-				div.appendChild(divTitle)	
 
-				var divTitle = document.createElement('div')
-				divTitle.className = 'panel-heading'
-				div.appendChild(divTitle)
+
 					
+
+				div.appendChild(divTitle)	
 
 			$('#Feed').append(div)
 

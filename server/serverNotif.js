@@ -539,32 +539,6 @@ router.post('/replyPost', middleware.requireAuthentication, function(req, res) {
 
 })
 
-router.post('/replyEmoj', middleware.requireAuthentication, function(req, res) {
-	var commentUser = req.user.id
-	var commentId = req.body.commentId
-	var commentEmoj = req.body.commentEmoj
-	console.log(commentEmoj+"--"+commentId+'--'+commentUser)
-
-	db.comment.update({
-		commentEmoj:commentEmoj
-	},{
-		where:{
-			id:commentId
-		}	
-	}).then(function(updated){
-		console.log(updated)
-		res.json({
-			updated:updated
-		})
-	}).catch(function(e) {
-		console.log(e)
-		res.render('error', {
-			error: e.toString()
-		})
-	});
-})
-
-
 // db.group.findOne({
 // 		where:{
 // 			id:1
