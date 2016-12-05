@@ -43,11 +43,14 @@ function getPostDB(){
 					comment.setAttribute('data-toggle', 'collapse')
 					comment.setAttribute('data-target', '#comment'+post.id)
 					comment.innerHTML = 'comments'
+					comment.addEventListener('click', function(){
+						comment.innerHTML == 'comments'?comment.innerHTML = 'collapse':comment.innerHTML= 'comments'
+					})
 					comment.addEventListener('mouseenter', function(){
 						console.log('before')
 						
 						
-
+						comment.innerHTML= 'comments'
 						$.post('/notif/getComment',{
 							mainPostId:post.id
 						}).done(function(Rdata1){
@@ -70,27 +73,51 @@ function getPostDB(){
 										spanEmoj.style.color = '#2DC729'
 										spanEmoj.style.fontSize = '20px'
 										spanEmoj.addEventListener('click', function(){
-											$('#spanEmoj').remove();
-											var spanRemove = document.createElement('span')
-											spanRemove.className = 'glyphicon glyphicon-remove-sign'
-											spanRemove. id = 'spanRemove'
-											spanRemove.style.float = 'right'
-											spanRemove.style.fontSize = '20px'
-											spanRemove.addEventListener('click', function(){
-												console.log('click')
-												$('#spanEmojDock').remove();
-												$('#spanRemove').remove();
-												pUser.appendChild(spanEmoj)
+											spanEmoj.parentNode.removeChild(spanEmoj)
+											// $('#spanEmoj').remove();
+											// var spanRemove = document.createElement('span')
+											// spanRemove.className = 'glyphicon glyphicon-remove-sign'
+											// spanRemove. id = 'spanRemove'
+											// spanRemove.style.float = 'right'
+											// spanRemove.style.fontSize = '20px'
+											// spanRemove.addEventListener('click', function(){
+											// 	console.log('click')
+											// 	$('#spanEmojDock').remove();
+											// 	$('#spanRemove').remove();
+											// 	pUser.appendChild(spanEmoj)
 												// $('#spanEmoj').html('')
-											})
-											pUser.appendChild(spanRemove)
+											// })
+											// pUser.appendChild(spanRemove)
+											function glyphiconGen (name, color) {
+												this.name = name
+												this.color = color
+											}
+											var divEmojDock = document.createElement('div')
+												var glyphiconList = [
+													new glyphiconGen('glyphicon glyphicon-thumbs-up','blue'),
+													new glyphiconGen('glyphicon glyphicon-thumbs-down','purple'),
+													new glyphiconGen('glyphicon glyphicon-heart','red'),
+													new glyphiconGen('glyphicon glyphicon-star','yellow'),
+													new glyphiconGen('glyphicon glyphicon-remove-sign','gray') ]
+												glyphiconList.forEach(function(item){
+													var spanEmojDock = document.createElement('span')
+													spanEmojDock.className = item.name
+													spanEmojDock.style.color = item.color
+													// spanEmojDock.style.float = 'left'
+													spanEmojDock.style.fontSize = '20px'
+													spanEmojDock.addEventListener('click', function () {
+														console.log(spanEmojDock.className)
+													})
+													divEmojDock.appendChild(spanEmojDock)
 
-											var spanEmojDock = document.createElement('span')
-											spanEmojDock.className = 'glyphicon glyphicon-thumbs-up'
-											spanEmojDock.style.float = 'right'
-											spanEmojDock.id = 'spanEmojDock'
-											spanEmojDock.style.fontSize = '20px'
-											pUser.appendChild(spanEmojDock)
+
+													var spanSpace = document.createElement('span')
+													// spanSpace.style.float = 'left'
+													spanSpace.innerHTML = '&nbsp&nbsp&nbsp'
+													divEmojDock.appendChild(spanSpace)
+													})
+											divComment.appendChild(divEmojDock)
+											
 
 											
 										}) 
