@@ -514,6 +514,55 @@ router.post('/getComment', middleware.requireAuthentication, function(req, res) 
 
 })
 
+router.post('/getCommentCount', middleware.requireAuthentication, function(req, res) {
+	var mainPostId = req.body.mainPostId
+	db.comment.count({
+		where:{
+			mainPostId:mainPostId,
+			comment: {
+				$not:''
+			}
+		}
+	}).then(function(commentCount){
+		// console.log(JSON.stringify(commentCount, null, 4))
+		return [db.comment.findAll({
+			where:{
+				mainPostId:mainPostId,
+				commentEmoj: {
+					$not:''
+				}
+			},
+			attributes:['commentEmoj']
+		}), commentCount]
+	}).spread(function(commentEmojs, commentCount){
+		// console.log('arrCommentEmojs'+JSON.stringify(commentEmojs.length, null, 4))
+		if(commentEmojs.length > 0){
+			var objCommentEmoj = {};
+			commentEmojs.map(function(commentEmoj){
+				
+				if(objCommentEmoj[commentEmoj.commentEmoj]!= undefined){
+					objCommentEmoj[commentEmoj.commentEmoj].push('x')
+				}else{
+					objCommentEmoj[commentEmoj.commentEmoj] = []
+					objCommentEmoj[commentEmoj.commentEmoj].push('x')
+				}
+
+			})
+
+			for(key in objCommentEmoj){
+				objCommentEmoj[key] = objCommentEmoj[key].length
+			}
+		}
+		res.json({
+			commentCount:commentCount,
+			emojCount:objCommentEmoj
+		})
+		
+		console.log('objCommentEmojs'+JSON.stringify(objCommentEmoj, null, 4))
+	})
+
+})
+
 router.post('/replyPost', middleware.requireAuthentication, function(req, res) {
 	var commentUser = req.user.id
 	var comment = req.body.comment

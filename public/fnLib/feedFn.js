@@ -56,6 +56,12 @@ function getPostDB(){
 					pUser.innerHTML =  post.user.name + " posted " + moment(post.createdAt).fromNow()
 					divTitle.appendChild(pUser)
 
+					$.post('/notif/getCommentCount',{
+						mainPostId:post.id
+					}).done(function(Rdata){
+						console.log(Rdata)
+					})
+
 					var comment = document.createElement('button')
 					comment.setAttribute('data-toggle', 'collapse')
 					comment.setAttribute('data-target', '#comment'+post.id)

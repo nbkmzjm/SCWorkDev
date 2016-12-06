@@ -1076,6 +1076,7 @@ append scripts
 
 			var arrCate = {}
 			$.each(Rdata.taskOption, function (i, taskOption){
+				console.log(taskOption)
 				if(arrCate[taskOption.category]!= undefined ){
 						arrCate[taskOption.category].push(taskOption.description)
 				}else{
@@ -1085,6 +1086,7 @@ append scripts
 			})
 
 			var taskOpListLength = 10
+			console.log(arrCate)
 			console.log(Object.keys(arrCate).length)
 			if (Object.keys(arrCate).length > 5){
 				var colNumber = 1
