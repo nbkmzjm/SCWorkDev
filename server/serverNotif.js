@@ -287,7 +287,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					userIds.push(group.groupBLUserId)
 				})
 				
-				return [db.mainPost.findAll({
+				return [db.mainPost.scope('limit21').findAll({
 				include:[{
 					model:db.user
 				}],
@@ -315,7 +315,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				},
 				order:[
 					['createdAt', 'DESC']
-				] 
+				]
 				})]
 			}).spread(function(posts){
 				// console.log(JSON.stringify(posts, null, 4))

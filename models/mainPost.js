@@ -23,6 +23,12 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING
         }   
 
-	})
+	},{
+    scopes: {
+        limit21: {
+            limit:9 
+        }
+    }
+    })
 
 };   

@@ -129,14 +129,12 @@ function getPostDB(){
 										
 									Rdata1.comments.forEach(function(comment){
 										var divComment = document.createElement('div')
-											var pUser = document.createElement('p')
-											pUser.innerHTML = '<b>' +comment.user.fullName + ' </b> commented ' 
-											+ moment(comment.createdAt).fromNow()
-												
+										
 												if(comment.commentEmoj !== ''){
 													var pUser = document.createElement('p')
 													pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName + ' </b>' 
 													+ moment(comment.createdAt).fromNow()
+													pUser.style.color = '#B0AAC4'
 													var spanEmoj = document.createElement('span')
 													spanEmoj.className = comment.commentEmoj
 													spanEmoj.style.color = glyphiconColor(comment.commentEmoj)
@@ -153,6 +151,7 @@ function getPostDB(){
 													var pUser = document.createElement('p')
 													pUser.innerHTML = '<b>' +comment.user.fullName + ' </b> commented ' 
 													+ moment(comment.createdAt).fromNow()
+													pUser.style.color = '#B0AAC4'
 													divComment.appendChild(pUser)
 													var pComment = document.createElement('p')
 													pComment.innerHTML = '&nbsp&nbsp-&nbsp'+comment.comment
