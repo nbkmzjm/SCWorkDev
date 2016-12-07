@@ -12,14 +12,14 @@ module.exports = function(sequelize, DataTypes) {
   //           primaryKey: true
   //       },
 		commentEmoj: {
-			type: DataTypes.STRING
-
+			type: DataTypes.STRING,
+			defaultValue:''
 						
 			
 		},
 		comment: {
 			type: DataTypes.STRING,
-			allowNull: false,
+			defaultValue:'',
 			validate: {
 				len: [0, 999]	
 			}

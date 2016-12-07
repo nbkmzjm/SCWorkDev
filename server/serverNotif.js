@@ -500,6 +500,9 @@ router.post('/getComment', middleware.requireAuthentication, function(req, res) 
 	db.comment.findAll({
 		where:{
 			mainPostId:mainPostId
+			// commentEmoj:''
+			
+
 		},
 		include:[{
 			model:db.user,
@@ -516,6 +519,8 @@ router.post('/getComment', middleware.requireAuthentication, function(req, res) 
 
 router.post('/getCommentCount', middleware.requireAuthentication, function(req, res) {
 	var mainPostId = req.body.mainPostId
+	var curUserId = req.user.id
+	console.log('mainPostId'+ mainPostId)
 	db.comment.count({
 		where:{
 			mainPostId:mainPostId,
@@ -553,12 +558,28 @@ router.post('/getCommentCount', middleware.requireAuthentication, function(req, 
 				objCommentEmoj[key] = objCommentEmoj[key].length
 			}
 		}
-		res.json({
-			commentCount:commentCount,
-			emojCount:objCommentEmoj
-		})
+		console.log('mainPostId'+ mainPostId)
+		return [db.comment.findOne({
+			where:{
+				mainPostId:mainPostId,
+				userId:curUserId,
+				commentEmoj:{
+					$not:''
+				}
+			}
+			
+		}), commentCount, objCommentEmoj]
+		
 		
 		console.log('objCommentEmojs'+JSON.stringify(objCommentEmoj, null, 4))
+	}).spread(function(selfEmoj,commentCount, objCommentEmoj){
+
+		console.log('selfEmoj: '+ JSON.stringify(selfEmoj, null, 4)+' id:'+ mainPostId)
+		res.json({
+			commentCount:commentCount,
+			emojCount:objCommentEmoj,
+			selfEmoj:selfEmoj
+		})
 	})
 
 })
@@ -586,6 +607,66 @@ router.post('/replyPost', middleware.requireAuthentication, function(req, res) {
 		})
 	});
 
+})
+
+router.post('/addPostEmoj', middleware.requireAuthentication, function(req, res) {
+	var curUserId = req.user.id
+	var commentEmoj = req.body.commentEmoj
+	var mainPostId = req.body.mainPostId
+	console.log(mainPostId+"--"+commentEmoj+'--'+curUserId)
+	db.comment.findOne({
+		where:{
+			mainPostId:mainPostId,
+			userId:curUserId,
+			commentEmoj:{
+				$not:''
+			}
+		}
+	}).then(function(comment){
+		console.log("xxx"+JSON.stringify(comment, null, 4))
+		if(!!comment){
+			console.log('updating')
+			db.comment.update({
+				commentEmoj:commentEmoj
+			},{
+				where:{
+					mainPostId:mainPostId,
+					userId:curUserId,
+					commentEmoj:{
+						$not:''
+					}
+				}
+			}).then(function(updated){
+				res.json({
+					updated:updated
+				})
+			}).catch(function(e) {
+				console.log(e)
+				res.render('error', {
+					error: e.toString()
+				})
+			});
+			
+		}else{
+			console.log('creating new')
+			db.comment.create({
+				mainPostId:mainPostId,
+				userId:curUserId,
+				commentEmoj:commentEmoj
+			}).then(function(comment){
+				res.json({
+					comment:comment
+				})
+			}).catch(function(e) {
+				console.log(e)
+				res.render('error', {
+					error: e.toString()
+				})
+			});
+			
+		}
+		
+	})
 })
 
 // db.group.findOne({
