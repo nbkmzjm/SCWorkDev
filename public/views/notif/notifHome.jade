@@ -50,7 +50,6 @@ append scripts
 			//- 	ul.appendChild(li)
 			//- 	console.log(group.name)
 			//- })
-			$('#feedTab').on('click', feedHome)
 			
 			function feedHome(){
 				var div = document.createElement('div')
@@ -209,6 +208,30 @@ append scripts
 					console.log(group)
 					console.log(name)
 				
+				})
+				$('#feedTab').on('click', feedHome)
+				var windowHt = 300
+				var loadNumber = 0
+				window.addEventListener('scroll', function(event){
+					var posScrollY = window.scrollY
+					
+					//window.innerHeight-50
+					
+					var feedPerScroll = 3
+					//- console.log('windowHt:'+windowHt)
+					//- console.log('posScrollY:'+posScrollY)
+					//- console.log('loadNumber:'+loadNumber)
+
+					if(posScrollY>windowHt ){
+						
+						loadNumber = loadNumber + 1
+						feednumber = loadNumber*feedPerScroll
+						console.log('feednumber: '+feednumber)
+						windowHt = windowHt*loadNumber
+					}
+					
+
+				 
 				})
 				getPostDB()
 
