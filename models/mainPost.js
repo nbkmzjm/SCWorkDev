@@ -26,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
 	},{
     scopes: {
         limit21: {
-            limit:9 
+            limit:6 
         }
     }
     })

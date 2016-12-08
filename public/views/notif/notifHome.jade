@@ -66,7 +66,7 @@ append scripts
 					//- select.className = ''
 					select.name = 'postTo'
 					select.id = 'postTo'
-						var optionList = ['mine','friend', 'friend of friend', 'public']
+						var optionList = ['friend', 'friend of friend','mine', 'public']
 
 						optionList.forEach(function(item, i){
 							//- if(item !== setting.value){
@@ -210,24 +210,30 @@ append scripts
 				
 				})
 				$('#feedTab').on('click', feedHome)
-				var windowHt = 300
+				var windowHt = window.innerHeight-50
 				var loadNumber = 0
 				window.addEventListener('scroll', function(event){
 					var posScrollY = window.scrollY
+					var loadPoint = document.getElementById('Feed').lastChild.getBoundingClientRect().top
 					
-					//window.innerHeight-50
+					
 					
 					var feedPerScroll = 3
-					//- console.log('windowHt:'+windowHt)
-					//- console.log('posScrollY:'+posScrollY)
+					console.log('windowHt:'+windowHt)
+					console.log('posScrollY:'+posScrollY)
 					//- console.log('loadNumber:'+loadNumber)
+					console.log('loadPoint:')
+					console.log(loadPoint)
 
-					if(posScrollY>windowHt ){
-						
-						loadNumber = loadNumber + 1
-						feednumber = loadNumber*feedPerScroll
-						console.log('feednumber: '+feednumber)
-						windowHt = windowHt*loadNumber
+					if(loadPoint<windowHt ){
+
+						console.log('loading...')
+						var loadPoint = document.getElementById('Feed').lastChild.getBoundingClientRect().top
+						getPostDB()
+						//- loadNumber = loadNumber + 1
+						//- feednumber = loadNumber*feedPerScroll
+						//- console.log('feednumber: '+feednumber)
+						//- windowHt = windowHt*loadNumber
 					}
 					
 
