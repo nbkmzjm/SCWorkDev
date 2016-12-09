@@ -218,7 +218,7 @@ append scripts
 				window.addEventListener('mousewheel', function(event){
 
 					scrollPointLoad++
-					scrollPointLoad>=11?scrollPointLoad=0:''
+					scrollPointLoad>=6?scrollPointLoad=0:''
 					//- scrollPoint6==6?console.log('XXX'):''
 					//- console.log(scrollPoint6)
 					var posScrollY = window.scrollY
@@ -234,12 +234,12 @@ append scripts
 					//- console.log('loadPoint:')
 					//- console.log(loadPoint)
 
-					if(loadPoint<windowHt && scrollPointLoad==6 ){
+					if(loadPoint<windowHt && scrollPointLoad==3 ){
 						
 						loadNumber += 6
 						console.log('loading...'+ loadNumber)
 						
-						getPostDB(loadNumber)
+						console.log('return load#'+getPostDB(loadNumber))
 						//- preventDefault(event);
 						
 						//- loadNumber = loadNumber + 1

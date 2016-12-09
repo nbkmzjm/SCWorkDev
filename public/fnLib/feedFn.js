@@ -141,23 +141,30 @@ function getPostDB(loadNumber){
 													pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName + ' </b>' 
 													+ moment(comment.createdAt).fromNow()
 													pUser.style.color = '#B0AAC4'
-													var spanEmoj = document.createElement('span')
-													spanEmoj.className = comment.commentEmoj
-													spanEmoj.style.color = glyphiconColor(comment.commentEmoj)
-													spanEmoj.id = 'spanEmoj'
-													spanEmoj.style.float = 'left'
-													
-													spanEmoj.style.fontSize = '20px'
-													pUser.appendChild(spanEmoj)
+														var spanEmoj = document.createElement('span')
+														spanEmoj.className = comment.commentEmoj
+														spanEmoj.style.color = glyphiconColor(comment.commentEmoj)
+														spanEmoj.id = 'spanEmoj'
+														spanEmoj.style.float = 'left'
+														spanEmoj.style.fontSize = '20px'
+														pUser.appendChild(spanEmoj)
 													divComment.appendChild(pUser)
 
 												}else{
 													// spanEmoj.className='glyphicon glyphicon-thumbs-up'
 													// spanEmoj.style.color = 'gray'
 													var pUser = document.createElement('p')
-													pUser.innerHTML = '<b>' +comment.user.fullName + ' </b> commented ' 
+													pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName + ' </b>' 
 													+ moment(comment.createdAt).fromNow()
 													pUser.style.color = '#B0AAC4'
+
+														var spanEmoj = document.createElement('span')
+														
+														spanEmoj.className = 'glyphicon glyphicon-comment'
+														spanEmoj.style.color = '#72D0C2'
+														spanEmoj.style.float = 'left'
+														spanEmoj.style.fontSize = '20px'
+														pUser.appendChild(spanEmoj)
 													divComment.appendChild(pUser)
 													var pComment = document.createElement('p')
 													pComment.innerHTML = '&nbsp&nbsp-&nbsp'+comment.comment
@@ -370,6 +377,7 @@ function getPostDB(loadNumber){
 	
 	
 	})
+	return 'Rdata.posts.length'
 }
 
 function BHUserList (typeaheadId) {
