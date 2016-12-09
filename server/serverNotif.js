@@ -321,7 +321,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				offset: loadNumber
 				})]
 			}).spread(function(posts){
-				// console.log(JSON.stringify(posts, null, 4))
+				console.log(JSON.stringify(posts, null, 4))
 				res.json({posts:posts})
 			}).catch(function(e) {
 				console.log(e)

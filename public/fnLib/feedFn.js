@@ -50,9 +50,11 @@ function getPostDB(loadNumber){
 			div.classList.add('col-md-4')
 				var divBody = document.createElement('div')
 				divBody.className = 'panel-body'
-				
-					var h3 = document.createElement('h3')
+					console.log(post.postText)
+					var h3 = document.createElement('pre')
 					h3.innerHTML = post.postText
+					// h3.style.background = 'red'
+					h3.className = 'pre'
 					divBody.appendChild(h3)
 				div.appendChild(divBody)
 				getComment()
@@ -140,13 +142,14 @@ function getPostDB(loadNumber){
 													var pUser = document.createElement('p')
 													pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName + ' </b>' 
 													+ moment(comment.createdAt).fromNow()
+													pUser.style.fontSize = '10px'
 													pUser.style.color = '#B0AAC4'
 														var spanEmoj = document.createElement('span')
 														spanEmoj.className = comment.commentEmoj
 														spanEmoj.style.color = glyphiconColor(comment.commentEmoj)
 														spanEmoj.id = 'spanEmoj'
 														spanEmoj.style.float = 'left'
-														spanEmoj.style.fontSize = '20px'
+														spanEmoj.style.fontSize = '15px'
 														pUser.appendChild(spanEmoj)
 													divComment.appendChild(pUser)
 
@@ -157,13 +160,14 @@ function getPostDB(loadNumber){
 													pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName + ' </b>' 
 													+ moment(comment.createdAt).fromNow()
 													pUser.style.color = '#B0AAC4'
+													pUser.style.fontSize = '10px'
 
 														var spanEmoj = document.createElement('span')
 														
 														spanEmoj.className = 'glyphicon glyphicon-comment'
 														spanEmoj.style.color = '#72D0C2'
 														spanEmoj.style.float = 'left'
-														spanEmoj.style.fontSize = '20px'
+														spanEmoj.style.fontSize = '15px'
 														pUser.appendChild(spanEmoj)
 													divComment.appendChild(pUser)
 													var pComment = document.createElement('p')

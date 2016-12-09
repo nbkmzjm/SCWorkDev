@@ -87,10 +87,11 @@ app.get('/message', function(req, res){
 	
 })
 
-app.get('/test', function(req, res){
-	
-	// res.send('hey hey')
-})
+app.get('/test', test)
+
+function test(req, res){
+	res.send('hey xhey')
+}
 
 
 app.get('/', middleware.requireAuthentication, function(req, res, next) {
@@ -333,13 +334,31 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 					}
 				})
 				, assign
+				, user
 			];
-		}).spread(function(assignUpdated, curUser, assign) {
+		}).spread(function(assignUpdated, curUser, assign, user) {
 			var body = {
 				Note:taskSC,
 				Memo:memo||'',
 				type:type
 			}
+			var postText = 'Assigned ' + taskSC + ' for '  + user.name +' on ' + dateSC
+			console.log('xxxxxxxxx'+ postText)
+			db.mainPost.create({
+				postText:postText,
+				postTo:'friend',
+				userId:curUser.id,
+				include:'',
+				exclude:''
+			}).then(function(post){
+				console.log(JSON.stringify(post, null, 4))
+				
+			}).catch(function(e) {
+				console.log(e)
+				res.render('error', {
+					error: e.toString()
+				})
+			});
 
 			res.json({
 					Note: taskSC

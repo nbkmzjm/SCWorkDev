@@ -6,7 +6,9 @@ var _ = require('underscore');
 
 var middleware = require('../middleware.js')(db);
 
-
+function test(req, res){
+	res.send('heyx;xhey')
+}
 router.get('/', middleware.requireAuthentication, function(req, res) {
 	var curUserTitle = req.user.title;
 	res.render('users/usersHome', {
