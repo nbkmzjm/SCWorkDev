@@ -212,24 +212,36 @@ append scripts
 				$('#feedTab').on('click', feedHome)
 				var windowHt = window.innerHeight-50
 				var loadNumber = 0
-				window.addEventListener('scroll', function(event){
+				var loadPoint = 0
+				var scrollPointLoad = 0 
+
+				window.addEventListener('mousewheel', function(event){
+
+					scrollPointLoad++
+					scrollPointLoad>=11?scrollPointLoad=0:''
+					//- scrollPoint6==6?console.log('XXX'):''
+					//- console.log(scrollPoint6)
 					var posScrollY = window.scrollY
-					var loadPoint = document.getElementById('Feed').lastChild.getBoundingClientRect().top
+					//- console.log(Math.ceil(posScrollY/100)*100)
 					
+					loadPoint = document.getElementById('Feed').lastChild.getBoundingClientRect().top
 					
 					
 					var feedPerScroll = 3
-					console.log('windowHt:'+windowHt)
-					console.log('posScrollY:'+posScrollY)
+					//- console.log('windowHt:'+Math.ceil(windowHt/100)*100)
+					//- console.log('posScrollY:'+posScrollY)
 					//- console.log('loadNumber:'+loadNumber)
-					console.log('loadPoint:')
-					console.log(loadPoint)
+					//- console.log('loadPoint:')
+					//- console.log(loadPoint)
 
-					if(loadPoint<windowHt ){
-
-						console.log('loading...')
-						var loadPoint = document.getElementById('Feed').lastChild.getBoundingClientRect().top
-						getPostDB()
+					if(loadPoint<windowHt && scrollPointLoad==6 ){
+						
+						loadNumber += 6
+						console.log('loading...'+ loadNumber)
+						
+						getPostDB(loadNumber)
+						//- preventDefault(event);
+						
 						//- loadNumber = loadNumber + 1
 						//- feednumber = loadNumber*feedPerScroll
 						//- console.log('feednumber: '+feednumber)

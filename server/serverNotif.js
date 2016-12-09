@@ -231,7 +231,8 @@ router.post('/setFeedSetting', middleware.requireAuthentication, function(req, r
 	
 router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	var curUserId = req.user.id
-	
+	var loadNumber = req.body.loadNumber
+	console.log('lodingNumber: '+ loadNumber)
 	db.feedSetting.findOne({
 		where:{
 			userId:curUserId,
@@ -287,7 +288,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					userIds.push(group.groupBLUserId)
 				})
 				
-				return [db.mainPost.scope('limit21').findAll({
+				return [db.mainPost.findAll({
 				include:[{
 					model:db.user
 				}],
@@ -315,7 +316,9 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				},
 				order:[
 					['createdAt', 'DESC']
-				]
+				],
+				limit: 6,
+				offset: loadNumber
 				})]
 			}).spread(function(posts){
 				// console.log(JSON.stringify(posts, null, 4))

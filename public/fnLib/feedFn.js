@@ -33,9 +33,14 @@ function glyphiconColor(name){
 	} 
 }
 
-function getPostDB(feedNumber){
-	console.log('feedNumber:'+feedNumber)
-	$.post('/notif/getFeed').done(function(Rdata){
+function getPostDB(loadNumber){
+
+	console.log('feedNumber:'+loadNumber)
+	$.post('/notif/getFeed',{
+		loadNumber:loadNumber
+	}).done(function(Rdata){
+		
+						
 		console.log(Rdata)
 		Rdata.posts.forEach(function(post, i){
 
