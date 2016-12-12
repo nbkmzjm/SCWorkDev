@@ -211,7 +211,7 @@ append scripts
 				})
 				$('#feedTab').on('click', feedHome)
 				var windowHt = window.innerHeight+150
-				var loadNumber = 6
+				var loadNumber = 12
 				var loadPoint = 0
 				var scrollPointLoad = 0 
 
@@ -239,7 +239,7 @@ append scripts
 						console.log('loading...'+ loadNumber)
 						
 						getPostDB(loadNumber)
-						loadNumber += 6
+						loadNumber += loadNumber
 						//- preventDefault(event);
 						
 						//- loadNumber = loadNumber + 1

@@ -346,9 +346,9 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 			console.log('xxxxxxxxx'+ postText)
 			db.mainPost.create({
 				postText:postText,
-				postTo:'friend',
+				postTo:'mine',
 				userId:curUser.id,
-				include:'',
+				include:'['+user.id+']',
 				exclude:''
 			}).then(function(post){
 				console.log(JSON.stringify(post, null, 4))

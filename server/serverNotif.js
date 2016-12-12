@@ -317,7 +317,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				order:[
 					['createdAt', 'DESC']
 				],
-				limit: 6,
+				limit: 12,
 				offset: loadNumber
 				})]
 			}).spread(function(posts){

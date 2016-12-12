@@ -199,11 +199,13 @@
   background-color: #FFFFFF;
   font: bold 18px  arial, sans-serif;
   border:0px solid transparent;
-  margin-bottom: 10px;
-  max-height: 600px;
-  overflow: auto;
+  /*word-wrap: break-word;*/
+  white-space: pre-wrap;
+  /*margin-bottom: 10px;*/
+  /*max-height: 600px;*/
+  /*overflow: auto;*/
   /*padding: 5px;*/
-  width: auto;
+  /*width: auto;*/
 }
 [draggable=true] {
   -khtml-user-drag: element;
