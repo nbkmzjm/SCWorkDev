@@ -342,23 +342,56 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				Memo:memo||'',
 				type:type
 			}
-			var postText = 'Assigned ' + taskSC + ' for '  + user.name +' on ' + dateSC
-			console.log('xxxxxxxxx'+ postText)
-			db.mainPost.create({
-				postText:postText,
-				postTo:'mine',
-				userId:curUser.id,
-				include:'['+user.id+']',
-				exclude:''
-			}).then(function(post){
-				console.log(JSON.stringify(post, null, 4))
-				
-			}).catch(function(e) {
-				console.log(e)
-				res.render('error', {
-					error: e.toString()
+			if (taskSC==='PTO-R'){
+				var postText = user.name + ' requested PTO' +' for ' + dateSC
+				console.log('xxxxxxxxx'+ postText)
+				db.user.findAll({
+					where:{
+						title: {
+							$in:['Admin', "Manager"]
+						}
+					}
+				}).then(function(users){
+					var userArr = users.map(function(user){
+						return user.id
+					})
+					console.log(JSON.stringify(userArr, null, 4))
+					db.mainPost.create({
+						postText:postText,
+						postTo:'mine',
+						userId:curUser.id,
+						include:JSON.stringify(userArr),
+						exclude:''
+					}).then(function(post){
+						console.log(JSON.stringify(post, null, 4))
+						
+					}).catch(function(e) {
+						console.log(e)
+						res.render('error', {
+							error: e.toString()
+						})
+					});
 				})
-			});
+
+			}else{
+				var postText = 'Assigned ' + taskSC + ' for '  + user.name +' on ' + dateSC
+				console.log('xxxxxxxxx'+ postText)
+				db.mainPost.create({
+					postText:postText,
+					postTo:'mine',
+					userId:curUser.id,
+					include:'['+user.id+']',
+					exclude:''
+				}).then(function(post){
+					console.log(JSON.stringify(post, null, 4))
+					
+				}).catch(function(e) {
+					console.log(e)
+					res.render('error', {
+						error: e.toString()
+					})
+				});
+			}
 
 			res.json({
 					Note: taskSC
