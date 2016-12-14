@@ -409,7 +409,8 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 			// 		});
 			// 	})
 
-			}else if (taskSC==='PTO-R' || 'SWIT-R'||'SWIT-A'){
+			}else if (taskSC==='PTO-R'||taskSC==='PTO-X' || taskSC==='SWIT-R'||taskSC==='SWIT-A'){
+				console.log('PTO-R SWIT-R SWIT-A' + taskSC)
 				postText = user.fullName + ' requested PTO' +' for ' + dateSC
 				console.log('xxxxxxxxx'+ postText)
 				db.user.findAll({
@@ -433,6 +434,9 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 						postText = curUser.fullName + ' is DENIED to work on' + dateSC + ' for ' + user.fullName 
 						userArr.push(user.id)
 
+					}else if(taskSC === 'PTO-X'){
+						postText = 'PTO is  denied for '+ user.fullName +' on ' + dateSC
+						userArr.push(user.id)
 					}
 					console.log(JSON.stringify(userArr, null, 4))
 					db.mainPost.create({
@@ -453,13 +457,14 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				})
 
 			}else{
-				if(taskSC === 'PTO-X'){
-					postText = 'PTO is  denied for '+ user.fullName +' on ' + dateSC
+				console.log('else')
+				// if(taskSC === 'PTO-X'){
+				// 	postText = 'PTO is  denied for '+ user.fullName +' on ' + dateSC
 				
-				}else{
+				// }else{
 					var postText = 'Assigned ' + taskSC + ' for '  + user.fullName +' on ' + dateSC
 					console.log('xxxxxxxxx'+ postText)
-				}
+				// }
 				
 				db.mainPost.create({
 					postText:postText,
