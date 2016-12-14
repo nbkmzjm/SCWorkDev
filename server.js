@@ -342,8 +342,75 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				Memo:memo||'',
 				type:type
 			}
-			if (taskSC==='PTO-R'){
-				var postText = user.name + ' requested PTO' +' for ' + dateSC
+			var postText;
+			if (taskSC==='PTO-A'){
+			
+				postText = 'PTO is  approved for '+ user.fullName +' on ' + dateSC
+
+				console.log('xxxxxxxxx'+ postText)
+				db.mainPost.create({
+					postText:postText,
+					postTo:'friend',
+					userId:curUser.id,
+					include:'',
+					exclude:''
+				
+					
+				}).catch(function(e) {
+					console.log(e)
+					res.render('error', {
+						error: e.toString()
+					})
+				});
+			}else if(taskSC==='SWIT-R' && user.id == curUser.id){
+				postText = curUser.fullName + ' is looking for coverage on ' + dateSC
+				db.mainPost.create({
+					postText:postText,
+					postTo:'friend',
+					userId:curUser.id,
+					include:'',
+					exclude:''
+				
+					
+				}).catch(function(e) {
+					console.log(e)
+					res.render('error', {
+						error: e.toString()
+					})
+				});
+			// }else if(taskSC==='SWIT-R' && user.id != curUser.id){
+				
+			// 	db.user.findAll({
+			// 		where:{
+			// 			title: {
+			// 				$in:['Admin', "Manager"]
+			// 			}
+			// 		}
+			// 	}).then(function(users){
+			// 		var userArr = users.map(function(user){
+			// 			return user.id
+			// 		})
+					
+			// 		console.log(JSON.stringify(userArr, null, 4))
+			// 		db.mainPost.create({
+			// 			postText:postText,
+			// 			postTo:'mine',
+			// 			userId:curUser.id,
+			// 			include:JSON.stringify(userArr),
+			// 			exclude:''
+			// 		}).then(function(post){
+			// 			console.log(JSON.stringify(post, null, 4))
+						
+			// 		}).catch(function(e) {
+			// 			console.log(e)
+			// 			res.render('error', {
+			// 				error: e.toString()
+			// 			})
+			// 		});
+			// 	})
+
+			}else if (taskSC==='PTO-R' || 'SWIT-R'||'SWIT-A'){
+				postText = user.fullName + ' requested PTO' +' for ' + dateSC
 				console.log('xxxxxxxxx'+ postText)
 				db.user.findAll({
 					where:{
@@ -355,6 +422,18 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 					var userArr = users.map(function(user){
 						return user.id
 					})
+					if(taskSC == 'SWIT-R'){
+						postText = curUser.fullName + ' ASK to work on' + dateSC + ' for ' + user.fullName + ' in exchange for pending SWIT-R day'
+						userArr.push(user.id)
+					}else if(taskSC == 'SWIT-A'){
+						postText = curUser.fullName + ' is AGREED to work on' + dateSC + ' for ' + user.fullName + ' in exchange for pending SWIT-R day'
+						userArr.push(user.id)
+
+					}else if(taskSC == 'SWIT-X'){
+						postText = curUser.fullName + ' is DENIED to work on' + dateSC + ' for ' + user.fullName 
+						userArr.push(user.id)
+
+					}
 					console.log(JSON.stringify(userArr, null, 4))
 					db.mainPost.create({
 						postText:postText,
@@ -374,8 +453,14 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				})
 
 			}else{
-				var postText = 'Assigned ' + taskSC + ' for '  + user.name +' on ' + dateSC
-				console.log('xxxxxxxxx'+ postText)
+				if(taskSC === 'PTO-X'){
+					postText = 'PTO is  denied for '+ user.fullName +' on ' + dateSC
+				
+				}else{
+					var postText = 'Assigned ' + taskSC + ' for '  + user.fullName +' on ' + dateSC
+					console.log('xxxxxxxxx'+ postText)
+				}
+				
 				db.mainPost.create({
 					postText:postText,
 					postTo:'mine',
@@ -437,6 +522,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 });
 
 app.post('/dateSCDel', middleware.requireAuthentication, function(req, res) {
+
 	var userId = req.body.postdata.userId;
 	var dateSC = req.body.postdata.dateSC;
 	var taskSC = req.body.postdata.taskSC;
@@ -458,7 +544,24 @@ app.post('/dateSCDel', middleware.requireAuthentication, function(req, res) {
 		}
 
 	).then(function(updated){
+		postText = ' Assigned on ' + dateSC + ' has been DELETED'
 		
+		
+		db.mainPost.create({
+			postText:postText,
+			postTo:'mine',
+			userId:curUser.id,
+			include:'['+userId+']',
+			exclude:''
+		}).then(function(post){
+			console.log(JSON.stringify(post, null, 4))
+			
+		}).catch(function(e) {
+			console.log(e)
+			res.render('error', {
+				error: e.toString()
+			})
+		});
 		res.json({
 			updated: updated
 		});

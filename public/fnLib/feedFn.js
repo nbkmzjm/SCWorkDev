@@ -48,6 +48,11 @@ function getPostDB(loadNumber){
 			
 			div.className = 'panel panel-primary'
 			div.classList.add('col-md-4')
+			// div.style.margin = '1px'
+			// div.style.float = 'left'
+			// div.style.maxWidth = '150px'
+			// div.style.borderStyle = 'none'
+			// div.style.borderTopStyle = 'solid'
 				var divBody = document.createElement('div')
 				divBody.className = 'panel-body'
 					console.log(post.postText)
