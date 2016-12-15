@@ -51,85 +51,20 @@ append scripts
 			//- 	console.log(group.name)
 			//- })
 			
-			function feedHome(){
-				var div = document.createElement('div')
-				div.className = 'input-group'
-				div.classList.add('col-sm-8')
+				function feedHome(){
+					var divInputGroup = document.createElement('div')
+					divInputGroup.className = 'input-group'
+					//- divInputGroup.classList.add('col-sm-3')
 					
-
-
-					//- span.classList.add('col-sm-3')
 					
-					var select = document.createElement('select')
-					select.className = 'form-control col-sm-1'
-
-					//- select.className = ''
-					select.name = 'postTo'
-					select.id = 'postTo'
-						var optionList = ['friend', 'friend of friend','mine', 'public']
-
-						optionList.forEach(function(item, i){
-							//- if(item !== setting.value){
-								var option = document.createElement('option')
-								option.value = item
-								option.innerHTML = item
-								select.appendChild(option)
-							//- }
-
-						})
-
-					
-					div.appendChild(select)
-
-					var span = document.createElement('span')
-					span.className = 'input-group-btn'
-					div.appendChild(span)
-
-					var selectFilter = document.createElement('select')
-					selectFilter.className = 'form-control col-sm-2'
-
-					//- select.className = ''
-					selectFilter.name = 'postTo'
-					selectFilter.id = 'postTo'
-						var optionList = ['include', 'exclude']
-
-						optionList.forEach(function(item, i){
-							//- if(item !== setting.value){
-								var option = document.createElement('option')
-								option.value = item
-								option.innerHTML = item
-								selectFilter.appendChild(option)
-							//- }
-
-						})
-
-					
-					div.appendChild(selectFilter)
-				
-					var span = document.createElement('span')
-					span.className = 'input-group-btn'
-					div.appendChild(span)
-
-
-					
-
-
-				
-					var span = document.createElement('span')
-					span.className = 'input-group-btn'
-					div.appendChild(span)
-
 					var inputPost = document.createElement('textarea')
 					inputPost.id = 'post'
 					inputPost.className = 'form-control'
 					inputPost.placeholder = 'Post announcement here'
-					div.appendChild(inputPost)
+					divInputGroup.appendChild(inputPost)
 
-
-
-
-					var span = document.createElement('span')
-					span.className = 'input-group-btn'
+					var divInputGroupBtn = document.createElement('div')
+					divInputGroupBtn.className = 'input-group-btn'
 						var btn = document.createElement('button')
 						btn.className = 'btn btn-primary'
 						btn.innerHTML = 'POST'
@@ -140,10 +75,8 @@ append scripts
 							//- input.value = ''
 							feedHome()
 						}) 
-						span.appendChild(btn)
-					div.appendChild(span)
-
-
+						divInputGroupBtn.appendChild(btn)
+					divInputGroup.appendChild(divInputGroupBtn)
 
 					//- var divbtn = document.createElement('div')
 					//- divbtn.className = 'input-group-btn'
@@ -166,36 +99,88 @@ append scripts
 					//- 		ul.appendChild(li)
 					//- 	divbtn.appendChild(ul)
 					//- div.appendChild(divbtn)
-
-
-					var userSelected = []
-					var userIdSelected = []
-					var input = document.createElement('input')
-					input.type = 'text'
-					
-					input.placeholder = 'Search Person'
-					input.className ='form-control'
-					input.id = 'friendSearch'
-					input.setAttribute('href','#');
-					input.setAttribute('data-toggle','popover');
-					input.setAttribute('data-trigger','hover');
-					input.setAttribute('data-placement','auto');
-					input.style.fontWeight = 'bold'
-					input.setAttribute('title', 'Selected User');
-					
-					document.addEventListener('mousemove', function(){
-						input.setAttribute('data-content', JSON.stringify(userSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
-						$('[data-toggle="popover"]').popover({html:true})
+					$('#Feed').append(divInputGroup)
 						
-					})
 
-					div.appendChild(input)
+					var divInputGroupFilter = document.createElement('div')
+					//- divInputGroupFilter.className = 'input-group'
+					divInputGroupFilter.className = 'col-sm-12'
+						divSelect = document.createElement('div')
+						divSelect.className = 'col-sm-4'
+							var select = document.createElement('select')
+							select.className = 'form-control'
+							select.classList.add('col-sm-4')
 
-					BHUserList("friendSearch")
-					
-					
-					
-				$('#Feed').html(div)
+							//- select.className = ''
+							select.name = 'postTo'
+							select.id = 'postTo'
+								var optionList = ['friend', 'friend of friend','mine', 'public']
+
+								optionList.forEach(function(item, i){
+									//- if(item !== setting.value){
+										var option = document.createElement('option')
+										option.value = item
+										option.innerHTML = item
+										select.appendChild(option)
+									//- }
+
+								})
+							divSelect.appendChild(select)
+						divInputGroupFilter.appendChild(divSelect)
+
+
+						divSelectFilter = document.createElement('div')
+						divSelectFilter.className = 'col-sm-4'
+						
+
+							var selectFilter = document.createElement('select')
+							selectFilter.className = 'form-control'
+
+							selectFilter.classList.add('col-sm-4')
+							selectFilter.name = 'postTo'
+							selectFilter.id = 'postTo'
+								var optionList = ['include', 'exclude']
+
+								optionList.forEach(function(item, i){
+									//- if(item !== setting.value){
+										var option = document.createElement('option')
+										option.value = item
+										option.innerHTML = item
+										selectFilter.appendChild(option)
+									//- }
+
+								})
+							divSelectFilter.appendChild(selectFilter)
+						divInputGroupFilter.appendChild(divSelectFilter)
+
+						divfriendSearch = document.createElement('div')
+						divfriendSearch.className = 'col-sm-4'
+							var userSelected = []
+							var userIdSelected = []
+							var input = document.createElement('input')
+							input.type = 'text'
+							
+							input.placeholder = 'Search Person'
+							input.className ='form-control'
+							input.id = 'friendSearch'
+							input.setAttribute('href','#');
+							input.setAttribute('data-toggle','popover');
+							input.setAttribute('data-trigger','hover');
+							input.setAttribute('data-placement','auto');
+							input.style.fontWeight = 'bold'
+							input.setAttribute('title', 'Selected User');
+							
+							document.addEventListener('mousemove', function(){
+								input.setAttribute('data-content', JSON.stringify(userSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
+								$('[data-toggle="popover"]').popover({html:true})
+								
+							})
+							divfriendSearch.appendChild(input)
+						divInputGroupFilter.appendChild(divfriendSearch)
+
+						BHUserList("friendSearch")
+					$('#Feed').append(divInputGroupFilter)
+
 				$('#post').autogrow({vertical: true, horizontal: false});
 				
 
@@ -204,6 +189,7 @@ append scripts
 					$('#friendSearch').typeahead('val', '')
 					userSelected.push(group.name.substring(0,group.name.indexOf("_")))
 					userIdSelected.push(group.groupBLUserId)
+					//- $('#friendSearch').val('.....')
 					console.log(obj)
 					console.log(group)
 					console.log(name)
