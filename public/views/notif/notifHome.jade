@@ -73,7 +73,8 @@ append scripts
 							console.log(userIdSelected)
 							inputPost.value!==''?postDB(select.value, inputPost.value, selectFilter.value,userIdSelected):''
 							//- input.value = ''
-							feedHome()
+							//- feedHome()
+							location.reload()
 						}) 
 						divInputGroupBtn.appendChild(btn)
 					divInputGroup.appendChild(divInputGroupBtn)
