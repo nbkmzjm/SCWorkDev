@@ -54,6 +54,10 @@ module.exports = function(sequelize, DataTypes) {
 			defaultValue: false
 			
 		},
+
+		department:{
+			type: DataTypes.STRING
+		},
 		
 		
 		salt: {
