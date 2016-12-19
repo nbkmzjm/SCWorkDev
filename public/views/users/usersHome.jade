@@ -115,6 +115,7 @@ append scripts
 					username:$('#username').val(),
 					password:$('#password').val(),
 					title:$('#title').val(),
+					department:$('#department').val(),
 					active:active,
 					passreset:passreset
 
@@ -143,16 +144,20 @@ append scripts
 			});
 			
 			var JSONdata = !{JSONdata};
-			var curUserTitle = JSONdata.curUserTitle
+			var curUser = JSONdata.curUser
 			var firstUser = JSONdata.firstUser
 
 			var arrayTitle_UserTab = ['Admin', 'Manager']
-			if (arrayTitle_UserTab.indexOf(curUserTitle) == -1) {
+			if (arrayTitle_UserTab.indexOf(curUser.title) == -1) {
 				$('#userFormTab').html('')
 				if (firstUser){
 					$('#title').attr('disabled', false)
 				}else{
 					$('#title').attr('disabled', true)
+				}
+
+				if(curUser.department !== 'ADMIN'){
+					$('#department').attr('disabled', true)
 				}
 				
 				$('#passreset').attr('disabled', true)
@@ -251,6 +256,7 @@ append scripts
 												$('#email').val(user.email)
 												$('#username').val(user.username)
 												$('#password').val('')
+												$('#department').val(user.department)
 												$('#title').val(user.title)
 												$('#passreset').attr('disabled', false)
 												document.getElementById('active').checked = user.active

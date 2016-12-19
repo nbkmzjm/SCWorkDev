@@ -10,11 +10,11 @@ function test(req, res){
 	res.send('heyx;xhey')
 }
 router.get('/', middleware.requireAuthentication, function(req, res) {
-	var curUserTitle = req.user.title;
+	var curUser = req.user;
 	res.render('users/usersHome', {
 			JSONdata: JSON.stringify({
 				tabx: 'userList', 
-				curUserTitle:curUserTitle,
+				curUser:curUser,
 				firstUser: false
 			})
 		})
@@ -53,6 +53,7 @@ router.post('/addUser', function(req, res) {
 	req.check('email', 'Email is not valid').isEmail();
 	req.check('username', 'Username must be within 5-20 characters').len(5, 20)
 	req.check('title', 'Title must be assigned').len(3)
+	req.check('department', 'Title must be at lease 3 characters').len(3)
 	// req.check('password', 'Password must be within 5-20 characters').len(5, 20)
 	var errors = req.validationErrors()
 	var id = req.body.id
@@ -61,7 +62,7 @@ router.post('/addUser', function(req, res) {
 	var passreset = req.body.passreset
 		// res.redirect("/aboutuserx");
 
-	var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'password', 'title', 'active')
+	var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'password', 'title','department', 'active')
 	console.log(JSON.stringify(id, null, 4))
 	if (errors) {
 		res.json({
@@ -104,12 +105,12 @@ router.post('/addUser', function(req, res) {
 		console.log(passreset + '--' + req.body.password)
 		if (passreset==true) {
 			req.body.password = 'banner1234'
-			var body = _.pick(req.body, 'name','lastname', 'email', 'password', 'username', 'title', 'active')
+			var body = _.pick(req.body, 'name','lastname', 'email', 'password', 'username', 'department', 'title', 'active')
 		}else if (req.body.password !== ''){
-			var body = _.pick(req.body, 'name','lastname', 'email', 'password', 'username', 'title', 'active')
+			var body = _.pick(req.body, 'name','lastname', 'email', 'password', 'username', 'department', 'title', 'active')
 		}else {
 			console.log('ese')
-			var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'title', 'active')
+			var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'department', 'title', 'active')
 		}
 
 		db.user.update(body, {
@@ -182,20 +183,27 @@ router.get('/userList', middleware.requireAuthentication, function(req, res) {
 	var curUser = req.user
 	console.log(curUser.id)
 
-	var idpara = {}
+	var para = {}
 	var arrayTitle_UserTab = ['Admin', 'Manager']
 	if (arrayTitle_UserTab.indexOf(curUser.title) !== -1) {
-		idpara.id = {$gt:0}
+		if(curUser.department == 'ADMIN'){
+			para.id = {$gt:0}
+		}else{
+			para.department = curUser.department
+			console.log(curUser.department + 'xxx')
+		}
+		
+
 	}else{
 		
-		idpara.id = curUser.id
+		para.id = curUser.id
 	}
 
 	db.user.findAll({
 		order: [
 			['title']
 		],
-		where:idpara
+		where:para
 	}).then(function(users) {
 		res.json({
 			users: users
