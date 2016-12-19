@@ -396,6 +396,9 @@ function BHUserList (typeaheadId) {
 			return group;
 			
 			});
+		result.push({
+			name:'ADD NEW GROUP'
+		})
 		// constructs the suggestion engine
 		var groupList = new Bloodhound({
 			identify: function(obj) { return obj.name; },
@@ -408,8 +411,9 @@ function BHUserList (typeaheadId) {
 
 		function groupDefault(q, sync) {
 			if (q === '') {
-			    sync(groupList.get('BCP', 'ACH', 'APS'));
+			   sync(groupList.get('ADD NEW GROUP'));
 			 }else {
+			 	console.log(result)
 			    groupList.search(q, sync);
 			 }
 		}
@@ -423,12 +427,12 @@ function BHUserList (typeaheadId) {
 		  	display: 'name',
 		  	source: groupDefault,
 		  	templates: {
-			  	empty: [
-			      '<div class="empty-message">',
-			        'unable to find any group with current search',
-			      '</div>'
-			    ].join('\n')
-			    ,
+			  	// empty: [
+			   //    '<div class="empty-message">',
+			   //      'unable to find any group with current search',
+			   //    '</div>'
+			   //  ].join('\n')
+			   //  ,
 			    suggestion: function (data) {
 				        return '<p><strong>' + data.name + '</strong> - ' + data.status + '</p>';
 				    }
