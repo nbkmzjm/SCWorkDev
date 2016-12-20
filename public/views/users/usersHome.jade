@@ -147,6 +147,13 @@ append scripts
 			var curUser = JSONdata.curUser
 			var firstUser = JSONdata.firstUser
 
+			if(curUser.department !== 'ADMIN'){
+				$('#department').attr('disabled', true)
+				
+			}else{
+				curUser.department = ''
+			}
+
 			var arrayTitle_UserTab = ['Admin', 'Manager']
 			if (arrayTitle_UserTab.indexOf(curUser.title) == -1) {
 				$('#userFormTab').html('')
@@ -156,9 +163,7 @@ append scripts
 					$('#title').attr('disabled', true)
 				}
 
-				if(curUser.department !== 'ADMIN'){
-					$('#department').attr('disabled', true)
-				}
+			
 				
 				$('#passreset').attr('disabled', true)
 			}
@@ -169,6 +174,8 @@ append scripts
 				$('#email').val('')
 				$('#username').val('')
 				$('#title').val('')
+				$('#department').val(curUser.department)
+				$('#lastname').val('')
 				$('#password').attr('type','password')
 				$('#password').val('')
 				$('#passreset').attr('disabled', false)

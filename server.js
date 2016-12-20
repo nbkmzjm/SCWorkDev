@@ -999,16 +999,19 @@ app.post('/assignTracerDetailUpd', middleware.requireAuthentication, function(re
 
 
 
-
+//Loading user on the scheduling main page
 app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
+	var curUser = req.user
+	var whereParams = {
+		active:true,
+		department:curUser.department
+	}
 
 	db.user.findAll({
-		where:{
-			active:true
-		}, 
+		where:whereParams, 
 		order:[
 				['title']
-				]
+			]
 		,
 	}).then(function(users) {
 		res.json({

@@ -56,7 +56,10 @@ module.exports = function(sequelize, DataTypes) {
 		},
 
 		department:{
-			type: DataTypes.STRING
+			type: DataTypes.STRING,
+			set: function(value){
+				this.setDataValue('department', value.toUpperCase())
+			}
 		},
 		
 		
