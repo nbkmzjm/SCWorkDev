@@ -71,20 +71,31 @@ router.post('/addUser', function(req, res) {
 	} else if (id == '0') {
 
 		return db.sequelize.transaction(function (t) {
-			return db.user.create(body, {transaction:t}
-			).then(function(user){
+			return db.user.create(body, {
+				transaction:t
+			}).then(function(user){
 				var groupName = user.name+' '+user.lastname+'_'+user.id
 				
 				return db.group.create({
 					name:groupName,
 					userId:user.id,
 					groupBLUserId:user.id
-				}, {transaction:t}).then(function(group){
+				}, {
+					transaction:t
+				}).then(function(group){
 					return db.userGroups.create({
 						userId:user.id,
 						groupId:group.id,
 						status:'OWNER'
-					}, {transaction:t})
+					}, {
+						transaction:t
+					}).then(function(){
+						return db.settingDescription.findAll({
+							transaction:t
+						}).then(function(settingDescriptions){
+							console.log(JSON.stringify(settingDescriptions, null, 4))
+						})
+					})
 				})
 			})
 		}).then(function(result){

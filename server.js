@@ -1007,10 +1007,18 @@ app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 		department:curUser.department
 	}
 
+	if(curUser.department==='ADMIN'){
+		var whereParams = {
+		active:true
+		}
+	}
+
 	db.user.findAll({
 		where:whereParams, 
 		order:[
+				['department'],
 				['title']
+
 			]
 		,
 	}).then(function(users) {

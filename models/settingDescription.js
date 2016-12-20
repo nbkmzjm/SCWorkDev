@@ -9,7 +9,12 @@ module.exports = function(sequelize, DataTypes) {
     description: {
         type: DataTypes.STRING, 
         allowNull: false
-  	}
+  	},
+    defaultValue:{
+        type: DataTypes.STRING, 
+        allowNull: false,
+        defaultValue: 'friend'
+    }
    
 
 	}, { timestamps: false})
