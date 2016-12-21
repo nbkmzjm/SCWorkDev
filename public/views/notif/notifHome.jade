@@ -115,7 +115,7 @@ append scripts
 							//- select.className = ''
 							select.name = 'postTo'
 							select.id = 'postTo'
-								var optionList = ['Deparment','Friend', 'Friend of Friend','Private', 'Public']
+								var optionList = ['Deparment','Cowoker','Colleague', 'Friend of Colleague','Private', 'Public']
 
 								optionList.forEach(function(item, i){
 									//- if(item !== setting.value){
@@ -286,7 +286,7 @@ append scripts
 				console.log('Relationships')
 				ul = document.createElement('ul')
 				ul.className = 'list-group'
-				ul.classList.add('col-sm-4')
+				ul.classList.add('col-sm-6')
 				var addGroup
 				$.getJSON('/notif/userGetGroups').done(function(Rdata){
 					var groupList = Rdata.groupList
@@ -297,7 +297,7 @@ append scripts
 							li.appendChild(document.createTextNode(groupName))
 								var span = document.createElement('span')
 								span.style.float = 'right'
-								if (group.userGroups.status=='ACTIVE'){
+								if (group.userGroups.status=='Colleague'){
 									span.style.color = '#2DC729'
 									span.style.fontSize = '20px'
 									span.className = "glyphicon glyphicon-link"
@@ -305,15 +305,16 @@ append scripts
 									span.style.color = '#F0C20B'
 									span.style.fontSize = '20px'
 									span.className = "glyphicon glyphicon-hourglass"
-								}else if (group.userGroups.status=='OWNER'){
+								}else if (group.userGroups.status=='Owner'){
 									span.style.color = '#DC14EE'
 									span.style.fontSize = '20px'
 									span.className = "glyphicon glyphicon-user"
-								}else if (group.userGroups.status=='REQUEST'){
+								}else{
 									span.style.color = '#EE1414'
-									span.style.fontSize = '20px'
-									span.className = "glyphicon glyphicon-question-sign"
-									span.id = 'questionSign'
+									span.style.fontSize = '14px'
+									span.innerHTML = group.userGroups.status
+									span.className = "requestSign"
+									span.id = 'requestSpan'
 								}
 
 								
@@ -336,8 +337,8 @@ append scripts
 										
 									
 
-									}else if(span.className=='glyphicon glyphicon-question-sign'){
-										$("#questionSign").hide()
+									}else if(span.className=='requestSign'){
+										$("#requestSpan").hide()
 										console.log(span.parentNode)
 
 										var spanOk = document.createElement('span')
@@ -442,15 +443,40 @@ append scripts
 							//- 	//- btn.type = 'button'
 							//- 	span.appendChild(btn)
 							//- inputgroup.appendChild(span)
+							divSelect = document.createElement('div')
+							divSelect.className = 'col-sm-5'
+								var select = document.createElement('select')
+								select.className = 'form-control'
+								select.name = 'postTo'
+								select.id = 'postTo'
+									var optionList = ['Deparment','Cowoker','Colleague', 'Friend of Colleague','Private', 'Public']
 
-							var input = document.createElement('input')
-							input.type = 'text'
-							
-							input.placeholder = 'Search and Select to ADD'
-							input.className ='form-control'
-							input.id = 'groupSearch'
-							//- input.setAttribute("aria-describedby", "basic-addon1")
-							liAddGroup.appendChild(input)
+									optionList.forEach(function(item, i){
+										//- if(item !== setting.value){
+											var option = document.createElement('option')
+											option.value = item
+											option.innerHTML = item
+											select.appendChild(option)
+										//- }
+
+									})
+								divSelect.appendChild(select)
+							liAddGroup.appendChild(divSelect)
+
+							divInput = document.createElement('div')
+							divInput.className = 'col-sm-5'
+								var input = document.createElement('input')
+								input.type = 'text'
+
+								
+								input.placeholder = 'Search and Select to'
+								input.className ='form-control'
+								input.id = 'groupSearch'
+								//- input.setAttribute("aria-describedby", "basic-addon1")
+								divInput.appendChild(input)
+							liAddGroup.appendChild(divInput)
+
+
 					ul.appendChild(liAddGroup)
 
 					$('#Relationships').append(ul)
@@ -458,9 +484,10 @@ append scripts
 					BHUserList("groupSearch")
 
 					$('#groupSearch').bind('typeahead:selected', function(obj, group, name){
-
+						console.log(select.value)
 						$.post('/notif/editGroup',{
 						groupSelectedId:group.id,
+						relationship:select.value,
 						action:'add'
 						}).done(function(pData){
 							console.log("xx: "+JSON.stringify(group, null, 4))
@@ -505,7 +532,7 @@ append scripts
 								select.className = 'form-control'
 								select.name = 'viewPostFrom'
 								select.id = 'viewPostFrom'
-									var optionList = ['Deparment','Friend', 'Friend of Friend','Private', 'Public']
+									var optionList = ['Deparment','Cowoker','Colleague', 'Colleague of Friend','Private', 'Public']
 										var optionDB = document.createElement('option')
 										optionDB.value = setting.value
 										optionDB.innerHTML = setting.value

@@ -51,6 +51,7 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 	var curUserId = req.user.id
 	var action = req.body.action
 	var groupSelectedId = req.body.groupSelectedId
+	var relationship = req.body.relationship
 
 	if(action==="add")
 		db.user.findOne({
@@ -89,7 +90,7 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 			}).spread(function(group2, user, group){
 				console.log('user1'+JSON.stringify( user, null, 4))
 				console.log('group1'+ JSON.stringify(group, null, 4))
-				return [user.addGroup(group2.id, {status:'REQUEST'}).then(function(usergroup){
+				return [user.addGroup(group2.id, {status: relationship + ' REQUEST'}).then(function(usergroup){
 
 				}), group]
 				
@@ -114,13 +115,13 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 			return [db.userGroups.findOne({
 				where:{
 					userId:curUserId,
-					status:'OWNER'
+					status:'Owner'
 				}
 			}),
 			db.userGroups.findOne({
 				where:{
 					groupId:groupSelectedId,
-					status:'OWNER'
+					status:'Owner'
 				}
 			})
 			]
@@ -141,27 +142,36 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 		db.userGroups.findOne({
 				where:{
 					userId:curUserId,
-					status:'OWNER'
+					status:'Owner'
 				}
 		}).then(function(userGroup1){
 			return [db.userGroups.findOne({
 				where:{
 					groupId:groupSelectedId,
-					status:'OWNER'
+					status:'Owner'
 				}
 			}), userGroup1]
 		}).spread(function(userGroup2, userGroup1){
-			console.log(userGroup1.groupId+' x:'+userGroup2.userId)
-			db.userGroups.update({
-				status:'ACTIVE'
-			},{
-				where:{ 
-					$or:[
-						{userId:curUserId, groupId:groupSelectedId},
-						{userId:userGroup2.userId, groupId:userGroup1.groupId}
-					]
+			console.log(userGroup1.status +' x:'+userGroup2.status)
+			console.log(curUserId +' y:'+groupSelectedId)
+			db.userGroups.findOne({
+				where:{
+					userId:curUserId, groupId:groupSelectedId	
 				}
+			}).then(function(userGroup){
+				console.log(JSON.stringify(userGroup.status, null, 4))
+				db.userGroups.update({
+					status:userGroup.status.slice(0, -6)
+				},{
+					where:{ 
+						$or:[
+							{userId:curUserId, groupId:groupSelectedId},
+							{userId:userGroup2.userId, groupId:userGroup1.groupId}
+						]
+					}
+				})
 			})
+			
 
 		})
 
@@ -264,7 +274,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				error: e.toString()
 				})
 			})
-		}else if(feedSetting.value==='Friend'){
+		}else if(feedSetting.value==='Colleague'){
 
 			db.group.findAll({
 				include:[{
@@ -275,7 +285,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					through:{
 						where:{
 							status:{
-								$in:['ACTIVE','OWNER']
+								$in:['Colleague','Owner']
 							}
 						}
 					}
@@ -329,7 +339,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					error: e.toString()
 				})
 			});
-		}else if(feedSetting.value==='Friend of Friend'){
+		}else if(feedSetting.value==='Friend of Colleague'){
 			console.log('fof:'+curUserId)
 			db.user.findOne({
 				where:{
@@ -346,7 +356,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						through:{
 							where:{
 								status:{
-									$in:['ACTIVE','OWNER']
+									$in:['Colleague','Owner']
 								}
 							}
 						}
