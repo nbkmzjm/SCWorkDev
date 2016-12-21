@@ -113,7 +113,11 @@ db.mainPost.hasMany(db.comment,{
 	onDelete:'CASCADE'
 })
 
-db.comment.belongsTo(db.user)
-db.user.hasMany(db.comment)
+db.comment.belongsTo(db.user,{
+	onDelete:'CASCADE'
+})
+db.user.hasMany(db.comment,{
+	onDelete:'CASCADE'
+})
 
 module.exports = db;

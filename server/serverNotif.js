@@ -240,7 +240,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 		}
 	}).then(function(feedSetting){
 		console.log(JSON.stringify(feedSetting, null, 4))
-		if(feedSetting.value==='mine'){
+		if(feedSetting.value==='Private'){
 			db.mainPost.findAll({
 				include:[{
 					model:db.user
@@ -264,7 +264,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				error: e.toString()
 				})
 			})
-		}else if(feedSetting.value==='friend'){
+		}else if(feedSetting.value==='Friend'){
 
 			db.group.findAll({
 				include:[{
@@ -329,7 +329,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					error: e.toString()
 				})
 			});
-		}else if(feedSetting.value==='friend of friend'){
+		}else if(feedSetting.value==='Friend of Friend'){
 			console.log('fof:'+curUserId)
 			db.user.findOne({
 				where:{
@@ -391,7 +391,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 										userId:req.user.id
 									},{
 										postTo:{
-											$in:['friend']
+											$in:['Friend']
 										},
 										userId:{
 											$in:friendUserId
@@ -405,7 +405,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 										}
 										,
 										postTo:{
-											$notIn:['mine', 'friend'],
+											$notIn:['Private', 'Friend'],
 										}
 									},{
 										include:{
@@ -432,6 +432,8 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 		
 
 router.post('/getUserPost', middleware.requireAuthentication, function(req, res) {
+
+	var curUserId = req.user.id
 	db.user.findOne({
 		where:{
 			id:curUserId

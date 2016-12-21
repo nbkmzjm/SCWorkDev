@@ -94,6 +94,15 @@ router.post('/addUser', function(req, res) {
 							transaction:t
 						}).then(function(settingDescriptions){
 							console.log(JSON.stringify(settingDescriptions, null, 4))
+							settingDescriptions.forEach(function(settingDescription){
+								return db.feedSetting.create({
+									value:settingDescription.defaultValue,
+									userId:user.id,
+									settingDescriptionId:settingDescription.id
+								}, {
+									transaction:t
+								})
+							})
 						})
 					})
 				})

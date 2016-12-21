@@ -115,7 +115,7 @@ append scripts
 							//- select.className = ''
 							select.name = 'postTo'
 							select.id = 'postTo'
-								var optionList = ['friend', 'friend of friend','mine', 'public']
+								var optionList = ['Deparment','Friend', 'Friend of Friend','Private', 'Public']
 
 								optionList.forEach(function(item, i){
 									//- if(item !== setting.value){
@@ -140,7 +140,7 @@ append scripts
 							selectFilter.classList.add('col-sm-4')
 							selectFilter.name = 'postTo'
 							selectFilter.id = 'postTo'
-								var optionList = ['include', 'exclude']
+								var optionList = ['Include', 'Exclude']
 
 								optionList.forEach(function(item, i){
 									//- if(item !== setting.value){
@@ -196,7 +196,9 @@ append scripts
 					console.log(name)
 				
 				})
-				$('#feedTab').on('click', feedHome)
+				$('#feedTab').on('click', function(){
+					location.reload()
+				})
 				var windowHt = window.innerHeight+150
 				var loadNumber = 12
 				var loadPoint = 0
@@ -503,7 +505,7 @@ append scripts
 								select.className = 'form-control'
 								select.name = 'viewPostFrom'
 								select.id = 'viewPostFrom'
-									var optionList = ['mine','friend', 'friend of friend', 'public']
+									var optionList = ['Deparment','Friend', 'Friend of Friend','Private', 'Public']
 										var optionDB = document.createElement('option')
 										optionDB.value = setting.value
 										optionDB.innerHTML = setting.value
