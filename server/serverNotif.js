@@ -161,7 +161,7 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 			}).then(function(userGroup){
 				console.log(JSON.stringify(userGroup.status, null, 4))
 				db.userGroups.update({
-					status:userGroup.status.slice(0, -6)
+					status:userGroup.status.slice(0, -8)
 				},{
 					where:{ 
 						$or:[
@@ -470,7 +470,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var userArray = req.body.userArray
 	var userArrayIn = ""
 	var userArrayEx =""
-	if (filter ==="include"){
+	if (filter ==="Include"){
 		userArrayIn= userArray
 	}else{
 		userArrayEx = userArray

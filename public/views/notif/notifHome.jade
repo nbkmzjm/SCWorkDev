@@ -309,12 +309,18 @@ append scripts
 									span.style.color = '#DC14EE'
 									span.style.fontSize = '20px'
 									span.className = "glyphicon glyphicon-user"
-								}else{
+								}else if(group.userGroups.status.indexOf('REQUEST')>0){
 									span.style.color = '#EE1414'
 									span.style.fontSize = '14px'
 									span.innerHTML = group.userGroups.status
 									span.className = "requestSign"
 									span.id = 'requestSpan'
+								}else {
+									span.style.color = '#2DC729'
+									span.style.fontSize = '14px'
+									span.innerHTML = group.userGroups.status
+									span.className = "acceptSign"
+									span.id = 'acceptSpan'
 								}
 
 								
@@ -444,12 +450,12 @@ append scripts
 							//- 	span.appendChild(btn)
 							//- inputgroup.appendChild(span)
 							divSelect = document.createElement('div')
-							divSelect.className = 'col-sm-5'
+							divSelect.className = 'col-sm-6'
 								var select = document.createElement('select')
 								select.className = 'form-control'
 								select.name = 'postTo'
 								select.id = 'postTo'
-									var optionList = ['Deparment','Cowoker','Colleague', 'Friend of Colleague','Private', 'Public']
+									var optionList = ['Cowoker','Colleague']
 
 									optionList.forEach(function(item, i){
 										//- if(item !== setting.value){
@@ -464,12 +470,12 @@ append scripts
 							liAddGroup.appendChild(divSelect)
 
 							divInput = document.createElement('div')
-							divInput.className = 'col-sm-5'
+							divInput.className = 'col-sm-6'
 								var input = document.createElement('input')
 								input.type = 'text'
 
 								
-								input.placeholder = 'Search and Select to'
+								input.placeholder = 'Search and Select to ADD'
 								input.className ='form-control'
 								input.id = 'groupSearch'
 								//- input.setAttribute("aria-describedby", "basic-addon1")
@@ -532,7 +538,7 @@ append scripts
 								select.className = 'form-control'
 								select.name = 'viewPostFrom'
 								select.id = 'viewPostFrom'
-									var optionList = ['Deparment','Cowoker','Colleague', 'Colleague of Friend','Private', 'Public']
+									var optionList = ['Cowoker','Colleague', 'Friend of Colleague','Private', 'Public']
 										var optionDB = document.createElement('option')
 										optionDB.value = setting.value
 										optionDB.innerHTML = setting.value
