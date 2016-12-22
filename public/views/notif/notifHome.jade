@@ -297,11 +297,12 @@ append scripts
 							li.appendChild(document.createTextNode(groupName))
 								var span = document.createElement('span')
 								span.style.float = 'right'
-								if (group.userGroups.status=='Colleague'){
-									span.style.color = '#2DC729'
-									span.style.fontSize = '20px'
-									span.className = "glyphicon glyphicon-link"
-								}else if (group.userGroups.status=='PENDING'){
+								//- if (group.userGroups.status=='Colleague'){
+								//- 	span.style.color = '#2DC729'
+								//- 	span.style.fontSize = '20px'
+								//- 	span.className = "glyphicon glyphicon-link"
+								//- }else 
+								if (group.userGroups.status=='PENDING'){
 									span.style.color = '#F0C20B'
 									span.style.fontSize = '20px'
 									span.className = "glyphicon glyphicon-hourglass"
@@ -358,7 +359,12 @@ append scripts
 											groupSelectedId:group.id,
 											action:'accept'
 											}).done(function(pData){
-												ul.removeChild(span.parentNode)
+												alert('accept')
+												alert(pData)
+												//- addGroup(pData.group.name)
+												//- ul.removeChild(span.parentNode)
+												location.reload()
+
 											})
 										})
 										
@@ -497,9 +503,10 @@ append scripts
 						action:'add'
 						}).done(function(pData){
 							console.log("xx: "+JSON.stringify(group, null, 4))
-							addGroup(pData.group.name)
-							ul.appendChild(li)
-							$('#groupSearch').val('')
+							//- addGroup(pData.group.name)
+							//- ul.appendChild(li)
+							//- $('#groupSearch').val('')
+							location.reload()
 							
 					
 						});

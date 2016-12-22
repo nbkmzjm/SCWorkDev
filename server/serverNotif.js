@@ -90,12 +90,12 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 			}).spread(function(group2, user, group){
 				console.log('user1'+JSON.stringify( user, null, 4))
 				console.log('group1'+ JSON.stringify(group, null, 4))
-				return [user.addGroup(group2.id, {status: relationship + ' REQUEST'}).then(function(usergroup){
-
-				}), group]
+				return [user.addGroup(group2.id, {status: relationship + ' REQUEST'}), group]
 				
 
 			}).spread(function(group2, group){
+				console.log('group'+ JSON.stringify( group, null, 4))
+				console.log('group2'+ JSON.stringify( group2, null, 4))
 				res.json({group:group})
 			}).catch(function(e) {
 				console.log(e)
@@ -242,14 +242,14 @@ router.post('/setFeedSetting', middleware.requireAuthentication, function(req, r
 router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	var curUserId = req.user.id
 	var loadNumber = req.body.loadNumber
-	console.log('lodingNumber: '+ loadNumber)
+	// console.log('lodingNumber: '+ loadNumber)
 	db.feedSetting.findOne({
 		where:{
 			userId:curUserId,
 			settingDescriptionId:1
 		}
 	}).then(function(feedSetting){
-		console.log(JSON.stringify(feedSetting, null, 4))
+		// console.log(JSON.stringify(feedSetting, null, 4))
 		if(feedSetting.value==='Private'){
 			db.mainPost.findAll({
 				include:[{
@@ -266,7 +266,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					
 				}
 			}).then(function(posts){
-				console.log(JSON.stringify(posts, null, 4))
+				// console.log(JSON.stringify(posts, null, 4))
 				res.json({posts:posts})
 			}).catch(function(e) {
 				console.log(e)
@@ -274,6 +274,73 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				error: e.toString()
 				})
 			})
+
+
+		}else if(feedSetting.value==='Cowoker'){
+
+			db.group.findAll({
+				include:[{
+					model:db.user,
+					where:{
+						id:curUserId
+					},
+					through:{
+						where:{
+							status:{
+								$in:['Cowoker','Owner']
+							}
+						}
+					}
+				}]
+			}).then(function(groups){
+				console.log('friend Group:'+JSON.stringify(groups, null, 4))
+				var userIds = []
+				groups.forEach(function(group, i){
+					
+					userIds.push(group.groupBLUserId)
+				})
+				
+				return [db.mainPost.findAll({
+				include:[{
+					model:db.user
+				}],
+				where:{
+					$or:[{
+							userId:req.user.id
+						},{
+							userId:{
+								$in:userIds
+							},
+							exclude:{
+								$notLike:'%'+curUserId+'%'
+							},
+								
+							postTo:{
+								$notIn:['Private']
+							}
+
+						},{
+							include:{
+							$like:'%'+curUserId+'%'
+							}
+						}]
+					
+				},
+				order:[
+					['createdAt', 'DESC']
+				],
+				limit: 12,
+				offset: loadNumber
+				})]
+			}).spread(function(posts){
+				// console.log(JSON.stringify(posts, null, 4))
+				res.json({posts:posts})
+			}).catch(function(e) {
+				console.log(e)
+				res.render('error', {
+					error: e.toString()
+				})
+			});
 		}else if(feedSetting.value==='Colleague'){
 
 			db.group.findAll({
@@ -314,7 +381,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							},
 								
 							postTo:{
-								$notIn:['mine']
+								$notIn:['Private']
 							}
 
 						},{
@@ -331,7 +398,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				offset: loadNumber
 				})]
 			}).spread(function(posts){
-				console.log(JSON.stringify(posts, null, 4))
+				// console.log(JSON.stringify(posts, null, 4))
 				res.json({posts:posts})
 			}).catch(function(e) {
 				console.log(e)
@@ -340,7 +407,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				})
 			});
 		}else if(feedSetting.value==='Friend of Colleague'){
-			console.log('fof:'+curUserId)
+			// console.log('fof:'+curUserId)
 			db.user.findOne({
 				where:{
 					id:curUserId
@@ -363,7 +430,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					}]
 					
 				}).then(function(groups){
-				console.log(JSON.stringify(groups, null, 4))
+				// console.log(JSON.stringify(groups, null, 4))
 					var groupIds = []
 					var friendUserId = []
 					groups.forEach(function(group, i){
@@ -373,14 +440,14 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					})
 					
 		    
-					console.log('group: '+JSON.stringify(groupIds, null, 4))
+					// console.log('group: '+JSON.stringify(groupIds, null, 4))
 					db.userGroups.findAll({
 						where:{
 							groupId:{
 								$in:groupIds
 							},
 							status:{
-								$in:['ACTIVE','OWNER']
+								$in:['Colleague','Owner']
 							}
 						}
 					}).then(function(userGroups){
@@ -390,8 +457,8 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							userIds.indexOf(userGroup.userId)===-1?
 							userIds.push(userGroup.userId):""
 						})
-						console.log('x: '+JSON.stringify(userIds, null, 4))
-						console.log('groupId:'+JSON.stringify(friendUserId, null, 4))
+						// console.log('x: '+JSON.stringify(userIds, null, 4))
+						// console.log('groupId:'+JSON.stringify(friendUserId, null, 4))
 						db.mainPost.findAll({
 							include:[{
 								model:db.user
@@ -401,7 +468,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 										userId:req.user.id
 									},{
 										postTo:{
-											$in:['Friend']
+											$in:['Colleague']
 										},
 										userId:{
 											$in:friendUserId
@@ -415,7 +482,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 										}
 										,
 										postTo:{
-											$notIn:['Private', 'Friend'],
+											$notIn:['Private', 'Colleague'],
 										}
 									},{
 										include:{
@@ -456,7 +523,7 @@ router.post('/getUserPost', middleware.requireAuthentication, function(req, res)
 			[db.mainPost, 'createdAt', 'DESC']
 		] 
 	}).then(function(user){
-		console.log(JSON.stringify(user, null, 4))
+		// console.log(JSON.stringify(user, null, 4))
 		res.json({user:user})
 	})
 
@@ -524,7 +591,7 @@ router.post('/getComment', middleware.requireAuthentication, function(req, res) 
 			attributes:['name','lastname']
 		}]
 	}).then(function(comments){
-		console.log(JSON.stringify(comments, null, 4))
+		// console.log(JSON.stringify(comments, null, 4))
 		res.json({
 			comments:comments
 		})
@@ -535,7 +602,7 @@ router.post('/getComment', middleware.requireAuthentication, function(req, res) 
 router.post('/getCommentCount', middleware.requireAuthentication, function(req, res) {
 	var mainPostId = req.body.mainPostId
 	var curUserId = req.user.id
-	console.log('mainPostId'+ mainPostId)
+	// console.log('mainPostId'+ mainPostId)
 	db.comment.count({
 		where:{
 			mainPostId:mainPostId,
@@ -573,7 +640,7 @@ router.post('/getCommentCount', middleware.requireAuthentication, function(req, 
 				objCommentEmoj[key] = objCommentEmoj[key].length
 			}
 		}
-		console.log('mainPostId'+ mainPostId)
+		// console.log('mainPostId'+ mainPostId)
 		return [db.comment.findOne({
 			where:{
 				mainPostId:mainPostId,
@@ -589,7 +656,7 @@ router.post('/getCommentCount', middleware.requireAuthentication, function(req, 
 		console.log('objCommentEmojs'+JSON.stringify(objCommentEmoj, null, 4))
 	}).spread(function(selfEmoj,commentCount, objCommentEmoj){
 
-		console.log('selfEmoj: '+ JSON.stringify(selfEmoj, null, 4)+' id:'+ mainPostId)
+		// console.log('selfEmoj: '+ JSON.stringify(selfEmoj, null, 4)+' id:'+ mainPostId)
 		res.json({
 			commentCount:commentCount,
 			emojCount:objCommentEmoj,
