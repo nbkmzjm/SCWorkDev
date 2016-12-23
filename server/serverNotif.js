@@ -766,9 +766,19 @@ router.post('/getDept', middleware.requireAuthentication, function(req, res) {
 			model:db.user,
 			attributes:['id','name', 'lastname']
 		}] 
-	}).then(function(department) {
- 	 	console.log(JSON.stringify(department, null, 4))
-		res.json({department:department})
+	}).then(function(depts) {
+
+		depts.forEach(function(dept){
+			var userIds = dept.users.map(function(user){
+				return user.id
+			})
+			dept.users = 'xxx'
+			console.log(JSON.stringify(dept, null, 4))
+		})
+ 	 	
+ 	 	
+ 	 	console.log(JSON.stringify(depts, null, 4))
+		res.json({department:depts})
 	})
 
 })
