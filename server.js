@@ -90,7 +90,15 @@ app.get('/message', function(req, res){
 app.get('/test', test)
 
 function test(req, res){
-	res.send('hey xhey')
+	db.department.findAll({ 
+		include: [{
+			model:db.user,
+			attributes:['id','name', 'lastname']
+		}] 
+	}).then(function(department) {
+ 	 	console.log(JSON.stringify(department, null, 4))
+		res.send('afagf<p>some html</p>')
+	})
 }
 
 

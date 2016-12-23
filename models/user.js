@@ -55,12 +55,12 @@ module.exports = function(sequelize, DataTypes) {
 			
 		},
 
-		department:{
-			type: DataTypes.STRING,
-			set: function(value){
-				this.setDataValue('department', value.toUpperCase())
-			}
-		},
+		// department:{
+		// 	type: DataTypes.STRING,
+		// 	set: function(value){
+		// 		this.setDataValue('department', value.toUpperCase())
+		// 	}
+		// },
 		
 		
 		salt: {

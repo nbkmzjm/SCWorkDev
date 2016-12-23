@@ -47,7 +47,7 @@ function getPostDB(loadNumber){
 			var div = document.createElement('div')
 			
 			div.className = 'panel panel-primary'
-			div.classList.add('col-md-4')
+			div.classList.add('col-sm-6')
 			// div.style.margin = '1px'
 			// div.style.float = 'left'
 			// div.style.maxWidth = '150px'

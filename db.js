@@ -35,6 +35,7 @@ db.settingDescription = sequelize.import(__dirname + '/models/settingDescription
 db.mainPost = sequelize.import(__dirname + '/models/mainPost.js');
 db.userGroups = sequelize.import(__dirname + '/models/userGroups.js');
 db.comment = sequelize.import(__dirname + '/models/comment.js');
+db.department = sequelize.import(__dirname + '/models/department.js');
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
@@ -119,5 +120,8 @@ db.comment.belongsTo(db.user,{
 db.user.hasMany(db.comment,{
 	onDelete:'CASCADE'
 })
+
+db.user.belongsTo(db.department)
+db.department.hasMany(db.user)
 
 module.exports = db;

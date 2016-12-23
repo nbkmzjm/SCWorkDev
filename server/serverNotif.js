@@ -760,6 +760,19 @@ router.post('/addPostEmoj', middleware.requireAuthentication, function(req, res)
 	})
 })
 
+router.post('/getDept', middleware.requireAuthentication, function(req, res) {
+	db.department.findAll({ 
+		include: [{
+			model:db.user,
+			attributes:['id','name', 'lastname']
+		}] 
+	}).then(function(department) {
+ 	 	console.log(JSON.stringify(department, null, 4))
+		res.json({department:department})
+	})
+
+})
+
 // db.group.findOne({
 // 		where:{
 // 			id:1

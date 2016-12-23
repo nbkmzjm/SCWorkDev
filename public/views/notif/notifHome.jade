@@ -52,6 +52,10 @@ append scripts
 			//- })
 			
 				function feedHome(){
+
+					var userSelected = []
+					var userIdSelected = []
+
 					var divInputGroup = document.createElement('div')
 					divInputGroup.className = 'input-group'
 					//- divInputGroup.classList.add('col-sm-3')
@@ -140,7 +144,7 @@ append scripts
 							selectFilter.classList.add('col-sm-4')
 							selectFilter.name = 'postTo'
 							selectFilter.id = 'postTo'
-								var optionList = ['Include', 'Exclude']
+								var optionList = ['Select Filter','Include', 'Exclude', 'Include Department']
 
 								optionList.forEach(function(item, i){
 									//- if(item !== setting.value){
@@ -151,51 +155,86 @@ append scripts
 									//- }
 
 								})
+							selectFilter.addEventListener('change', function(){
+								if((selectFilter.value === 'Include'||selectFilter.value === 'Exclude')&& $('#friendSearch').length <1){
+									divfriendSearch = document.createElement('div')
+									divfriendSearch.className = 'col-sm-4'
+										
+										var input = document.createElement('input')
+										input.type = 'text'
+										
+										input.placeholder = 'Search Person'
+										input.className ='form-control'
+										input.id = 'friendSearch'
+										input.setAttribute('href','#');
+										input.setAttribute('data-toggle','popover');
+										input.setAttribute('data-trigger','hover');
+										input.setAttribute('data-placement','auto');
+										input.style.fontWeight = 'bold'
+										input.setAttribute('title', 'Selected User');
+										
+										document.addEventListener('mousemove', function(){
+											input.setAttribute('data-content', JSON.stringify(userSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
+											$('[data-toggle="popover"]').popover({html:true})
+											
+										})
+										divfriendSearch.appendChild(input)
+									divInputGroupFilter.appendChild(divfriendSearch)
+									BHUserList("friendSearch")
+									$('#friendSearch').bind('typeahead:selected', function(obj, group, name){
+										$('#friendSearch').typeahead('val', '')
+										userSelected.push(group.name.substring(0,group.name.indexOf("_")))
+										userIdSelected.push(group.groupBLUserId)
+										//- $('#friendSearch').val('.....')
+										console.log(obj)
+										console.log(group)
+										console.log(name)
+									
+									})
+								}else if (selectFilter.value === 'Include Department'){
+									$('#friendSearch').remove()
+									$.post('/notif/getDept').done(function(Rdata){
+										if($('#selectDept').length<1){
+
+											var divSelectDept = document.createElement('div')
+											divSelectDept.className = 'col-sm-4'
+												var selectDept = document.createElement('select')
+												selectDept.className = 'form-control'
+												selectDept.id = 'selectDept'
+
+												//- selectDept.classList.add('col-sm-4')
+												Rdata.department.forEach(function(dept, i){
+													//- if(item !== setting.value){
+														var option = document.createElement('option')
+														option.value = dept.users
+														option.innerHTML = dept.name
+														selectDept.appendChild(option)
+													//- }
+												})
+												divSelectDept.appendChild(selectDept)
+											divInputGroupFilter.appendChild(divSelectDept)
+										}
+									})
+
+
+
+									
+
+								}
+							})
 							divSelectFilter.appendChild(selectFilter)
 						divInputGroupFilter.appendChild(divSelectFilter)
 
-						divfriendSearch = document.createElement('div')
-						divfriendSearch.className = 'col-sm-4'
-							var userSelected = []
-							var userIdSelected = []
-							var input = document.createElement('input')
-							input.type = 'text'
-							
-							input.placeholder = 'Search Person'
-							input.className ='form-control'
-							input.id = 'friendSearch'
-							input.setAttribute('href','#');
-							input.setAttribute('data-toggle','popover');
-							input.setAttribute('data-trigger','hover');
-							input.setAttribute('data-placement','auto');
-							input.style.fontWeight = 'bold'
-							input.setAttribute('title', 'Selected User');
-							
-							document.addEventListener('mousemove', function(){
-								input.setAttribute('data-content', JSON.stringify(userSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
-								$('[data-toggle="popover"]').popover({html:true})
-								
-							})
-							divfriendSearch.appendChild(input)
-						divInputGroupFilter.appendChild(divfriendSearch)
+						
 
-						BHUserList("friendSearch")
+						
 					$('#Feed').append(divInputGroupFilter)
 
 				$('#post').autogrow({vertical: true, horizontal: false});
 				
 
 				
-				$('#friendSearch').bind('typeahead:selected', function(obj, group, name){
-					$('#friendSearch').typeahead('val', '')
-					userSelected.push(group.name.substring(0,group.name.indexOf("_")))
-					userIdSelected.push(group.groupBLUserId)
-					//- $('#friendSearch').val('.....')
-					console.log(obj)
-					console.log(group)
-					console.log(name)
 				
-				})
 				$('#feedTab').on('click', function(){
 					location.reload()
 				})
