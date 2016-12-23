@@ -115,7 +115,7 @@ append scripts
 							//- select.className = ''
 							select.name = 'postTo'
 							select.id = 'postTo'
-								var optionList = ['Deparment','Cowoker','Colleague', 'Friend of Colleague','Private', 'Public']
+								var optionList = ['Coworker','Deparment','Colleague', 'Friend of Colleague','Private', 'Public']
 
 								optionList.forEach(function(item, i){
 									//- if(item !== setting.value){
@@ -291,10 +291,10 @@ append scripts
 				$.getJSON('/notif/userGetGroups').done(function(Rdata){
 					var groupList = Rdata.groupList
 					groupList.forEach(function(group,i){
-						addGroup = function (groupName){
+						addGroup = function (group){
 							li = document.createElement('li')
 							li.className = 'list-group-item'
-							li.appendChild(document.createTextNode(groupName))
+							li.appendChild(document.createTextNode(group.name))
 								var span = document.createElement('span')
 								span.style.float = 'right'
 								//- if (group.userGroups.status=='Colleague'){
@@ -359,10 +359,8 @@ append scripts
 											groupSelectedId:group.id,
 											action:'accept'
 											}).done(function(pData){
-												alert('accept')
-												alert(pData)
+												
 												//- addGroup(pData.group.name)
-												//- ul.removeChild(span.parentNode)
 												location.reload()
 
 											})
@@ -435,7 +433,7 @@ append scripts
 								
 						}
 
-						addGroup(group.name)
+						addGroup(group)
 						ul.appendChild(li)
 
 					})
@@ -461,7 +459,7 @@ append scripts
 								select.className = 'form-control'
 								select.name = 'postTo'
 								select.id = 'postTo'
-									var optionList = ['Cowoker','Colleague']
+									var optionList = ['Coworker','Colleague']
 
 									optionList.forEach(function(item, i){
 										//- if(item !== setting.value){
@@ -502,11 +500,14 @@ append scripts
 						relationship:select.value,
 						action:'add'
 						}).done(function(pData){
-							console.log("xx: "+JSON.stringify(group, null, 4))
-							//- addGroup(pData.group.name)
-							//- ul.appendChild(li)
-							//- $('#groupSearch').val('')
-							location.reload()
+							//- console.log("xx: "+JSON.stringify(group, null, 4))
+							var group = pData.group
+							group.userGroups = {status:'PENDING'}
+							console.log(group)
+							addGroup(group)
+							ul.insertBefore(li, ul.lastChild)
+							$('#groupSearch').val('')
+							
 							
 					
 						});
@@ -545,7 +546,7 @@ append scripts
 								select.className = 'form-control'
 								select.name = 'viewPostFrom'
 								select.id = 'viewPostFrom'
-									var optionList = ['Cowoker','Colleague', 'Friend of Colleague','Private', 'Public']
+									var optionList = ['Coworker','Colleague', 'Friend of Colleague','Private', 'Public']
 										var optionDB = document.createElement('option')
 										optionDB.value = setting.value
 										optionDB.innerHTML = setting.value

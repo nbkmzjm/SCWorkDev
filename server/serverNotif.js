@@ -160,7 +160,7 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 				}
 			}).then(function(userGroup){
 				console.log(JSON.stringify(userGroup.status, null, 4))
-				db.userGroups.update({
+				return db.userGroups.update({
 					status:userGroup.status.slice(0, -8)
 				},{
 					where:{ 
@@ -169,6 +169,10 @@ router.post('/editGroup', middleware.requireAuthentication, function(req, res){
 							{userId:userGroup2.userId, groupId:userGroup1.groupId}
 						]
 					}
+				})
+			}).then(function(updated){
+				res.json({
+					updated:updated
 				})
 			})
 			
@@ -276,7 +280,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 			})
 
 
-		}else if(feedSetting.value==='Cowoker'){
+		}else if(feedSetting.value==='Coworker'){
 
 			db.group.findAll({
 				include:[{
@@ -287,7 +291,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					through:{
 						where:{
 							status:{
-								$in:['Cowoker','Owner']
+								$in:['Coworker','Owner']
 							}
 						}
 					}
@@ -314,9 +318,14 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							exclude:{
 								$notLike:'%'+curUserId+'%'
 							},
+
+
 								
+							// postTo:{
+							// 	$notIn:['Private']
+							// },
 							postTo:{
-								$notIn:['Private']
+								$in:['Coworker']
 							}
 
 						},{
