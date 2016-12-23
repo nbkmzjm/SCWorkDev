@@ -157,9 +157,10 @@ append scripts
 								})
 							selectFilter.addEventListener('change', function(){
 								if((selectFilter.value === 'Include'||selectFilter.value === 'Exclude')&& $('#friendSearch').length <1){
+									$('#divSelectDept').remove()
 									divfriendSearch = document.createElement('div')
 									divfriendSearch.className = 'col-sm-4'
-										
+									divfriendSearch.id = 'divfriendSearch'
 										var input = document.createElement('input')
 										input.type = 'text'
 										
@@ -192,15 +193,15 @@ append scripts
 									
 									})
 								}else if (selectFilter.value === 'Include Department'){
-									$('#friendSearch').remove()
+									$('#divfriendSearch').remove()
 									$.post('/notif/getDept').done(function(Rdata){
 										if($('#selectDept').length<1){
 
 											var divSelectDept = document.createElement('div')
 											divSelectDept.className = 'col-sm-4'
+											divSelectDept.id = 'divSelectDept'
 												var selectDept = document.createElement('select')
 												selectDept.className = 'form-control'
-												selectDept.id = 'selectDept'
 
 												//- selectDept.classList.add('col-sm-4')
 												Rdata.department.forEach(function(dept, i){
