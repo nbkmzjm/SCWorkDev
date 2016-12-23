@@ -55,6 +55,7 @@ append scripts
 
 					var userSelected = []
 					var userIdSelected = []
+					var deptSelected = []
 
 					var divInputGroup = document.createElement('div')
 					divInputGroup.className = 'input-group'
@@ -119,7 +120,7 @@ append scripts
 							//- select.className = ''
 							select.name = 'postTo'
 							select.id = 'postTo'
-								var optionList = ['Coworker','Deparment','Colleague', 'Friend of Colleague','Private', 'Public']
+								var optionList = ['Coworker','Colleague', 'Coworker of Colleague','Private', 'Public']
 
 								optionList.forEach(function(item, i){
 									//- if(item !== setting.value){
@@ -156,8 +157,11 @@ append scripts
 
 								})
 							selectFilter.addEventListener('change', function(){
+								selectFilter.value === 'Exclude'?$('#divSelectDept').remove():""
+								
 								if((selectFilter.value === 'Include'||selectFilter.value === 'Exclude')&& $('#friendSearch').length <1){
-									$('#divSelectDept').remove()
+									
+									
 									divfriendSearch = document.createElement('div')
 									divfriendSearch.className = 'col-sm-4'
 									divfriendSearch.id = 'divfriendSearch'
@@ -193,7 +197,7 @@ append scripts
 									
 									})
 								}else if (selectFilter.value === 'Include Department'){
-									$('#divfriendSearch').remove()
+									//- $('#divfriendSearch').remove()
 									$.post('/notif/getDept').done(function(Rdata){
 										if($('#selectDept').length<1){
 
@@ -202,18 +206,39 @@ append scripts
 											divSelectDept.id = 'divSelectDept'
 												var selectDept = document.createElement('select')
 												selectDept.className = 'form-control'
-
+												selectDept.setAttribute('href','#');
+												selectDept.setAttribute('data-toggle','popover');
+												selectDept.setAttribute('data-trigger','hover');
+												selectDept.setAttribute('data-placement','auto');
+												selectDept.style.fontWeight = 'bold'
+												selectDept.setAttribute('title', 'Selected Department');
+												
+												var optionDefault = document.createElement('option')
+												optionDefault.innerHTML = 'Select Department'
+												selectDept.appendChild(optionDefault)
 												//- selectDept.classList.add('col-sm-4')
 												Rdata.department.forEach(function(dept, i){
 													//- if(item !== setting.value){
 														var option = document.createElement('option')
-														option.value = dept.users
+														option.value = JSON.stringify(dept, null, 4)
 														option.innerHTML = dept.name
+
 														selectDept.appendChild(option)
 													//- }
 												})
+												selectDept.addEventListener('change', function(){
+													var dept = JSON.parse(selectDept.value)
+													userIdSelected.push(dept.status)
+													deptSelected.push(dept.name)
+													//- console.log(selectDept.value.name)
+												})
 												divSelectDept.appendChild(selectDept)
 											divInputGroupFilter.appendChild(divSelectDept)
+											document.addEventListener('mousemove', function(){
+											selectDept.setAttribute('data-content', JSON.stringify(deptSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
+											$('[data-toggle="popover"]').popover({html:true})
+											
+										})
 										}
 									})
 

@@ -83,21 +83,28 @@ io.on('connection', function(socket) {
 });
 
 app.get('/message', function(req, res){
-	res.render('message/messageHome')
+	res.render('message/mesdepasageHome')
 	
 })
 
 app.get('/test', test)
 
 function test(req, res){
-	db.department.findAll({ 
-		include: [{
-			model:db.user,
-			attributes:['id','name', 'lastname']
-		}] 
-	}).then(function(department) {
- 	 	console.log(JSON.stringify(department, null, 4))
-		res.send('afagf<p>some html</p>')
+	db.group.findAll({
+		include:[{
+				model:db.user,
+				//specify which model to include if there is more ONE
+				as:'groupBLUser',
+				// attributes:['name'],
+				include:[{
+					model:db.department
+					// attributes:['name']
+				}]
+
+			}]
+	}).then(function(groupList){
+		console.log(JSON.stringify(groupList, null, 4))
+		res.json({groupList:groupList})
 	})
 }
 
@@ -1010,9 +1017,10 @@ app.post('/assignTracerDetailUpd', middleware.requireAuthentication, function(re
 //Loading user on the scheduling main page
 app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 	var curUser = req.user
+	console.log(JSON.stringify(curUser, null, 4))
 	var whereParams = {
 		active:true,
-		department:curUser.department
+		departmentId:curUser.departmentId
 	}
 
 	if(curUser.department==='ADMIN'){
@@ -1024,7 +1032,7 @@ app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 	db.user.findAll({
 		where:whereParams, 
 		order:[
-				['department'],
+				// ['department'],
 				['title']
 
 			]

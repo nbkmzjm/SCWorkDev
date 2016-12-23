@@ -396,9 +396,10 @@ function BHUserList (typeaheadId) {
 			return group;
 			
 			});
-		result.push({
-			name:'ADD NEW GROUP'
-		})
+		// result.push({
+		// 	name:'ADD NEW GROUP',
+
+		// })
 		// constructs the suggestion engine
 		var groupList = new Bloodhound({
 			identify: function(obj) { return obj.name; },
@@ -411,8 +412,9 @@ function BHUserList (typeaheadId) {
 
 		function groupDefault(q, sync) {
 			if (q === '') {
-			   sync(groupList.get('ADD NEW GROUP'));
+			   // sync(groupList.get('ADD NEW GROUP'));
 			 }else {
+			 	console.log('BHResult')
 			 	console.log(result)
 			    groupList.search(q, sync);
 			 }
@@ -434,7 +436,7 @@ function BHUserList (typeaheadId) {
 			   //  ].join('\n')
 			   //  ,
 			    suggestion: function (data) {
-				        return '<p><strong>' + data.name + '</strong> - ' + data.status + '</p>';
+				        return '<p><strong>' + data.name + '</strong> - ' + data.groupBLUser.department.name + '</p>';
 				    }
 		  }
 		});

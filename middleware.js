@@ -30,6 +30,7 @@ module.exports = function(db) {
 						}
 					}
 				}).then(function(user){
+
 					if (!!user){
 						res.redirect('/users/loginform');
 						
