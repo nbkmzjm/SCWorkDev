@@ -53,6 +53,22 @@ router.get('/newAccountForm', function(req, res) {
 	res.render('users/newAccountForm');
 })
 
+router.post('/addDept',middleware.requireAuthentication, function(req, res) {
+	req.check('deptName', 'Deparment name must be within 2-30 characters').len(2, 30);
+	req.check('status', 'Please select a status').len(2, 30);
+	var errors = req.validationErrors()
+	var body = _.pick(req.body, 'deptName', 'status')
+	console.log(JSON.stringify(body, null, 4))
+	if (errors) {
+		res.json({
+			errors: errors
+		})
+	}else{
+		res.json({
+			redi: '/users'
+		})
+	}	
+})
 
 router.post('/addUser',middleware.requireAuthentication, function(req, res) {
 	// console.log('xxx'+req.user.departmentId)
