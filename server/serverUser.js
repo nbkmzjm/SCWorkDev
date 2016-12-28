@@ -71,9 +71,13 @@ router.post('/addUser',middleware.requireAuthentication, function(req, res) {
 	
 	var passreset = req.body.passreset
 		// res.redirect("/aboutuserx");
-	// body.department = 
-	var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'password', 'title','department', 'active')
+	
+	var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'password', 'title','departmentId', 'active')
+	// if(body.departmentId === 1){
+		
+	// }
 	console.log(JSON.stringify(body, null, 4))
+
 	if (errors) {
 		res.json({
 			errors: errors
