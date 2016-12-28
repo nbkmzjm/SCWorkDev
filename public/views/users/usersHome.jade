@@ -96,8 +96,12 @@ append scripts
 		$(function(){
 			
 			
-				
-			
+			var JSONdata = !{JSONdata};
+			var curUser = JSONdata.curUser
+			var firstUser = JSONdata.firstUser
+			console.log('curUser')
+			console.log(curUser)
+
 			$("#form").on('submit', function(e){
 				var active = false
 				var passreset = false
@@ -144,15 +148,17 @@ append scripts
 				return false;
 			});
 			
-			var JSONdata = !{JSONdata};
-			var curUser = JSONdata.curUser
-			var firstUser = JSONdata.firstUser
+			
+			console.log('curUser')
+			console.log(curUser)
+			if(curUser.department.name !== 'ADMIN'){
 
-			if(curUser.department !== 'ADMIN'){
 				$('#department').attr('disabled', true)
 				
 			}else{
-				curUser.department = ''
+				$('#department').attr('disabled', false)
+				$('#department').val('')
+				
 			}
 
 			var arrayTitle_UserTab = ['Admin', 'Manager']
@@ -175,7 +181,7 @@ append scripts
 				$('#email').val('')
 				$('#username').val('')
 				$('#title').val('')
-				$('#department').val(curUser.department)
+				$('#department').val(curUser.department.name)
 				$('#lastname').val('')
 				$('#password').attr('type','password')
 				$('#password').val('')

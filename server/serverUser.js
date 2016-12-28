@@ -11,13 +11,22 @@ function test(req, res){
 }
 router.get('/', middleware.requireAuthentication, function(req, res) {
 	var curUser = req.user;
-	res.render('users/usersHome', {
+	db.user.findOne({
+		where:curUser.id,
+		include:[{
+			model:db.department
+		}]
+	}).then(function(curUser){
+		res.render('users/usersHome', {
 			JSONdata: JSON.stringify({
 				tabx: 'userList', 
 				curUser:curUser,
 				firstUser: false
 			})
 		})
+
+	})
+	
 	// var arrayTitle_UserTab = ['admin', 'manager']
 	// if (arrayTitle_UserTab.indexOf(curUserTitle) !== -1) {
 		
@@ -45,15 +54,16 @@ router.get('/newAccountForm', function(req, res) {
 })
 
 
-router.post('/addUser', function(req, res) {
-	console.log('xxx'+req.body.lastname)
-	
+router.post('/addUser',middleware.requireAuthentication, function(req, res) {
+	// console.log('xxx'+req.user.departmentId)
+
+	// db.department.
 	req.check('name', 'First name must be within 2-30 characters').len(2, 30);
 	req.check('lastname', 'Last name must be within 2-30 characters').len(2, 30);
 	req.check('email', 'Email is not valid').isEmail();
 	req.check('username', 'Username must be within 5-20 characters').len(5, 20)
 	req.check('title', 'Title must be assigned').len(3)
-	req.check('department', 'Title must be at lease 3 characters').len(3)
+	// req.check('department', 'Deparment must be at lease 3 characters').len(3)
 	// req.check('password', 'Password must be within 5-20 characters').len(5, 20)
 	var errors = req.validationErrors()
 	var id = req.body.id
@@ -61,9 +71,9 @@ router.post('/addUser', function(req, res) {
 	
 	var passreset = req.body.passreset
 		// res.redirect("/aboutuserx");
-
+	// body.department = 
 	var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'password', 'title','department', 'active')
-	console.log(JSON.stringify(id, null, 4))
+	console.log(JSON.stringify(body, null, 4))
 	if (errors) {
 		res.json({
 			errors: errors
@@ -95,12 +105,10 @@ router.post('/addUser', function(req, res) {
 						}).then(function(settingDescriptions){
 							console.log(JSON.stringify(settingDescriptions, null, 4))
 							settingDescriptions.forEach(function(settingDescription){
-								return db.feedSetting.create({
+								db.feedSetting.create({
 									value:settingDescription.defaultValue,
 									userId:user.id,
 									settingDescriptionId:settingDescription.id
-								}, {
-									transaction:t
 								})
 							})
 						})
