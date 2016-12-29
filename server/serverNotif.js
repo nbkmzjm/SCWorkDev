@@ -394,9 +394,11 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					
 
 					if(group.groupBLUserId !== curUserId){
-
 						userIds.push(group.groupBLUserId)
-						coworkerGroupIds.push(group.id)		
+							
+					}
+					if(group.groupBLUserId === curUserId){
+							coworkerGroupIds.push(group.id)	
 					}
 					
 				})
@@ -508,9 +510,11 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					
 
 					if(group.groupBLUserId !== curUserId){
-
 						userIds.push(group.groupBLUserId)
-						coworkerGroupIds.push(group.id)		
+							
+					}
+					if(group.groupBLUserId === curUserId){
+							coworkerGroupIds.push(group.id)	
 					}
 					
 				})
@@ -560,18 +564,18 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 								// }
 									
 								postTo:{
-									$notIn:['Private','Coworker']
+									$in:['Coworker','Colleague']
 								}
 
-							},{
-								//view postst that is related as Coworker and post to Coworker
-								userId:{
-									$in:coworkerUserIds
-								}
-								,
-								postTo:{
-									$in:['Coworker']
-								}
+							// },{
+							// 	//view postst that is related as Coworker and post to Coworker
+							// 	userId:{
+							// 		$in:coworkerUserIds
+							// 	}
+							// 	,
+							// 	postTo:{
+							// 		$in:['Coworker']
+							// 	}
 
 							},{
 								include:{
@@ -596,6 +600,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					error: e.toString()
 				})
 			});
+			
 		}
 
 
