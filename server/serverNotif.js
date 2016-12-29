@@ -397,6 +397,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						userIds.push(group.groupBLUserId)
 							
 					}
+					//including groupids of coworker of current user
 					if(group.groupBLUserId === curUserId){
 							coworkerGroupIds.push(group.id)	
 					}
@@ -513,9 +514,9 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						userIds.push(group.groupBLUserId)
 							
 					}
-					if(group.groupBLUserId === curUserId){
-							coworkerGroupIds.push(group.id)	
-					}
+					//including groupids of coworker of current user and ALSO Colleague
+					coworkerGroupIds.push(group.id)
+
 					
 				})
 
@@ -535,7 +536,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 
 					var coworkerUserIds = []
 					userGroups.forEach(function(userGroup, i){
-						coworkerUserIds.push(userGroup.userId)
+						coworkerUserIds.indexOf(userGroup.userId)===-1?coworkerUserIds.push(userGroup.userId):""
 					})
 					
 					console.log('userId: '+JSON.stringify(userIds, null, 4))
@@ -564,18 +565,18 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 								// }
 									
 								postTo:{
-									$in:['Coworker','Colleague']
+									$notIn:['Private','Coworker']
 								}
 
-							// },{
-							// 	//view postst that is related as Coworker and post to Coworker
-							// 	userId:{
-							// 		$in:coworkerUserIds
-							// 	}
-							// 	,
-							// 	postTo:{
-							// 		$in:['Coworker']
-							// 	}
+							},{
+								//view postst that is related as Coworker and post to Coworker
+								userId:{
+									$in:coworkerUserIds
+								}
+								,
+								postTo:{
+									$in:['Coworker', 'Coworker of Colleague']
+								}
 
 							},{
 								include:{
