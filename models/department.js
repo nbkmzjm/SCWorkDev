@@ -9,6 +9,7 @@ module.exports = function(sequelize, DataTypes) {
         name: {
             type: DataTypes.STRING, 
             allowNull: false,
+            unique:true,
             set: function(value){
                 this.setDataValue('name', value.toUpperCase())
             }

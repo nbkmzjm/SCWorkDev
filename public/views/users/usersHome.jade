@@ -52,7 +52,7 @@ block content
 						div(class="form-group")
 							label(class="control-label col-sm-2" for="department") Department
 							div(class="col-sm-4")
-								input(type="text" class="form-control" id="department" name="department" placeholder="Enter Department" )
+								select(class="form-control" id="department" name="department")
 						div(class="form-group")
 							label(class="control-label col-sm-2" for="title") Title
 							div(class="col-sm-4")
@@ -80,11 +80,8 @@ block content
 							div(class="col-sm-offset-2 col-sm-3")
 								button(type="submit" id='submit' class="btn btn-primary") Submit
 
-						- if (errors)
-							p.error Please check following items:
-							- each error in errors
-								li.error= error.msg
-					div#errors
+						
+					div.errors
 				div(id="deptForm" class="tab-pane")
 					br
 					form(class="form-horizontal" autocomplete="off" id='formDept' action="/users/addDept" method="POST")
@@ -104,18 +101,8 @@ block content
 						div(class="form-group")
 							div(class="col-sm-offset-2 col-sm-3")
 								button(type="submit" id='submitDept' class="btn btn-primary") Submit
-
-						- if (errors)
-							p.error Please check following items:
-							- each error in errors
-								li.error= error.msg
-					div#errors			
-
-
-		
-
-	
-
+					div.errors
+						
 append scripts 
 	script(src="public/fnLib/homeFn.js")
 	script.
@@ -139,22 +126,24 @@ append scripts
 					if (!!Rdata.redi){
 						window.location.replace(Rdata.redi)
 					}else if (!!Rdata.errors){
-					alert(JSON.stringify(Rdata.errors, null, 4))
-						$('#errors').html('')
+					//- alert(JSON.stringify(Rdata.errors, null, 4))
+						$('.errors').html('')
 						if (typeof Rdata.errors == 'string'){
-							$('#errors').append('<br>'+'* '+ Rdata.errors)
-							$('#errors').addClass('error')
-							$('#errors').addClass('col-sm-offset-2 col-sm-10')
+							$('.errors').append('<br>'+'* '+ Rdata.errors)
+							$('.errors').addClass('error')
+							$('.errors').addClass('col-sm-offset-2 col-sm-10')
 						} else{
 
 							Rdata.errors.forEach(function(item){
-								$('#errors').append('<br>'+'* '+ item.msg)
-								$('#errors').addClass('error')
-								$('#errors').addClass('col-sm-offset-2 col-sm-10')
+								$('.errors').append('<br>'+'* '+ item.msg)
+								$('.errors').addClass('error')
+								$('.errors').addClass('col-sm-offset-2 col-sm-10')
 							})
 						}
 					}
 				})
+				e.preventDefault();
+				//- return false;
 			})
 
 			$("#form").on('submit', function(e){
@@ -168,7 +157,7 @@ append scripts
 				}
 				
 				$.post('/users/addUser',{
-					departmentId:curUser.department.id,
+					//- departmentId:curUser.department.id,
 					name:$('#name').val(),
 					lastname:$('#lastname').val(),
 					id:$('#id').val(),
@@ -176,7 +165,7 @@ append scripts
 					username:$('#username').val(),
 					password:$('#password').val(),
 					title:$('#title').val(),
-					department:$('#department').val(),
+					departmentId:$('#department').val(),
 					active:active,
 					passreset:passreset
 
@@ -185,17 +174,17 @@ append scripts
 						window.location.replace(Rdata.redi)
 					}else if (!!Rdata.errors){
 					//- alert(JSON.stringify(Rdata.errors, null, 4))
-						$('#errors').html('')
+						$('.errors').html('')
 						if (typeof Rdata.errors == 'string'){
 							$('#errors').append('<br>'+'* '+ Rdata.errors)
 							$('#errors').addClass('error')
-								$('#errors').addClass('col-sm-offset-2 col-sm-10')
+							$('#errors').addClass('col-sm-offset-2 col-sm-10')
 						} else{
 
 							Rdata.errors.forEach(function(item){
-								$('#errors').append('<br>'+'* '+ item.msg)
-								$('#errors').addClass('error')
-								$('#errors').addClass('col-sm-offset-2 col-sm-10')
+								$('.errors').append('<br>'+'* '+ item.msg)
+								$('.errors').addClass('error')
+								$('.errors').addClass('col-sm-offset-2 col-sm-10')
 							})
 						}
 					}
@@ -237,18 +226,35 @@ append scripts
 				$('#email').val('')
 				$('#username').val('')
 				$('#title').val('')
-				$('#department').val(curUser.department.name)
 				$('#lastname').val('')
 				$('#password').attr('type','password')
 				$('#password').val('')
 				$('#passreset').attr('disabled', false)
-				
+				$('.error').html('')
+
+				var option = document.createElement('option')
+					option.value = curUser.department.id
+					option.innerHTML = curUser.department.name
+					$('#department').append(option)
+				$.post('/users/getDept').done(function(Rdata){
+
+					Rdata.departments.forEach(function(department, i){
+						if(department.name !== curUser.department.name){
+							var option = document.createElement('option')
+							option.value = department.id
+							option.innerHTML = department.name
+							$('#department').append(option)
+						}
+
+					})
+				})
 				document.getElementById('active').checked = 1
 			})	
 
-			$('#userFormTab').click(function(){
+			$('#deptTab').click(function(){
 				$('#deptName').val('')
 				$('#status').val('Active')
+				$('.error').html('')
 				
 				
 				//- document.getElementById('active').checked = 1
@@ -282,7 +288,9 @@ append scripts
 				table.appendChild(tr)
 
 
-				$.getJSON('/users/userList').done(function(Rdata){
+				$.post('/users/userList',{
+					departmentId:curUser.department.id
+				}).done(function(Rdata){
 
 					console.log(JSON.stringify(Rdata, null, 4))
 					Rdata.users.forEach(function(user){
@@ -323,7 +331,7 @@ append scripts
 										span1.id = 'editGly';
 										//- click the 'x' to remove from list
 										span1.addEventListener('click', function(){
-											$.post('/users/editUserForm',{userId:user.id}).done(function(){
+											//- $.post('/users/editUserForm',{userId:user.id}).done(function(){
 												//- alert(JSON.stringify(user,null,4))
 												$('#userListTab').attr('class', '')
 												//- $('#userFormTab').attr('class', 'active')
@@ -336,11 +344,27 @@ append scripts
 												$('#email').val(user.email)
 												$('#username').val(user.username)
 												$('#password').val('')
-												$('#department').val(user.department)
 												$('#title').val(user.title)
 												$('#passreset').attr('disabled', false)
+												var option = document.createElement('option')
+													option.value = user.department.id
+													option.innerHTML = user.department.name
+													$('#department').append(option)
+												$.post('/users/getDept').done(function(Rdata){
+
+													Rdata.departments.forEach(function(department, i){
+														if(department.name !== user.department.name){
+															var option = document.createElement('option')
+															option.value = department.id
+															option.innerHTML = department.name
+															$('#department').append(option)
+														}
+
+													})
+												})
+
 												document.getElementById('active').checked = user.active
-											});
+											//- });
 										});
 										td.appendChild(span1)
 									})

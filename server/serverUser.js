@@ -53,6 +53,14 @@ router.get('/newAccountForm', function(req, res) {
 	res.render('users/newAccountForm');
 })
 
+router.post('/getDept',middleware.requireAuthentication, function(req, res) {
+	db.department.findAll().then(function(departments){
+		res.json({
+			departments:departments
+		})
+	})
+})
+
 router.post('/addDept',middleware.requireAuthentication, function(req, res) {
 	req.check('deptName', 'Deparment name must be within 2-30 characters').len(2, 30);
 	req.check('status', 'Please select a status').len(2, 30);
@@ -64,9 +72,22 @@ router.post('/addDept',middleware.requireAuthentication, function(req, res) {
 			errors: errors
 		})
 	}else{
-		res.json({
-			redi: '/users'
-		})
+		db.department.create({
+			name:body.deptName,
+			staus:body.status
+		}).then(function(created){
+			console.log('department created: '+ created)
+			res.json({
+				redi: '/users'
+			})
+		}).catch(function(e) {
+			console.log(JSON.stringify(e, null, 4))
+			res.json({
+				errors: "User cannot be created due to " + e.errors[0].message
+			})
+		});
+
+		
 	}	
 })
 
@@ -116,7 +137,7 @@ router.post('/addUser',middleware.requireAuthentication, function(req, res) {
 					return db.userGroups.create({
 						userId:user.id,
 						groupId:group.id,
-						status:'OWNER'
+						status:'Owner'
 					}, {
 						transaction:t
 					}).then(function(){
@@ -143,7 +164,7 @@ router.post('/addUser',middleware.requireAuthentication, function(req, res) {
 		}).catch(function(e) {
 			console.log(JSON.stringify(e, null, 4))
 			res.json({
-				errors: "User cannot be created due to " + e
+				errors: "User cannot be created due to " + e.errors[0].message
 			})
 		});
 		
@@ -153,12 +174,12 @@ router.post('/addUser',middleware.requireAuthentication, function(req, res) {
 		console.log(passreset + '--' + req.body.password)
 		if (passreset==true) {
 			req.body.password = 'banner1234'
-			var body = _.pick(req.body, 'name','lastname', 'email', 'password', 'username', 'department', 'title', 'active')
+			var body = _.pick(req.body, 'name','lastname', 'email', 'password', 'username', 'departmentId', 'title', 'active')
 		}else if (req.body.password !== ''){
-			var body = _.pick(req.body, 'name','lastname', 'email', 'password', 'username', 'department', 'title', 'active')
+			var body = _.pick(req.body, 'name','lastname', 'email', 'password', 'username', 'departmentId', 'title', 'active')
 		}else {
 			console.log('ese')
-			var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'department', 'title', 'active')
+			var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'departmentId', 'title', 'active')
 		}
 
 		db.user.update(body, {
@@ -186,9 +207,13 @@ router.post('/addUser',middleware.requireAuthentication, function(req, res) {
 router.post('/editUserForm', function(req, res) {
 
 	db.user.findOne({
+
 		where: {
 			id: req.body.userId
-		}
+		},
+		include:[{
+			model:db.department
+		}]
 	}).then(function(user) {
 		res.json({
 			user: user
@@ -227,18 +252,18 @@ router.post('/editUserForm', function(req, res) {
 // 	})
 // })
 
-router.get('/userList', middleware.requireAuthentication, function(req, res) {
+router.post('/userList', middleware.requireAuthentication, function(req, res) {
 	var curUser = req.user
-	console.log(curUser.id)
+	var departmentId = req.body.departmentId
 
 	var para = {}
 	var arrayTitle_UserTab = ['Admin', 'Manager']
 	if (arrayTitle_UserTab.indexOf(curUser.title) !== -1) {
-		if(curUser.department == 'ADMIN'){
+		if(departmentId == 1){
 			para.id = {$gt:0}
 		}else{
-			para.department = curUser.department
-			console.log(curUser.department + 'xxx')
+			para.departmentId = departmentId
+			console.log(departmentId + ' :xxx')
 		}
 		
 
@@ -251,7 +276,10 @@ router.get('/userList', middleware.requireAuthentication, function(req, res) {
 		order: [
 			['title']
 		],
-		where:para
+		where:para,
+		include:[{
+			model:db.department
+		}]
 	}).then(function(users) {
 		res.json({
 			users: users
