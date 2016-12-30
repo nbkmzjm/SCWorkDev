@@ -30,6 +30,7 @@ block content
 					form(class="form-horizontal" autocomplete="off" id='form' action="/users/addUser" method="POST")
 						div(class="form-group")
 							label(class="control-label col-sm-2" for="name") First Name
+							input(type="hidden" class="form-control" id="id" name="id" value='0')
 							div(class="col-sm-4")
 								input(type="hidden" class="form-control" id="id" name="id" value='0')
 								input(type="text" class="form-control" id="name" name="name" placeholder="Enter First Name" )
@@ -88,7 +89,7 @@ block content
 						div(class="form-group")
 							label(class="control-label col-sm-2" for="deptName") Department Name
 							div(class="col-sm-4")
-								//- input(type="hidden" class="form-control" id="id" name="id" value='0')
+								
 								input(type="text" class="form-control" id="deptName" name="deptName" placeholder="Enter Department Name" )
 						
 						div(class="form-group")
@@ -122,6 +123,76 @@ append scripts
 					$('#userFormTab').attr('class', 'active')
 					$('#userList').attr('class', 'tab-pane')
 					$('#userForm').attr('class', 'tab-pane fade in active')
+
+					$.post('/users/getDept').done(function(Rdata){
+						console.log(Rdata)
+						if(Rdata.departments !== 'undefined'){
+							Rdata.departments.forEach(function(department, i){
+									var option = document.createElement('option')
+									option.value = department.id
+									option.innerHTML = department.name
+									$('#department').append(option)
+								
+
+							})
+						}else{
+							$.post('/users/addDept',{
+								deptName:'ADMIN',
+								status:'Active',
+							}).done(function(Rdata){
+								alert('Please refresh browser to populate Department Name')
+							})
+						}
+					})
+
+					$("#form").on('submit', function(e){
+						alert('form submit')
+						var active = false
+						var passreset = false
+						if ($('#active').is(':checked')){
+							active = true
+						}
+						if ($('#passreset').is(':checked')){
+							passreset = true
+						}
+						
+						$.post('/users/addUser',{
+							//- departmentId:curUser.department.id,
+							name:$('#name').val(),
+							lastname:$('#lastname').val(),
+							id:$('#id').val(),
+							email:$('#email').val(),
+							username:$('#username').val(),
+							password:$('#password').val(),
+							title:$('#title').val(),
+							departmentId:$('#department').val(),
+							active:active,
+							passreset:passreset
+
+						}).done(function(Rdata){
+							if (!!Rdata.redi){
+								window.location.replace(Rdata.redi)
+							}else if (!!Rdata.errors){
+							//- alert(JSON.stringify(Rdata.errors, null, 4))
+								$('.errors').html('')
+								if (typeof Rdata.errors == 'string'){
+									$('#errors').append('<br>'+'* '+ Rdata.errors)
+									$('#errors').addClass('error')
+									$('#errors').addClass('col-sm-offset-2 col-sm-10')
+								} else{
+
+									Rdata.errors.forEach(function(item){
+										$('.errors').append('<br>'+'* '+ item.msg)
+										$('.errors').addClass('error')
+										$('.errors').addClass('col-sm-offset-2 col-sm-10')
+									})
+								}
+							}
+						})
+						e.preventDefault();
+						return false;
+					});
+					
 				}
 			}else{
 				$("#formDept").on('submit', function(e){

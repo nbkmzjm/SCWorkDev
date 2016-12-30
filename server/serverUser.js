@@ -53,15 +53,21 @@ router.get('/newAccountForm', function(req, res) {
 	res.render('users/newAccountForm');
 })
 
-router.post('/getDept',middleware.requireAuthentication, function(req, res) {
+router.post('/getDept', function(req, res) {
 	db.department.findAll().then(function(departments){
-		res.json({
-			departments:departments
-		})
+		console.log('dept: '+ departments)
+		if(departments.length > 0){
+			res.json({
+				departments:departments
+			})
+		}else{
+			res.json({departments:'undefined'})
+		}
+		
 	})
 })
 
-router.post('/addDept',middleware.requireAuthentication, function(req, res) {
+router.post('/addDept', function(req, res) {
 	req.check('deptName', 'Deparment name must be within 2-30 characters').len(2, 30);
 	req.check('status', 'Please select a status').len(2, 30);
 	var errors = req.validationErrors()
@@ -91,7 +97,7 @@ router.post('/addDept',middleware.requireAuthentication, function(req, res) {
 	}	
 })
 
-router.post('/addUser',middleware.requireAuthentication, function(req, res) {
+router.post('/addUser', function(req, res) {
 	// console.log('xxx'+req.user.departmentId)
 
 	// db.department.
