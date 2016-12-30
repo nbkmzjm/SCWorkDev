@@ -115,273 +115,275 @@ append scripts
 			var firstUser = JSONdata.firstUser
 			console.log('curUser')
 			console.log(curUser)
+			if (curUser == undefined ){
+				if (JSONdata.tabx=='userForm'){
 
-
-			$("#formDept").on('submit', function(e){
-				$.post('/users/addDept',{
-					
-					deptName:$('#deptName').val(),
-					status:$('#status').val(),
-				}).done(function(Rdata){
-					if (!!Rdata.redi){
-						window.location.replace(Rdata.redi)
-					}else if (!!Rdata.errors){
-					//- alert(JSON.stringify(Rdata.errors, null, 4))
-						$('.errors').html('')
-						if (typeof Rdata.errors == 'string'){
-							$('.errors').append('<br>'+'* '+ Rdata.errors)
-							$('.errors').addClass('error')
-							$('.errors').addClass('col-sm-offset-2 col-sm-10')
-						} else{
-
-							Rdata.errors.forEach(function(item){
-								$('.errors').append('<br>'+'* '+ item.msg)
-								$('.errors').addClass('error')
-								$('.errors').addClass('col-sm-offset-2 col-sm-10')
-							})
-						}
-					}
-				})
-				e.preventDefault();
-				//- return false;
-			})
-
-			$("#form").on('submit', function(e){
-				var active = false
-				var passreset = false
-				if ($('#active').is(':checked')){
-					active = true
+					$('#userListTab').attr('class', '')
+					$('#userFormTab').attr('class', 'active')
+					$('#userList').attr('class', 'tab-pane')
+					$('#userForm').attr('class', 'tab-pane fade in active')
 				}
-				if ($('#passreset').is(':checked')){
-					passreset = true
-				}
-				
-				$.post('/users/addUser',{
-					//- departmentId:curUser.department.id,
-					name:$('#name').val(),
-					lastname:$('#lastname').val(),
-					id:$('#id').val(),
-					email:$('#email').val(),
-					username:$('#username').val(),
-					password:$('#password').val(),
-					title:$('#title').val(),
-					departmentId:$('#department').val(),
-					active:active,
-					passreset:passreset
-
-				}).done(function(Rdata){
-					if (!!Rdata.redi){
-						window.location.replace(Rdata.redi)
-					}else if (!!Rdata.errors){
-					//- alert(JSON.stringify(Rdata.errors, null, 4))
-						$('.errors').html('')
-						if (typeof Rdata.errors == 'string'){
-							$('#errors').append('<br>'+'* '+ Rdata.errors)
-							$('#errors').addClass('error')
-							$('#errors').addClass('col-sm-offset-2 col-sm-10')
-						} else{
-
-							Rdata.errors.forEach(function(item){
-								$('.errors').append('<br>'+'* '+ item.msg)
-								$('.errors').addClass('error')
-								$('.errors').addClass('col-sm-offset-2 col-sm-10')
-							})
-						}
-					}
-				})
-				e.preventDefault();
-				return false;
-			});
-			
-			
-			console.log('curUser')
-			console.log(curUser)
-			if(curUser.department.name !== 'ADMIN'){
-
-				$('#department').attr('disabled', true)
-				
 			}else{
-				$('#department').attr('disabled', false)
-				$('#department').val('')
-				
-			}
+				$("#formDept").on('submit', function(e){
+					$.post('/users/addDept',{
+						
+						deptName:$('#deptName').val(),
+						status:$('#status').val(),
+					}).done(function(Rdata){
+						if (!!Rdata.redi){
+							window.location.replace(Rdata.redi)
+						}else if (!!Rdata.errors){
+						//- alert(JSON.stringify(Rdata.errors, null, 4))
+							$('.errors').html('')
+							if (typeof Rdata.errors == 'string'){
+								$('.errors').append('<br>'+'* '+ Rdata.errors)
+								$('.errors').addClass('error')
+								$('.errors').addClass('col-sm-offset-2 col-sm-10')
+							} else{
 
-			var arrayTitle_UserTab = ['Admin', 'Manager']
-			if (arrayTitle_UserTab.indexOf(curUser.title) == -1) {
-				$('#userFormTab').html('')
-				if (firstUser){
-					$('#title').attr('disabled', false)
+								Rdata.errors.forEach(function(item){
+									$('.errors').append('<br>'+'* '+ item.msg)
+									$('.errors').addClass('error')
+									$('.errors').addClass('col-sm-offset-2 col-sm-10')
+								})
+							}
+						}
+					})
+					e.preventDefault();
+					//- return false;
+				})
+
+				$("#form").on('submit', function(e){
+					var active = false
+					var passreset = false
+					if ($('#active').is(':checked')){
+						active = true
+					}
+					if ($('#passreset').is(':checked')){
+						passreset = true
+					}
+					
+					$.post('/users/addUser',{
+						//- departmentId:curUser.department.id,
+						name:$('#name').val(),
+						lastname:$('#lastname').val(),
+						id:$('#id').val(),
+						email:$('#email').val(),
+						username:$('#username').val(),
+						password:$('#password').val(),
+						title:$('#title').val(),
+						departmentId:$('#department').val(),
+						active:active,
+						passreset:passreset
+
+					}).done(function(Rdata){
+						if (!!Rdata.redi){
+							window.location.replace(Rdata.redi)
+						}else if (!!Rdata.errors){
+						//- alert(JSON.stringify(Rdata.errors, null, 4))
+							$('.errors').html('')
+							if (typeof Rdata.errors == 'string'){
+								$('#errors').append('<br>'+'* '+ Rdata.errors)
+								$('#errors').addClass('error')
+								$('#errors').addClass('col-sm-offset-2 col-sm-10')
+							} else{
+
+								Rdata.errors.forEach(function(item){
+									$('.errors').append('<br>'+'* '+ item.msg)
+									$('.errors').addClass('error')
+									$('.errors').addClass('col-sm-offset-2 col-sm-10')
+								})
+							}
+						}
+					})
+					e.preventDefault();
+					return false;
+				});
+				
+				
+				console.log('curUser')
+				console.log(curUser)
+				if(curUser.department.name !== 'ADMIN'){
+
+					$('#department').attr('disabled', true)
+					
 				}else{
-					$('#title').attr('disabled', true)
+					$('#department').attr('disabled', false)
+					$('#department').val('')
+					
 				}
 
-			
+				var arrayTitle_UserTab = ['Admin', 'Manager']
+				if (arrayTitle_UserTab.indexOf(curUser.title) == -1) {
+					$('#userFormTab').html('')
+					if (firstUser){
+						$('#title').attr('disabled', false)
+					}else{
+						$('#title').attr('disabled', true)
+					}
+
 				
-				$('#passreset').attr('disabled', true)
-			}
-
-			$('#userFormTab').click(function(){
-				$('#name').val('')
-				$('#id').val('0')
-				$('#email').val('')
-				$('#username').val('')
-				$('#title').val('')
-				$('#lastname').val('')
-				$('#password').attr('type','password')
-				$('#password').val('')
-				$('#passreset').attr('disabled', false)
-				$('.error').html('')
-
-				var option = document.createElement('option')
-					option.value = curUser.department.id
-					option.innerHTML = curUser.department.name
-					$('#department').append(option)
-				$.post('/users/getDept').done(function(Rdata){
-
-					Rdata.departments.forEach(function(department, i){
-						if(department.name !== curUser.department.name){
-							var option = document.createElement('option')
-							option.value = department.id
-							option.innerHTML = department.name
-							$('#department').append(option)
-						}
-
-					})
-				})
-				document.getElementById('active').checked = 1
-			})	
-
-			$('#deptTab').click(function(){
-				$('#deptName').val('')
-				$('#status').val('Active')
-				$('.error').html('')
-				
-				
-				//- document.getElementById('active').checked = 1
-			})	
-
-
-
-			if (JSONdata.tabx=='userForm'){
-
-				$('#userListTab').attr('class', '')
-				$('#userFormTab').attr('class', 'active')
-				$('#userList').attr('class', 'tab-pane')
-				$('#userForm').attr('class', 'tab-pane fade in active')
-			}
-
-			$('#horMenuList li').removeClass('active');
-			$('#user').addClass('active');
-
-			var table = document.createElement('table')
-			table.id = 'user'
-			table.className = 'table table-striped'
-				var tr = document.createElement('tr')
-				var arrayField = ['Name', 'Email', 'Title', 'Active']
-
-				arrayField.forEach(function(field){
 					
-					var td = document.createElement('td')
-					td.appendChild(document.createTextNode(field))
-					tr.appendChild(td)
-				})
-				table.appendChild(tr)
+					$('#passreset').attr('disabled', true)
+				}
+
+				$('#userFormTab').click(function(){
+					$('#name').val('')
+					$('#id').val('0')
+					$('#email').val('')
+					$('#username').val('')
+					$('#title').val('')
+					$('#lastname').val('')
+					$('#password').attr('type','password')
+					$('#password').val('')
+					$('#passreset').attr('disabled', false)
+					$('.error').html('')
+
+					var option = document.createElement('option')
+						option.value = curUser.department.id
+						option.innerHTML = curUser.department.name
+						$('#department').append(option)
+					$.post('/users/getDept').done(function(Rdata){
+
+						Rdata.departments.forEach(function(department, i){
+							if(department.name !== curUser.department.name){
+								var option = document.createElement('option')
+								option.value = department.id
+								option.innerHTML = department.name
+								$('#department').append(option)
+							}
+
+						})
+					})
+					document.getElementById('active').checked = 1
+				})	
+
+				$('#deptTab').click(function(){
+					$('#deptName').val('')
+					$('#status').val('Active')
+					$('.error').html('')
+					
+					
+					//- document.getElementById('active').checked = 1
+				})	
 
 
-				$.post('/users/userList',{
-					departmentId:curUser.department.id
-				}).done(function(Rdata){
 
-					console.log(JSON.stringify(Rdata, null, 4))
-					Rdata.users.forEach(function(user){
-						var tr = document.createElement('tr')
-							arrayField = [user.name, user.email, user.title, user.active]
-							arrayField.forEach(function(field, i){
+				
 
-								var td = document.createElement('td')
-								td.appendChild(document.createTextNode(field))
+				$('#horMenuList li').removeClass('active');
+				$('#user').addClass('active');
 
-								if(i==0){
-										console.log(td)
-									td.addEventListener('click', function(){
-										console.log(td)
-										if (td.childNodes.length >2){
-											td.removeChild(td.childNodes[0])
-											td.removeChild(td.childNodes[1])
-										}
+				var table = document.createElement('table')
+				table.id = 'user'
+				table.className = 'table table-striped'
+					var tr = document.createElement('tr')
+					var arrayField = ['Name', 'Email', 'Title', 'Active']
 
-										var span = document.createElement('span')
-										
-										span.style.color = 'red'
-										span.className = "glyphicon glyphicon-remove-circle"
-										span.id = 'delGly';
-										//- click the 'x' to remove from list
-										span.addEventListener('click', function(){
-											$.post('/users/delUser',{userId:user.id}).done(function(pData){
-												table.removeChild(tr)
+					arrayField.forEach(function(field){
+						
+						var td = document.createElement('td')
+						td.appendChild(document.createTextNode(field))
+						tr.appendChild(td)
+					})
+					table.appendChild(tr)
+
+
+					$.post('/users/userList',{
+						departmentId:curUser.department.id
+					}).done(function(Rdata){
+
+						console.log(JSON.stringify(Rdata, null, 4))
+						Rdata.users.forEach(function(user){
+							var tr = document.createElement('tr')
+								arrayField = [user.name, user.email, user.title, user.active]
+								arrayField.forEach(function(field, i){
+
+									var td = document.createElement('td')
+									td.appendChild(document.createTextNode(field))
+
+									if(i==0){
+											console.log(td)
+										td.addEventListener('click', function(){
+											console.log(td)
+											if (td.childNodes.length >2){
+												td.removeChild(td.childNodes[0])
+												td.removeChild(td.childNodes[1])
+											}
+
+											var span = document.createElement('span')
+											
+											span.style.color = 'red'
+											span.className = "glyphicon glyphicon-remove-circle"
+											span.id = 'delGly';
+											//- click the 'x' to remove from list
+											span.addEventListener('click', function(){
+												$.post('/users/delUser',{userId:user.id}).done(function(pData){
+													table.removeChild(tr)
+												});
+												
 											});
 											
-										});
-										
-										//- td.insertBefore(span, td.firstChild)
-										var span1 = document.createElement('span')
-										
-										span1.style.color = 'violet'
-										span1.className = "glyphicon glyphicon-edit"
-										span1.id = 'editGly';
-										//- click the 'x' to remove from list
-										span1.addEventListener('click', function(){
-											//- $.post('/users/editUserForm',{userId:user.id}).done(function(){
-												//- alert(JSON.stringify(user,null,4))
-												$('#userListTab').attr('class', '')
-												//- $('#userFormTab').attr('class', 'active')
-												$('#userList').attr('class', 'tab-pane')
-												$('#userForm').attr('class', 'tab-pane fade in active')
-												
-												$('#name').val(user.name)
-												$('#lastname').val(user.lastname)
-												$('#id').val(user.id)
-												$('#email').val(user.email)
-												$('#username').val(user.username)
-												$('#password').val('')
-												$('#title').val(user.title)
-												$('#passreset').attr('disabled', false)
-												var option = document.createElement('option')
-													option.value = user.department.id
-													option.innerHTML = user.department.name
-													$('#department').append(option)
-												$.post('/users/getDept').done(function(Rdata){
+											//- td.insertBefore(span, td.firstChild)
+											var span1 = document.createElement('span')
+											
+											span1.style.color = 'violet'
+											span1.className = "glyphicon glyphicon-edit"
+											span1.id = 'editGly';
+											//- click the 'x' to remove from list
+											span1.addEventListener('click', function(){
+												//- $.post('/users/editUserForm',{userId:user.id}).done(function(){
+													//- alert(JSON.stringify(user,null,4))
+													$('#userListTab').attr('class', '')
+													//- $('#userFormTab').attr('class', 'active')
+													$('#userList').attr('class', 'tab-pane')
+													$('#userForm').attr('class', 'tab-pane fade in active')
+													
+													$('#name').val(user.name)
+													$('#lastname').val(user.lastname)
+													$('#id').val(user.id)
+													$('#email').val(user.email)
+													$('#username').val(user.username)
+													$('#password').val('')
+													$('#title').val(user.title)
+													$('#passreset').attr('disabled', false)
+													var option = document.createElement('option')
+														option.value = user.department.id
+														option.innerHTML = user.department.name
+														$('#department').append(option)
+													$.post('/users/getDept').done(function(Rdata){
 
-													Rdata.departments.forEach(function(department, i){
-														if(department.name !== user.department.name){
-															var option = document.createElement('option')
-															option.value = department.id
-															option.innerHTML = department.name
-															$('#department').append(option)
-														}
+														Rdata.departments.forEach(function(department, i){
+															if(department.name !== user.department.name){
+																var option = document.createElement('option')
+																option.value = department.id
+																option.innerHTML = department.name
+																$('#department').append(option)
+															}
 
+														})
 													})
-												})
 
-												document.getElementById('active').checked = user.active
-											//- });
-										});
-										td.appendChild(span1)
-									})
-									td.addEventListener('mouseleave',function(){
-										//- alert($('#delGly').length)
-										if ($('#delGly').length>0){
-											td.removeChild(document.getElementById('delGly'))
-										}
-										if ($('#editGly').length>0){
-											td.removeChild(document.getElementById('editGly'))
-										}
-									})
-								}
-								tr.appendChild(td)				
-							})
-						table.appendChild(tr)
+													document.getElementById('active').checked = user.active
+												//- });
+											});
+											td.appendChild(span1)
+										})
+										td.addEventListener('mouseleave',function(){
+											//- alert($('#delGly').length)
+											if ($('#delGly').length>0){
+												td.removeChild(document.getElementById('delGly'))
+											}
+											if ($('#editGly').length>0){
+												td.removeChild(document.getElementById('editGly'))
+											}
+										})
+									}
+									tr.appendChild(td)				
+								})
+							table.appendChild(tr)
+						})
 					})
-				})
-			userList.appendChild(table)
+				userList.appendChild(table)
+			}
 		})

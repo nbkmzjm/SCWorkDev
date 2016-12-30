@@ -11,7 +11,7 @@ if (env === 'production'){
 	sequelize = new Sequelize('database_development', 'nbkmzjm', 'fish1ing', {
 	host:"localhost",
 	dialect:'sqlite',
-	storage: __dirname + '/data/dev-todo-api.sqlite',
+	storage: __dirname + '/data/dev-todo-api-x.sqlite',
 	logging:false
 	});
 }
