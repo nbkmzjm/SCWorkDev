@@ -1078,12 +1078,12 @@ var notif = require('./server/serverNotif.js');
 app.use('/notif', notif)
 
 
-umzug.up().then(function (migrations) {
-	console.log(migrations)
+// umzug.up().then(function (migrations) {
+// 	console.log(migrations)
   // "migrations" will be an Array with the names of
   // pending migrations.
   	db.sequelize.sync(
-	{force: false}
+	{force: true}
 	).then(function() {
 		
 		http.listen(PORT, function() {
@@ -1091,7 +1091,7 @@ umzug.up().then(function (migrations) {
 		});
 
 	});
-});
+// });
 
 
 // db.sequelize.sync(
