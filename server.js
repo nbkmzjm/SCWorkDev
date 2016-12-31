@@ -3,7 +3,7 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
+// var io = require('socket.io')(http);
 var expValidator = require('express-validator');
 var cookieParser = require('cookie-parser');
 var debug = require('debug')('http')
@@ -66,21 +66,21 @@ var umzug = new Umzug({
 
 
 
-io.on('connection', function(socket) {
-	console.log('user connect to socket io');
+// io.on('connection', function(socket) {
+// 	console.log('user connect to socket io');
 
-	socket.emit('message', {
-		text: 'welcomex to schedule app',
-		Note: 'first'
-	});
+// 	socket.emit('message', {
+// 		text: 'welcomex to schedule app',
+// 		Note: 'first'
+// 	});
 
-	socket.emit('test', {
-		text1: 'testtext',
-		Note: 'testNote'
-	});
+// 	socket.emit('test', {
+// 		text1: 'testtext',
+// 		Note: 'testNote'
+// 	});
 
 
-});
+// });
 
 app.get('/message', function(req, res){
 	res.render('message/mesdepasageHome')
@@ -1058,16 +1058,16 @@ app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 
 
 
-io.on('connection', function(socket) {
-	console.log('user connect to socket io');
+// io.on('connection', function(socket) {
+// 	console.log('user connect to socket io');
 
-	socket.emit('message', {
-		text: 'welcomex to schedule app',
-		Note: 'first'
-	});
+// 	socket.emit('message', {
+// 		text: 'welcomex to schedule app',
+// 		Note: 'first'
+// 	});
 
 
-});
+// });
 
 
 var user = require('./server/serverUser.js');
