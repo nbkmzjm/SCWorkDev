@@ -1080,8 +1080,8 @@ app.use('/notif', notif)
 
 // umzug.up().then(function (migrations) {
 // 	console.log(migrations)
-  // "migrations" will be an Array with the names of
-  // pending migrations.
+//   // "migrations" will be an Array with the names of
+//   // pending migrations.
   	db.sequelize.sync(
 	{force: true}
 	).then(function() {

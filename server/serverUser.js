@@ -147,15 +147,26 @@ router.post('/addUser', function(req, res) {
 					}, {
 						transaction:t
 					}).then(function(){
-						return db.settingDescription.findAll({
+						var data = [{
+							description:'View post from:',
+							defaultValue:'Colleague'
+						},{
+							description:'Who can view my post:',
+							defaultValue:'Colleague'
+						}]
+						return db.settingDescription.bulkCreate(data,{
 							transaction:t
-						}).then(function(settingDescriptions){
-							console.log(JSON.stringify(settingDescriptions, null, 4))
-							settingDescriptions.forEach(function(settingDescription){
-								db.feedSetting.create({
-									value:settingDescription.defaultValue,
-									userId:user.id,
-									settingDescriptionId:settingDescription.id
+						}).then(function(){
+							return db.settingDescription.findAll({
+								transaction:t
+							}).then(function(settingDescriptions){
+								console.log(JSON.stringify(settingDescriptions, null, 4))
+								settingDescriptions.forEach(function(settingDescription){
+									db.feedSetting.create({
+										value:settingDescription.defaultValue,
+										userId:user.id,
+										settingDescriptionId:settingDescription.id
+									})
 								})
 							})
 						})
