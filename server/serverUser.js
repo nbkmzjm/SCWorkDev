@@ -161,13 +161,21 @@ router.post('/addUser', function(req, res) {
 								transaction:t
 							}).then(function(settingDescriptions){
 								console.log(JSON.stringify(settingDescriptions, null, 4))
+								var data = []
 								settingDescriptions.forEach(function(settingDescription){
-									db.feedSetting.create({
+									var feedSettingObj ={
 										value:settingDescription.defaultValue,
 										userId:user.id,
 										settingDescriptionId:settingDescription.id
-									})
+									}
+									data.push(feedSettingObj)
 								})
+								return db.feedSetting.bulkCreate(data,{
+									transaction:t
+								}).then(function(){
+									console.log('User created successfully')
+								})
+
 							})
 						})
 					})
