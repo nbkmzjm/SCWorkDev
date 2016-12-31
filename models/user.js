@@ -46,7 +46,7 @@ module.exports = function(sequelize, DataTypes) {
 
 
 		title: {
-			type: DataTypes.BOOLEAN,
+			type: DataTypes.STRING,
 			defaultValue: false
 		},
 		active: {
