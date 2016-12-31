@@ -284,7 +284,6 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							$like:'%'+curUserId+'%'
 						}
 					}]
-					
 				}
 			}).then(function(posts){
 				// console.log(JSON.stringify(posts, null, 4))
@@ -295,8 +294,70 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				error: e.toString()
 				})
 			})
+		}else if(feedSetting.value==='WorkGroup'){
+			db.group.findAll({
+				include:[{
+					model:db.user,
+					where:{
+						id:curUserId
+					},
+					through:{
+						where:{
+							status:{
+								$like:'WorkGroup%'
+							}
+						}
+					}
+				}]
+			}).then(function(groups){
+				console.log('friend Group:'+JSON.stringify(groups, null, 4))
+				var workGroupIds = []
 
+				groups.forEach(function(group, i){
+					if(group.users[0].userGroups.status === 'Coworker'){
+						workGroupIds.push(group.groupBLUserId)
+					}
+				})
+				console.log('workGroupIds: '+JSON.stringify(workGroupIds, null, 4))
+				return [db.mainPost.findAll({
+				include:[{
+					model:db.user
+				}],
+				where:{
+					$or:[{
+							userId:req.user.id
+						},{
+							userId:{
+								$in:workGroupIds
+							},
+							exclude:{
+								$notLike:'%'+curUserId+'%'
+							},
+							postTo:{
+								$notIn:['Private']
+							}
 
+						},{
+							include:{
+							$like:'%'+curUserId+'%'
+							}
+						}]
+				},
+				order:[
+					['createdAt', 'DESC']
+				],
+				limit: 12,
+				offset: loadNumber
+				})]
+			}).spread(function(posts){
+				// console.log(JSON.stringify(posts, null, 4))
+				res.json({posts:posts})
+			}).catch(function(e) {
+				console.log(e)
+				res.render('error', {
+					error: e.toString()
+				})
+			});
 		}else if(feedSetting.value==='Coworker'){
 
 			db.group.findAll({
@@ -308,19 +369,21 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					through:{
 						where:{
 							status:{
-								$in:['Coworker','Owner']
+								$in:['Coworker']
 							}
 						}
 					}
 				}]
 			}).then(function(groups){
 				console.log('friend Group:'+JSON.stringify(groups, null, 4))
-				var userIds = []
+				var coworkerUserIds = []
+
 				groups.forEach(function(group, i){
-					
-					userIds.push(group.groupBLUserId)
+					if(group.users[0].userGroups.status === 'Coworker'){
+						coworkerUserIds.push(group.groupBLUserId)
+					}
 				})
-				
+				console.log('coworkerUserIds: '+JSON.stringify(coworkerUserIds, null, 4))
 				return [db.mainPost.findAll({
 				include:[{
 					model:db.user
@@ -330,19 +393,13 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							userId:req.user.id
 						},{
 							userId:{
-								$in:userIds
+								$in:coworkerUserIds
 							},
 							exclude:{
 								$notLike:'%'+curUserId+'%'
 							},
-
-
-								
-							// postTo:{
-							// 	$notIn:['Private']
-							// },
 							postTo:{
-								$in:['Coworker', 'Colleague', 'Coworker of Colleague']
+								$notIn:['Private']
 							}
 
 						},{
@@ -350,7 +407,6 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							$like:'%'+curUserId+'%'
 							}
 						}]
-					
 				},
 				order:[
 					['createdAt', 'DESC']
@@ -378,7 +434,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					through:{
 						where:{
 							status:{
-								$in:['Coworker','Colleague','Owner']
+								$in:['Coworker','Colleague']
 							}
 						}
 					}
@@ -399,11 +455,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					}
 					
 				})
-
 				console.log('colleagueUserIds: '+JSON.stringify(colleagueUserIds, null, 4))
-			
-			
-
 				console.log('coworkerUserIds: '+JSON.stringify(coworkerUserIds, null, 4))
 				db.mainPost.findAll({
 				include:[{
@@ -464,7 +516,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					through:{
 						where:{
 							status:{
-								$in:['Coworker','Colleague','Owner']
+								$in:['Coworker','Colleague']
 							}
 						}
 					}
@@ -486,7 +538,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						coworkerUserIds.push(group.groupBLUserId)
 					}
 				})
-
+				//Finding for Coworker of Colleague
 				db.userGroups.findAll({
 					where:{
 						groupId:{
@@ -500,10 +552,12 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						}
 					}
 				}).then(function(userGroups){
-
+					//adding userId of Coworker of Colleague to coworkerofColleagueUserIds Array
 					var coworkerofColleagueUserIds = []
 					userGroups.forEach(function(userGroup, i){
-						coworkerofColleagueUserIds.indexOf(userGroup.userId)===-1?coworkerofColleagueUserIds.push(userGroup.userId):""
+						//removing duplicate if exist
+						coworkerofColleagueUserIds.indexOf(userGroup.userId)===-1?
+						coworkerofColleagueUserIds.push(userGroup.userId):""
 					})
 					
 					console.log('colleagueUserIds: '+JSON.stringify(colleagueUserIds, null, 4))

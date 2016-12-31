@@ -120,7 +120,7 @@ append scripts
 							//- select.className = ''
 							select.name = 'postTo'
 							select.id = 'postTo'
-								var optionList = ['Coworker','Colleague', 'Coworker of Colleague','Private', 'Public']
+								var optionList = ['Coworker','Colleague', 'Coworker of Colleague','WorkGroup','Private', 'Public']
 
 								optionList.forEach(function(item, i){
 									//- if(item !== setting.value){
@@ -611,7 +611,7 @@ append scripts
 								select.className = 'form-control'
 								select.name = 'viewPostFrom'
 								select.id = 'viewPostFrom'
-									var optionList = ['Coworker','Colleague', 'Coworker of Colleague','Private', 'Public']
+									var optionList = ['Coworker','Colleague','WorkGroup', 'Coworker of Colleague','Private', 'Public']
 										var optionDB = document.createElement('option')
 										optionDB.value = setting.value
 										optionDB.innerHTML = setting.value
