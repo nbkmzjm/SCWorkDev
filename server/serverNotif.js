@@ -295,28 +295,45 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				})
 			})
 		}else if(feedSetting.value==='WorkGroup'){
-			db.group.findAll({
-				include:[{
-					model:db.user,
-					where:{
-						id:curUserId
-					},
-					through:{
-						where:{
-							status:{
-								$like:'WorkGroup%'
-							}
-						}
+			// db.group.findAll({
+
+			// 	include:[{
+			// 		model:db.user,
+			// 		where:{
+			// 			id:curUserId
+			// 		}
+			// 		,
+			// 		through:{
+			// 			where:{
+			// 				status:{
+			// 					$like:'WorkGroup%'
+			// 				}
+			// 			}
+			// 		}
+			// 	}]
+			// }).then(function(groups){
+			db.userGroups.findAll({
+				where:{
+					// groupId:{
+					// 	$in:coworkerofColleagueGroupIds
+					// },
+					// userId:{
+					// 	$notIn:[curUserId]
+					// },
+					status:{
+						$like:'WorkGroup%'
 					}
-				}]
-			}).then(function(groups){
-				console.log('friend Group:'+JSON.stringify(groups, null, 4))
+				}
+			}).then(function(userGroups){
+			
+				console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
 				var workGroupIds = []
 
-				groups.forEach(function(group, i){
-					if(group.users[0].userGroups.status === 'Coworker'){
-						workGroupIds.push(group.groupBLUserId)
-					}
+				userGroups.forEach(function(userGroup, i){
+					// if(group.users[0].userGroups.status === 'Coworker'){
+					workGroupIds.indexOf(userGroup.userId)===-1?
+					workGroupIds.push(userGroup.userId):""
+					// }
 				})
 				console.log('workGroupIds: '+JSON.stringify(workGroupIds, null, 4))
 				return [db.mainPost.findAll({
@@ -334,7 +351,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 								$notLike:'%'+curUserId+'%'
 							},
 							postTo:{
-								$notIn:['Private']
+								$like:'WorkGroup%'
 							}
 
 						},{
