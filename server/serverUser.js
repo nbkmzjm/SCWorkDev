@@ -398,6 +398,7 @@ router.get('/logout', middleware.requireAuthentication, function(req, res) {
 		})
 		res.redirect('loginForm');
 	}).catch(function(e) {
+		res.redirect('loginForm');
 		res.status(500).send();
 	});
 });
