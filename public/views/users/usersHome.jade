@@ -18,9 +18,11 @@ block content
 				li(class="active" id='userListTab')
 					a(data-toggle="tab" href="#userList") Users
 				li(id='userFormTab')
-					a(data-toggle="tab"  href="#userForm") Add User
+					a(data-toggle="tab"  href="#userForm") Create User
 				li(id='deptTab')
-					a(data-toggle="tab"  href="#deptForm") Add Department
+					a(data-toggle="tab"  href="#deptForm") Create Department
+				li(id='WorkGroupTab')
+					a(data-toggle="tab"  href="#WorkGroupForm") Create WorkGroup
 
 			div(class="tab-content")
 				div(id="userList" class="tab-pane fade in active")
@@ -30,7 +32,6 @@ block content
 					form(class="form-horizontal" autocomplete="off" id='form' action="/users/addUser" method="POST")
 						div(class="form-group")
 							label(class="control-label col-sm-2" for="name") First Name
-							input(type="hidden" class="form-control" id="id" name="id" value='0')
 							div(class="col-sm-4")
 								input(type="hidden" class="form-control" id="id" name="id" value='0')
 								input(type="text" class="form-control" id="name" name="name" placeholder="Enter First Name" )
@@ -72,6 +73,7 @@ block content
 									option(value="Techn TPN") Technician TPN
 									option(value="Techn Float") Technician Float
 									option(value="Personel") Personel
+									option(value="Associate") Associate
 						div(class="form-group")
 							label(class="control-label col-sm-2" for="active") Active
 							div(class="col-sm-1")
@@ -97,7 +99,7 @@ block content
 								input(type="text" class="form-control" id="deptName" name="deptName" placeholder="Enter Department Name" )
 						
 						div(class="form-group")
-							label(class="control-label col-sm-2" for="status") Title
+							label(class="control-label col-sm-2" for="status") Status
 							div(class="col-sm-4")
 								select(name="status" class="form-control" id="status")
 									
@@ -106,6 +108,40 @@ block content
 						div(class="form-group")
 							div(class="col-sm-offset-2 col-sm-3")
 								button(type="submit" id='submitDept' class="btn btn-primary") Submit
+					div.errors
+				div(id="WorkGroupForm" class="tab-pane")
+					br
+					form(class="form-horizontal" autocomplete="off" id='formWorkGroup' action="/users/addWorkGroup" method="POST")
+						div(class="form-group")
+							label(class="control-label col-sm-2" for="name") WorkGroup Name
+							div(class="col-sm-4")
+								input(type="hidden" class="form-control" id="id" name="id" value='0')
+								input(type="text" class="form-control" id="name" name="name" placeholder="Enter First Name" )
+						div(class="form-group")
+							label(class="control-label col-sm-2" for="email") Email
+							div(class="col-sm-4")
+								input(type="email" class="form-control" id="email" name="email" placeholder="Enter Email")
+						div(class="form-group")
+							label(class="control-label col-sm-2" for="username") Username
+							div(class="col-sm-4")
+								input(type="text" class="form-control" id="username" name="usern" placeholder="Enter Username")
+						div(class="form-group")
+							label(class="control-label col-sm-2" for="password") Password
+							div(class="col-sm-4")
+								input(type="password" class="form-control" id="password" name="password" placeholder="Enter Password" )
+						div(class="form-group")
+							label(class="control-label col-sm-2" for="active") Active
+							div(class="col-sm-1")
+								input(type="checkbox" id= 'active' class="form-control" name="active" value='true' checked)
+							label(class="control-label col-sm-2" for="passreset") Reset Password
+							div(class="col-sm-1")
+								input(type="checkbox" id= 'passreset' class="form-control" name="passreset" value=true disabled=true)
+
+
+						div(class="form-group")
+							div(class="col-sm-offset-2 col-sm-3")
+								button(type="submit" id='submit' class="btn btn-primary") Submit
+						
 					div.errors
 						
 append scripts 
@@ -136,8 +172,6 @@ append scripts
 									option.value = department.id
 									option.innerHTML = department.name
 									$('#department').append(option)
-								
-
 							})
 						}else{
 							$.post('/users/addDept',{
@@ -145,22 +179,14 @@ append scripts
 								status:'Active',
 							}).done(function(Rdata){
 								location.reload()
-								
 							})
 						}
 					})
-
 					$("#form").on('submit', function(e){
-						
 						var active = false
 						var passreset = false
-						if ($('#active').is(':checked')){
-							active = true
-						}
-						if ($('#passreset').is(':checked')){
-							passreset = true
-						}
-						
+						$('#active').is(':checked')?active = true:''
+						$('#passreset').is(':checked')?passreset = true:''
 						$.post('/users/addUser',{
 							//- departmentId:curUser.department.id,
 							name:$('#name').val(),
@@ -173,7 +199,6 @@ append scripts
 							departmentId:$('#department').val(),
 							active:active,
 							passreset:passreset
-
 						}).done(function(Rdata){
 							if (!!Rdata.redi){
 								window.location.replace(Rdata.redi)
@@ -197,7 +222,6 @@ append scripts
 						e.preventDefault();
 						return false;
 					});
-					
 				}
 			}else{
 
@@ -240,12 +264,8 @@ append scripts
 				$("#form").on('submit', function(e){
 					var active = false
 					var passreset = false
-					if ($('#active').is(':checked')){
-						active = true
-					}
-					if ($('#passreset').is(':checked')){
-						passreset = true
-					}
+					$('#active').is(':checked')?active = true:''
+					$('#passreset').is(':checked')?passreset = true:''
 					
 					$.post('/users/addUser',{
 						//- departmentId:curUser.department.id,
@@ -283,10 +303,48 @@ append scripts
 					e.preventDefault();
 					return false;
 				});
+
+				$("#formWorkGroup").on('submit', function(e){
+					var active = false
+					var passreset = false
+					$('#active').is(':checked')?active = true:''
+					$('#passreset').is(':checked')?passreset = true:''
+					
+					$.post('/users/addWorkGroup',{
+						//- departmentId:curUser.department.id,
+						name:$('#name').val(),
+						id:$('#id').val(),
+						email:$('#email').val(),
+						username:$('#username').val(),
+						password:$('#password').val(),
+						departmentId:$('#department').val(),
+						active:active,
+						passreset:passreset
+
+					}).done(function(Rdata){
+						if (!!Rdata.redi){
+							window.location.replace(Rdata.redi)
+						}else if (!!Rdata.errors){
+						//- alert(JSON.stringify(Rdata.errors, null, 4))
+							$('.errors').html('')
+							if (typeof Rdata.errors == 'string'){
+								$('#errors').append('<br>'+'* '+ Rdata.errors)
+								$('#errors').addClass('error')
+								$('#errors').addClass('col-sm-offset-2 col-sm-10')
+							} else{
+
+								Rdata.errors.forEach(function(item){
+									$('.errors').append('<br>'+'* '+ item.msg)
+									$('.errors').addClass('error')
+									$('.errors').addClass('col-sm-offset-2 col-sm-10')
+								})
+							}
+						}
+					})
+					e.preventDefault();
+					return false;
+				});
 				
-				
-				console.log('curUser')
-				console.log(curUser)
 				if(curUser.department.name !== 'ADMIN'){
 
 					$('#department').attr('disabled', true)

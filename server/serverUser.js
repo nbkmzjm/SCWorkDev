@@ -55,7 +55,6 @@ router.get('/newAccountForm', function(req, res) {
 
 router.post('/getDept', function(req, res) {
 	db.department.findAll().then(function(departments){
-		console.log('dept: '+ departments)
 		if(departments.length > 0){
 			res.json({
 				departments:departments
