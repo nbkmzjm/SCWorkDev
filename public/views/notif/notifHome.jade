@@ -106,13 +106,72 @@ append scripts
 					//- 	divbtn.appendChild(ul)
 					//- div.appendChild(divbtn)
 					$('#Feed').append(divInputGroup)
+					$.post('/notif/getFeedSetting').done(function(Rdata){
+
+						Rdata.settings.forEach(function(setting){
+							if(setting.settingDescriptionId === 1){
+								var divViewFilter = document.createElement('div')
+								divViewFilter.className = 'form-group col-sm-12'
+
+									var label = document.createElement('label')
+									label.className = 'col-sm-2'
+									label.innerHTML = 'View Filter: '
+									divViewFilter.appendChild(label)
+
+									var divSelectViewFilter = document.createElement('div')
+									divSelectViewFilter.className = 'col-sm-3'
+
+
+										var selectViewFilter = document.createElement('select')
+										selectViewFilter.className = 'form-control'
+										selectViewFilter.name = 'viewPostFrom'
+										selectViewFilter.id = 'viewPostFrom'
+											var optionList = ['Coworker','Colleague','WorkGroup', 'Coworker of Colleague','Private', 'Public']
+												var optionDB = document.createElement('option')
+												optionDB.value = setting.value
+												optionDB.innerHTML = setting.value
+												selectViewFilter.appendChild(optionDB)
+
+											optionList.forEach(function(item, i){
+												if(item !== setting.value){
+													var option = document.createElement('option')
+													option.value = item
+													option.innerHTML = item
+													selectViewFilter.appendChild(option)
+												}
+
+											})
+										selectViewFilter.addEventListener('change', function(){
+
+											//- alert(select.value)
+											$.post('/notif/setFeedSetting',{
+												settingId:setting.id,
+												settingValue:selectViewFilter.value,
+												action:'update'
+											}).done(function(Rdata){
+
+											})
+										})
+										
+										divSelectViewFilter.appendChild(selectViewFilter)
+
+									divViewFilter.appendChild(divSelectViewFilter)
+								$('#Feed').append(divViewFilter)
+							}
+						})
+					})
 						
 
 					var divInputGroupFilter = document.createElement('div')
 					//- divInputGroupFilter.className = 'input-group'
 					divInputGroupFilter.className = 'col-sm-12'
+						var label = document.createElement('label')
+						label.className = 'col-sm-2'
+						label.innerHTML = 'Post Filter: '
+						divInputGroupFilter.appendChild(label)
+
 						divSelect = document.createElement('div')
-						divSelect.className = 'col-sm-4'
+						divSelect.className = 'col-sm-3'
 							var select = document.createElement('select')
 							select.className = 'form-control'
 							select.classList.add('col-sm-4')
@@ -136,7 +195,7 @@ append scripts
 
 
 						divSelectFilter = document.createElement('div')
-						divSelectFilter.className = 'col-sm-4'
+						divSelectFilter.className = 'col-sm-3'
 						
 
 							var selectFilter = document.createElement('select')
@@ -163,7 +222,7 @@ append scripts
 									
 									
 									divfriendSearch = document.createElement('div')
-									divfriendSearch.className = 'col-sm-4'
+									divfriendSearch.className = 'col-sm-3'
 									divfriendSearch.id = 'divfriendSearch'
 										var input = document.createElement('input')
 										input.type = 'text'
@@ -202,7 +261,7 @@ append scripts
 										if($('#selectDept').length<1){
 
 											var divSelectDept = document.createElement('div')
-											divSelectDept.className = 'col-sm-4'
+											divSelectDept.className = 'col-sm-3'
 											divSelectDept.id = 'divSelectDept'
 												var selectDept = document.createElement('select')
 												selectDept.className = 'form-control'
