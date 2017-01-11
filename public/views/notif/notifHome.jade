@@ -147,7 +147,7 @@ append scripts
 											})
 										selectViewFilter.addEventListener('change', function(){
 											console.log(selectViewFilter.value)
-											$('#divPostContainer').html(selectViewFilter.value)
+											$('#divPostContainer').html('')
 											getPostDB()
 											//- alert(select.value)
 											//- $.post('/notif/setFeedSetting',{
@@ -331,7 +331,7 @@ append scripts
 						var divPostContainer = document.createElement('div')
 						divPostContainer.id = 'divPostContainer'
 						$('#Feed').append(divPostContainer)
-						
+
 					})
 						
 					
