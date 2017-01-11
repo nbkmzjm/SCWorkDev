@@ -939,11 +939,44 @@ append scripts
 						
 
 						//- add new row for next user if user ID changed detected
-						
+						function scOverview (){
+							var divSCOverview = document.createElement('div')
+							divSCOverview.id = 'divSCOverview'
+							divSCOverview.style.top = event.clientY-185+'px'
+
+								var p = document.createElement('p')
+								p.innerHTML = this.innerHTML
+								divSCOverview.appendChild(p)
+							divSCOverview.addEventListener('dblclick', function(){
+								this.remove()
+							})
+							divSCOverview.addEventListener('mouseenter', function(){
+								this.style.zIndex = '0'
+							})
+							divSCOverview.addEventListener('mousedown', function(){
+								
+								this.style.position = 'absolute'
+								var self = this
+								document.onmousemove = function(event){
+									self.style.left = event.pageX-80+'px'
+									self.style.top = event.pageY-215+'px'
+								}
+
+								this.onmouseup = function() {
+									self.style.zIndex = '1'
+									console.log(self)
+									document.onmousemove = null
+								}
+							})
+							mainSC.append(divSCOverview)
+
+						}
+
 						if(userId != userDelta && userTitle != titleDelta ){
 							var tdUser = document.createElement('td');
 							tdUser.setAttribute('class','cell')
 							tdUser.appendChild(document.createTextNode(item.name));
+							tdUser.addEventListener('click', scOverview)
 							//- alert(arr[i].dateSC)
 							window['tr' + userId] = document.createElement('tr');
 							window['tr' + userId].style.borderTop = '5px groove #ABF7FE'
@@ -954,6 +987,7 @@ append scripts
 							var tdUser = document.createElement('td');
 							tdUser.setAttribute('class','cell')
 							tdUser.appendChild(document.createTextNode(item.name));
+							tdUser.addEventListener('click', scOverview)
 							//- alert(arr[i].dateSC)
 							window['tr' + userId] = document.createElement('tr');
 							window['tr' + userId].id = 'user'+userId

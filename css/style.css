@@ -184,6 +184,14 @@
 	bottom: -15px
 }
 
+#divSCOverview{
+	position: absolute;
+    left: 10px;
+    width: 300px;
+    background: #FBFBD3;
+    border: 3px solid #73AD21;
+    z-index: 0;
+}
 
 .tt-menu {
 	background-color: #9ED1F2;
