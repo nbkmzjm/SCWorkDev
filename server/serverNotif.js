@@ -263,6 +263,9 @@ router.post('/setFeedSetting', middleware.requireAuthentication, function(req, r
 router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	var curUserId = req.user.id
 	var loadNumber = req.body.loadNumber
+	var viewOption = req.body.viewOption
+	console.log('offset: '+ loadNumber)
+
 	// console.log('lodingNumber: '+ loadNumber)
 	db.feedSetting.findOne({
 		where:{
@@ -271,6 +274,10 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 		}
 	}).then(function(feedSetting){
 		// console.log(JSON.stringify(feedSetting, null, 4))
+		if(viewOption!== 'false'){
+			feedSetting.value = viewOption
+		}
+		console.log(feedSetting.value)
 		if(feedSetting.value==='Private'){
 			db.mainPost.findAll({
 				include:[{
@@ -284,7 +291,12 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							$like:'%'+curUserId+'%'
 						}
 					}]
-				}
+				},
+				order:[
+					['createdAt', 'DESC']
+				],
+				limit: 12,
+				offset: loadNumber
 			}).then(function(posts){
 				// console.log(JSON.stringify(posts, null, 4))
 				res.json({posts:posts})
@@ -326,7 +338,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				}
 			}).then(function(userGroups){
 			
-				console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
+				// console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
 				var workGroupIds = []
 
 				userGroups.forEach(function(userGroup, i){
@@ -384,7 +396,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				}
 			}).then(function(userGroups){
 
-				console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
+				// console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
 				var workGroupIds = []
 
 				userGroups.forEach(function(userGroup, i){
@@ -408,7 +420,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				}), workGroupIds]
 
 			}).spread(function(groups, workGroupIds){
-				console.log('friend Group:'+JSON.stringify(groups, null, 4))
+				// console.log('friend Group:'+JSON.stringify(groups, null, 4))
 				var coworkerUserIds = []
 
 				groups.forEach(function(group, i){

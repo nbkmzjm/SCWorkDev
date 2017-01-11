@@ -68,15 +68,14 @@ append scripts
 					inputPost.placeholder = 'Post announcement here'
 					divInputGroup.appendChild(inputPost)
 
+
 					var divInputGroupBtn = document.createElement('div')
 					divInputGroupBtn.className = 'input-group-btn'
 						var btn = document.createElement('button')
 						btn.className = 'btn btn-primary'
 						btn.innerHTML = 'POST'
 						btn.addEventListener('click', function(){
-							console.log(inputPost.value)
-							console.log(userIdSelected)
-								alert(select.value)
+
 							inputPost.value!==''?postDB(select.value, inputPost.value, selectFilter.value,userIdSelected):''
 							//- input.value = ''
 							//- feedHome()
@@ -107,6 +106,7 @@ append scripts
 					//- 	divbtn.appendChild(ul)
 					//- div.appendChild(divbtn)
 					$('#Feed').append(divInputGroup)
+					document.getElementById("post").focus()
 
 					var select;
 					var selectFilter
@@ -148,7 +148,7 @@ append scripts
 										selectViewFilter.addEventListener('change', function(){
 											console.log(selectViewFilter.value)
 											$('#divPostContainer').html('')
-											getPostDB()
+											getPostDB({viewOption:selectViewFilter.value})
 											//- alert(select.value)
 											//- $.post('/notif/setFeedSetting',{
 											//- 	settingId:setting.id,
@@ -344,13 +344,13 @@ append scripts
 				$('#feedTab').on('click', function(){
 					location.reload()
 				})
-				var windowHt = window.innerHeight+150
+				var windowHt = window.innerHeight
 				var loadNumber = 12
 				var loadPoint = 0
 				var scrollPointLoad = 0 
 
 				window.addEventListener('scroll', function(event){
-
+					
 					scrollPointLoad++
 					scrollPointLoad>=12?scrollPointLoad=0:''
 					//- scrollPoint6==6?console.log('XXX'):''
@@ -358,22 +358,27 @@ append scripts
 					var posScrollY = window.scrollY
 					//- console.log(Math.ceil(posScrollY/100)*100)
 					
-					loadPoint = document.getElementById('Feed').lastChild.getBoundingClientRect().top
+					loadPoint = document.getElementById('divPostContainer').lastChild.getBoundingClientRect().top
 					
 					
 					//- console.log('windowHt:'+Math.ceil(windowHt/100)*100)
 					//- console.log('posScrollY:'+posScrollY)
-					//- console.log('loadNumber:'+loadNumber)
-					//- console.log('loadPoint:')
-					//- console.log(loadPoint)
+					console.log('scrollPointLoad:')
+					console.log(scrollPointLoad)
+					
+					console.log('loadPoint:')
+					console.log(loadPoint)
+					console.log('windowHt:')
+					console.log(windowHt)
+					console.log('loadNumber:'+loadNumber)
 
-					if(loadPoint<windowHt && scrollPointLoad==6 ){
+					if(loadPoint<windowHt && (scrollPointLoad==6 ||scrollPointLoad==9 )){
 						
 						
 						console.log('loading...'+ loadNumber)
 						
-						getPostDB(loadNumber)
-						loadNumber += loadNumber
+						getPostDB({loadNumber:loadNumber})
+						loadNumber += 12
 						//- preventDefault(event);
 						
 						//- loadNumber = loadNumber + 1

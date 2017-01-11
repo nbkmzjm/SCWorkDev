@@ -33,11 +33,17 @@ function glyphiconColor(name){
 	} 
 }
 
-function getPostDB(loadNumber){
+function getPostDB(option){
+	if(option===undefined){
+		var option = {}
+	}
+	var loadNumber = option.loadNumber||undefined
+	var viewOption = option.viewOption||false
 
-	console.log('feedNumber:'+loadNumber)
+	// console.log('feedNumber:'+loadNumber)
 	$.post('/notif/getFeed',{
-		loadNumber:loadNumber
+		loadNumber:loadNumber,
+		viewOption:viewOption
 	}).done(function(Rdata){
 		
 						
@@ -55,7 +61,6 @@ function getPostDB(loadNumber){
 			// div.style.borderTopStyle = 'solid'
 				var divBody = document.createElement('div')
 				divBody.className = 'panel-body'
-					console.log(post.postText)
 					var h3 = document.createElement('pre')
 					h3.innerHTML = post.postText
 					// h3.style.background = 'red'
@@ -68,7 +73,6 @@ function getPostDB(loadNumber){
 					$.post('/notif/getCommentCount',{
 						mainPostId:post.id
 					}).done(function(Rdata){
-						console.log(Rdata)
 						var emojCount = Rdata.emojCount
 						
 						var divTitle = document.createElement('div')
