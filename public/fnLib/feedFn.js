@@ -41,7 +41,7 @@ function getPostDB(loadNumber){
 	}).done(function(Rdata){
 		
 						
-		console.log(Rdata)
+		
 		Rdata.posts.forEach(function(post, i){
 
 			var div = document.createElement('div')
@@ -378,15 +378,15 @@ function getPostDB(loadNumber){
 					})
 				}	
 
-			$('#Feed').append(div)
-
+			divPostContainer.appendChild(div)
+			
 
 		})
 
 	
 	
 	})
-	return 'Rdata.posts.length'
+	return true
 }
 
 function BHUserList (typeaheadId) {

@@ -76,6 +76,7 @@ append scripts
 						btn.addEventListener('click', function(){
 							console.log(inputPost.value)
 							console.log(userIdSelected)
+								alert(select.value)
 							inputPost.value!==''?postDB(select.value, inputPost.value, selectFilter.value,userIdSelected):''
 							//- input.value = ''
 							//- feedHome()
@@ -106,6 +107,9 @@ append scripts
 					//- 	divbtn.appendChild(ul)
 					//- div.appendChild(divbtn)
 					$('#Feed').append(divInputGroup)
+
+					var select;
+					var selectFilter
 					$.post('/notif/getFeedSetting').done(function(Rdata){
 
 						Rdata.settings.forEach(function(setting){
@@ -142,29 +146,24 @@ append scripts
 
 											})
 										selectViewFilter.addEventListener('change', function(){
-
+											console.log(selectViewFilter.value)
+											$('#divPostContainer').html(selectViewFilter.value)
+											getPostDB()
 											//- alert(select.value)
-											$.post('/notif/setFeedSetting',{
-												settingId:setting.id,
-												settingValue:selectViewFilter.value,
-												action:'update'
-											}).done(function(Rdata){
+											//- $.post('/notif/setFeedSetting',{
+											//- 	settingId:setting.id,
+											//- 	settingValue:selectViewFilter.value,
+											//- 	action:'update'
+											//- }).done(function(Rdata){
 
-											})
+											//- })
 										})
 										
 										divSelectViewFilter.appendChild(selectViewFilter)
 
 									divViewFilter.appendChild(divSelectViewFilter)
 								$('#Feed').append(divViewFilter)
-							}
-						})
-					})
-						
-					$.post('/notif/getFeedSetting').done(function(Rdata){
-
-						Rdata.settings.forEach(function(setting){
-							if(setting.settingDescriptionId === 2){
+							} else if(setting.settingDescriptionId === 2){
 								var divInputGroupFilter = document.createElement('div')
 								//- divInputGroupFilter.className = 'input-group'
 								divInputGroupFilter.className = 'col-sm-12'
@@ -175,7 +174,7 @@ append scripts
 						
 									divSelect = document.createElement('div')
 									divSelect.className = 'col-sm-3'
-										var select = document.createElement('select')
+										select = document.createElement('select')
 										select.className = 'form-control'
 										select.classList.add('col-sm-4')
 
@@ -199,17 +198,17 @@ append scripts
 													select.appendChild(option)
 												}
 											})
-										select.addEventListener('change', function(){
+										//- select.addEventListener('change', function(){
 
-											//- alert(select.value)
-											$.post('/notif/setFeedSetting',{
-												settingId:setting.id,
-												settingValue:select.value,
-												action:'update'
-											}).done(function(Rdata){
+										//- 	//- alert(select.value)
+										//- 	$.post('/notif/setFeedSetting',{
+										//- 		settingId:setting.id,
+										//- 		settingValue:select.value,
+										//- 		action:'update'
+										//- 	}).done(function(Rdata){
 
-											})
-										})
+										//- 	})
+										//- })
 
 										divSelect.appendChild(select)
 									divInputGroupFilter.appendChild(divSelect)
@@ -220,7 +219,7 @@ append scripts
 									divSelectFilter.className = 'col-sm-3'
 									
 
-										var selectFilter = document.createElement('select')
+										selectFilter = document.createElement('select')
 										selectFilter.className = 'form-control'
 
 										selectFilter.classList.add('col-sm-4')
@@ -329,15 +328,17 @@ append scripts
 							$('#Feed').append(divInputGroupFilter)
 							}
 						})
-					})
+						var divPostContainer = document.createElement('div')
+						divPostContainer.id = 'divPostContainer'
+						$('#Feed').append(divPostContainer)
 						
-
+					})
 						
 					
 
 				$('#post').autogrow({vertical: true, horizontal: false});
 				
-
+				
 				
 				
 				$('#feedTab').on('click', function(){
