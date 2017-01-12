@@ -24,7 +24,18 @@
 
 }
 
-#mainSC table{
+#tblOverview thead th{
+	min-width: 65px;
+	width: 1200px;
+	height: 45px;
+	/*border: 2px solid #FFFFFF;*/
+	padding: 2px;
+	/*color: #00A478;*/
+	text-align: center;
+	margin-left: 0;
+}
+
+#main{
 	/*table-layout: auto;*/
 	position: relative;
 	bottom: 100px;
@@ -187,7 +198,7 @@
 #divSCOverview{
 	position: absolute;
     left: 10px;
-    width: 300px;
+    width: 80%;
     background: #FBFBD3;
     border: 3px solid #73AD21;
     z-index: 0;

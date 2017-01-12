@@ -103,13 +103,26 @@ append scripts
 
 
 				function scOverview (){
+					console.log(weekStart)	
+					for (var i=0; i<14; i++){
+					}
+
 					var divSCOverview = document.createElement('div')
 					divSCOverview.id = 'divSCOverview'
 					divSCOverview.style.top = event.clientY-185+'px'
 
-						var p = document.createElement('p')
-						p.innerHTML = this.innerHTML
-						divSCOverview.appendChild(p)
+						var tblOverview = document.createElement('table')
+						tblOverview.id = 'tblOverview'
+							var thead = document.createElement('thead')
+								var tr = document.createElement('tr')
+								for (var i=0; i<7; i++){
+									var th = document.createElement('th')
+									th.innerHTML = days[i]
+									tr.appendChild(th)
+								}
+								thead.appendChild(tr)
+							tblOverview.appendChild(thead)
+						divSCOverview.appendChild(tblOverview)
 					divSCOverview.addEventListener('dblclick', function(){
 						this.remove()
 					})
