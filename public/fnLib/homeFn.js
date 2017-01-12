@@ -267,3 +267,38 @@ function dateSCSubmit(memo, type, userId, dateSC, taskSC, td, detailListArr){
 		} 
 	});
 }
+
+
+function scOverview (parentDiv){
+	var divSCOverview = document.createElement('div')
+	divSCOverview.id = 'divSCOverview'
+	divSCOverview.style.top = event.clientY-185+'px'
+
+		var p = document.createElement('p')
+		p.innerHTML = this.innerHTML
+		divSCOverview.appendChild(p)
+	divSCOverview.addEventListener('dblclick', function(){
+		this.remove()
+	})
+	divSCOverview.addEventListener('mouseenter', function(){
+		this.style.zIndex = '0'
+	})
+	divSCOverview.addEventListener('mousedown', function(){
+		
+		this.style.position = 'absolute'
+		var self = this
+		document.onmousemove = function(event){
+			self.style.left = event.pageX-80+'px'
+			self.style.top = event.pageY-215+'px'
+		}
+
+		this.onmouseup = function() {
+			self.style.zIndex = '1'
+			console.log(self)
+			document.onmousemove = null
+		}
+	})
+	parentDiv.append(divSCOverview)
+	
+
+}
