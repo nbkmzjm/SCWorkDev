@@ -21,7 +21,7 @@ block content
 					a(data-toggle="tab"  href="#userForm") Create User
 				li(id='deptTab')
 					a(data-toggle="tab"  href="#deptForm") Create Department
-				li(id='WorkGroupTab')
+				li(id='WorkGroupFormTab')
 					a(data-toggle="tab"  href="#WorkGroupForm") Create WorkGroup
 
 			div(class="tab-content")
@@ -115,32 +115,38 @@ block content
 						div(class="form-group")
 							label(class="control-label col-sm-2" for="name") WorkGroup Name
 							div(class="col-sm-4")
-								input(type="hidden" class="form-control" id="id" name="id" value='0')
-								input(type="text" class="form-control" id="name" name="name" placeholder="Enter First Name" )
+								input(type="hidden" class="form-control" id="WorkGroupId" name="id" value='0')
+								input(type="text" class="form-control" id="WorkGroupName" name="name" placeholder="Enter WorkGroup Name" )
 						div(class="form-group")
 							label(class="control-label col-sm-2" for="email") Email
 							div(class="col-sm-4")
-								input(type="email" class="form-control" id="email" name="email" placeholder="Enter Email")
+								input(type="email" class="form-control" id="WorkGroupEmail" name="email" placeholder="Enter Email")
 						div(class="form-group")
 							label(class="control-label col-sm-2" for="username") Username
 							div(class="col-sm-4")
-								input(type="text" class="form-control" id="username" name="usern" placeholder="Enter Username")
+								input(type="text" class="form-control" id="WorkGroupUsername" name="usern" placeholder="Enter Username")
 						div(class="form-group")
 							label(class="control-label col-sm-2" for="password") Password
 							div(class="col-sm-4")
-								input(type="password" class="form-control" id="password" name="password" placeholder="Enter Password" )
+								input(type="password" class="form-control" id="WorkGroupPassword" name="password" placeholder="Enter Password" )
+						div(class="form-group")
+							label(class="control-label col-sm-2" for="department") Department
+							span
+								input(type='button' class="btn btn-success" value='Add New' id='addDeptBtn' ) 
+							div(class="col-sm-4")
+								select(class="form-control" id="WorkGroupDepartment" name="department")
 						div(class="form-group")
 							label(class="control-label col-sm-2" for="active") Active
 							div(class="col-sm-1")
-								input(type="checkbox" id= 'active' class="form-control" name="active" value='true' checked)
+								input(type="checkbox" id= 'WorkGroupActive' class="form-control" name="active" value='true' checked)
 							label(class="control-label col-sm-2" for="passreset") Reset Password
 							div(class="col-sm-1")
-								input(type="checkbox" id= 'passreset' class="form-control" name="passreset" value=true disabled=true)
+								input(type="checkbox" id= 'WorkGroupPassreset' class="form-control" name="passreset" value=true disabled=true)
 
 
 						div(class="form-group")
 							div(class="col-sm-offset-2 col-sm-3")
-								button(type="submit" id='submit' class="btn btn-primary") Submit
+								button(type="submit" id='submitWorkGroup' class="btn btn-primary") Submit
 						
 					div.errors
 						
@@ -313,10 +319,12 @@ append scripts
 					$.post('/users/addWorkGroup',{
 						//- departmentId:curUser.department.id,
 						name:$('#name').val(),
+						lastname:'WorkGroup',
 						id:$('#id').val(),
 						email:$('#email').val(),
 						username:$('#username').val(),
 						password:$('#password').val(),
+						title:'WorkGroup',
 						departmentId:$('#department').val(),
 						active:active,
 						passreset:passreset
@@ -376,6 +384,36 @@ append scripts
 					$('#username').val('')
 					$('#title').val('')
 					$('#lastname').val('')
+					$('#password').attr('type','password')
+					$('#password').val('')
+					$('#passreset').attr('disabled', false)
+					$('.error').html('')
+					$('#department').html('')
+					var option = document.createElement('option')
+						option.value = curUser.department.id
+						option.innerHTML = curUser.department.name
+						$('#department').append(option)
+					$.post('/users/getDept').done(function(Rdata){
+
+						Rdata.departments.forEach(function(department, i){
+							if(department.name !== curUser.department.name){
+								var option = document.createElement('option')
+								option.value = department.id
+								option.innerHTML = department.name
+								$('#department').append(option)
+							}
+
+						})
+					})
+					document.getElementById('active').checked = 1
+				})	
+
+				$('#WorkGroupFormTab').click(function(){
+					alert('lick WorkGroup')
+					$('#name').val('')
+					$('#id').val('0')
+					$('#email').val('')
+					$('#username').val('')
 					$('#password').attr('type','password')
 					$('#password').val('')
 					$('#passreset').attr('disabled', false)

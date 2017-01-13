@@ -130,11 +130,9 @@ append scripts
 								for (var i=-7; i<14; i++){
 									var scOverviewWeekStart = moment(curDate, 'MM-DD-YYYY').isoWeekday(1);
 									var td = document.createElement('td')
-									if(i < 0){
-									td.innerHTML = i + ':'+scOverviewWeekStart.add(i, 'days').format('MMM DD')
-									}else{
+									
 									td.innerHTML = scOverviewWeekStart.add(i, 'days').format('MMM DD')
-									}
+									
 									
 									tr.appendChild(td)
 								}
