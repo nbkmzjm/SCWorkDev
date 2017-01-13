@@ -103,7 +103,8 @@ append scripts
 
 
 				function scOverview (){
-					console.log(weekStart)	
+					
+					//- console.log(scOverviewWeekStart)	
 					for (var i=0; i<14; i++){
 					}
 
@@ -122,6 +123,23 @@ append scripts
 								}
 								thead.appendChild(tr)
 							tblOverview.appendChild(thead)
+
+							var tbody = document.createElement(('tbody'))
+								var tr = document.createElement('tr')
+
+								for (var i=-7; i<14; i++){
+									var scOverviewWeekStart = moment(curDate, 'MM-DD-YYYY').isoWeekday(1);
+									var td = document.createElement('td')
+									if(i < 0){
+									td.innerHTML = i + ':'+scOverviewWeekStart.add(i, 'days').format('MMM DD')
+									}else{
+									td.innerHTML = scOverviewWeekStart.add(i, 'days').format('MMM DD')
+									}
+									
+									tr.appendChild(td)
+								}
+								tbody.appendChild(tr)
+							tblOverview.appendChild(tbody)
 						divSCOverview.appendChild(tblOverview)
 					divSCOverview.addEventListener('dblclick', function(){
 						this.remove()
