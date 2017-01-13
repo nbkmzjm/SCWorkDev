@@ -98,7 +98,7 @@ router.post('/addDept', function(req, res) {
 
 router.post('/addUser', function(req, res) {
 	// console.log('xxx'+req.user.departmentId)
-
+	console.log('username:' + req.body.username)
 	// db.department.
 	req.check('name', 'First name must be within 2-30 characters').len(2, 30);
 	req.check('lastname', 'Last name must be within 2-30 characters').len(2, 30);
@@ -125,6 +125,7 @@ router.post('/addUser', function(req, res) {
 			errors: errors
 		})
 	} else if (id == '0') {
+		console.log('creating user')
 
 		return db.sequelize.transaction(function (t) {
 			return db.user.create(body, {
@@ -223,6 +224,7 @@ router.post('/addUser', function(req, res) {
 		
 
 	} else if (id != '0' || id != '') {
+		console.log('edit user')
 		console.log(typeof (req.body.password))
 		console.log(passreset + '--' + req.body.password)
 		if (passreset==true) {

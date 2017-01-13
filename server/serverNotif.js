@@ -272,6 +272,7 @@ router.post('/setFeedSetting', middleware.requireAuthentication, function(req, r
 
 	
 router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
+	var curUser = req.user
 	var curUserId = req.user.id
 	var loadNumber = req.body.loadNumber
 	var viewOption = req.body.viewOption
@@ -318,6 +319,8 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				})
 			})
 		}else if(feedSetting.value==='WorkGroup'){
+			var WorkGroupName = curUser.lastname + '_'+curUser.name
+			console.log('WorkGroupName:'+ WorkGroupName)
 			// db.group.findAll({
 
 			// 	include:[{
@@ -344,7 +347,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					// 	$notIn:[curUserId]
 					// },
 					status:{
-						$like:'WorkGroup%'
+						$in:[WorkGroupName]
 					}
 				}
 			}).then(function(userGroups){
@@ -401,13 +404,14 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 		}else if(feedSetting.value==='Coworker'){
 			db.userGroups.findAll({
 				where:{
+					userId: curUserId,
 					status:{
 						$like:'WorkGroup%'
 					}
 				}
 			}).then(function(userGroups){
 
-				// console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
+				console.log('userGroups:'+JSON.stringify(userGroups, null, 4))
 				var workGroupIds = []
 
 				userGroups.forEach(function(userGroup, i){
