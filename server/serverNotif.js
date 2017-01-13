@@ -8,13 +8,24 @@ var middleware = require('../middleware.js')(db);
 
 
 router.get('/', middleware.requireAuthentication, function(req, res) {
+	var curUser = req.user;
 	var curUserTitle = req.user.title;
-	res.render('notif/notifHome', {
-			JSONdata: {
-				notif: 'notif'
-			}
-			
+
+	db.user.findOne({
+		where:curUser.id,
+		include:[{
+			model:db.department
+		}]
+	}).then(function(curUser){
+		res.render('notif/notifHome', {
+			JSONdata: JSON.stringify({
+				notif: 'notif',
+				curUser:curUser
+				
+			})
 		})
+
+	})
 	
 
 })

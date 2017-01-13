@@ -146,20 +146,13 @@ router.post('/addUser', function(req, res) {
 					}, {
 						transaction:t
 					}).then(function(){
-						var data = [{
-							description:'View post from:',
-							defaultValue:'Colleague'
-						},{
-							description:'Who can view my post:',
-							defaultValue:'Colleague'
-						}]
-						return db.settingDescription.bulkCreate(data,{
+						
+						return db.settingDescription.findAll({
 							transaction:t
-						}).then(function(){
-							return db.settingDescription.findAll({
-								transaction:t
-							}).then(function(settingDescriptions){
-								console.log(JSON.stringify(settingDescriptions, null, 4))
+						}).then(function(settingDescriptions){
+							console.log(JSON.stringify(settingDescriptions, null, 4))
+							if(!!settingDescriptions){
+								console.log('feedSetting exist')
 								var data = []
 								settingDescriptions.forEach(function(settingDescription){
 									var feedSettingObj ={
@@ -174,12 +167,48 @@ router.post('/addUser', function(req, res) {
 								}).then(function(){
 									console.log('User created successfully')
 								})
+							}else{
+								console.log('feedSetting not exist')
+								var data = [{
+									description:'View post from:',
+									defaultValue:'Colleague'
+								},{
+									description:'Who can view my post:',
+									defaultValue:'Colleague'
+								}]
+								return db.settingDescription.bulkCreate(data,{
+									transaction:t
+								}).then(function(){
+									return db.settingDescription.findAll({
+										transaction:t
+									}).then(function(settingDescriptions){
+										console.log(JSON.stringify(settingDescriptions, null, 4))
+										var data = []
+										settingDescriptions.forEach(function(settingDescription){
+											var feedSettingObj ={
+												value:settingDescription.defaultValue,
+												userId:user.id,
+												settingDescriptionId:settingDescription.id
+											}
+											data.push(feedSettingObj)
+										})
+										return db.feedSetting.bulkCreate(data,{
+											transaction:t
+										}).then(function(){
+											console.log('User created successfully')
+										})
 
-							})
+									})
+								})
+							}
+							
+
 						})
 					})
 				})
 			})
+
+			
 		}).then(function(result){
 			console.log('result is:'+JSON.stringify(result, null, 4))
 			res.json({

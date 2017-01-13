@@ -37,6 +37,8 @@ append scripts
 	script.
 
 		$(function(){
+			var JSONdata = !{JSONdata};
+			var curUser = JSONdata.curUser
 			feedHome()
 			//- var groups = [{name:'a'}, {name:'b'}, {name:'c'}]
 			//- ul = document.createElement('ul')
@@ -609,8 +611,11 @@ append scripts
 								select.className = 'form-control'
 								select.name = 'postTo'
 								select.id = 'postTo'
-									var optionList = ['Coworker','Colleague']
-
+									if(curUser.title === 'WorkGroup'){
+										var optionList = [curUser.lastname+'_'+curUser.name]
+									}else{
+										var optionList = ['Coworker','Colleague']
+									}
 									optionList.forEach(function(item, i){
 										//- if(item !== setting.value){
 											var option = document.createElement('option')

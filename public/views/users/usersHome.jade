@@ -74,6 +74,7 @@ block content
 									option(value="Techn Float") Technician Float
 									option(value="Personel") Personel
 									option(value="Associate") Associate
+									option(value="WorkGroup") WorkGroup
 						div(class="form-group")
 							label(class="control-label col-sm-2" for="active") Active
 							div(class="col-sm-1")
@@ -111,7 +112,8 @@ block content
 					div.errors
 				div(id="WorkGroupForm" class="tab-pane")
 					br
-					form(class="form-horizontal" autocomplete="off" id='formWorkGroup' action="/users/addWorkGroup" method="POST")
+					alert('submitWorkGroup')
+					form(class="form-horizontal" autocomplete="off" id='formWorkGroup' method="POST")
 						div(class="form-group")
 							label(class="control-label col-sm-2" for="name") WorkGroup Name
 							div(class="col-sm-4")
@@ -267,65 +269,23 @@ append scripts
 					//- return false;
 				})
 
-				$("#form").on('submit', function(e){
-					var active = false
-					var passreset = false
-					$('#active').is(':checked')?active = true:''
-					$('#passreset').is(':checked')?passreset = true:''
-					
-					$.post('/users/addUser',{
-						//- departmentId:curUser.department.id,
-						name:$('#name').val(),
-						lastname:$('#lastname').val(),
-						id:$('#id').val(),
-						email:$('#email').val(),
-						username:$('#username').val(),
-						password:$('#password').val(),
-						title:$('#title').val(),
-						departmentId:$('#department').val(),
-						active:active,
-						passreset:passreset
-
-					}).done(function(Rdata){
-						if (!!Rdata.redi){
-							window.location.replace(Rdata.redi)
-						}else if (!!Rdata.errors){
-						//- alert(JSON.stringify(Rdata.errors, null, 4))
-							$('.errors').html('')
-							if (typeof Rdata.errors == 'string'){
-								$('#errors').append('<br>'+'* '+ Rdata.errors)
-								$('#errors').addClass('error')
-								$('#errors').addClass('col-sm-offset-2 col-sm-10')
-							} else{
-
-								Rdata.errors.forEach(function(item){
-									$('.errors').append('<br>'+'* '+ item.msg)
-									$('.errors').addClass('error')
-									$('.errors').addClass('col-sm-offset-2 col-sm-10')
-								})
-							}
-						}
-					})
-					e.preventDefault();
-					return false;
-				});
 
 				$("#formWorkGroup").on('submit', function(e){
 					var active = false
 					var passreset = false
-					$('#active').is(':checked')?active = true:''
-					$('#passreset').is(':checked')?passreset = true:''
+					$('#WorkGroupActive').is(':checked')?active = true:''
+					$('#WorkGroupPassreset').is(':checked')?passreset = true:''
 					
-					$.post('/users/addWorkGroup',{
+					$.post('/users/addUser',{
 						//- departmentId:curUser.department.id,
-						name:$('#name').val(),
+						name:$('#WorkGroupName').val(),
 						lastname:'WorkGroup',
-						id:$('#id').val(),
-						email:$('#email').val(),
-						username:$('#username').val(),
-						password:$('#password').val(),
+						id:$('#WorkGroupId').val(),
+						email:$('#WorkGroupEmail').val(),
+						username:$('#WorkGroupUsername').val(),
+						password:$('#WorkGroupPassword').val(),
 						title:'WorkGroup',
-						departmentId:$('#department').val(),
+						departmentId:$('#WorkGroupDepartment').val(),
 						active:active,
 						passreset:passreset
 
@@ -356,10 +316,13 @@ append scripts
 				if(curUser.department.name !== 'ADMIN'){
 
 					$('#department').attr('disabled', true)
+					$('#WorkGroupDepartment').attr('disabled', true)
 					
 				}else{
 					$('#department').attr('disabled', false)
 					$('#department').val('')
+					$('#WorkGroupDepartment').attr('disabled', false)
+					$('#WorkGroupDepartment').val('')
 					
 				}
 
@@ -409,20 +372,19 @@ append scripts
 				})	
 
 				$('#WorkGroupFormTab').click(function(){
-					alert('lick WorkGroup')
-					$('#name').val('')
-					$('#id').val('0')
-					$('#email').val('')
-					$('#username').val('')
-					$('#password').attr('type','password')
-					$('#password').val('')
-					$('#passreset').attr('disabled', false)
+					$('#WorkGroupName').val('')
+					$('#WorkGroupId').val('0')
+					$('#WorkGroupEmail').val('')
+					$('#WorkGroupUsername').val('')
+					$('#WorkGroupPassword').attr('type','password')
+					$('#WorkGroupPassword').val('')
+					$('#WorkGroupPassreset').attr('disabled', false)
 					$('.error').html('')
-					$('#department').html('')
+					$('#WorkGroupDepartment').html('')
 					var option = document.createElement('option')
 						option.value = curUser.department.id
 						option.innerHTML = curUser.department.name
-						$('#department').append(option)
+						$('#WorkGroupDepartment').append(option)
 					$.post('/users/getDept').done(function(Rdata){
 
 						Rdata.departments.forEach(function(department, i){
@@ -430,7 +392,7 @@ append scripts
 								var option = document.createElement('option')
 								option.value = department.id
 								option.innerHTML = department.name
-								$('#department').append(option)
+								$('#WorkGroupDepartment').append(option)
 							}
 
 						})
