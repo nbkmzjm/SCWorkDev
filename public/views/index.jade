@@ -126,15 +126,46 @@ append scripts
 
 							var tbody = document.createElement(('tbody'))
 								var tr = document.createElement('tr')
+								var arrSCOverviewDate = []
+								for (var i=-14; i<28; i++){
+									if (i % 7 === 0){
+										var scOverviewWeekStart = moment(curDate, 'MM-DD-YYYY').isoWeekday(1);
+										scOverviewWeekStart.add(i, 'days').format('MMM DD')
+										arrSCOverviewDate.push(scOverviewWeekStart.format('MMM DD'))
+									}
 
-								for (var i=-7; i<14; i++){
-									var scOverviewWeekStart = moment(curDate, 'MM-DD-YYYY').isoWeekday(1);
-									var td = document.createElement('td')
-									
-									td.innerHTML = scOverviewWeekStart.add(i, 'days').format('MMM DD')
-									
-									
-									tr.appendChild(td)
+								}
+								console.log('arrSCOverviewDate')
+								console.log(arrSCOverviewDate)
+								arrSCOverviewDate.forEach(function(weekStartDate, i){
+									//- $.post('/taskSC',{
+									//- sDate:weekStart.format('MM-DD-YYYY')
+									//- }).done(function(rData){
+
+
+
+								})
+								for (var i=-14; i<28; i++){
+									if (i % 7 === 0){
+										var scOverviewWeekStart = moment(curDate, 'MM-DD-YYYY').isoWeekday(1);
+										var td = document.createElement('td')
+										
+										td.innerHTML = scOverviewWeekStart.add(i, 'days').format('MMM DD')
+										
+										
+										var tr = document.createElement('tr')
+										tr.appendChild(td)
+										tbody.appendChild(tr)
+
+									}else{
+										var scOverviewWeekStart = moment(curDate, 'MM-DD-YYYY').isoWeekday(1);
+										var td = document.createElement('td')
+										
+										td.innerHTML = scOverviewWeekStart.add(i, 'days').format('MMM DD')
+										
+										
+										tr.appendChild(td)
+									}
 								}
 								tbody.appendChild(tr)
 							tblOverview.appendChild(tbody)
