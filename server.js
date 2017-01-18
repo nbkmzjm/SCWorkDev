@@ -177,7 +177,8 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res){
 	var datePos={
 			$between:[sDate,eDate]
 		}
-	console.log(sDate+':'+eDate)
+	console.log('::::::::::::::::::::::::')
+	console.log(sDate+':'+eDate + req.body.i)
 	console.log(JSON.stringify(sDate.slice(-1), null, 4))
 	console.log(JSON.stringify(eDate.slice(-1), null, 4))
 	if (sDate.slice(-1)!=eDate.slice(-1)){

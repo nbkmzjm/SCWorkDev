@@ -138,16 +138,22 @@ append scripts
 								console.log('arrSCOverviewDate')
 								console.log(arrSCOverviewDate)
 								arrSCOverviewDate.forEach(function(weekStart, i){
-									$.post('/taskSC',{
-									sDate:weekStart.format('MM-DD-YYYY')
-									}).done(function(rData){
-										console.log('xxxx: ' + weekStart.format('MM-DD-YYYY'))
-										console.log(rData)
-										var assign = rData.assign
-
+										console.log('aaaa:'+ i)
+										console.log(weekStart)
+										$.post('/taskSC',{
+											sDate:weekStart.format('MM-DD-YYYY'),
+											i:i
+											}).done(function(rData){
+												console.log('xxxx: ' + weekStart.format('MM-DD-YYYY'))
+												console.log(rData)
+												var assign = rData.assign
+										})
+									var scOverviewDate = moment(weekStart, 'MM-DD-YYYY');
 										for (var i=0; i<7; i++){
+											var scOverviewDate
+
 											if (i === 0){
-												var scOverviewDate = moment(weekStart, 'MM-DD-YYYY');
+												scOverviewDate = moment(weekStart, 'MM-DD-YYYY');
 												var td = document.createElement('td')
 												
 												td.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')
@@ -158,7 +164,7 @@ append scripts
 												tbody.appendChild(tr)
 
 											}else{
-												var scOverviewDate = moment(curDate, 'MM-DD-YYYY').isoWeekday(1);
+												scOverviewDate = moment(weekStart, 'MM-DD-YYYY').isoWeekday(1);
 												var td = document.createElement('td')
 												
 												td.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')
@@ -168,12 +174,10 @@ append scripts
 											}
 										}
 										tbody.appendChild(tr)
-
-									})
-
-
-
 								})
+
+
+
 								
 							tblOverview.appendChild(tbody)
 						divSCOverview.appendChild(tblOverview)
@@ -296,7 +300,6 @@ append scripts
 				$.post('/taskSC',{
 					sDate:weekStart.format('MM-DD-YYYY')
 					}).done(function(rData){
-					alert(JSON.stringify(rData.assign, null, 4))
 					//- alert(JSON.stringify(arrListDateSC, null, 4))
 					var assign = rData.assign
 					
