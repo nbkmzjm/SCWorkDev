@@ -129,8 +129,8 @@ append scripts
 								var pastDate = -14
 								var futureDate = 28
 								var arrSCOverviewDate = []
-								var arr2DOverViewDate = []
-								var arrSCOverviewFirstLast = []
+								var arrSCOverviewFirstRange = []
+								var arrSCOverviewLastRange = []
 								for (var i=pastDate; i<futureDate; i++){
 									if (i % 7 === 0){
 										var scOverviewWeekStart = moment(curDate, 'MM-DD-YYYY').isoWeekday(1);
@@ -138,17 +138,17 @@ append scripts
 										arrSCOverviewDate.push(scOverviewWeekStart)
 									}
 									if(i===pastDate){
-										arrSCOverviewFirstLast.push(scOverviewWeekStart)
-									}else if(i % 7 !== 0 && i === futureDate-1){
-										scOverviewWeekStart.add(7, 'days').format('MMM DD')
+										arrSCOverviewFirstRange = scOverviewWeekStart
 										
-										
-										arrSCOverviewFirstLast.push(scOverviewWeekStart)
+									}else if(i === futureDate-1){
+										var scOverviewWeekStart = moment(scOverviewWeekStart)
+										scOverviewWeekStart.add(6, 'days').format('MMM DD')
+										arrSCOverviewLastRange = scOverviewWeekStart
 									}
 
 								}
 								console.log('arrSCOverviewFirstLast')
-								console.log(arrSCOverviewFirstLast)
+								console.log(arrSCOverviewFirstRange + ':'+arrSCOverviewLastRange )
 								console.log('arrSCOverviewDate')
 								console.log(arrSCOverviewDate)
 								arrSCOverviewDate.forEach(function(weekStart, i){
