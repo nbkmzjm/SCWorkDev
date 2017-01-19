@@ -126,11 +126,11 @@ append scripts
 
 							var tbody = document.createElement(('tbody'))
 								var tr = document.createElement('tr')
-								var pastDate = -14
+								var pastDate = -21
 								var futureDate = 28
 								var arrSCOverviewDate = []
-								var arrSCOverviewFirstRange = []
-								var arrSCOverviewLastRange = []
+								var arrSCOverviewFirstRange 
+								var arrSCOverviewLastRange 
 								for (var i=pastDate; i<futureDate; i++){
 									if (i % 7 === 0){
 										var scOverviewWeekStart = moment(curDate, 'MM-DD-YYYY').isoWeekday(1);
@@ -138,15 +138,26 @@ append scripts
 										arrSCOverviewDate.push(scOverviewWeekStart)
 									}
 									if(i===pastDate){
-										arrSCOverviewFirstRange = scOverviewWeekStart
+										arrSCOverviewFirstRange = scOverviewWeekStart.format('MM-DD-YYYY')
 										
 									}else if(i === futureDate-1){
 										var scOverviewWeekStart = moment(scOverviewWeekStart)
-										scOverviewWeekStart.add(6, 'days').format('MMM DD')
-										arrSCOverviewLastRange = scOverviewWeekStart
+										
+										arrSCOverviewLastRange = scOverviewWeekStart.add(6, 'days').format('MM-DD-YYYY')
 									}
 
 								}
+								$.post('/scOverview',{
+								sDate:arrSCOverviewFirstRange,
+								eDate:arrSCOverviewLastRange,
+								newYearFix:futureDate-pastDate
+								}).done(function(rData){
+									console.log('xxxx: ' + weekStart.format('MM-DD-YYYY'))
+									console.log(rData)
+									var assign = rData.assign
+								})
+
+
 								console.log('arrSCOverviewFirstLast')
 								console.log(arrSCOverviewFirstRange + ':'+arrSCOverviewLastRange )
 								console.log('arrSCOverviewDate')
@@ -154,15 +165,7 @@ append scripts
 								arrSCOverviewDate.forEach(function(weekStart, i){
 									console.log('aaaa:'+ i)
 									console.log(weekStart)
-									$.post('/taskSC',{
-									sDate:weekStart.format('MM-DD-YYYY'),
-									i:i
-									}).done(function(rData){
-										console.log('xxxx: ' + weekStart.format('MM-DD-YYYY'))
-										console.log(rData)
-										var assign = rData.assign
-									})
-								//- })
+									
 									var scOverviewDate = moment(weekStart, 'MM-DD-YYYY');
 										for (var i=0; i<7; i++){
 											var scOverviewDate

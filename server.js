@@ -212,6 +212,51 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res){
 	})
 })
 
+app.post('/scOverview', middleware.requireAuthentication, function(req, res){
+	var curUser= req.user;
+	var sDate = req.body.sDate
+	var eDate = req.body.eDate
+	var datePosRange = [];
+
+	var datePos={
+		$between:[sDate,eDate]
+	}
+
+	console.log(sDate +':'+ eDate)
+	if (sDate.slice(-1)!=eDate.slice(-1)){
+		for(var i = 0; i<49;i++){
+			datePosRange.push(moment(new Date(sDate)).add(i,'days').format('MM-DD-YYYY'))
+		}
+		datePos = {$in:datePosRange}
+	}
+	
+	db.assign.findAll({
+		attributes:['id', 'datePos', 'Memo', 'userId', 'Note'],
+		include:[{
+			model:db.assignTracer,
+			include:[{
+				model:db.user
+			}]
+			
+		}],
+		where:{
+			datePos,
+			userId:curUser.id
+
+		},
+		order:[
+				[db.assignTracer,'createdAt', 'DESC']
+			]
+	}).then(function(assign){
+		
+		// console.log(JSON.stringify(assign, null, 4))
+		res.json({
+			assign,
+			 curUser
+		})
+	})
+})
+
 
 app.post('/assignTracerReadUpd', middleware.requireAuthentication, function(req, res) {
 	var assignTracerId = req.body.assignTracerId;
