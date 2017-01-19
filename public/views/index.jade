@@ -126,28 +126,43 @@ append scripts
 
 							var tbody = document.createElement(('tbody'))
 								var tr = document.createElement('tr')
+								var pastDate = -14
+								var futureDate = 28
 								var arrSCOverviewDate = []
-								for (var i=-14; i<28; i++){
+								var arr2DOverViewDate = []
+								var arrSCOverviewFirstLast = []
+								for (var i=pastDate; i<futureDate; i++){
 									if (i % 7 === 0){
 										var scOverviewWeekStart = moment(curDate, 'MM-DD-YYYY').isoWeekday(1);
 										scOverviewWeekStart.add(i, 'days').format('MMM DD')
 										arrSCOverviewDate.push(scOverviewWeekStart)
 									}
+									if(i===pastDate){
+										arrSCOverviewFirstLast.push(scOverviewWeekStart)
+									}else if(i % 7 !== 0 && i === futureDate-1){
+										scOverviewWeekStart.add(7, 'days').format('MMM DD')
+										
+										
+										arrSCOverviewFirstLast.push(scOverviewWeekStart)
+									}
 
 								}
+								console.log('arrSCOverviewFirstLast')
+								console.log(arrSCOverviewFirstLast)
 								console.log('arrSCOverviewDate')
 								console.log(arrSCOverviewDate)
 								arrSCOverviewDate.forEach(function(weekStart, i){
-										console.log('aaaa:'+ i)
-										console.log(weekStart)
-										$.post('/taskSC',{
-											sDate:weekStart.format('MM-DD-YYYY'),
-											i:i
-											}).done(function(rData){
-												console.log('xxxx: ' + weekStart.format('MM-DD-YYYY'))
-												console.log(rData)
-												var assign = rData.assign
-										})
+									console.log('aaaa:'+ i)
+									console.log(weekStart)
+									$.post('/taskSC',{
+									sDate:weekStart.format('MM-DD-YYYY'),
+									i:i
+									}).done(function(rData){
+										console.log('xxxx: ' + weekStart.format('MM-DD-YYYY'))
+										console.log(rData)
+										var assign = rData.assign
+									})
+								//- })
 									var scOverviewDate = moment(weekStart, 'MM-DD-YYYY');
 										for (var i=0; i<7; i++){
 											var scOverviewDate
@@ -301,8 +316,9 @@ append scripts
 					sDate:weekStart.format('MM-DD-YYYY')
 					}).done(function(rData){
 					//- alert(JSON.stringify(arrListDateSC, null, 4))
+
 					var assign = rData.assign
-					
+					console.log(assign)
 					var curUser = rData.curUser
 					var curUserTitle = curUser.title
 					var curUserId = curUser.id
