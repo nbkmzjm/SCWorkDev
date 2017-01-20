@@ -166,26 +166,26 @@ append scripts
 												var scOverviewDate = moment(weekStart, 'MM-DD-YYYY');
 												var td = document.createElement('td')
 												
-												td.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')
+												td.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')+ '<br> OFF'
 												assign.forEach(function(assign, i){
 													if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
-														td.innerHTML = scOverviewDate.format('MMM DD')+ '<br>'+ assign.Note  
-														
+														td.innerHTML = scOverviewDate.format('MMM DD')+ '<br> <b>'+ assign.Note  + '</b>'
 													}
 												})
 												
 												var tr = document.createElement('tr')
 												tr.appendChild(td)
+												
 												tbody.appendChild(tr)
 
 											}else{
 												var scOverviewDate = moment(weekStart, 'MM-DD-YYYY').isoWeekday(1);
 												var td = document.createElement('td')
 												
-												td.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')
+												td.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')+ '<br> OFF'
 												assign.forEach(function(assign, i){
 													if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
-														td.innerHTML = scOverviewDate.format('MMM DD')+ '<br>'+ assign.Note  
+														td.innerHTML = scOverviewDate.format('MMM DD')+ '<br> <b>'+ assign.Note  + '</b>'
 														
 													}
 												})

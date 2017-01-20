@@ -35,6 +35,18 @@
 	margin-left: 0;
 }
 
+#tblOverview td{
+	/*width: 100%;*/
+	min-width: 65px;
+	width: 1200px;
+	border: 1px solid #FFFFFF;
+	padding: 2px;
+	/*color: #00A478;*/
+	text-align: center;
+	margin-left: 0
+
+}
+
 #main{
 	/*table-layout: auto;*/
 	position: relative;
@@ -199,8 +211,8 @@
 	position: absolute;
     left: 10px;
     width: 80%;
-    background: #FBFBD3;
-    border: 3px solid #73AD21;
+    background: #7ECCD5;
+    border: 3px solid #FFFFFF;
     z-index: 0;
 }
 
