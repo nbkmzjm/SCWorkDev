@@ -155,44 +155,52 @@ append scripts
 									console.log('xxxx: ' + weekStart.format('MM-DD-YYYY'))
 									console.log(rData)
 									var assign = rData.assign
-								})
+									arrSCOverviewDate.forEach(function(weekStart, i){
 
-
-								console.log('arrSCOverviewFirstLast')
-								console.log(arrSCOverviewFirstRange + ':'+arrSCOverviewLastRange )
-								console.log('arrSCOverviewDate')
-								console.log(arrSCOverviewDate)
-								arrSCOverviewDate.forEach(function(weekStart, i){
-									console.log('aaaa:'+ i)
-									console.log(weekStart)
-									
-									var scOverviewDate = moment(weekStart, 'MM-DD-YYYY');
+										var scOverviewDate = moment(weekStart, 'MM-DD-YYYY');
 										for (var i=0; i<7; i++){
-											var scOverviewDate
+											
+											
 
 											if (i === 0){
-												scOverviewDate = moment(weekStart, 'MM-DD-YYYY');
+												var scOverviewDate = moment(weekStart, 'MM-DD-YYYY');
 												var td = document.createElement('td')
 												
 												td.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')
-												
+												assign.forEach(function(assign, i){
+													if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
+														td.innerHTML = scOverviewDate.format('MMM DD')+ '<br>'+ assign.Note  
+														
+													}
+												})
 												
 												var tr = document.createElement('tr')
 												tr.appendChild(td)
 												tbody.appendChild(tr)
 
 											}else{
-												scOverviewDate = moment(weekStart, 'MM-DD-YYYY').isoWeekday(1);
+												var scOverviewDate = moment(weekStart, 'MM-DD-YYYY').isoWeekday(1);
 												var td = document.createElement('td')
 												
 												td.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')
-												
+												assign.forEach(function(assign, i){
+													if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
+														td.innerHTML = scOverviewDate.format('MMM DD')+ '<br>'+ assign.Note  
+														
+													}
+												})
 												
 												tr.appendChild(td)
 											}
+
+											
 										}
 										tbody.appendChild(tr)
+									})
 								})
+
+
+								
 
 
 
