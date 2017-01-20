@@ -216,7 +216,9 @@ app.post('/scOverview', middleware.requireAuthentication, function(req, res){
 	var curUser= req.user;
 	var sDate = req.body.sDate
 	var eDate = req.body.eDate
+	var userId = req.body.userId
 	var datePosRange = [];
+	console.log(userId)
 
 	var datePos={
 		$between:[sDate,eDate]
@@ -241,7 +243,7 @@ app.post('/scOverview', middleware.requireAuthentication, function(req, res){
 		}],
 		where:{
 			datePos,
-			userId:curUser.id
+			userId:userId
 
 		},
 		order:[
