@@ -77,11 +77,20 @@ append scripts
 						btn.className = 'btn btn-primary'
 						btn.innerHTML = 'POST'
 						btn.addEventListener('click', function(){
-
+							if(select.value === "WorkGroup" && selectWorkGroup.value ===''){
+							alert('Please select a WorkGroup')
+							}else if(select.value === "WorkGroup" && selectWorkGroup.value !== ''){
+							inputPost.value!==''?postDB(selectWorkGroup.value, inputPost.value, selectFilter.value,userIdSelected):''
+							location.reload()
+							}else{
 							inputPost.value!==''?postDB(select.value, inputPost.value, selectFilter.value,userIdSelected):''
+							location.reload()
+							}
+
+							
 							//- input.value = ''
 							//- feedHome()
-							location.reload()
+							
 						}) 
 						divInputGroupBtn.appendChild(btn)
 					divInputGroup.appendChild(divInputGroupBtn)
@@ -200,17 +209,42 @@ append scripts
 													select.appendChild(option)
 												}
 											})
-										//- select.addEventListener('change', function(){
+										select.addEventListener('change', function(){
 
-										//- 	//- alert(select.value)
-										//- 	$.post('/notif/setFeedSetting',{
-										//- 		settingId:setting.id,
-										//- 		settingValue:select.value,
-										//- 		action:'update'
-										//- 	}).done(function(Rdata){
+											//- alert(select.value)
+											if(select.value === "WorkGroup" && $('selectWorkGroup').length <1){
+												$.post('/notif/getMyWorkGroup').done(function(Rdata){
 
-										//- 	})
-										//- })
+													divSelectWorkGroup = document.createElement('div')
+													divSelectWorkGroup.className = 'col-sm-3'
+														selectWorkGroup = document.createElement('select')
+														selectWorkGroup.className = 'form-control'
+														selectWorkGroup.classList.add('col-sm-4')
+
+														//- select.className = ''
+														//- select.name = 'postTo'
+														selectWorkGroup.id = 'selectWorkGroup'
+														var option = document.createElement('option')
+														option.value = ''
+														option.innerHTML = 'Select WorkGroup'
+														selectWorkGroup.appendChild(option)
+														Rdata.userGroups.forEach(function(item, i){
+															if(item !== setting.value){
+																var option = document.createElement('option')
+																option.value = item.status
+																option.innerHTML = item.status
+																selectWorkGroup.appendChild(option)
+															}
+														})
+														divSelectWorkGroup.appendChild(selectWorkGroup)
+													divInputGroupFilter.insertBefore(divSelectWorkGroup, divSelectFilter)
+												})
+
+											}else{
+												$('#selectWorkGroup').remove()
+											}
+											
+										})
 
 										divSelect.appendChild(select)
 									divInputGroupFilter.appendChild(divSelect)
@@ -225,8 +259,8 @@ append scripts
 										selectFilter.className = 'form-control'
 
 										selectFilter.classList.add('col-sm-4')
-										selectFilter.name = 'postTo'
-										selectFilter.id = 'postTo'
+										selectFilter.name = 'selectFilter'
+										selectFilter.id = 'selectFilter'
 											var optionList = ['Select Filter','Include', 'Exclude', 'Include Department']
 
 											optionList.forEach(function(item, i){

@@ -1111,6 +1111,7 @@ router.post('/addPostEmoj', middleware.requireAuthentication, function(req, res)
 })
 
 router.post('/getDept', middleware.requireAuthentication, function(req, res) {
+	
 	db.department.findAll({ 
 		include: [{
 			model:db.user,
@@ -1129,6 +1130,25 @@ router.post('/getDept', middleware.requireAuthentication, function(req, res) {
  	 	
  	 	console.log(JSON.stringify(depts, null, 4))
 		res.json({department:depts})
+	})
+
+})
+
+router.post('/getMyWorkGroup', middleware.requireAuthentication, function(req, res) {
+	var curUserId = req.user.id
+	db.userGroups.findAll({ 
+		where:{
+			userId:curUserId,
+			status: {
+				$like:'WorkGroup%'
+			}
+		}
+		
+	}).then(function(userGroups) {
+
+ 	 	
+ 	 	console.log(JSON.stringify(userGroups, null, 4))
+		res.json({userGroups:userGroups})
 	})
 
 })
