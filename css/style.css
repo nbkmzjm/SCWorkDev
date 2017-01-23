@@ -120,9 +120,9 @@
 	
 }
 
-#main td:nth-child(7), #main td:nth-child(8){
+#main td:nth-child(7), #main td:nth-child(8),#tblOverview td:nth-child(7), #tblOverview td:nth-child(6){
 	background-color: #66C27A;
-	font-weight: bold;
+	/*font-weight: bold;*/
 }
 
 #user td:nth-child(1), #main td:nth-child(1){
@@ -209,10 +209,11 @@
 
 #divSCOverview{
 	position: absolute;
+	box-shadow: 10px 10px 5px #888888;
     left: 10px;
     width: 80%;
-    background: #7ECCD5;
-    border: 3px solid #FFFFFF;
+   /* background: #7ECCD5;
+    border: 3px solid #FFFFFF;*/
     z-index: 0;
 }
 

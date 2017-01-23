@@ -221,11 +221,11 @@ function activeOptionText(x){
 		
 		
 function noteColor(assignNote, element){
-	if (assignNote=='PTO-A'){
+	if (assignNote.indexOf('PTO-A')!==-1){
 		element.style.color = 'green'
-	}else if(assignNote=='PTO-R'){
-		element.style.color = '#FFBD4B'
-	}else if(assignNote=='OFF'){
+	}else if(assignNote.indexOf('PTO-R')!==-1){
+		element.style.color = '#ED9907'
+	}else if(assignNote.indexOf('OFF')!==-1){
 		element.style.color = '#9FAAA3'
 	}else{
 		element.style.color = 'blue'

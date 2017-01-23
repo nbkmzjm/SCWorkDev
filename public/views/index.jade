@@ -90,8 +90,8 @@ append scripts
 			//- alert(JSON.stringify(data, null, 4))
 			$.post('/sysObjRead', {pData:['lockoutDate']}).done(function(rData){
 				this.data = data
-				var mainSC = $('#mainSC');
-				mainSC.html('');
+				var mainSCDiv = $('#mainSC');
+				mainSCDiv.html('');
 
 
 
@@ -107,22 +107,32 @@ append scripts
 					var userName = this.innerHTML
 					console.log(userName.innerHTML)
 					//- console.log(scOverviewWeekStart)	
-					for (var i=0; i<14; i++){
-					}
+					
 
 					var divSCOverview = document.createElement('div')
 					divSCOverview.id = 'divSCOverview'
+					divSCOverview.style.opacity= 0;
+					var a = 0 
+					var myInv = setInterval(function(){
+							a = a + 0.1
+							divSCOverview.style.opacity= a;
+							a>1?clearInterval(myInv):""
+						
+					}, 50)
+					
+					
 					divSCOverview.style.top = event.clientY-185+'px'
 
 						var tblOverview = document.createElement('table')
 						tblOverview.id = 'tblOverview'
 							var thead = document.createElement('thead')
 								var tr = document.createElement('tr')
+								tr.style.backgroundColor = '#82E9EF'
 								for (var i=0; i<7; i++){
 
 									var th = document.createElement('th')
 									th.innerHTML = days[i]
-									i===0?th.innerHTML = userName +'<br>'+days[i]:""
+									i===0?th.innerHTML = days[i]+'<br>'+userName :""
 									tr.appendChild(th)
 								}
 								thead.appendChild(tr)
@@ -131,7 +141,7 @@ append scripts
 							var tbody = document.createElement(('tbody'))
 								var tr = document.createElement('tr')
 								var pastDate = -14
-								var futureDate = 21
+								var futureDate = 28
 								var arrSCOverviewDate = []
 								var arrSCOverviewFirstRange 
 								var arrSCOverviewLastRange 
@@ -173,33 +183,60 @@ append scripts
 												var scOverviewDate = moment(weekStart, 'MM-DD-YYYY');
 												var td = document.createElement('td')
 												
-												td.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')+ '<br> OFF'
-												assign.forEach(function(assign, i){
-													if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
-														td.innerHTML = scOverviewDate.format('MMM DD')+ '<br> <b>'+ assign.Note  + '</b>'
-													}
-												})
-												
+												//- td.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')+ '<br> -'
+													var a = document.createElement('a')
+
+													a.style.color = '#0000BE'
+													a.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')+ '<br> &nbsp'
+													
+													a.scOverviewDate = scOverviewDate.format('MM-DD-YYYY')
+													a.addEventListener('click', function(){
+														$('#calendar').val(this.scOverviewDate)
+														$.post('/ajaxUser').done(mainSC);
+													})
+													assign.forEach(function(assign, i){
+														console.log(assign.Note)
+														
+														if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
+															noteColor(assign.Note, a)
+															a.innerHTML = scOverviewDate.format('MMM DD')+ '<br> <b>'+ assign.Note  + '</b>'
+														}
+													})
+													a.setAttribute('href','#');
+													td.appendChild(a)
 												var tr = document.createElement('tr')
+												tr.style.backgroundColor = '#7ECCD5'
 												scOverviewCurWeekStart.isSame(scOverviewDate)?
-												tr.style.backgroundColor = '#B8E9F4':""
+												tr.style.backgroundColor = '#14B9DE':""
 												
 												
 												tr.appendChild(td)
 												
 												tbody.appendChild(tr)
 
+
 											}else{
 												var scOverviewDate = moment(weekStart, 'MM-DD-YYYY').isoWeekday(1);
 												var td = document.createElement('td')
+													var a = document.createElement('a')
+													a.style.color = '#0000BE'
+													a.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')+ '<br> &nbsp'
+													
 												
-												td.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')+ '<br> -'
-												assign.forEach(function(assign, i){
-													if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
-														td.innerHTML = scOverviewDate.format('MMM DD')+ '<br> <b>'+ assign.Note  + '</b>'
-														
-													}
-												})
+													a.scOverviewDate = scOverviewDate.format('MM-DD-YYYY')
+													a.addEventListener('click', function(){
+														$('#calendar').val(this.scOverviewDate)
+														$.post('/ajaxUser').done(mainSC);
+													})
+													assign.forEach(function(assign, i){
+														if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
+															noteColor(assign.Note, a)
+															a.innerHTML = scOverviewDate.format('MMM DD')+ '<br> <b>'+ assign.Note  + '</b>'
+															
+														}
+													})
+													a.setAttribute('href','#');
+													td.appendChild(a)
 												
 												tr.appendChild(td)
 											}
@@ -218,27 +255,53 @@ append scripts
 								
 							tblOverview.appendChild(tbody)
 						divSCOverview.appendChild(tblOverview)
-					divSCOverview.addEventListener('dblclick', function(){
-						this.remove()
-					})
+
+
+					//- divSCOverview.addEventListener('click', function(){
+					//- 	var self = this
+					var span = document.createElement('span')
+					span.innerHTML = '';
+					span.zIndex = 1;
+					span.style.position = 'absolute'
+					span.style.fontSize = "25px"
+					span.style.color = 'red'
+					span.className = "glyphicon glyphicon-remove"
+					span.id = 'delGly';
+					//- click the 'x' to remove from list
+					span.addEventListener('click', function(){
+						divSCOverview.remove()
+					
+					});
+					//- if($("#delGly").length > 0){
+					//- $("#delGly").remove()
+					//- }
+					divSCOverview.appendChild(span)
+					//- })
 					divSCOverview.addEventListener('mouseleave', function(){
 						this.style.zIndex = '0'
 					})
-					divSCOverview.addEventListener('mousedown', function(){
-						
+					divSCOverview.addEventListener('mousedown', function(event){
+						var mousedownPosX = event.pageX
+						var mousedownPosY = event.pageY
 						this.style.position = 'absolute'
 						var self = this
 						document.onmousemove = function(event){
-							self.style.left = event.pageX-150+'px'
-							self.style.top = event.pageY-300+'px'
+							console.log(event.pageX)
+							self.style.left = event.pageX-50+'px'
+							self.style.top = event.pageY-220+'px'
 						}
 
 						this.onmouseup = function() {
 							self.style.zIndex = '1'
 							document.onmousemove = null
 						}
+
+						document.onmouseup = function() {
+							document.onmousemove = null
+						}
 					})
-					mainSC.append(divSCOverview)
+					mainSCDiv.append(divSCOverview)
+					$('#divSCOverview').fadeIn(500)
 
 				}
 
@@ -1123,7 +1186,7 @@ append scripts
 
 				//- output lock out Note 
 				table.appendChild(tbody)
-				mainSC.append(table);	
+				mainSCDiv.append(table);	
 				
 			});
 		}	
