@@ -273,7 +273,9 @@ router.post('/setFeedSetting', middleware.requireAuthentication, function(req, r
 	
 router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	var curUser = req.user
+
 	var curUserId = req.user.id
+	console.log('curUserId'+ curUserId)
 	var loadNumber = req.body.loadNumber
 	var viewOption = req.body.viewOption
 	console.log('offset: '+ loadNumber)
