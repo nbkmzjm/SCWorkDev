@@ -321,8 +321,8 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				})
 			})
 		}else if(feedSetting.value==='WorkGroup'){
-			var WorkGroupName = curUser.lastname + '_'+curUser.name
-			console.log('WorkGroupName:'+ WorkGroupName)
+			// var WorkGroupName = curUser.lastname + '_'+curUser.name
+			// console.log('WorkGroupName:'+ WorkGroupName)
 			// db.group.findAll({
 
 			// 	include:[{
@@ -341,19 +341,32 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 			// 	}]
 			// }).then(function(groups){
 			db.userGroups.findAll({
-				where:{
-					// groupId:{
-					// 	$in:coworkerofColleagueGroupIds
-					// },
-					// userId:{
-					// 	$notIn:[curUserId]
-					// },
-					status:{
-						$in:[WorkGroupName]
+				
+					where:{
+						
+						userId:curUserId,
+						status:{
+							$like:'WorkGroup%'
+						}
 					}
-				}
+
 			}).then(function(userGroups){
-			
+				console.log('userGroups:' + JSON.stringify(userGroups, null, 4))
+				var workGroupName = userGroups.map(function(userGroup){
+					return userGroup.status
+				})
+				console.log('workGroupName:' + JSON.stringify(workGroupName, null, 4))
+				return [db.userGroups.findAll({
+					where:{
+						status:{
+							$in:workGroupName
+						}
+					}
+				}), workGroupName]
+				
+
+
+			}).spread(function(userGroups, workGroupName){
 				// console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
 				var workGroupIds = []
 
@@ -379,7 +392,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 								$notLike:'%'+curUserId+'%'
 							},
 							postTo:{
-								$like:'WorkGroup%'
+								$in:workGroupName
 							}
 
 						},{
