@@ -321,62 +321,38 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				})
 			})
 		}else if(feedSetting.value==='WorkGroup'){
-			// var WorkGroupName = curUser.lastname + '_'+curUser.name
-			// console.log('WorkGroupName:'+ WorkGroupName)
-			// db.group.findAll({
-
-			// 	include:[{
-			// 		model:db.user,
-			// 		where:{
-			// 			id:curUserId
-			// 		}
-			// 		,
-			// 		through:{
-			// 			where:{
-			// 				status:{
-			// 					$like:'WorkGroup%'
-			// 				}
-			// 			}
-			// 		}
-			// 	}]
-			// }).then(function(groups){
+			var workGroupName
 			db.userGroups.findAll({
-				
 					where:{
-						
 						userId:curUserId,
 						status:{
 							$like:'WorkGroup%'
 						}
 					}
-
 			}).then(function(userGroups){
 				console.log('userGroups:' + JSON.stringify(userGroups, null, 4))
-				var workGroupName = userGroups.map(function(userGroup){
+				workGroupName = userGroups.map(function(userGroup){
 					return userGroup.status
 				})
 				console.log('workGroupName:' + JSON.stringify(workGroupName, null, 4))
-				return [db.userGroups.findAll({
+				return db.userGroups.findAll({
 					where:{
 						status:{
 							$in:workGroupName
 						}
 					}
-				}), workGroupName]
-				
+				})
 
-
-			}).spread(function(userGroups, workGroupName){
+			}).then(function(userGroups){
 				// console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
 				var workGroupIds = []
 
 				userGroups.forEach(function(userGroup, i){
-					// if(group.users[0].userGroups.status === 'Coworker'){
 					workGroupIds.indexOf(userGroup.userId)===-1?
 					workGroupIds.push(userGroup.userId):""
-					// }
 				})
 				console.log('workGroupIds: '+JSON.stringify(workGroupIds, null, 4))
+
 				return [db.mainPost.findAll({
 				include:[{
 					model:db.user
@@ -417,16 +393,29 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				})
 			});
 		}else if(feedSetting.value==='Coworker'){
+			var workGroupName
 			db.userGroups.findAll({
-				where:{
-					userId: curUserId,
-					status:{
-						$like:'WorkGroup%'
+					where:{
+						userId:curUserId,
+						status:{
+							$like:'WorkGroup%'
+						}
 					}
-				}
 			}).then(function(userGroups){
+				console.log('userGroups:' + JSON.stringify(userGroups, null, 4))
+				workGroupName = userGroups.map(function(userGroup){
+					return userGroup.status
+				})
+				console.log('workGroupName:' + JSON.stringify(workGroupName, null, 4))
+				return db.userGroups.findAll({
+					where:{
+						status:{
+							$in:workGroupName
+						}
+					}
+				})
 
-				console.log('userGroups:'+JSON.stringify(userGroups, null, 4))
+			}).then(function(userGroupWorkGroups){
 				
 
 				// userGroups.forEach(function(userGroup, i){
@@ -441,21 +430,15 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						},
 						through:{
 							where:{
-								$or:[{
-										status:{
-											$in:['Coworker']
-										}
-									},{
-										status:{
-										$like:'WorkGroup%'
-										}
-									}]
-								}
+								status:{
+									$in:['Coworker']
+								}	
 							}
-						}]
-				})]
+						}
+					}]
+				}), userGroupWorkGroups]
 
-			}).spread(function(groups){
+			}).spread(function(groups, userGroupWorkGroups){
 				console.log('friend Group:'+JSON.stringify(groups, null, 4))
 				var coworkerUserIds = []
 				var workGroupIds = []
@@ -463,9 +446,12 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				groups.forEach(function(group, i){
 					if(group.users[0].userGroups.status === 'Coworker'){
 						coworkerUserIds.push(group.groupBLUserId)
-					}else if(group.users[0].userGroups.status.indexOf('WORKGROUP')!== -1){
-						workGroupIds.push(group.groupBLUserId)
 					}
+				})
+				userGroupWorkGroups.forEach(function(userGroupWorkGroup, i){
+					workGroupIds.indexOf(userGroupWorkGroup.userId)===-1?
+					workGroupIds.push(userGroupWorkGroup.userId):""
+					
 				})
 				console.log('coworkerUserIds: '+JSON.stringify(coworkerUserIds, null, 4))
 				console.log('workGroupIds: '+JSON.stringify(workGroupIds, null, 4))
@@ -495,7 +481,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 								$notLike:'%'+curUserId+'%'
 							},
 							postTo:{
-								$like:'WorkGroup%'
+								$in:workGroupName
 							}
 
 						},{
