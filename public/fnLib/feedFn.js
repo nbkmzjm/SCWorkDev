@@ -33,17 +33,19 @@ function glyphiconColor(name){
 	} 
 }
 
-function getPostDB(option){
+function getPostDB(option, viewOnly){
 	if(option===undefined){
 		var option = {}
 	}
 	var loadNumber = option.loadNumber||undefined
 	var viewOption = option.viewOption||false
+	var viewOnly = option.viewOnly||false
 
 	// console.log('feedNumber:'+loadNumber)
 	$.post('/notif/getFeed',{
 		loadNumber:loadNumber,
-		viewOption:viewOption
+		viewOption:viewOption,
+		viewOnly:viewOnly
 	}).done(function(Rdata){
 		
 						

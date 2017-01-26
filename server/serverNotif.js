@@ -278,7 +278,9 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	console.log('curUserId'+ curUserId)
 	var loadNumber = req.body.loadNumber
 	var viewOption = req.body.viewOption
+	var viewOnly = req.body.viewOnly
 	console.log('offset: '+ loadNumber)
+	console.log('viewOnly: '+ viewOnly)
 
 	// console.log('lodingNumber: '+ loadNumber)
 	db.feedSetting.findOne({
@@ -353,12 +355,21 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				})
 				console.log('workGroupIds: '+JSON.stringify(workGroupIds, null, 4))
 
-				return [db.mainPost.findAll({
-				include:[{
-					model:db.user
-				}],
-				where:{
-					$or:[{
+				if(viewOnly==='true'){
+					wherePara={
+						userId:{
+								$in:workGroupIds
+							},
+							exclude:{
+								$notLike:'%'+curUserId+'%'
+							},
+							postTo:{
+								$in:workGroupName
+							}
+					}
+				}else{
+					wherePara={
+						$or:[{
 							userId:req.user.id
 						},{
 							userId:{
@@ -376,7 +387,17 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							$like:'%'+curUserId+'%'
 							}
 						}]
-				},
+						
+					}
+
+				}
+
+				return [db.mainPost.findAll({
+				include:[{
+					model:db.user
+				}],
+				where:wherePara
+				,
 				order:[
 					['createdAt', 'DESC']
 				],
@@ -451,57 +472,59 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				})
 				console.log('coworkerUserIds: '+JSON.stringify(coworkerUserIds, null, 4))
 				console.log('workGroupIds: '+JSON.stringify(workGroupIds, null, 4))
+				if(viewOnly==='true'){
+					console.log('yyyy')
+					var wherePara ={
+						userId:{
+							$in:coworkerUserIds
+						},
+						exclude:{
+							$notLike:'%'+curUserId+'%'
+						},
+						postTo:{
+							$in:['Coworker']
+						}
+					}
+				}else if(viewOnly==='false'){
+					console.log('xxxx')
+					var wherePara = {
+						$or:[{
+								userId:req.user.id
+							},{
+								userId:{
+									$in:coworkerUserIds
+								},
+								exclude:{
+									$notLike:'%'+curUserId+'%'
+								},
+								postTo:{
+									$notIn:['Private']
+								}
 
-				var wherePara = {
-					$or:[{
-							userId:req.user.id
-						},{
-							userId:{
-								$in:coworkerUserIds
-							},
-							exclude:{
-								$notLike:'%'+curUserId+'%'
-							},
-							postTo:{
-								$notIn:['Private']
-							}
+							},{
+								userId:{
+									$in:workGroupIds
+								},
+								exclude:{
+									$notLike:'%'+curUserId+'%'
+								},
+								postTo:{
+									$in:workGroupName
+								}
 
-						},{
-							userId:{
-								$in:workGroupIds
-							},
-							exclude:{
-								$notLike:'%'+curUserId+'%'
-							},
-							postTo:{
-								$in:workGroupName
-							}
-
-						},{
-							include:{
-							$like:'%'+curUserId+'%'
-							}
-						}]
-				}
-
-				var wherePara1 ={
-					userId:{
-						$in:coworkerUserIds
-					},
-					exclude:{
-						$notLike:'%'+curUserId+'%'
-					},
-					postTo:{
-						$in:['Coworker']
+							},{
+								include:{
+								$like:'%'+curUserId+'%'
+								}
+							}]
 					}
 				}
-
 
 				return [db.mainPost.findAll({
 				include:[{
 					model:db.user
 				}],
-				where:wherePara1,
+				where:wherePara,
 				order:[
 					['createdAt', 'DESC']
 				],
@@ -581,12 +604,22 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				console.log('colleagueUserIds: '+JSON.stringify(colleagueUserIds, null, 4))
 				console.log('coworkerUserIds: '+JSON.stringify(coworkerUserIds, null, 4))
 				console.log('workGroupIds: '+JSON.stringify(workGroupIds, null, 4))
-				return [db.mainPost.findAll({
-				include:[{
-					model:db.user
-				}],
-				where:{
-					$or:[{
+				if(viewOnly==='true'){
+					wherePara={
+						userId:{
+								$in:colleagueUserIds
+							},
+							exclude:{
+								$notLike:'%'+curUserId+'%'
+							},
+								
+							postTo:{
+								$in:['Colleague', 'Coworker of Colleague']
+							}
+					}
+				}else{
+					wherePara={
+						$or:[{
 							userId:req.user.id
 						},{
 							userId:{
@@ -627,7 +660,15 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							$like:'%'+curUserId+'%'
 							}
 						}]
-				},
+						
+					}
+
+				}
+				return [db.mainPost.findAll({
+				include:[{
+					model:db.user
+				}],
+				where:wherePara,
 				order:[
 					['createdAt', 'DESC']
 				],
@@ -737,12 +778,22 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				
 
 					console.log('coworkerofColleagueUserIds: '+JSON.stringify(coworkerofColleagueUserIds, null, 4))
-					db.mainPost.findAll({
-					include:[{
-						model:db.user
-					}],
-					where:{
-						$or:[{
+					if(viewOnly==='true'){
+						wherePara={
+							userId:{
+									$in:colleagueUserIds
+								},
+								exclude:{
+									$notLike:'%'+curUserId+'%'
+								},
+									
+								postTo:{
+									$in:['Coworker of Colleague']
+								}
+						}
+					}else{
+						wherePara={
+							$or:[{
 								userId:req.user.id
 							},{
 								userId:{
@@ -791,8 +842,14 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 								$like:'%'+curUserId+'%'
 								}
 							}]
-						
-					},
+						}
+
+					}
+					db.mainPost.findAll({
+					include:[{
+						model:db.user
+					}],
+					where:wherePara,
 					order:[
 						['createdAt', 'DESC']
 					],
@@ -898,16 +955,20 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					console.log('colleagueUserIds: '+JSON.stringify(colleagueUserIds, null, 4))
 					console.log('workGroupIds: '+JSON.stringify(workGroupIds, null, 4))
 					console.log('coworkerUserIds: '+JSON.stringify(coworkerUserIds, null, 4))
-				
-				
-
 					console.log('coworkerofColleagueUserIds: '+JSON.stringify(coworkerofColleagueUserIds, null, 4))
-					db.mainPost.findAll({
-					include:[{
-						model:db.user
-					}],
-					where:{
-						$or:[{
+
+					if(viewOnly==='true'){
+						wherePara={
+							postTo:{
+								$in:['Public']
+							},
+							exclude:{
+								$notLike:'%'+curUserId+'%'
+							}
+						}
+					}else{
+						wherePara={
+							$or:[{
 								userId:req.user.id
 							},{
 								userId:{
@@ -967,8 +1028,15 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 								$like:'%'+curUserId+'%'
 								}
 							}]
-						
-					},
+						}
+
+
+					}
+					db.mainPost.findAll({
+					include:[{
+						model:db.user
+					}],
+					where:wherePara,
 					order:[
 						['createdAt', 'DESC']
 					],

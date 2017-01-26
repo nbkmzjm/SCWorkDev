@@ -159,7 +159,11 @@ append scripts
 										selectViewFilter.addEventListener('change', function(){
 											console.log(selectViewFilter.value)
 											$('#divPostContainer').html('')
+											$('#viewOnly').attr('checked', false)
+											
+
 											getPostDB({viewOption:selectViewFilter.value})
+
 											//- alert(select.value)
 											//- $.post('/notif/setFeedSetting',{
 											//- 	settingId:setting.id,
@@ -171,8 +175,39 @@ append scripts
 										})
 										
 										divSelectViewFilter.appendChild(selectViewFilter)
-
 									divViewFilter.appendChild(divSelectViewFilter)
+
+									var label = document.createElement('label')
+									label.className = 'col-sm-2'
+									label.innerHTML = 'View Only: '
+									divViewFilter.appendChild(label)
+
+									var divViewOnly = document.createElement('div')
+									divViewOnly.className = 'col-sm-1'
+										
+										var viewOnly = document.createElement('input')
+										viewOnly.type = 'checkbox'
+										viewOnly.className = 'form-control'
+										viewOnly.id = 'viewOnly'
+										viewOnly.value = 'false'
+										viewOnly.addEventListener('click', function(){
+
+											if(this.checked === true){
+												getPostDB({
+													viewOption:selectViewFilter.value,
+													viewOnly:true
+												})
+												$('#divPostContainer').html('')
+											}else{
+												getPostDB({
+													viewOption:selectViewFilter.value,
+													viewOnly:false
+												})
+											}
+										})
+										divViewOnly.appendChild(viewOnly)
+									divViewFilter.appendChild(divViewOnly)
+
 								$('#Feed').append(divViewFilter)
 							} else if(setting.settingDescriptionId === 2){
 								var divInputGroupFilter = document.createElement('div')
