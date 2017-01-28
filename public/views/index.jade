@@ -39,29 +39,48 @@ append scripts
 
 		
 		$(function (){
-			//- var p = document.createElement('p')
-			//- p.innerHTML = 'hello'
-			//- p.style.backgroundColor = 'red'
-			//- p.style.width = "25px"
-			//- var span = document.createElement('span')
-			//- span.appendChild(document.createTextNode('ola'))
-			//- span.style.backgroundColor = 'blue'
-			//- span.style.width = "25px"
-			
-			//- var test = document.getElementById('test')
-			//- test.style.width = "100px"
-			//- test.id = 'test'
-			//- test.style.backgroundColor = 'yellow'
-			//- test.appendChild(p)
-			//- test.appendChild(span)
-			//- test.addEventListener('mouseover', function(){
-			//- 	console.log(event.target.childNodes[0].offsetTop)
-			//- })
 
-			//- test.ondragover = function(event){
-			//- 	event.preventDefault()
-			//- }
-			
+
+			if ('serviceWorker' in navigator && 'PushManager' in window) {
+			  console.log('Service Worker and Push is supported');
+
+			  navigator.serviceWorker.register('sw.js')
+			  .then(function(swReg) {
+			    console.log('Service Worker is registered', swReg);
+
+			    swRegistration = swReg;
+			  })
+			  .catch(function(error) {
+			    console.error('Service Worker Error', error);
+			  });
+			} else {
+			  console.warn('Push messaging is not supported');
+			  pushButton.textContent = 'Push Not Supported';
+			}
+
+
+
+
+			 //- if (!("Notification" in window)) {
+			 //-    alert("This browser does not support desktop notification");
+			 //-  }
+
+			 //-  // Let's check whether notification permissions have already been granted
+			 //-  else if (Notification.permission === "granted") {
+			 //-    // If it's okay let's create a notification
+			 //-    var notification = new Notification("Hi there!");
+			 //-  }
+
+			 //-  // Otherwise, we need to ask the user for permission
+			 //-  else if (Notification.permission !== 'denied') {
+			 //-    Notification.requestPermission(function (permission) {
+			 //-      // If the user accepts, let's create a notification
+			 //-      if (permission === "granted") {
+			 //-        var notification = new Notification("Hi there!");
+			 //-      }
+			 //-    });
+			 //-  }
+
 			
 			calendarPick();
 			
