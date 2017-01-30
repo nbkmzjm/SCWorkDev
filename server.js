@@ -90,22 +90,23 @@ app.get('/message', function(req, res){
 app.get('/test', test)
 
 function test(req, res){
-	db.group.findAll({
-		include:[{
-				model:db.user,
-				//specify which model to include if there is more ONE
-				as:'groupBLUser',
-				// attributes:['name'],
-				include:[{
-					model:db.department
-					// attributes:['name']
-				}]
+	res.render('test')
+	// db.group.findAll({
+	// 	include:[{
+	// 			model:db.user,
+	// 			//specify which model to include if there is more ONE
+	// 			as:'groupBLUser',
+	// 			// attributes:['name'],
+	// 			include:[{
+	// 				model:db.department
+	// 				// attributes:['name']
+	// 			}]
 
-			}]
-	}).then(function(groupList){
-		console.log(JSON.stringify(groupList, null, 4))
-		res.json({groupList:groupList})
-	})
+	// 		}]
+	// }).then(function(groupList){
+	// 	console.log(JSON.stringify(groupList, null, 4))
+	// 	res.json({groupList:groupList})
+	// })
 }
 
 

@@ -1,6 +1,4 @@
-extends ./layout.jade
-
-	
+extends ../views/layout/layout.jade
 block title 
 	title Title From TEST
 
@@ -21,17 +19,14 @@ append scripts
 
 			container.appendChild(newP);
 
-			alert('in onload')
 
 			$('#testP').click(function(){
-			alert('testP lcik')
 			})
 			
 		});
 
 
 
-		alert('out onload')
 
 		$('#test').click(function(){
 			alert('testP lcik')
