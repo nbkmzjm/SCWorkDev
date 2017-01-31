@@ -13,6 +13,8 @@ append scripts
 	script(src="public/js/date.js")
 	script.
 		$(function(){
+			var JSONdata = !{JSONdata};
+			alert(JSONdata.admin)
 			var newP = document.createElement('p')
 			newP.id = 'testP'
 			newP.innerHTML = 'heloo'

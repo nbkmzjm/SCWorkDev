@@ -172,7 +172,7 @@ append scripts
 					$('#').attr('class', 'tab-pane')
 					$('#deptForm').attr('class', 'tab-pane fade in active')
 
-					$.post('/users/getDept').done(function(Rdata){
+					$.getJSON('/users/getDept').done(function(Rdata){
 						console.log(Rdata)
 						if(Rdata.departments !== 'undefined'){
 							Rdata.departments.forEach(function(department, i){
@@ -400,7 +400,7 @@ append scripts
 						option.value = curUser.department.id
 						option.innerHTML = curUser.department.name
 						$('#department').append(option)
-					$.post('/users/getDept').done(function(Rdata){
+					$.getJSON('/users/getDept').done(function(Rdata){
 
 						Rdata.departments.forEach(function(department, i){
 							if(department.name !== curUser.department.name){
@@ -429,7 +429,7 @@ append scripts
 						option.value = curUser.department.id
 						option.innerHTML = curUser.department.name
 						$('#WorkGroupDepartment').append(option)
-					$.post('/users/getDept').done(function(Rdata){
+					$.getJSON('/users/getDept').done(function(Rdata){
 
 						Rdata.departments.forEach(function(department, i){
 							if(department.name !== curUser.department.name){
@@ -546,7 +546,7 @@ append scripts
 														//- 	btnEditDept.value = 'Edit'
 														//- 	btnEditDept.className = 'btn btn-success'
 														//- 	btnEditDept.addEventListener('click', function(){
-													$.post('/users/getDept').done(function(Rdata){
+													$.getJSON('/users/getDept').done(function(Rdata){
 														$('#department').html('')
 														var optionInit = document.createElement('option')
 														optionInit.value = user.department.id

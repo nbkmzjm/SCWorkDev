@@ -44,13 +44,14 @@ append scripts
 			if ('serviceWorker' in navigator && 'PushManager' in window) {
 			  console.log('Service Worker and Push is supported');
 
-			  navigator.serviceWorker.register('sw.js')
-			  .then(function(swReg) {
+			  navigator.serviceWorker.register('sw.js').then(function(swReg) {
 			    console.log('Service Worker is registered', swReg);
 
 			    swRegistration = swReg;
-			  })
-			  .catch(function(error) {
+			    return swReg.pushManager.subscribe({ userVisibleOnly: true });
+			  }).then(function(subscription){
+			  	console.log(subscription)
+			  }).catch(function(error) {
 			    console.error('Service Worker Error', error);
 			  });
 			} else {
@@ -84,7 +85,7 @@ append scripts
 			
 			calendarPick();
 			
-			$.post('/ajaxUser').done(mainSC, function(){
+			$.getJSON('/ajaxUser').done(mainSC, function(){
 				//- setInterval(function(){
 				//- 	//- alert('5 second')
 				//- 	document.getElementById('SELECT').checked = true
@@ -107,7 +108,11 @@ append scripts
 
 		function mainSC(data){
 			//- alert(JSON.stringify(data, null, 4))
-			$.post('/sysObjRead', {pData:['lockoutDate']}).done(function(rData){
+			$.getJSON('/sysObjRead', {
+				    tags: "mount rainier",
+				    tagmode: "any",
+				    format: "json"
+			}, 'system').done(function(rData){
 				this.data = data
 				var mainSCDiv = $('#mainSC');
 				mainSCDiv.html('');
@@ -180,7 +185,7 @@ append scripts
 									}
 
 								}
-								$.post('/scOverview',{
+								$.getJSON('/scOverview',{
 								sDate:arrSCOverviewFirstRange,
 								eDate:arrSCOverviewLastRange,
 								newYearFix:futureDate-pastDate,
@@ -211,7 +216,7 @@ append scripts
 													a.scOverviewDate = scOverviewDate.format('MM-DD-YYYY')
 													a.addEventListener('click', function(){
 														$('#calendar').val(this.scOverviewDate)
-														$.post('/ajaxUser').done(mainSC);
+														$.getJSON('/ajaxUser').done(mainSC);
 													})
 													assign.forEach(function(assign, i){
 														console.log(assign.Note)
@@ -415,7 +420,7 @@ append scripts
 				}
 				
 							
-				$.post('/taskSC',{
+				$.getJSON('/taskSC',{
 					sDate:weekStart.format('MM-DD-YYYY')
 					}).done(function(rData){
 					//- alert(JSON.stringify(arrListDateSC, null, 4))
@@ -633,7 +638,7 @@ append scripts
 													$('#eventAction').html('')
 													
 													
-													$.post('/assignTracerReadDay',{
+													$.getJSON('/assignTracerReadDay',{
 														type:'TASK',
 														assignId:assign.id
 													}).done(function(Rdata){
@@ -817,7 +822,7 @@ append scripts
 														)
 													})
 
-													$.post('/assignTracerReadDay',{
+													$.getJSON('/assignTracerReadDay',{
 														type:'MESSAGE',
 														assignId:assign.id
 													}).done(function(Rdata){
@@ -1256,7 +1261,7 @@ append scripts
 
 		var i = 0
 		function taskOptionLoop(arr){
-			$.post('/taskOption',{
+			$.getJSON('/taskOptionDefault',{
 			taskOption:arr[i].name,
 			taskCategory:arr[i].category
 			}).done(function(pData){
@@ -1439,7 +1444,7 @@ append scripts
 											var taskOptionData = $("#taskOption").val().toUpperCase();
 											var taskCategoryData = $("#taskCategory").val().toUpperCase();
 											if (taskOptionData!=''&& taskCategoryData!=''){
-										 		 $.post('/taskOption',{
+										 		 $.getJSON('/taskOption',{
 						                          taskOption:taskOptionData,
 						                          taskCategory:taskCategoryData
 						                        }).done(function(pData){

@@ -31,7 +31,7 @@ function calendarPick(){
 				var dateM7 = moment(dateCalender.value,'MM-DD-YYYY');
 				dateM7.subtract(30, 'days');
 				dateCalender.value = dateM7.format('MM-DD-YYYY')
-				$.post('/ajaxUser', {clickedData:true}).done(mainSC);
+				$.getJSON('/ajaxUser', {clickedData:true}).done(mainSC);
 
 			})
 		ul.appendChild(MBackward)
@@ -52,7 +52,7 @@ function calendarPick(){
 			var dateM7 = moment(dateCalender.value,'MM-DD-YYYY');
 			dateM7.subtract(7, 'days');
 			dateCalender.value = dateM7.format('MM-DD-YYYY')
-			$.post('/ajaxUser', {clickedData:true}).done(mainSC);
+			$.getJSON('/ajaxUser', {clickedData:true}).done(mainSC);
 
 			})
 		ul.appendChild(dateBackward)
@@ -87,7 +87,7 @@ function calendarPick(){
 					// 	$("#calendar").blur()
 					// },
 					onSelect: function(){
-						$.post('/ajaxUser').done(mainSC);
+						$.getJSON('/ajaxUser').done(mainSC);
 					}
 					
 				});
@@ -132,7 +132,7 @@ function calendarPick(){
 			var date = moment(dateCalender.value,'MM-DD-YYYY');
 			
 			dateCalender.value = date.format('MM-DD-YYYY')
-			$.post('/ajaxUser', {clickedData:true}).done(mainSC);
+			$.getJSON('/ajaxUser', {clickedData:true}).done(mainSC);
 
 			})
 		ul.appendChild(refesh)
@@ -151,7 +151,7 @@ function calendarPick(){
 			var dateM7 = moment(dateCalender.value,'MM-DD-YYYY');
 			dateM7.add(7, 'days');
 			dateCalender.value = dateM7.format('MM-DD-YYYY')
-			$.post('/ajaxUser', {clickedData:true}).done(mainSC);
+			$.getJSON('/ajaxUser', {clickedData:true}).done(mainSC);
 
 			})
 		ul.appendChild(dateForward)
@@ -173,7 +173,7 @@ function calendarPick(){
 				var dateM7 = moment(dateCalender.value,'MM-DD-YYYY');
 				dateM7.add(30, 'days');
 				dateCalender.value = dateM7.format('MM-DD-YYYY')
-				$.post('/ajaxUser', {clickedData:true}).done(mainSC);
+				$.getJSON('/ajaxUser', {clickedData:true}).done(mainSC);
 
 			})
 			ul.appendChild(MForward)
@@ -189,7 +189,7 @@ function calendarPick(){
 		// 	var dateP7 = new Date(dateCalender.value);
 		// 	dateP7.setDate(dateP7.getDate()+7);
 		// 	dateCalender.value = dateP7.toLocaleDateString();
-		// 	$.post('/ajaxUser', {clickedData:true}).done(mainSC);
+		// 	$.getJSON('/ajaxUser', {clickedData:true}).done(mainSC);
 
 		// 	})
 

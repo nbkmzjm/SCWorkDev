@@ -53,7 +53,7 @@ router.get('/newAccountForm', function(req, res) {
 	res.render('users/newAccountForm');
 })
 
-router.post('/getDept', function(req, res) {
+router.get('/getDept', function(req, res) {
 	db.department.findAll().then(function(departments){
 		if(departments.length > 0){
 			res.json({

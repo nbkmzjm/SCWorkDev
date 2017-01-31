@@ -90,7 +90,16 @@ app.get('/message', function(req, res){
 app.get('/test', test)
 
 function test(req, res){
-	res.render('test')
+	// var i = 0
+	// setInterval(function(){
+	// 	i = i+1
+		res.render('test',{
+			JSONdata: JSON.stringify({
+				admin: 'Thien' 
+			})
+		})
+	// }, 5000)
+
 	// db.group.findAll({
 	// 	include:[{
 	// 			model:db.user,
@@ -134,13 +143,12 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 });
 
 
-app.post('/sysObjRead', middleware.requireAuthentication, function(req, res){
+app.get('/sysObjRead', middleware.requireAuthentication, function(req, res){
 	var varList = req.body.pData
 	
+	console.log(JSON.stringify(req.params, null, 4))
 	db.sysObj.findAll({
-		where:{
-			name: varList
-		} 
+		
 	}).then(function(sysObjs){
 		var sysObjList = {}
 		sysObjs.forEach(function(sysObj,i){
@@ -169,12 +177,12 @@ app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 	});
 })
 
-app.post('/taskSC', middleware.requireAuthentication, function(req, res){
+app.get('/taskSC', middleware.requireAuthentication, function(req, res){
 	var curUser= req.user;
 	var datePosRange = [];
 	
-	var sDate = moment(new Date(req.body.sDate)).format('MM-DD-YYYY')
-	var eDate = moment(new Date(req.body.sDate)).add(7,'days').format('MM-DD-YYYY')
+	var sDate = moment(new Date(req.query.sDate)).format('MM-DD-YYYY')
+	var eDate = moment(new Date(req.query.sDate)).add(7,'days').format('MM-DD-YYYY')
 	var datePos={
 			$between:[sDate,eDate]
 		}
@@ -213,11 +221,11 @@ app.post('/taskSC', middleware.requireAuthentication, function(req, res){
 	})
 })
 
-app.post('/scOverview', middleware.requireAuthentication, function(req, res){
+app.get('/scOverview', middleware.requireAuthentication, function(req, res){
 	var curUser= req.user;
-	var sDate = req.body.sDate
-	var eDate = req.body.eDate
-	var userId = req.body.userId
+	var sDate = req.query.sDate
+	var eDate = req.query.eDate
+	var userId = req.query.userId
 	var datePosRange = [];
 	console.log(userId)
 
@@ -275,9 +283,9 @@ app.post('/assignTracerReadUpd', middleware.requireAuthentication, function(req,
 	})
 })
 
-app.post('/assignTracerReadDay', middleware.requireAuthentication, function(req, res) {
-	var assignId = req.body.assignId;
-	var type = req.body.type;
+app.get('/assignTracerReadDay', middleware.requireAuthentication, function(req, res) {
+	var assignId = req.query.assignId;
+	var type = req.query.type;
 	var curUserTitle = req.user.title;
 	// console.log(assignId)
 
@@ -302,6 +310,7 @@ app.post('/assignTracerReadDay', middleware.requireAuthentication, function(req,
 				[db.assignTracer,'createdAt', 'DESC']
 			]
 	}).then(function(assign) {
+		console.log('xxx')
 		console.log(JSON.stringify(assign, null, 4))
 			res.json({
 				assign: assign
@@ -725,9 +734,9 @@ app.get('/taskOption', middleware.requireAuthentication, function(req, res){
 })
 
 
-app.post('/taskOption', middleware.requireAuthentication, function(req, res) {
-	var description = req.body.taskOption
-	var category = req.body.taskCategory
+app.get('/taskOptionDefault', middleware.requireAuthentication, function(req, res) {
+	var description = req.query.taskOption
+	var category = req.query.taskCategory
 	db.taskOption.findOrCreate({
 		where:{
 			description:description
@@ -1065,7 +1074,7 @@ app.post('/assignTracerDetailUpd', middleware.requireAuthentication, function(re
 
 
 //Loading user on the scheduling main page
-app.post('/ajaxUser', middleware.requireAuthentication, function(req, res) {
+app.get('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 	var curUser = req.user
 	console.log(JSON.stringify(curUser, null, 4))
 	var whereParams = {
