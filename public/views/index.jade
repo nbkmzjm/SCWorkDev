@@ -39,8 +39,26 @@ append scripts
 
 		
 		$(function (){
-
-
+			var JSONdata = !{JSONdata}
+			var vapidPub = JSONdata.vapidPub
+			console.log('vapidPub:'+ vapidPub)
+			function urlBase64ToUint8Array(base64String) {
+			  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+			  const base64 = (base64String + padding)
+			    .replace(/\-/g, '+')
+			    .replace(/_/g, '/');
+			 
+			  const rawData = window.atob(base64);
+			  const outputArray = new Uint8Array(rawData.length);
+			 
+			  for (let i = 0; i < rawData.length; ++i) {
+			    outputArray[i] = rawData.charCodeAt(i);
+			  }
+			  return outputArray;
+			}
+			 
+			const vapidPublicKey = vapidPub;
+			const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
 			if ('serviceWorker' in navigator && 'PushManager' in window) {
 			  console.log('Service Worker and Push is supported');
 
@@ -48,9 +66,14 @@ append scripts
 			    console.log('Service Worker is registered', swReg);
 
 			    swRegistration = swReg;
-			    return swReg.pushManager.subscribe({ userVisibleOnly: true });
+			    return swReg.pushManager.subscribe({ 
+			    	userVisibleOnly: true,
+			    	applicationServerKey:convertedVapidKey
+
+			    });
 			  }).then(function(subscription){
 			  	console.log(subscription)
+
 			  }).catch(function(error) {
 			    console.error('Service Worker Error', error);
 			  });
@@ -59,7 +82,7 @@ append scripts
 			  pushButton.textContent = 'Push Not Supported';
 			}
 
-
+			
 
 
 			 //- if (!("Notification" in window)) {
@@ -107,7 +130,6 @@ append scripts
 
 
 		function mainSC(data){
-			//- alert(JSON.stringify(data, null, 4))
 			$.getJSON('/sysObjRead', {
 				    tags: "mount rainier",
 				    tagmode: "any",
@@ -194,6 +216,7 @@ append scripts
 									console.log('xxxx: ' + weekStart.format('MM-DD-YYYY'))
 									console.log(rData)
 									var assign = rData.assign
+
 									var scOverviewCurWeekStart = moment(curDate, 'MM-DD-YYYY').isoWeekday(1);
 									arrSCOverviewDate.forEach(function(weekStart, i){
 										

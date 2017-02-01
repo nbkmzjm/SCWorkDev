@@ -1,9 +1,9 @@
 var version = 'v1::';
 var urlsToCache = [
-  './',
-  './css/style.css',
-  './public/views/index.jade',
-  './test'
+  // './',
+  // './css/style.css',
+  // './public/views/index.jade',
+  // './test'
 ];
 
 self.addEventListener('install', function(event) {
@@ -86,6 +86,7 @@ self.addEventListener("fetch", function(event) {
      client-side, by handling failed POST,PUT,PATCH,etc. requests.
   */
   if (event.request.method !== 'GET') {
+  	
     /* If we don't block the event as shown below, then the request will go to
        the network as usual.
     */
@@ -183,23 +184,28 @@ self.addEventListener("fetch", function(event) {
 });
 
 
-// self.addEventListener('push', function(event) {
-//   if (event.data.text() == 'new-email') {
-//     event.waitUntil(
-//       caches.open('mysite-dynamic').then(function(cache) {
-//         return fetch('/inbox.json').then(function(response) {
-//           cache.put('/inbox.json', response.clone());
-//           return response.json();
-//         });
-//       }).then(function(emails) {
-//         registration.showNotification("New email", {
-//           body: "From " + emails[0].from.name
-//           tag: "new-email"
-//         });
-//       })
-//     );
-//   }
-// });
+self.addEventListener('push', function(event) {
+	alert('pushing owkr')
+	 event.waitUntil(
+	 	 self.registration.showNotification("New push",{body:'yae work!'})
+	 )
+
+  // if (event.data.text() == 'new-email') {
+  //   event.waitUntil(
+  //     caches.open('mysite-dynamic').then(function(cache) {
+  //       return fetch('/inbox.json').then(function(response) {
+  //         cache.put('/inbox.json', response.clone());
+  //         return response.json();
+  //       });
+  //     }).then(function(emails) {
+  //       registration.showNotification("New email", {
+  //         body: "From " + emails[0].from.name
+  //         tag: "new-email"
+  //       });
+  //     })
+  //   );
+  // }
+});
 
 // self.addEventListener('notificationclick', function(event) {
 //   if (event.notification.tag == 'new-email') {

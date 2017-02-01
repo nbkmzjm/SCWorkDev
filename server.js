@@ -7,7 +7,7 @@ var http = require('http').Server(app);
 var expValidator = require('express-validator');
 var cookieParser = require('cookie-parser');
 var debug = require('debug')('http')
-
+var webpush = require('web-push')
 var moment = require('moment');
 var now = moment();
 var bodyParser = require('body-parser');
@@ -15,8 +15,13 @@ var bcrypt = require('bcryptjs');
 var _ = require('underscore');
 var Umzug = require('umzug')
 
-
-
+const vapidKeys = webpush.generateVAPIDKeys();
+webpush.setGCMAPIKey('AIzaSyCwG4Os9mz7muGFQmhZs6ysOVy-q1suHdQ');
+webpush.setVapidDetails(
+  'mailto:tkngo85@gmail.com',
+  vapidKeys.publicKey,
+  vapidKeys.privateKey
+);
 
 
 
@@ -131,9 +136,13 @@ app.get('/', middleware.requireAuthentication, function(req, res, next) {
 		// console.log('ggggggggggggg' + JSON.stringify(assigns));
 		// console.log('yyyyyyyyyy' + JSON.stringify(dateHeader));
 		res.render('index', {
+			JSONdata: JSON.stringify({
+				vapidPub:vapidKeys.publicKey
 			// users: users,
 			// assigns: assigns,
 			// dateHeader: dateHeader
+			})
+			
 		});
 	}).catch(function(e) {
 		res.render('error', {
@@ -222,17 +231,29 @@ app.get('/taskSC', middleware.requireAuthentication, function(req, res){
 })
 
 app.get('/scOverview', middleware.requireAuthentication, function(req, res){
+	var endpoint = "https://fcm.googleapis.com/fcm/send/ewIW3UHI5ZA:APA91bHabXC1B-JbtYWbumDaoH7u5JInx3M0lVdVC7XkEoUwtgZx68maTxhB_TWrXrA2BAuEQZhgJFKFWNsHSnX1h5fTWbllkDpB1ouN4BW-KVWlKnUjPwN3A47Zmq7erdOMBI2mejZa"
+	const pushSubscription = {
+	  endpoint: endpoint
+	  // ,
+	  // keys: {
+	  //   auth: '.....',
+	  //   p256dh: '.....'
+	  // }
+	};
+	console.log('pulick key:'+ vapidKeys.publicKey)
 	var curUser= req.user;
 	var sDate = req.query.sDate
 	var eDate = req.query.eDate
 	var userId = req.query.userId
 	var datePosRange = [];
+	var vapidPublicKey = vapidKeys.publicKey
 	console.log(userId)
 
 	var datePos={
 		$between:[sDate,eDate]
 	}
-
+	console.log('pushing endpoint: '+ endpoint)
+	webpush.sendNotification(pushSubscription, 'payload');
 	console.log(sDate +':'+ eDate)
 	if (sDate.slice(-1)!=eDate.slice(-1)){
 		for(var i = 0; i<49;i++){
@@ -263,7 +284,8 @@ app.get('/scOverview', middleware.requireAuthentication, function(req, res){
 		// console.log(JSON.stringify(assign, null, 4))
 		res.json({
 			assign,
-			 curUser
+			curUser,
+			vapidPublicKey
 		})
 	})
 })
@@ -1100,6 +1122,7 @@ app.get('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 		res.json({
 			pData: {
 				users: users
+				
 				
 			}
 		});
