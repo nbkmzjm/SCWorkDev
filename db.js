@@ -36,6 +36,7 @@ db.mainPost = sequelize.import(__dirname + '/models/mainPost.js');
 db.userGroups = sequelize.import(__dirname + '/models/userGroups.js');
 db.comment = sequelize.import(__dirname + '/models/comment.js');
 db.department = sequelize.import(__dirname + '/models/department.js');
+db.endpoint = sequelize.import(__dirname + '/models/endpoint.js');
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

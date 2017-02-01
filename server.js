@@ -16,7 +16,7 @@ var _ = require('underscore');
 var Umzug = require('umzug')
 
 const vapidKeys = webpush.generateVAPIDKeys();
-webpush.setGCMAPIKey('AIzaSyCwG4Os9mz7muGFQmhZs6ysOVy-q1suHdQ');
+webpush.setGCMAPIKey("AIzaSyCwG4Os9mz7muGFQmhZs6ysOVy-q1suHdQ");
 webpush.setVapidDetails(
   'mailto:tkngo85@gmail.com',
   vapidKeys.publicKey,
@@ -92,17 +92,43 @@ app.get('/message', function(req, res){
 	
 })
 
+app.get('/showNoti', function(){
+
+	db.endpoint.findOne({
+		where:{
+			id:1
+		}
+	}).then(function(rData){
+		var endpoint = rData.endpoint
+		console.log('endpoint:'+ endpoint)
+		const pushSubscription = {
+	 		endpoint: endpoint
+	  // ,
+	  // keys: {
+	  //   auth: '.....',
+	  //   p256dh: '.....'
+	  // }
+		};
+		webpush.sendNotification(pushSubscription, 200);
+	})	
+
+})
+
 app.get('/test', test)
 
 function test(req, res){
-	// var i = 0
-	// setInterval(function(){
-	// 	i = i+1
-		res.render('test',{
+
+	res.render('test',{
 			JSONdata: JSON.stringify({
 				admin: 'Thien' 
 			})
 		})
+
+	
+	// var i = 0
+	// setInterval(function(){
+	// 	i = i+1
+		
 	// }, 5000)
 
 	// db.group.findAll({
@@ -164,6 +190,22 @@ app.get('/sysObjRead', middleware.requireAuthentication, function(req, res){
 		sysObjList[sysObj.name] = sysObj.value
 		})
 		res.json(sysObjList)
+	});
+})
+
+app.post('/endpoint', middleware.requireAuthentication, function(req, res){
+	var endpoint = req.body.endpoint
+	
+	console.log('endpoint post:'+JSON.stringify(endpoint, null, 4))
+	db.endpoint.update({
+		endpoint:endpoint
+	},{
+		where:{
+			id:1
+		}
+	}).then(function(endpoint){
+		console.log('endpoint:'+ endpoint)
+		res.json(endpoint)
 	});
 })
 
@@ -231,15 +273,8 @@ app.get('/taskSC', middleware.requireAuthentication, function(req, res){
 })
 
 app.get('/scOverview', middleware.requireAuthentication, function(req, res){
-	var endpoint = "https://fcm.googleapis.com/fcm/send/ewIW3UHI5ZA:APA91bHabXC1B-JbtYWbumDaoH7u5JInx3M0lVdVC7XkEoUwtgZx68maTxhB_TWrXrA2BAuEQZhgJFKFWNsHSnX1h5fTWbllkDpB1ouN4BW-KVWlKnUjPwN3A47Zmq7erdOMBI2mejZa"
-	const pushSubscription = {
-	  endpoint: endpoint
-	  // ,
-	  // keys: {
-	  //   auth: '.....',
-	  //   p256dh: '.....'
-	  // }
-	};
+	
+
 	console.log('pulick key:'+ vapidKeys.publicKey)
 	var curUser= req.user;
 	var sDate = req.query.sDate
@@ -253,7 +288,7 @@ app.get('/scOverview', middleware.requireAuthentication, function(req, res){
 		$between:[sDate,eDate]
 	}
 	console.log('pushing endpoint: '+ endpoint)
-	webpush.sendNotification(pushSubscription, 'payload');
+	
 	console.log(sDate +':'+ eDate)
 	if (sDate.slice(-1)!=eDate.slice(-1)){
 		for(var i = 0; i<49;i++){

@@ -14,15 +14,18 @@ append scripts
 	script.
 		$(function(){
 			var JSONdata = !{JSONdata};
-			alert(JSONdata.admin)
-			var newP = document.createElement('p')
-			newP.id = 'testP'
-			newP.innerHTML = 'heloo'
+			var newP = document.createElement('input')
+			newP.type = 'button'
+			newP.id = 'testBut'
+			newP.value = 'Show Notification'
 
 			container.appendChild(newP);
 
 
-			$('#testP').click(function(){
+			$('#testBut').click(function(){
+				$.getJSON('/showNoti').then(function(){
+
+				})
 			})
 			
 		});
@@ -30,7 +33,4 @@ append scripts
 
 
 
-		$('#test').click(function(){
-			alert('testP lcik')
-			})
 

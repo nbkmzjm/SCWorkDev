@@ -2,7 +2,7 @@
   "name": "SCwork App",
   "developer": {
         "name": "thien ngo",
-        "url": "localhost3000"
+        "url": "http://localhost:3000/"
   },
   "gcm_sender_id": "209110020027"
 }
