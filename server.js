@@ -22,6 +22,7 @@ webpush.setVapidDetails(
   vapidKeys.publicKey,
   vapidKeys.privateKey
 );
+console.log('vapidKeys.publicKey' + vapidKeys.publicKey)
 
 
 
