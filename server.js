@@ -13,6 +13,7 @@ var now = moment();
 var bodyParser = require('body-parser');
 var bcrypt = require('bcryptjs');
 var _ = require('underscore');
+const urlsafeBase64 = require('urlsafe-base64')
 var Umzug = require('umzug')
 
 const vapidKeys = webpush.generateVAPIDKeys();
@@ -23,6 +24,8 @@ webpush.setVapidDetails(
   vapidKeys.privateKey
 );
 console.log('vapidKeys.publicKey' + vapidKeys.publicKey)
+// const decodedVapidPublicKey = urlsafeBase64.decode(vapidKeys.publicKey)
+// console.log(decodedVapidPublicKey)
 
 
 
@@ -93,21 +96,38 @@ app.get('/message', function(req, res){
 	
 })
 
-app.get('/showNoti', function(req, res){
+app.post('/showNoti', function(req, res){
+	var text = req.body.text
 
 	db.endpoint.findAll().then(function(endpoints){
 		endpoints.forEach(function(endpoint){
-			const pushSubscription = {
-	 		endpoint: endpoint.endpoint
-	  	// ,
-			 // keys: {
-			 //    auth: '209110020027-lcg4uk8rudvfppfj2m5nj2jmuppcfdlb.apps.googleusercontent.com',
-			 //    p256dh: 'mpVWPGLVxZtZMnBTEQDurLkI'
-	  	// 	}
-			};
-			console.log('pushSubscription:'+ JSON.stringify(pushSubscription, null, 4))
-			webpush.sendNotification(pushSubscription).catch(function(statusCode){
-				console.log(JSON.stringify(statusCode, null, 4))
+			var pushSubscription = JSON.parse(endpoint.endpoint)
+			// var person = {
+			// 	name:'thien',
+			// 	age:'20'
+			// }
+			const payload = JSON.stringify(text)
+			const options = {
+		      TTL: 24 * 60 * 60,
+		      vapidDetails: {
+		        subject: 'mailto:sender@example.com',
+		        publicKey: vapidKeys.publicKey,
+		        privateKey: vapidKeys.privateKey
+		      }
+		    }
+			
+			console.log('pushSubscription:'+ pushSubscription)
+				
+			webpush.sendNotification(pushSubscription, payload, options).then(function(statusSent){
+				console.log('statusSent'+ JSON.stringify(statusSent, null, 4))
+			}).catch(function(statusCode){
+				console.log('statusCode'+ JSON.stringify(statusCode, null, 4))
+				db.endpoint.destroy({
+					where:{
+						endpoint: endpoint.endpoint
+					}
+				})
+				console.log('pushSubscription'+JSON.stringify(pushSubscription, null, 4))
 			});
 
 		})
@@ -124,9 +144,12 @@ app.get('/test', test)
 
 function test(req, res){
 
+
+
+
 	res.render('test',{
 			JSONdata: JSON.stringify({
-				admin: 'Thien' 
+				vapidPub:vapidKeys.publicKey
 			})
 		})
 

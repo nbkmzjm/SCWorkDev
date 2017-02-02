@@ -28,6 +28,7 @@
     "underscore": "^1.8.3",
     "sqlite3": "^3.1.1",
     "web-push":"3.2.1",
+    "urlsafe-base64":"1.0.0",
     "umzug": "^1.11.0"
   }
 }

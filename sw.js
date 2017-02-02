@@ -186,8 +186,14 @@ self.addEventListener("fetch", function(event) {
 
 self.addEventListener("push", function(event) {
 	console.log('xxxxxxxxxxxpushhing')
+	console.log(event.data.text())
+	var text = event.data.text()
 	 event.waitUntil(
-	 	 self.registration.showNotification("New push")
+	 	 self.registration.showNotification("Web push",{
+
+	 	 	body:text,
+	 	 	vibrate: [200, 1000, 200]
+	 	 })
 	 )
 
   // if (event.data.text() == 'new-email') {

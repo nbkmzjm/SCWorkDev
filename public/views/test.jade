@@ -13,17 +13,103 @@ append scripts
 	script(src="public/js/date.js")
 	script.
 		$(function(){
+			var JSONdata = !{JSONdata}
+			var vapidPub = JSONdata.vapidPub
+			console.log('vapidPub:'+ vapidPub)
+			function urlBase64ToUint8Array(base64String) {
+			  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+			  const base64 = (base64String + padding)
+			    .replace(/\-/g, '+')
+			    .replace(/_/g, '/');
+			 
+			  const rawData = window.atob(base64);
+			  const outputArray = new Uint8Array(rawData.length);
+			 
+			  for (let i = 0; i < rawData.length; ++i) {
+			    outputArray[i] = rawData.charCodeAt(i);
+			  }
+			  return outputArray;
+			}
+			 
+			const vapidPublicKey = vapidPub;
+			const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+
+			if ('serviceWorker' in navigator && 'PushManager' in window) {
+			  console.log('Service Worker and Push is supported');
+
+			  navigator.serviceWorker.register('sw.js').then(function(swReg){
+			    console.log('Service Worker is registered', swReg);
+
+			    swRegistration = swReg;
+			    checkSubcription();
+			  }).catch(function(error) {
+			    console.error('Service Worker Error', error);
+			  });
+			} else {
+			  console.warn('Push messaging is not supported');
+			  //- pushButton.textContent = 'Push Not Supported';
+			}
+
+			function checkSubcription(){
+				swRegistration.pushManager.getSubscription().then(function(subscription){
+					
+					if(subscription==null){
+					console.log('no subscription and add subscription now')
+						navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+							swRegistration.pushManager.subscribe({ 
+						    	userVisibleOnly: true,
+						   		applicationServerKey:convertedVapidKey
+					    	}).then(function(subscription){
+					    		$.post('/endpoint', {
+						  		endpoint:JSON.stringify(subscription)
+						  		}).done(function(){
+
+						  		})
+
+					  		})
+						})
+						
+					}else{
+					console.log('yes subscription and continue')
+						$.post('/endpoint', {
+				  			endpoint:JSON.stringify(subscription)
+				  		}).done(function(){
+
+				  		})
+
+					}
+
+					console.log('subscription')
+					console.log(JSON.stringify(subscription))
+
+					
+			  	})
+			}
+
+
+
+
+
+
 			var JSONdata = !{JSONdata};
 			var newP = document.createElement('input')
-			newP.type = 'button'
-			newP.id = 'testBut'
-			newP.value = 'Show Notification'
+			newP.type = 'text'
+			newP.id = 'text'
+			container.appendChild(newP);
 
 			container.appendChild(newP);
+			var showBut = document.createElement('input')
+			showBut.type = 'button'
+			showBut.id = 'testBut'
+			showBut.value = 'Show Notification'
+
+			container.appendChild(showBut);
 
 
 			$('#testBut').click(function(){
-				$.getJSON('/showNoti').then(function(Rdata){
+				$.post('/showNoti',{
+					text:$('#text').val()
+				}).then(function(Rdata){
 					$('#test').html(Rdata.endpoint)
 
 				})

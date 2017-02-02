@@ -87,7 +87,7 @@ append scripts
 						   		applicationServerKey:convertedVapidKey
 					    	}).then(function(subscription){
 					    		$.post('/endpoint', {
-						  		endpoint:subscription.endpoint
+						  		endpoint:JSON.stringify(subscription)
 						  		}).done(function(){
 
 						  		})
@@ -98,7 +98,7 @@ append scripts
 					}else{
 					console.log('yes subscription and continue')
 						$.post('/endpoint', {
-				  			endpoint:subscription.endpoint
+				  			endpoint:JSON.stringify(subscription)
 				  		}).done(function(){
 
 				  		})
@@ -106,7 +106,7 @@ append scripts
 					}
 
 					console.log('subscription')
-					console.log(subscription)
+					console.log(JSON.stringify(subscription))
 
 					
 			  	})
