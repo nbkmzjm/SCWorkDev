@@ -95,27 +95,26 @@ app.get('/message', function(req, res){
 
 app.get('/showNoti', function(req, res){
 
-	db.endpoint.findOne({
-		where:{
-			id:1
-		}
-	}).then(function(rData){
-		var endpoint = rData.endpoint
-		
-		const pushSubscription = {
-	 		endpoint: endpoint
+	db.endpoint.findAll().then(function(endpoints){
+		endpoints.forEach(function(endpoint){
+			const pushSubscription = {
+	 		endpoint: endpoint.endpoint
 	  	// ,
 			 // keys: {
 			 //    auth: '209110020027-lcg4uk8rudvfppfj2m5nj2jmuppcfdlb.apps.googleusercontent.com',
 			 //    p256dh: 'mpVWPGLVxZtZMnBTEQDurLkI'
 	  	// 	}
-		};
-		console.log('pushSubscription:'+ JSON.stringify(pushSubscription, null, 4))
-		webpush.sendNotification(pushSubscription).catch(function(statusCode){
+			};
+			console.log('pushSubscription:'+ JSON.stringify(pushSubscription, null, 4))
+			webpush.sendNotification(pushSubscription).catch(function(statusCode){
 				console.log(JSON.stringify(statusCode, null, 4))
-		});
+			});
+
+		})
+		
+		
 		res.json({
-			endpoint: pushSubscription
+			endpoint: 'pushed OK'
 		})
 	})	
 
@@ -204,12 +203,11 @@ app.post('/endpoint', middleware.requireAuthentication, function(req, res){
 	var endpoint = req.body.endpoint
 	
 	console.log('endpoint post:'+JSON.stringify(endpoint, null, 4))
-	db.endpoint.update({
-		endpoint:endpoint
-	},{
+	db.endpoint.findOrCreate({
 		where:{
-			id:1
+			endpoint:endpoint
 		}
+		
 	}).then(function(endpoint){
 		console.log('endpoint:'+ endpoint)
 		res.json(endpoint)
