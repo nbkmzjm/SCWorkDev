@@ -78,28 +78,38 @@ append scripts
 
 			function checkSubcription(){
 				swRegistration.pushManager.getSubscription().then(function(subscription){
-					var postSubcription = subscription;
+					//- var postSubcription = subscription;
 					
-					if(!subscription){
-					alert('no subscription and add subscription now')
-						swRegistration.pushManager.subscribe({ 
-					    	userVisibleOnly: true,
-					   		applicationServerKey:convertedVapidKey
-				    	}).then(function(subscription){
-				  			alert(subscription.endpoint+ '---with vapid: '+ vapidPublicKey)
-				  			postSubcription = subscription
+					if(subscription==null){
+					console.log('no subscription and add subscription now')
+						navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+							swRegistration.pushManager.subscribe({ 
+						    	userVisibleOnly: true,
+						   		applicationServerKey:convertedVapidKey
+					    	}).then(function(subscription){
+					    		$.post('/endpoint', {
+						  		endpoint:subscription.endpoint
+						  		}).done(function(){
+
+						  		})
+
+					  		})
+						})
+						
+					}else{
+					console.log('yes subscription and continue')
+						$.post('/endpoint', {
+				  			endpoint:subscription.endpoint
+				  		}).done(function(){
 
 				  		})
+
 					}
 
 					console.log('subscription')
-					console.log(postSubcription)
+					console.log(subscription)
 
-					$.post('/endpoint', {
-			  		endpoint:postSubcription.endpoint
-			  		}).done(function(){
-
-			  		})
+					
 			  	})
 			}
 

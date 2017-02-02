@@ -185,7 +185,6 @@ self.addEventListener("fetch", function(event) {
 
 
 self.addEventListener("push", function(event) {
-	alert('pushing owkr')
 	console.log('xxxxxxxxxxxpushhing')
 	 event.waitUntil(
 	 	 self.registration.showNotification("New push")

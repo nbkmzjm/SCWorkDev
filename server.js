@@ -101,18 +101,21 @@ app.get('/showNoti', function(req, res){
 		}
 	}).then(function(rData){
 		var endpoint = rData.endpoint
-		console.log('endpoint:'+ endpoint)
+		
 		const pushSubscription = {
 	 		endpoint: endpoint
-	  // ,
-	  // keys: {
-	  //   auth: '.....',
-	  //   p256dh: '.....'
-	  // }
+	  	// ,
+			 // keys: {
+			 //    auth: '209110020027-lcg4uk8rudvfppfj2m5nj2jmuppcfdlb.apps.googleusercontent.com',
+			 //    p256dh: 'mpVWPGLVxZtZMnBTEQDurLkI'
+	  	// 	}
 		};
-		webpush.sendNotification(endpoint, 120);
+		console.log('pushSubscription:'+ JSON.stringify(pushSubscription, null, 4))
+		webpush.sendNotification(pushSubscription).catch(function(statusCode){
+				console.log(JSON.stringify(statusCode, null, 4))
+		});
 		res.json({
-			endpoint: endpoint
+			endpoint: pushSubscription
 		})
 	})	
 
