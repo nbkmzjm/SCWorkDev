@@ -184,10 +184,11 @@ self.addEventListener("fetch", function(event) {
 });
 
 
-self.addEventListener('push', function(event) {
+self.addEventListener("push", function(event) {
 	alert('pushing owkr')
+	console.log('xxxxxxxxxxxpushhing')
 	 event.waitUntil(
-	 	 self.registration.showNotification("New push",{body:'yae work!'})
+	 	 self.registration.showNotification("New push")
 	 )
 
   // if (event.data.text() == 'new-email') {

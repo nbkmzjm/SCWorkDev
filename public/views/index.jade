@@ -67,8 +67,8 @@ append scripts
 
 			    swRegistration = swReg;
 			    return swReg.pushManager.subscribe({ 
-			    	userVisibleOnly: true,
-			    	applicationServerKey:convertedVapidKey
+			    	userVisibleOnly: true
+			    	,applicationServerKey:convertedVapidKey
 
 			    });
 			  }).then(function(subscription){
@@ -86,7 +86,7 @@ append scripts
 			  });
 			} else {
 			  console.warn('Push messaging is not supported');
-			  pushButton.textContent = 'Push Not Supported';
+			  //- pushButton.textContent = 'Push Not Supported';
 			}
 
 			

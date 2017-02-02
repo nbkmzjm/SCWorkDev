@@ -23,7 +23,8 @@ append scripts
 
 
 			$('#testBut').click(function(){
-				$.getJSON('/showNoti').then(function(){
+				$.getJSON('/showNoti').then(function(Rdata){
+					$('#test').html(Rdata.endpoint)
 
 				})
 			})

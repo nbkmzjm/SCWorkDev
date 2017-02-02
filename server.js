@@ -7,7 +7,7 @@ var http = require('http').Server(app);
 var expValidator = require('express-validator');
 var cookieParser = require('cookie-parser');
 var debug = require('debug')('http')
-var webpush = require('web-push')
+const webpush = require('web-push')
 var moment = require('moment');
 var now = moment();
 var bodyParser = require('body-parser');
@@ -16,7 +16,7 @@ var _ = require('underscore');
 var Umzug = require('umzug')
 
 const vapidKeys = webpush.generateVAPIDKeys();
-webpush.setGCMAPIKey("AIzaSyCwG4Os9mz7muGFQmhZs6ysOVy-q1suHdQ");
+webpush.setGCMAPIKey("AIzaSyAVHtFMejQX7To7UwVqi4MWzWIfBP1qWAc");
 webpush.setVapidDetails(
   'mailto:tkngo85@gmail.com',
   vapidKeys.publicKey,
@@ -92,7 +92,7 @@ app.get('/message', function(req, res){
 	
 })
 
-app.get('/showNoti', function(){
+app.get('/showNoti', function(req, res){
 
 	db.endpoint.findOne({
 		where:{
@@ -109,7 +109,10 @@ app.get('/showNoti', function(){
 	  //   p256dh: '.....'
 	  // }
 		};
-		webpush.sendNotification(pushSubscription, 200);
+		webpush.sendNotification(endpoint, 120);
+		res.json({
+			endpoint: endpoint
+		})
 	})	
 
 })
