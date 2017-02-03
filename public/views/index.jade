@@ -39,8 +39,25 @@ append scripts
 
 		
 		$(function (){
+			if(!localStorage.getItem('vapid')){
+				localStorage.setItem('vapid', 'xxxx')
+			}
+
+			
+			//- alert(localStorage.getItem('vapid'))
+
 			var JSONdata = !{JSONdata}
 			var vapidPub = JSONdata.vapidPub
+			//- alert('windowbefore'+window.curVapid)
+			//- if(window.curVapid !=vapidPub){
+				
+			//- 	alert('vapid'+vapidPub)
+
+			//- 	window.curVapid = vapidPub
+			//- }
+			//- alert('window'+window.curVapid)
+
+			//- alert('after'+localStorage.getItem('vapid'))
 			console.log('vapidPub:'+ vapidPub)
 			function urlBase64ToUint8Array(base64String) {
 			  const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -67,6 +84,7 @@ append scripts
 			    console.log('Service Worker is registered', swReg);
 
 			    swRegistration = swReg;
+			    unSubcription()
 			    checkSubcription();
 			  }).catch(function(error) {
 			    console.error('Service Worker Error', error);
@@ -74,6 +92,19 @@ append scripts
 			} else {
 			  console.warn('Push messaging is not supported');
 			  //- pushButton.textContent = 'Push Not Supported';
+			}
+			function unSubcription(){
+				if(localStorage.getItem('vapid')!=vapidPub){
+					localStorage.setItem('vapid', vapidPub)
+					navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+						swRegistration.pushManager.getSubscription()
+						.then(function(subscription) {
+						    if (subscription) {
+						      return subscription.unsubscribe();
+						    }
+					  	})
+					})
+				}
 			}
 
 			function checkSubcription(){

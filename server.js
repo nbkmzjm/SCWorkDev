@@ -13,6 +13,8 @@ var now = moment();
 var bodyParser = require('body-parser');
 var bcrypt = require('bcryptjs');
 var _ = require('underscore');
+var LocalStorage = require('node-localstorage').LocalStorage
+localStorage = new LocalStorage('./scratch')
 // const urlsafeBase64 = require('urlsafe-base64')
 var Umzug = require('umzug')
 
@@ -108,7 +110,7 @@ app.post('/showNoti', function(req, res){
 			// }
 			const payload = JSON.stringify(text)
 			const options = {
-		      TTL: 24 * 60 * 60,
+		      TTL: 240 * 60 * 60,
 		      vapidDetails: {
 		        subject: 'mailto:sender@example.com',
 		        publicKey: vapidKeys.publicKey,
