@@ -13,7 +13,7 @@ var now = moment();
 var bodyParser = require('body-parser');
 var bcrypt = require('bcryptjs');
 var _ = require('underscore');
-const urlsafeBase64 = require('urlsafe-base64')
+// const urlsafeBase64 = require('urlsafe-base64')
 var Umzug = require('umzug')
 
 const vapidKeys = webpush.generateVAPIDKeys();

@@ -125,4 +125,12 @@ db.user.hasMany(db.comment,{
 db.user.belongsTo(db.department)
 db.department.hasMany(db.user)
 
+db.endpoint.belongsTo(db.user,{
+	onDelete:'CASCADE'
+});
+db.user.hasMany(db.endpoint,{
+	onDelete:'CASCADE'
+});
+
+
 module.exports = db;
