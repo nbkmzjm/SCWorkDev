@@ -192,7 +192,7 @@ self.addEventListener("push", function(event) {
 	 	 self.registration.showNotification("Web push",{
 
 	 	 	body:text,
-	 	 	vibrate: [200, 1000, 200]
+	 	 	vibrate: [200, 100, 200]
 	 	 })
 	 )
 

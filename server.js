@@ -226,11 +226,13 @@ app.get('/sysObjRead', middleware.requireAuthentication, function(req, res){
 
 app.post('/endpoint', middleware.requireAuthentication, function(req, res){
 	var endpoint = req.body.endpoint
+	var curUser= req.user;
 	
 	console.log('endpoint post:'+JSON.stringify(endpoint, null, 4))
 	db.endpoint.findOrCreate({
 		where:{
-			endpoint:endpoint
+			endpoint:endpoint,
+			userId:curUser.id
 		}
 		
 	}).then(function(endpoint){
