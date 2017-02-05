@@ -3,8 +3,18 @@ var router = express.Router();
 var db = require('../db.js');
 var moment = require('moment');
 var _ = require('underscore');
+const webpush = require('web-push')
 
 var middleware = require('../middleware.js')(db);
+
+// const vapidKeys = webpush.generateVAPIDKeys();
+// webpush.setGCMAPIKey("AIzaSyAVHtFMejQX7To7UwVqi4MWzWIfBP1qWAc");
+// webpush.setVapidDetails(
+//   'mailto:tkngo85@gmail.com',
+//   vapidKeys.publicKey,
+//   vapidKeys.privateKey
+// );
+// console.log('vapidKeys.publicKeyNOTI' + vapidKeys.publicKey)
 
 
 router.get('/', middleware.requireAuthentication, function(req, res) {
@@ -1238,6 +1248,46 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	}).spread(function(post, user){
 		console.log('post:'+JSON.stringify(post, null, 4))
 		// console.log(JSON.stringify(user, null, 4))
+
+		db.endpoint.findAll().then(function(endpoints){
+			endpoints.forEach(function(endpoint){
+				var pushSubscription = JSON.parse(endpoint.endpoint)
+				// var person = {
+				// 	name:'thien',
+				// 	age:'20'
+				// }
+				const payload = JSON.stringify(post.postText)
+				// const options = {
+			 //      TTL: 240 * 60 * 60,
+			 //      vapidDetails: {
+			 //        subject: 'mailto:sender@example.com',
+			 //        publicKey: vapidKeys.publicKey,
+			 //        privateKey: vapidKeys.privateKey
+			 //      }
+			 //    }
+				
+				console.log('pushSubscription:'+ pushSubscription)
+					
+				webpush.sendNotification(pushSubscription, payload).then(function(statusSent){
+					console.log('statusSent'+ JSON.stringify(statusSent, null, 4))
+				}).catch(function(statusCode){
+					console.log('statusCode'+ JSON.stringify(statusCode, null, 4))
+					db.endpoint.destroy({
+						where:{
+							endpoint: endpoint.endpoint
+						}
+					})
+					console.log('pushSubscription'+JSON.stringify(pushSubscription, null, 4))
+				});
+
+			})
+			
+			
+			// res.json({
+			// 	endpoint: 'pushed OK'
+			// })
+		})	
+
 		res.json({
 			post:post,
 			user:user
