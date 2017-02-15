@@ -1248,45 +1248,65 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	}).spread(function(post, user){
 		console.log('post:'+JSON.stringify(post, null, 4))
 		// console.log(JSON.stringify(user, null, 4))
+		var postTo = post.postTo
 
-		db.endpoint.findAll().then(function(endpoints){
-			endpoints.forEach(function(endpoint){
-				var pushSubscription = JSON.parse(endpoint.endpoint)
-				// var person = {
-				// 	name:'thien',
-				// 	age:'20'
-				// }
-				const payload = JSON.stringify(post.postText)
-				// const options = {
-			 //      TTL: 240 * 60 * 60,
-			 //      vapidDetails: {
-			 //        subject: 'mailto:sender@example.com',
-			 //        publicKey: vapidKeys.publicKey,
-			 //        privateKey: vapidKeys.privateKey
-			 //      }
-			 //    }
-				
-				console.log('pushSubscription:'+ pushSubscription)
-					
-				webpush.sendNotification(pushSubscription, payload).then(function(statusSent){
-					console.log('statusSent'+ JSON.stringify(statusSent, null, 4))
-				}).catch(function(statusCode){
-					console.log('statusCode'+ JSON.stringify(statusCode, null, 4))
-					db.endpoint.destroy({
-						where:{
-							endpoint: endpoint.endpoint
-						}
-					})
-					console.log('pushSubscription'+JSON.stringify(pushSubscription, null, 4))
-				});
+		if(post.postTo.indexOf('WORKGROUP') !== -1){
+			console.log('WorkGroup...')
+			var workGroupName
+			db.userGroups.findAll({
+					where:{
+						status:postTo
+					}
+			}).then(function(userGroups){
+				// console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
+				var workGroupIds = []
 
+				userGroups.forEach(function(userGroup, i){
+					workGroupIds.indexOf(userGroup.userId)===-1?
+					workGroupIds.push(userGroup.userId):""
+				})
+				console.log('workGroupIds: '+JSON.stringify(workGroupIds, null, 4))
 			})
+
+		}
+
+	
+
+
+		// db.endpoint.findAll().then(function(endpoints){
+		// 	endpoints.forEach(function(endpoint){
+		// 		var pushSubscription = JSON.parse(endpoint.endpoint)
+		// 		// var person = {
+		// 		// 	name:'thien',
+		// 		// 	age:'20'
+		// 		// }
+		// 		const payload = JSON.stringify(post.postText)
+		// 		// const options = {
+		// 	 //      TTL: 240 * 60 * 60,
+		// 	 //      vapidDetails: {
+		// 	 //        subject: 'mailto:sender@example.com',
+		// 	 //        publicKey: vapidKeys.publicKey,
+		// 	 //        privateKey: vapidKeys.privateKey
+		// 	 //      }
+		// 	 //    }
+				
+		// 		console.log('pushSubscription:'+ pushSubscription)
+					
+		// 		webpush.sendNotification(pushSubscription, payload).then(function(statusSent){
+		// 			console.log('statusSent'+ JSON.stringify(statusSent, null, 4))
+		// 		}).catch(function(statusCode){
+		// 			console.log('statusCode'+ JSON.stringify(statusCode, null, 4))
+		// 			db.endpoint.destroy({
+		// 				where:{
+		// 					endpoint: endpoint.endpoint
+		// 				}
+		// 			})
+		// 			console.log('pushSubscription'+JSON.stringify(pushSubscription, null, 4))
+		// 		});
+
+		// 	})
 			
-			
-			// res.json({
-			// 	endpoint: 'pushed OK'
-			// })
-		})	
+		// })	
 
 		res.json({
 			post:post,
