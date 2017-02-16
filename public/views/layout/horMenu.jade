@@ -36,7 +36,7 @@
 					li
 						a(href="#" id='curUserName') 
 					li  
-						a(href="/users/logout" class="btn btn-info btn-md")
+						a(href="/users/logout" id= 'signOut' class="btn btn-info btn-md")
 							span(class="glyphicon glyphicon-log-out")  Sign-Out
 script.
 	$(function (){
@@ -44,4 +44,17 @@ script.
 			
 			$('#curUserName').append(Rdata.curUserName)
 		})
+		document.getElementById('signOut').addEventListener('click',function(){
+			console.log('signing out...')
+			navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+				swRegistration.pushManager.getSubscription()
+				.then(function(subscription) {
+				    if (subscription) {
+				      return subscription.unsubscribe();
+				    }
+			  	})
+			})
+
+		})
+
 	})

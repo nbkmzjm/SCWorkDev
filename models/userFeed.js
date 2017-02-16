@@ -16,9 +16,8 @@ module.exports = function(sequelize, DataTypes) {
         status:{
             type: DataTypes.STRING
         },
-        read:{
-            type: DataTypes.BOOLEAN,
-            defaultValue: false
+        notification:{
+            type: DataTypes.STRING
         }  
 
 	})
