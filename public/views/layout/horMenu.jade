@@ -44,17 +44,18 @@ script.
 			
 			$('#curUserName').append(Rdata.curUserName)
 		})
-		document.getElementById('signOut').addEventListener('click',function(){
-			console.log('signing out...')
-			navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-				swRegistration.pushManager.getSubscription()
-				.then(function(subscription) {
-				    if (subscription) {
-				      return subscription.unsubscribe();
-				    }
-			  	})
-			})
+		//- document.getElementById('signOut').addEventListener('click',function(){
 
-		})
+		//- 	alert('signing out...')
+		//- 	navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+		//- 		serviceWorkerRegistration.pushManager.getSubscription()
+		//- 		.then(function(subscription) {
+		//- 		    if (subscription) {
+		//- 		      return subscription.unsubscribe();
+		//- 		    }
+		//- 	  	})
+		//- 	})
+
+		//- })
 
 	})

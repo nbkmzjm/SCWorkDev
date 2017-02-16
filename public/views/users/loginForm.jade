@@ -21,7 +21,7 @@ html(lang="en")
 				label Password:
 				input(type="password" name="password")
 				br
-				input(type="submit" value='Log In')
+				input(type="submit" id='submit' value='Log In')
 				br
 				- if (errors)
 					p.error Please check following items:
@@ -38,6 +38,18 @@ html(lang="en")
 		//- script(src="public/js/app.js")
 		script.
 
-			$(function onload(){
+			$(function (){
 				
-			});
+				document.getElementById('submit').addEventListener('click',function(){
+					navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+						serviceWorkerRegistration.pushManager.getSubscription()
+						.then(function(subscription) {
+						    if (subscription) {
+						      return subscription.unsubscribe();
+						    }
+					  	})
+					})
+
+				})
+
+			})

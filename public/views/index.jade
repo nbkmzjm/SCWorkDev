@@ -87,7 +87,7 @@ append scripts
 					if(localStorage.getItem('vapid')!=vapidPub){
 						localStorage.setItem('vapid', vapidPub)
 						navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-							swRegistration.pushManager.getSubscription()
+							serviceWorkerRegistration.pushManager.getSubscription()
 							.then(function(subscription) {
 							    if (subscription) {
 							      return subscription.unsubscribe();
@@ -103,7 +103,7 @@ append scripts
 						if(subscription==null){
 						console.log('no subscription and add subscription now')
 							navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-								swRegistration.pushManager.subscribe({ 
+								serviceWorkerRegistration.pushManager.subscribe({ 
 							    	userVisibleOnly: true,
 							   		applicationServerKey:convertedVapidKey
 						    	}).then(function(subscription){
