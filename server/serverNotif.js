@@ -1310,12 +1310,14 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			var workGroupIds = []
 			db.userGroups.findAll({
 					where:{
-						status:post.postTo
+						status:postTo
 					}
 			}).then(function(userGroups){
 				// console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
 				
 				var bulkData = []
+				//add id of owner of post for notification
+				workGroupIds.push(curUserId)
 
 				userGroups.forEach(function(userGroup, i){
 					if (workGroupIds.indexOf(userGroup.userId)===-1){
@@ -1336,6 +1338,92 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				})
 			});
 
+		} else if(postTo === 'Coworker'){
+			console.log('Coworker...')
+			var coworkerIds = []
+
+			db.group.findAll({
+				include:[{
+					model:db.user,
+					where:{
+						id:curUserId
+					},
+					through:{
+						where:{
+							status:{
+								$in:['Owner','Coworker']
+							}	
+						}
+					}
+				}]
+			}).then(function(groups){
+				console.log('friend Group:'+JSON.stringify(groups, null, 4))
+				// var coworkerIds = []
+				var bulkData = []
+
+				groups.forEach(function(group, i){
+					// group.users[0].userGroups.status === 'Owner'?
+					// coworkerIds.push(group.groupBLUserId):""
+					// group.users[0].userGroups.status === 'Coworker'?
+					coworkerIds.push(group.groupBLUserId)
+					var userFeed = new UserFeed(post.id, group.groupBLUserId)
+						bulkData.push(userFeed)
+				})
+				console.log('coworkerIds: '+JSON.stringify(coworkerIds, null, 4))
+				console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+				return db.userFeed.bulkCreate(bulkData)
+			}).then(function(created){
+			
+				showNotification(coworkerIds, post)
+			}).catch(function(e) {
+				console.log(e)
+				res.render('error', {
+					error: e.toString()
+				})
+			});
+		} else if(postTo === 'Colleague'){
+			console.log('Colleague...')
+			var colleagueIds = []
+
+			db.group.findAll({
+				include:[{
+					model:db.user,
+					where:{
+						id:curUserId
+					},
+					through:{
+						where:{
+							status:{
+								$in:['Owner','Coworker','Colleague']
+							}	
+						}
+					}
+				}]
+			}).then(function(groups){
+				console.log('friend Group:'+JSON.stringify(groups, null, 4))
+				// var coworkerIds = []
+				var bulkData = []
+
+				groups.forEach(function(group, i){
+					// group.users[0].userGroups.status === 'Owner'?
+					// coworkerIds.push(group.groupBLUserId):""
+					// group.users[0].userGroups.status === 'Coworker'?
+					colleagueIds.push(group.groupBLUserId)
+					var userFeed = new UserFeed(post.id, group.groupBLUserId)
+						bulkData.push(userFeed)
+				})
+				console.log('colleagueIds: '+JSON.stringify(colleagueIds, null, 4))
+				console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+				return db.userFeed.bulkCreate(bulkData)
+			}).then(function(created){
+			
+				showNotification(colleagueIds, post)
+			}).catch(function(e) {
+				console.log(e)
+				res.render('error', {
+					error: e.toString()
+				})
+			});
 		}
 		
 
