@@ -1215,6 +1215,59 @@ router.post('/getUserPost', middleware.requireAuthentication, function(req, res)
 	})
 
 })
+function UserFeed(mainPostId, receivedUserId){
+	this.mainPostId = mainPostId
+	this.receivedUserId = receivedUserId
+	this.status = 'active',
+	this.notification = 'new'
+}
+
+function showNotification(idArray, post){
+	
+		db.endpoint.findAll({
+			where:{
+				userId:{
+					$in:idArray
+				}
+			}
+		}).then(function(endpoints){
+			console.log('endpoints'+ JSON.stringify(endpoints, null, 4))
+			endpoints.forEach(function(endpoint){
+				var pushSubscription = JSON.parse(endpoint.endpoint)
+				// var person = {
+				// 	name:'thien',
+				// 	age:'20'
+				// }
+				const payload = JSON.stringify(post.postText)
+				// const options = {
+			 //      TTL: 240 * 60 * 60,
+			 //      vapidDetails: {
+			 //        subject: 'mailto:sender@example.com',
+			 //        publicKey: vapidKeys.publicKey,
+			 //        privateKey: vapidKeys.privateKey
+			 //      }
+			 //    }
+				
+				console.log('pushSubscription:'+ pushSubscription)
+					
+				webpush.sendNotification(pushSubscription, payload).then(function(statusSent){
+					console.log('statusSent'+ JSON.stringify(statusSent, null, 4))
+				}).catch(function(statusCode){
+					console.log('statusCode'+ JSON.stringify(statusCode, null, 4))
+					db.endpoint.destroy({
+						where:{
+							endpoint: endpoint.endpoint
+						}
+					})
+					console.log('pushSubscription'+JSON.stringify(pushSubscription, null, 4))
+				});
+			})
+		}).catch(function(e) {
+			console.log(e)
+		});	
+	
+
+}
 
 router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var curUserId = req.user.id
@@ -1225,12 +1278,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var userArrayIn = ""
 	var userArrayEx =""
 
-	function UserFeed(mainPostId, receivedUserId){
-		this.mainPostId = mainPostId
-		this.receivedUserId = receivedUserId
-		this.status = 'active',
-		this.notification = 'new'
-	}
+	
 	if (filter ==="Include"||filter ==='Include Department'){
 		userArrayIn= userArray
 	}else{
@@ -1257,12 +1305,12 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 		// console.log(JSON.stringify(user, null, 4))
 		var postTo = post.postTo
 
-		if(post.postTo.indexOf('WORKGROUP') !== -1){
+		if(postTo.indexOf('WORKGROUP') !== -1){
 			console.log('WorkGroup...')
 			var workGroupIds = []
 			db.userGroups.findAll({
 					where:{
-						status:postTo
+						status:post.postTo
 					}
 			}).then(function(userGroups){
 				// console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
@@ -1279,45 +1327,8 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
 				return db.userFeed.bulkCreate(bulkData)
 			}).then(function(created){
-				db.endpoint.findAll({
-					where:{
-						userId:{
-							$in:workGroupIds
-						}
-					}
-				}).then(function(endpoints){
-					console.log('endpoints'+ JSON.stringify(endpoints, null, 4))
-					endpoints.forEach(function(endpoint){
-						var pushSubscription = JSON.parse(endpoint.endpoint)
-						// var person = {
-						// 	name:'thien',
-						// 	age:'20'
-						// }
-						const payload = JSON.stringify(post.postText)
-						// const options = {
-					 //      TTL: 240 * 60 * 60,
-					 //      vapidDetails: {
-					 //        subject: 'mailto:sender@example.com',
-					 //        publicKey: vapidKeys.publicKey,
-					 //        privateKey: vapidKeys.privateKey
-					 //      }
-					 //    }
-						
-						console.log('pushSubscription:'+ pushSubscription)
-							
-						webpush.sendNotification(pushSubscription, payload).then(function(statusSent){
-							console.log('statusSent'+ JSON.stringify(statusSent, null, 4))
-						}).catch(function(statusCode){
-							console.log('statusCode'+ JSON.stringify(statusCode, null, 4))
-							db.endpoint.destroy({
-								where:{
-									endpoint: endpoint.endpoint
-								}
-							})
-							console.log('pushSubscription'+JSON.stringify(pushSubscription, null, 4))
-						});
-					})
-				})	
+			
+				showNotification(workGroupIds, post)
 			}).catch(function(e) {
 				console.log(e)
 				res.render('error', {
@@ -1326,10 +1337,6 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			});
 
 		}
-
-	
-
-
 		
 
 		res.json({
