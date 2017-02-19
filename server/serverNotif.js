@@ -1424,6 +1424,77 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					error: e.toString()
 				})
 			});
+		} else if(postTo === 'Coworker of Colleague'){
+			console.log('Coworker of Colleague...')
+			var colleagueIds = []
+			var bulkData = []
+			db.group.findAll({
+				include:[{
+					model:db.user,
+					where:{
+						id:curUserId
+					},
+					through:{
+						where:{
+							status:{
+								$in:['Owner','Coworker','Colleague']
+							}	
+						}
+					}
+				}]
+			}).then(function(groups){
+				console.log('friend Group:'+JSON.stringify(groups, null, 4))
+				// var coworkerIds = []
+				
+				var colleagueGroupIds = []
+				groups.forEach(function(group, i){
+					group.users[0].userGroups.status === 'Colleague'?
+					colleagueGroupIds.push(group.id):""
+					console.log('colleagueGroupIds: '+JSON.stringify(colleagueGroupIds, null, 4))
+					colleagueIds.push(group.groupBLUserId)
+					var userFeed = new UserFeed(post.id, group.groupBLUserId)
+						bulkData.push(userFeed)
+				})
+
+				return db.userGroups.findAll({
+					where:{
+						groupId:{
+							$in:colleagueGroupIds
+						},
+						userId:{
+							$notIn:[curUserId]
+						},
+						status:{
+							$in:['Coworker']
+						}
+					}
+				})
+			}).then(function(userGroups){
+				//adding userId of Coworker of Colleague to coworkerofColleagueUserIds Array
+				var coworkerofColleagueUserIds = []
+				userGroups.forEach(function(userGroup, i){
+					//removing duplicate if exist
+					// if(coworkerofColleagueUserIds.indexOf(userGroup.userId)===-1){
+					// 	coworkerofColleagueUserIds.push(userGroup.userId)
+						var userFeed = new UserFeed(post.id, userGroup.userId)
+						bulkData.push(userFeed)
+					// }
+					
+				})
+				
+				console.log('colleagueIds: '+JSON.stringify(colleagueIds, null, 4))
+				console.log('Coworker of Colleague bulkData: '+JSON.stringify(bulkData, null, 4))
+				return db.userFeed.bulkCreate(bulkData)
+
+			}).then(function(created){
+			
+				showNotification(colleagueIds, post)
+			}).catch(function(e) {
+				console.log(e)
+				res.render('error', {
+					error: e.toString()
+				})
+			});
 		}
 		
 
