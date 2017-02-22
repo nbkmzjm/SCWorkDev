@@ -11,6 +11,7 @@
 				//- button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#")
 				//- 	span(class="sr-only") Shopping Cart
 				//- 	span(class="glyphicon glyphicon-shopping-cart" aria-hidden="false")
+				button(type="button" id='test') Test
 				button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#taskOptionDiv" id='optionTextS') 
 					span(class="glyphicon glyphicon-edit" aria-hidden="true") SELECT 
 
@@ -44,8 +45,27 @@ script.
 			
 			$('#curUserName').append(Rdata.curUserName)
 		})
+		function send_message_to_sw(msg){
+			if(navigator.serviceWorker.controller){
+				var messageChannel = new MessageChannel();
+				alert('bbbbResponsedrrrr')
+		        messageChannel.port1.onmessage = function(event) {
+		        	alert('Responsedrrrr')
+		            console.log("Response the SW : ", event.data);
+		        }
+		        navigator.serviceWorker.onmessage = function(event) {
+		        	console.log("Broadcasted SW : ", event.data);
+		        }
+			    navigator.serviceWorker.controller.postMessage("Client 1 says '"+msg+"'", [messageChannel.port2]);
+		   	}
+		}
 
-		$.post('/')
+		document.getElementById('test').addEventListener('click',function(){
+			send_message_to_sw('hello')
+		})
+
+		
+		
 
 		$("#notifBtn").val()
 		//- document.getElementById('signOut').addEventListener('click',function(){

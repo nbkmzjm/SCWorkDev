@@ -77,15 +77,6 @@ self.addEventListener('activate', function(event) {
 //       })
 //     );
 // });
-console.log('clientsss::::')
-clients.matchAll().then(function(clients){
-  console.log('xxxclient')
-  console.log(clients)
-  clients.forEach(function(client){
-      console.log('client:'+client)
-  })
-
-})
 
 
 self.addEventListener("fetch", function(event) {
@@ -194,6 +185,16 @@ self.addEventListener("fetch", function(event) {
 
 self.addEventListener('message', function(event){
     console.log("SW Received Message: " + event.data);
+    // event.ports[0].postMessage("Hi, responsed from SW");
+
+  self.clients.matchAll().then(function(clients){
+  console.log('xxxclient')
+  console.log(clients)
+  clients.forEach(function(client){
+    client.postMessage('broadcast from SW')
+    })
+
+  })
     self.registration.showNotification("SW Received Message",{
 
       body:event.data,
@@ -239,3 +240,5 @@ self.addEventListener("push", function(event) {
 //     new WindowClient('/inbox/');
 //   }
 // });
+
+
