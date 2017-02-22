@@ -77,6 +77,15 @@ self.addEventListener('activate', function(event) {
 //       })
 //     );
 // });
+console.log('clientsss::::')
+clients.matchAll().then(function(clients){
+  console.log('xxxclient')
+  console.log(clients)
+  clients.forEach(function(client){
+      console.log('client:'+client)
+  })
+
+})
 
 
 self.addEventListener("fetch", function(event) {
@@ -181,6 +190,15 @@ self.addEventListener("fetch", function(event) {
         }
       })
   );
+});
+
+self.addEventListener('message', function(event){
+    console.log("SW Received Message: " + event.data);
+    self.registration.showNotification("SW Received Message",{
+
+      body:event.data,
+      vibrate: [200, 100, 200]
+     })
 });
 
 

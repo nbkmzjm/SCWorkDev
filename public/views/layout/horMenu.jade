@@ -26,7 +26,7 @@
 						a(href="/") Home
 					li( id='user')
 						a(href="/users") Users
-					li
+					li(id=notifBtn)
 						a(href="/notif") Notification
 				ul(class="nav navbar-nav navbar-right")
 					li
@@ -44,6 +44,10 @@ script.
 			
 			$('#curUserName').append(Rdata.curUserName)
 		})
+
+		$.post('/')
+
+		$("#notifBtn").val()
 		//- document.getElementById('signOut').addEventListener('click',function(){
 
 		//- 	alert('signing out...')

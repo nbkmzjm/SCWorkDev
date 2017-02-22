@@ -125,7 +125,7 @@ append scripts
 					  		})
 
 						}
-
+						//- send_message_to_sw('hello ssssss')
 						console.log('subscription')
 						console.log(JSON.stringify(subscription))
 
@@ -133,6 +133,11 @@ append scripts
 				  	})
 				}
 			}
+
+			function send_message_to_sw(msg){
+			    navigator.serviceWorker.controller.postMessage("Client 1 says '"+msg+"'");
+			}
+
 				
 			  	
 			  	

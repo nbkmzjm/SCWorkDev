@@ -1731,6 +1731,25 @@ router.post('/getMyWorkGroup', middleware.requireAuthentication, function(req, r
 
 })
 
+router.post('/getNewNotif', middleware.requireAuthentication, function(req, res) {
+	var curUserId = req.user.id
+	db.userFeed.findAll({ 
+		where:{
+			userId:curUserId,
+			notification: 'new' 
+		},
+		include:[
+			
+		]
+		
+	}).then(function(userFeed) {
+
+ 	 	
+ 	 	console.log(JSON.stringify(userGroups, null, 4))
+		res.json({userGroups:userGroups})
+	})
+
+})
 // db.group.findOne({
 // 		where:{
 // 			id:1
