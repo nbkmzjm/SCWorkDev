@@ -210,15 +210,13 @@ self.addEventListener("push", function(event) {
 	console.log(event.data.text())
 	var text = event.data.text()
   
-	 event.waitUntil(
+  event.waitUntil(
+    self.registration.showNotification("Web push",{
 
-   
-	 	 // self.registration.showNotification("Web push",{
-
-	 	 // 	body:text,
-	 	 // 	vibrate: [200, 100, 200]
-	 	 // })
-	 )
+    body:text,
+    vibrate: [200, 100, 200]
+    })
+  )
 
   // if (event.data.text() == 'new-email') {
   //   event.waitUntil(
