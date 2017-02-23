@@ -1278,7 +1278,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var userArrayIn = ""
 	var userArrayEx =""
 
-	
+	console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbb')
 	if (filter ==="Include"||filter ==='Include Department'){
 		userArrayIn= userArray
 	}else{
