@@ -109,6 +109,7 @@ append scripts
 							    	userVisibleOnly: true,
 							   		applicationServerKey:convertedVapidKey
 						    	}).then(function(subscription){
+						    		console.log()
 						    		$.post('/endpoint', {
 							  		endpoint:JSON.stringify(subscription)
 							  		}).done(function(){

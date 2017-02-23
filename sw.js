@@ -184,15 +184,24 @@ self.addEventListener("fetch", function(event) {
 });
 
 self.addEventListener('message', function(event){
-    console.log("SW Received Message: " + event.data);
-    // event.ports[0].postMessage("Hi, responsed from SW");
-    
-  
-    self.registration.showNotification("SW Received Message",{
+    if(event.data.command =="POST"){
+      self.clients.matchAll().then(function(clients){
+        console.log('xxxclient')
+        clients.forEach(function(client){
+          // var messageChannel = new MessageChannel();
+          //     messageChannel.port1.onmessage = function(event) {
+          //       console.log('SW received Message:'+ event.data)
+          //   }
+          console.log('broadcasting...')
+          client.postMessage({
+            'command':'updateNotif',
+            'clientId':client.id
 
-      body:event.data,
-      vibrate: [200, 100, 200]
-     })
+          })
+        })
+      })
+    }
+
 });
 
 
@@ -202,14 +211,8 @@ self.addEventListener("push", function(event) {
 	var text = event.data.text()
   
 	 event.waitUntil(
-    self.clients.matchAll().then(function(clients){
-    console.log('xxxclient')
-    console.log(clients)
-    clients.forEach(function(client){
-      client.postMessage('broadcast from SW')
-      })
 
-    })
+   
 	 	 // self.registration.showNotification("Web push",{
 
 	 	 // 	body:text,
