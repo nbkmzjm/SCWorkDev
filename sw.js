@@ -186,15 +186,8 @@ self.addEventListener("fetch", function(event) {
 self.addEventListener('message', function(event){
     console.log("SW Received Message: " + event.data);
     // event.ports[0].postMessage("Hi, responsed from SW");
-
-  self.clients.matchAll().then(function(clients){
-  console.log('xxxclient')
-  console.log(clients)
-  clients.forEach(function(client){
-    client.postMessage('broadcast from SW')
-    })
-
-  })
+    
+  
     self.registration.showNotification("SW Received Message",{
 
       body:event.data,
@@ -207,12 +200,21 @@ self.addEventListener("push", function(event) {
 	console.log('xxxxxxxxxxxpushhing')
 	console.log(event.data.text())
 	var text = event.data.text()
+  
 	 event.waitUntil(
-	 	 self.registration.showNotification("Web push",{
+    self.clients.matchAll().then(function(clients){
+    console.log('xxxclient')
+    console.log(clients)
+    clients.forEach(function(client){
+      client.postMessage('broadcast from SW')
+      })
 
-	 	 	body:text,
-	 	 	vibrate: [200, 100, 200]
-	 	 })
+    })
+	 	 // self.registration.showNotification("Web push",{
+
+	 	 // 	body:text,
+	 	 // 	vibrate: [200, 100, 200]
+	 	 // })
 	 )
 
   // if (event.data.text() == 'new-email') {

@@ -103,6 +103,8 @@ append scripts
 						if(subscription==null){
 						console.log('no subscription and add subscription now')
 							navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+								console.log('ppppp')
+								console.log(serviceWorkerRegistration)
 								serviceWorkerRegistration.pushManager.subscribe({ 
 							    	userVisibleOnly: true,
 							   		applicationServerKey:convertedVapidKey
@@ -125,7 +127,7 @@ append scripts
 					  		})
 
 						}
-						send_message_to_sw('hello ssssss')
+						
 						console.log('subscription')
 						console.log(JSON.stringify(subscription))
 
@@ -134,9 +136,7 @@ append scripts
 				}
 			}
 
-			function send_message_to_sw(msg){
-			    navigator.serviceWorker.controller.postMessage("Client 1 says '"+msg+"'");
-			}
+		
 
 				
 			  	

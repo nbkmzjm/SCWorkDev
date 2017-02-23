@@ -27,8 +27,8 @@
 						a(href="/") Home
 					li( id='user')
 						a(href="/users") Users
-					li(id=notifBtn)
-						a(href="/notif") Notification
+					li
+						a(href="/notif" id='notifBtn') Notification
 				ul(class="nav navbar-nav navbar-right")
 					li
 						a(href='#' class="btn" data-toggle="collapse" data-target="#taskOptionDiv" id='optionTextL') 
@@ -55,6 +55,7 @@ script.
 		        }
 		        navigator.serviceWorker.onmessage = function(event) {
 		        	console.log("Broadcasted SW : ", event.data);
+		        	//- document.getElementById('notifBtn').innerHTML = event.data
 		        }
 			    navigator.serviceWorker.controller.postMessage("Client 1 says '"+msg+"'", [messageChannel.port2]);
 		   	}
@@ -67,7 +68,6 @@ script.
 		
 		
 
-		$("#notifBtn").val()
 		//- document.getElementById('signOut').addEventListener('click',function(){
 
 		//- 	alert('signing out...')
