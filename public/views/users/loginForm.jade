@@ -42,12 +42,14 @@ html(lang="en")
 				
 				document.getElementById('submit').addEventListener('click',function(){
 					navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-						serviceWorkerRegistration.pushManager.getSubscription()
-						.then(function(subscription) {
-						    if (subscription) {
-						      return subscription.unsubscribe();
-						    }
-					  	})
+						console.log('unregistering..')
+						serviceWorkerRegistration.unregister()
+						//- serviceWorkerRegistration.pushManager.getSubscription()
+						//- .then(function(subscription) {
+						//-     if (subscription) {
+						//-       return subscription.unsubscribe();
+						//-     }
+					 //-  	})
 					})
 
 				})

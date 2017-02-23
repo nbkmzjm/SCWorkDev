@@ -74,15 +74,18 @@ script.
 		
 
 		//- document.getElementById('signOut').addEventListener('click',function(){
-
-		//- 	alert('signing out...')
+		//- 	console.log('signOut..')
 		//- 	navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-		//- 		serviceWorkerRegistration.pushManager.getSubscription()
-		//- 		.then(function(subscription) {
-		//- 		    if (subscription) {
-		//- 		      return subscription.unsubscribe();
-		//- 		    }
-		//- 	  	})
+		//- 		//- console.log('unsubcribe..')
+		//- 		//- serviceWorkerRegistration.pushManager.getSubscription()
+		//- 		//- .then(function(subscription) {
+		//- 		//-     if (subscription) {
+		//- 		//-       return subscription.unsubscribe();
+		//- 		//-     }
+		//- 	 //-  	})
+		//- 		console.log('unregistering..')
+		//- 		serviceWorkerRegistration.unregister()
+				
 		//- 	})
 
 		//- })
