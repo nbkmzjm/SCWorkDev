@@ -209,6 +209,21 @@ self.addEventListener("push", function(event) {
 	console.log('xxxxxxxxxxxpushhing')
 	console.log(event.data.text())
 	var text = event.data.text()
+  clients.matchAll().then(function(clients){
+        console.log('xxxclient')
+        clients.forEach(function(client){
+          // var messageChannel = new MessageChannel();
+          //     messageChannel.port1.onmessage = function(event) {
+          //       console.log('SW received Message:'+ event.data)
+          //   }
+          console.log('broadcasting...clientid:'+ client.id)
+          client.postMessage({
+            'command':'updateNotif',
+            'clientId':client.id
+
+          })
+        })
+      })
   
   event.waitUntil(
     self.registration.showNotification("Web push",{
