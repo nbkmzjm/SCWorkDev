@@ -56,7 +56,6 @@ script.
 		        navigator.serviceWorker.addEventListener('message', function(event){
 		        	if(event.data.command == 'updateNotif'){
 		        		console.log("run Update Notification : ", event.data);
-		        		console.log(event.data)
 		        		$('#notifBtn').html('xxxx')
 		        		//- event.ports[0].postMessage('Client 1 says hello back to SW')
 		        	}

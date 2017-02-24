@@ -185,7 +185,7 @@ self.addEventListener("fetch", function(event) {
 
 self.addEventListener('message', function(event){
     if(event.data.command =="POST"){
-      self.clients.matchAll().then(function(clients){
+      clients.matchAll().then(function(clients){
         console.log('xxxclient')
         clients.forEach(function(client){
           // var messageChannel = new MessageChannel();
