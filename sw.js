@@ -219,7 +219,7 @@ self.addEventListener("push", function(event) {
           console.log('broadcasting...clientid:'+ client.id)
           client.postMessage({
             'command':'updateNotif',
-            'clientId':client.id
+            'message':text
 
           })
         })
