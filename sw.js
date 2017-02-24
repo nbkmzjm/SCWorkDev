@@ -194,7 +194,7 @@ self.addEventListener('message', function(event){
           //   }
           console.log('broadcasting...')
           client.postMessage({
-            'command':'updateNotif',
+            'command':'startUp',
             'clientId':client.id
 
           })

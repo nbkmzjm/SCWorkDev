@@ -45,29 +45,7 @@ script.
 			
 			$('#curUserName').append(Rdata.curUserName)
 		})
-		function send_message_to_sw(msg){
-			if(navigator.serviceWorker.controller){
-
-				//- var messageChannel = new MessageChannel();
-		  //-       messageChannel.port1.onmessage = function(event) {
-		  //-       	alert('Responsedrrrr')
-		  //-           console.log("Response the SW : ", event.data);
-		        //- }
-		        navigator.serviceWorker.addEventListener('message', function(event){
-		        	if(event.data.command == 'updateNotif'){
-		        		console.log("run Update Notification : ", event.data);
-		        		$('#notifBtn').html(event.data.message)
-		        		//- event.ports[0].postMessage('Client 1 says hello back to SW')
-		        	}
-		        	
-		        })
-			    navigator.serviceWorker.controller.postMessage({'command':'POST'});
-		   	}
-		}
-
-		document.getElementById('test').addEventListener('click',function(){
-			send_message_to_sw('hello')
-		})
+		
 
 		
 		
