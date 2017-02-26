@@ -186,15 +186,14 @@ self.addEventListener("fetch", function(event) {
 self.addEventListener('message', function(event){
     if(event.data.command =="POST"){
       clients.matchAll().then(function(clients){
-        console.log('xxxclient')
         clients.forEach(function(client){
           // var messageChannel = new MessageChannel();
           //     messageChannel.port1.onmessage = function(event) {
           //       console.log('SW received Message:'+ event.data)
           //   }
-          console.log('broadcasting...')
+          console.log('push activating...')
           client.postMessage({
-            'command':'startUp',
+            'command':'pushActivation',
             'clientId':client.id
 
           })
@@ -206,17 +205,16 @@ self.addEventListener('message', function(event){
 
 
 self.addEventListener("push", function(event) {
-	console.log('xxxxxxxxxxxpushhing')
+	console.log('pushhing')
 	console.log(event.data.text())
 	var text = event.data.text()
   clients.matchAll().then(function(clients){
-        console.log('xxxclient')
         clients.forEach(function(client){
           // var messageChannel = new MessageChannel();
           //     messageChannel.port1.onmessage = function(event) {
           //       console.log('SW received Message:'+ event.data)
           //   }
-          console.log('broadcasting...clientid:'+ client.id)
+          console.log('push updating:'+ client.id)
           client.postMessage({
             'command':'updateNotif',
             'message':text

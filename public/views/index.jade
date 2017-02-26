@@ -135,6 +135,18 @@ append scripts
 						
 				  	})
 				}
+
+				(function push_update_activation(msg){
+					if(navigator.serviceWorker.controller){
+
+				        navigator.serviceWorker.addEventListener('message', function(event){
+				        	if(event.data.command == 'pushActivation'){
+				        		console.log("run push activation");
+				        	} 
+				        })
+					    navigator.serviceWorker.controller.postMessage({'command':'POST'});
+				   	}
+				})()
 			}
 
 		

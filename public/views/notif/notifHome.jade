@@ -52,24 +52,16 @@ append scripts
 			//- 	ul.appendChild(li)
 			//- 	console.log(group.name)
 			//- })
-				function send_message_to_sw(msg){
+				function push_update_notification(msg){
 					if(navigator.serviceWorker.controller){
 
-						//- var messageChannel = new MessageChannel();
-				  //-       messageChannel.port1.onmessage = function(event) {
-				  //-       	alert('Responsedrrrr')
-				  //-           console.log("Response the SW : ", event.data);
-				        //- }
 				        navigator.serviceWorker.addEventListener('message', function(event){
-				        	if(event.data.command == 'startUp'){
-				        		console.log("run start up");
-				        		//- event.ports[0].postMessage('Client 1 says hello back to SW')
-				        	} else if(event.data.command == 'updateNotif'){
+				        	if(event.data.command == 'updateNotif'){
 				        		$('#notifBtn').html(event.data.message)
 				        	}
 				        	
 				        })
-					    navigator.serviceWorker.controller.postMessage({'command':'POST'});
+					    
 				   	}
 				}
 
@@ -99,7 +91,7 @@ append scripts
 						btn.className = 'btn btn-primary'
 						btn.innerHTML = 'POST'
 						btn.addEventListener('click', function(){
-							send_message_to_sw()
+							push_update_notification()
 							if(select.value === "WorkGroup" && selectWorkGroup.value ===''){
 							alert('Please select a WorkGroup')
 							}else if(select.value === "WorkGroup" && selectWorkGroup.value !== ''){
