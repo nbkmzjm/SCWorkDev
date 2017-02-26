@@ -44,12 +44,6 @@ html(lang="en")
 					navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
 						console.log('unregistering..')
 						serviceWorkerRegistration.unregister()
-						//- serviceWorkerRegistration.pushManager.getSubscription()
-						//- .then(function(subscription) {
-						//-     if (subscription) {
-						//-       return subscription.unsubscribe();
-						//-     }
-					 //-  	})
 					})
 
 				})

@@ -45,26 +45,13 @@ script.
 			
 			$('#curUserName').append(Rdata.curUserName)
 		})
-		
 
-		
-		
-
-		//- document.getElementById('signOut').addEventListener('click',function(){
-		//- 	console.log('signOut..')
-		//- 	navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-		//- 		//- console.log('unsubcribe..')
-		//- 		//- serviceWorkerRegistration.pushManager.getSubscription()
-		//- 		//- .then(function(subscription) {
-		//- 		//-     if (subscription) {
-		//- 		//-       return subscription.unsubscribe();
-		//- 		//-     }
-		//- 	 //-  	})
-		//- 		console.log('unregistering..')
-		//- 		serviceWorkerRegistration.unregister()
-				
-		//- 	})
-
-		//- })
+		document.getElementById('signOut').addEventListener('click',function(){
+			console.log('signOut..')
+			navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+				console.log('unregistering..')
+				serviceWorkerRegistration.unregister()
+			})
+		})
 
 	})
