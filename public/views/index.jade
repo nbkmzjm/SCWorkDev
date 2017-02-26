@@ -142,6 +142,9 @@ append scripts
 				        navigator.serviceWorker.addEventListener('message', function(event){
 				        	if(event.data.command == 'pushActivation'){
 				        		console.log("run push activation");
+				        	} else if(event.data.command == 'updateNotif'){
+				        		console.log('recieving update contain..')
+				        		$('#notifBtn').html(event.data.message)
 				        	} 
 				        })
 					    navigator.serviceWorker.controller.postMessage({'command':'POST'});
