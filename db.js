@@ -133,10 +133,39 @@ db.user.hasMany(db.endpoint,{
 	onDelete:'CASCADE'
 });
 
-db.userFeed.belongsTo(db.mainPost,{
+db.userFeed.belongsTo(db.comment,{
+	foreignKey: 'notiRefId',
+	constraints: false,
+	as: 'comment'
+},{
 	onDelete:'CASCADE'
 })
+
+db.comment.hasMany(db.userFeed,{
+	foreignKey: 'notiRefId',
+  	constraints: false,
+  	scope: {
+    	commentable: 'comment'
+  	}
+},{
+	onDelete:'CASCADE'
+});
+
+db.userFeed.belongsTo(db.mainPost,{
+	foreignKey: 'notiRefId',
+	constraints: false,
+	as: 'mainPost'
+},{
+	onDelete:'CASCADE'
+})
+
 db.mainPost.hasMany(db.userFeed,{
+	foreignKey: 'notiRefId',
+  	constraints: false,
+  	scope: {
+    	commentable: 'mainPost'
+  	}
+},{
 	onDelete:'CASCADE'
 });
 

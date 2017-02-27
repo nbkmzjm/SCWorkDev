@@ -1735,18 +1735,18 @@ router.post('/getNewNotif', middleware.requireAuthentication, function(req, res)
 	var curUserId = req.user.id
 	db.userFeed.findAll({ 
 		where:{
-			userId:curUserId,
+			receivedUserId:curUserId,
 			notification: 'new' 
 		},
-		include:[
-			
-		]
+		include:[{
+			model:db.mainPost
+		}]
 		
 	}).then(function(userFeed) {
 
  	 	
- 	 	console.log(JSON.stringify(userGroups, null, 4))
-		res.json({userGroups:userGroups})
+ 	 	console.log(JSON.stringify(userFeed, null, 4))
+		res.json({userFeed:'contain from server'})
 	})
 
 })
