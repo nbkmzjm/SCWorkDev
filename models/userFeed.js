@@ -18,7 +18,10 @@ module.exports = function(sequelize, DataTypes) {
         },
         notification:{
             type: DataTypes.STRING
-        }  
+        } ,
+        notifText:{
+            type: DataTypes.STRING
+        } 
 
 	})
 

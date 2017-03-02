@@ -1215,11 +1215,13 @@ router.post('/getUserPost', middleware.requireAuthentication, function(req, res)
 	})
 
 })
-function UserFeed(mainPostId, receivedUserId){
+function UserFeed(mainPostId, receivedUserId, userId, notifText){
 	this.mainPostId = mainPostId
 	this.receivedUserId = receivedUserId
 	this.status = 'active',
 	this.notification = 'new'
+	this.userId = userId,
+	this.notifText = notifText
 }
 
 function showNotification(idArray, post){
@@ -1271,6 +1273,7 @@ function showNotification(idArray, post){
 
 router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var curUserId = req.user.id
+	var curUser = req.user
 	var postText = req.body.postText
 	var postTo = req.body.postTo
 	var filter = req.body.filter
@@ -1362,12 +1365,15 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				var bulkData = []
 
 				groups.forEach(function(group, i){
+					console.log(curUser.fullName + ' posted '+ post.postText)
 					// group.users[0].userGroups.status === 'Owner'?
 					// coworkerIds.push(group.groupBLUserId):""
 					// group.users[0].userGroups.status === 'Coworker'?
 					coworkerIds.push(group.groupBLUserId)
-					var userFeed = new UserFeed(post.id, group.groupBLUserId)
-						bulkData.push(userFeed)
+					var userFeed = new UserFeed(post.id, 
+						group.groupBLUserId, curUserId, 
+						curUser.fullName + ' posted :'+ post.postText)
+					bulkData.push(userFeed)
 				})
 				console.log('coworkerIds: '+JSON.stringify(coworkerIds, null, 4))
 				console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
