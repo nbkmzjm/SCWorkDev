@@ -183,7 +183,7 @@ function test(req, res){
 
 
 app.get('/', middleware.requireAuthentication, function(req, res, next) {
-
+	
 	db.assign.findAll({
 		include: [db.user]
 	}).then(function(assigns) {

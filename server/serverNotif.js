@@ -1756,6 +1756,22 @@ router.post('/getNewNotif', middleware.requireAuthentication, function(req, res)
 	})
 
 })
+router.post('/getNewNotifCount', middleware.requireAuthentication, function(req, res) {
+	var curUserId = req.user.id
+	db.userFeed.count({ 
+		where:{
+			receivedUserId:curUserId,
+			notification: 'new' 
+		}
+		
+	}).then(function(userFeedCount) {
+
+ 	 	
+ 	 	console.log('countttt'+JSON.stringify(userFeedCount, null, 4))
+		res.json({userFeed:userFeedCount})
+	})
+
+})
 // db.group.findOne({
 // 		where:{
 // 			id:1

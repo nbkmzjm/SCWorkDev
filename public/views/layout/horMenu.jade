@@ -11,7 +11,7 @@
 				//- button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#")
 				//- 	span(class="sr-only") Shopping Cart
 				//- 	span(class="glyphicon glyphicon-shopping-cart" aria-hidden="false")
-				button(type="button" id='test') Test
+				
 				button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#taskOptionDiv" id='optionTextS') 
 					span(class="glyphicon glyphicon-edit" aria-hidden="true") SELECT 
 
@@ -28,7 +28,10 @@
 					li( id='user')
 						a(href="/users") Users
 					li
-						a(href="/notif" id='notifBtn') Notification
+						a(href="/notif" id='announBtn') Announcement
+					li
+						a(href="#" id='notifBtn') Notification
+							
 				ul(class="nav navbar-nav navbar-right")
 					li
 						a(href='#' class="btn" data-toggle="collapse" data-target="#taskOptionDiv" id='optionTextL') 
@@ -39,8 +42,18 @@
 					li  
 						a(href="/users/logout" id= 'signOut' class="btn btn-info btn-md")
 							span(class="glyphicon glyphicon-log-out")  Sign-Out
+#testContainer
+	p heleo
 script.
 	$(function (){
+		var span = document.createElement('span')
+		span.style.color = '#FF8C5A'
+		span.className = "badge"
+		span.id = 'badgeNotif'
+		span.style.float = 'right'
+
+		document.getElementById('notifBtn').appendChild(span)
+
 		$.getJSON('/users/curUser').done(function(Rdata){
 			
 			$('#curUserName').append(Rdata.curUserName)

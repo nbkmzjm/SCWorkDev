@@ -202,7 +202,7 @@ function calendarPick(){
 
 function activeOptionText(x){
 		var span = document.createElement('span')
-		span.className = 'glyphicon glyphicon-tasks'
+		span.className = 'glyphicon glyphicon-edit'
 		span.innerHTML = x
 		span.style.backgroundColor = 'yellow'
 		var optionText = document.getElementById('optionTextS')

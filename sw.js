@@ -184,12 +184,7 @@ self.addEventListener("fetch", function(event) {
 });
 
 self.addEventListener('message', function(event){
-   console.log('realcing message...')
-   self.registration.showNotification("Web push",{
-
-    body:'hihihi',
-    vibrate: [200, 100, 200]
-    })
+    
     if(event.data.command =="POST"){
       clients.matchAll().then(function(clients){
         clients.forEach(function(client){

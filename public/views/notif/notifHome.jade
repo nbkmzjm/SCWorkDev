@@ -58,12 +58,17 @@ append scripts
 				        navigator.serviceWorker.addEventListener('message', function(event){
 				        	if(event.data.command == 'pushActivation'){
 				        		console.log("run push activation");
-				        	}else if(event.data.command == 'updateNotif'){
-				        		$.post('/notif/getNewNotif').done(function(Rdata){
+				        		$.post('/notif/getNewNotifCount').done(function(Rdata){
 
 				        			console.log('recieving update contain..')
-				        			$('#notifBtn').html(Rdata.userFeed)
+				        			$('#badgeNotif').html(Rdata.userFeed)
 				        		})
+				        	}else if(event.data.command == 'updateNotif'){
+				        		//- $.post('/notif/getNewNotif').done(function(Rdata){
+
+				        		//- 	console.log('recieving update contain..')
+				        		//- 	$('#notifBtn').html(Rdata.userFeed)
+				        		//- })
 				        		
 				        	}
 				        	
@@ -77,7 +82,7 @@ append scripts
 				
 			
 				function feedHome(){
-
+					push_update_notification()
 					var userSelected = []
 					var userIdSelected = []
 					var deptSelected = []
