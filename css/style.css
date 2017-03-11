@@ -6,11 +6,49 @@
 	max-width:1200px;
 	margin:0 auto;
 }
-#testContainer{
+#notifContainer{
 	position: absolute;
-	bottom:200px;
+	top:200px;
+	left: 50px;
 	z-index: 1;
+	color: black;
+	box-shadow: 10px 10px 5px #C0CDC3;
 }
+
+#tblNotif{
+	background-color: #DBEFC9;
+	min-width: 65px;
+	width: 500px;
+	
+	padding: 5px;
+
+	/*color: #00A478;*/
+	
+	margin-left: 0
+}
+#tblNotif tr{
+	border-bottom: 2px solid #C4C4CB;
+}
+
+#tblNotif th{
+	font-size: 20px;
+	padding: 5px;
+	text-align: center;
+	background-color: #20AFAA
+}
+
+
+#tblNotif td{
+	text-align: left;
+	padding: 10px;
+}
+/*#tblNotif tr:nth-child(even){
+	background-color: #C0FFFD
+}
+*/
+/*#tblNotif tr:nth-child(odd){
+	background-color: #DAEFFF
+}*/
 
 #container{
 	position: relative;

@@ -48,3 +48,14 @@ Date.prototype.toShortDate = function(){
 moment.fn.FullDate = function () {
 	return "xxxx"
 }
+
+moment.updateLocale('en', {
+    calendar : {
+        lastDay : '[Yesterday @] LT',
+        sameDay : '[Today @] LT',
+        nextDay : '[Tomorrow @] LT',
+        lastWeek : '[Last] dddd [@] LT',
+        nextWeek : 'dddd [@] LT',
+        sameElse : 'MMMM D [@] LT'
+    }
+});

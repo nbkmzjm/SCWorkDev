@@ -1372,7 +1372,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					coworkerIds.push(group.groupBLUserId)
 					var userFeed = new UserFeed(post.id, 
 						group.groupBLUserId, curUserId, 
-						curUser.fullName + ' posted :'+ post.postText)
+						curUser.fullName + ' posted: '+ post.postText)
 					bulkData.push(userFeed)
 				})
 				console.log('coworkerIds: '+JSON.stringify(coworkerIds, null, 4))
@@ -1741,18 +1741,22 @@ router.post('/getNewNotif', middleware.requireAuthentication, function(req, res)
 	var curUserId = req.user.id
 	db.userFeed.findAll({ 
 		where:{
-			receivedUserId:curUserId,
-			notification: 'new' 
+			receivedUserId:curUserId
 		},
 		include:[{
 			model:db.mainPost
 		}]
+		,
+		order:[ 
+			['createdAt', 'DESC']
+		],
+		limit: 25
 		
-	}).then(function(userFeed) {
+	}).then(function(userFeeds) {
 
  	 	
- 	 	console.log(JSON.stringify(userFeed, null, 4))
-		res.json({userFeed:'contain from server'})
+ 	 	console.log(JSON.stringify(userFeeds, null, 4))
+		res.json({userFeeds:userFeeds})
 	})
 
 })
@@ -1769,6 +1773,43 @@ router.post('/getNewNotifCount', middleware.requireAuthentication, function(req,
  	 	
  	 	console.log('countttt'+JSON.stringify(userFeedCount, null, 4))
 		res.json({userFeed:userFeedCount})
+	})
+
+})
+
+router.post('/clearNewNotif', middleware.requireAuthentication, function(req, res) {
+	var curUserId = req.user.id
+	db.userFeed.update({
+			notification:'viewed'
+		},{
+			where:{
+			receivedUserId:curUserId,
+			notification: 'new' 
+			}
+	}).then(function(updated) {
+
+ 	 	
+ 	 	console.log('updated'+JSON.stringify(updated, null, 4))
+		res.json({updated:updated})
+	})
+
+})
+
+router.post('/viewedNotif', middleware.requireAuthentication, function(req, res) {
+	var userFeedId = req.body.userFeedId
+	var curUserId = req.user.id
+	db.userFeed.update({
+			notification:'read'
+		},{
+			where:{
+			id:userFeedId,
+			notification:'viewed'
+			}
+	}).then(function(updated) {
+
+ 	 	
+ 	 	console.log('updatedviewed'+JSON.stringify(updated, null, 4))
+		res.json({updated:updated})
 	})
 
 })

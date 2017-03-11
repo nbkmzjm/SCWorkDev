@@ -84,7 +84,7 @@ function getPostDB(option, viewOnly){
 
 							//Posted users with date and time
 							var pUser = document.createElement('span')
-							pUser.innerHTML =  post.user.fullName + " posted " + moment(post.createdAt).fromNow() + '  '
+							pUser.innerHTML =  post.user.fullName + " posted " + moment(post.createdAt).calendar() + '  '
 							divTitle.appendChild(pUser)
 
 							
@@ -153,7 +153,7 @@ function getPostDB(option, viewOnly){
 												if(comment.commentEmoj !== ''){
 													var pUser = document.createElement('p')
 													pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName + ' </b>' 
-													+ moment(comment.createdAt).fromNow()
+													+ moment(comment.createdAt).calendar()
 													pUser.style.fontSize = '10px'
 													pUser.style.color = '#B0AAC4'
 														var spanEmoj = document.createElement('span')

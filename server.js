@@ -320,7 +320,6 @@ app.get('/scOverview', middleware.requireAuthentication, function(req, res){
 	var datePos={
 		$between:[sDate,eDate]
 	}
-	console.log('pushing endpoint: '+ endpoint)
 	
 	console.log(sDate +':'+ eDate)
 	if (sDate.slice(-1)!=eDate.slice(-1)){

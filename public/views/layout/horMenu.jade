@@ -42,10 +42,12 @@
 					li  
 						a(href="/users/logout" id= 'signOut' class="btn btn-info btn-md")
 							span(class="glyphicon glyphicon-log-out")  Sign-Out
-#testContainer
-	p heleo
+#notifContainer
+	
 script.
 	$(function (){
+
+		
 		var span = document.createElement('span')
 		span.style.color = '#FF8C5A'
 		span.className = "badge"
@@ -57,6 +59,57 @@ script.
 		$.getJSON('/users/curUser').done(function(Rdata){
 			
 			$('#curUserName').append(Rdata.curUserName)
+		})
+		document.getElementById('notifBtn').addEventListener('click', function(){
+			$('#notifContainer').html('')
+			var span = document.createElement('span')
+			span.innerHTML = '';
+			span.zIndex = 1;
+			span.style.position = 'absolute'
+			span.style.right = '1px'
+			span.style.fontSize = "25px"
+			span.style.color = '#DF7E01'
+			span.className = "glyphicon glyphicon-remove"
+			span.id = 'delGly';
+			//- click the 'x' to remove from list
+			span.addEventListener('click', function(){
+				$('#notifContainer').html('')
+			
+			});
+			$('#notifContainer').append(span)
+			$.post('/notif/getNewNotif').done(function(Rdata){
+				console.log('recieving update contain..')
+				var tblNotif = document.createElement('table')
+				tblNotif.id = 'tblNotif'
+					var th = document.createElement('th')
+							th.innerHTML = 'Activity Center'
+					tblNotif.appendChild(th)
+				$('#notifContainer').append(tblNotif)		
+				Rdata.userFeeds.forEach(function(userFeed){
+					console.log(userFeed)
+					var tr = document.createElement('tr')
+						if(userFeed.notification === 'read'){
+							tr.style.backgroundColor = '#82C3FF'
+						} else if(userFeed.notification === 'viewed'){
+							tr.style.backgroundColor = '#C0FFFD'
+						}
+
+						
+						var td = document.createElement('td')
+						td.innerHTML = '<b>'+userFeed.notifText + '</b><br>' + moment(userFeed.createdAt).calendar()
+						td.addEventListener('click', function(){
+							$.post('notif/viewedNotif',{
+								userFeedId:userFeed.id
+							}).done(function(){})
+						})
+					tr.appendChild(td)
+
+				$('#tblNotif').append(tr)
+
+				})
+				$.post('notif/clearNewNotif').done(function(){})
+				
+			})
 		})
 
 		document.getElementById('signOut').addEventListener('click',function(){
