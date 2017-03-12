@@ -1750,7 +1750,7 @@ router.post('/getNewNotif', middleware.requireAuthentication, function(req, res)
 		order:[ 
 			['createdAt', 'DESC']
 		],
-		limit: 25
+		limit: 100
 		
 	}).then(function(userFeeds) {
 

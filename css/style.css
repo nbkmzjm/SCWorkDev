@@ -8,11 +8,13 @@
 }
 #notifContainer{
 	position: absolute;
-	top:200px;
+	top:170px;
 	left: 50px;
 	z-index: 1;
 	color: black;
-	box-shadow: 10px 10px 5px #C0CDC3;
+	box-shadow: 10px 10px 15px #888888;
+	background-color: white;
+	overflow-y: auto;
 }
 
 #tblNotif{
