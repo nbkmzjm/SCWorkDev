@@ -11,7 +11,7 @@
 				//- button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#")
 				//- 	span(class="sr-only") Shopping Cart
 				//- 	span(class="glyphicon glyphicon-shopping-cart" aria-hidden="false")
-				
+				button(id= 'testbtn') Test
 				button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#taskOptionDiv" id='optionTextS') 
 					span(class="glyphicon glyphicon-edit" aria-hidden="true") SELECT 
 
@@ -47,7 +47,10 @@
 script.
 	$(function (){
 
-		
+		$('#testbtn').click(function(){
+			document.location = ("/notif?id=282")
+			
+		})
 		var span = document.createElement('span')
 		span.style.color = '#FF8C5A'
 		span.className = "badge"
@@ -63,7 +66,7 @@ script.
 		
 		document.getElementById('notifBtn').addEventListener('click', function(){
 			$('#notifContainer').html('')
-			document.getElementById('notifContainer').style.maxHeight = '700px'
+			document.getElementById('notifContainer').style.height = '700px'
 			document.getElementById('notifContainer').style.width = '500px'
 			
 			var span = document.createElement('span')
@@ -104,6 +107,7 @@ script.
 						var td = document.createElement('td')
 						td.innerHTML = '<b>'+userFeed.notifText + '</b><br>' + moment(userFeed.createdAt).calendar()
 						td.addEventListener('click', function(){
+							
 							$.post('notif/viewedNotif',{
 								userFeedId:userFeed.id
 							}).done(function(){})

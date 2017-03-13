@@ -289,6 +289,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	var loadNumber = req.body.loadNumber
 	var viewOption = req.body.viewOption
 	var viewOnly = req.body.viewOnly
+	var postId = req.body.postId
 	console.log('offset: '+ loadNumber)
 	console.log('viewOnly: '+ viewOnly)
 
@@ -304,7 +305,21 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 			feedSetting.value = viewOption
 		}
 		console.log(feedSetting.value)
-		if(feedSetting.value==='Private'){
+		if(postId !== 'false'){
+			console.log('postId: '+postId)
+			db.mainPost.findOne({
+				include:[{
+					model:db.user
+				}],
+				where:{
+					id:postId
+				}
+			}).then(function(post){
+				var posts = []
+				posts.push(post)
+				res.json({posts:posts})
+			})
+		}else if(feedSetting.value==='Private'){
 			db.mainPost.findAll({
 				include:[{
 					model:db.user
