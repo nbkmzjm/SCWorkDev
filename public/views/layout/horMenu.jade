@@ -48,7 +48,7 @@ script.
 	$(function (){
 
 		$('#testbtn').click(function(){
-			document.location = ("/notif?id=282")
+			
 			
 		})
 		var span = document.createElement('span')
@@ -107,7 +107,7 @@ script.
 						var td = document.createElement('td')
 						td.innerHTML = '<b>'+userFeed.notifText + '</b><br>' + moment(userFeed.createdAt).calendar()
 						td.addEventListener('click', function(){
-							
+							document.location = ("/notif?postId="+ userFeed.mainPost.id)
 							$.post('notif/viewedNotif',{
 								userFeedId:userFeed.id
 							}).done(function(){})

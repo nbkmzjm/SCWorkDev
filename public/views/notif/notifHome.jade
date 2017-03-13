@@ -39,6 +39,7 @@ append scripts
 		$(function(){
 			var JSONdata = !{JSONdata};
 			var curUser = JSONdata.curUser
+			var postId = JSONdata.postId
 			feedHome()
 			//- var groups = [{name:'a'}, {name:'b'}, {name:'c'}]
 			//- ul = document.createElement('ul')
@@ -491,7 +492,12 @@ append scripts
 
 				 
 				})
-				getPostDB()
+				if(postId !== undefined){
+					getPostDB({postId:postId})
+				}else{
+					getPostDB()
+				}
+				
 
 
 				//- $.getJSON('/notif/mainFeed').done(function(Rdata){
