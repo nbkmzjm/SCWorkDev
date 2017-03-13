@@ -1389,7 +1389,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					coworkerIds.push(group.groupBLUserId)
 					var userFeed = new UserFeed(post.id, 
 						group.groupBLUserId, curUserId, 
-						curUser.fullName + ' posted: '+ post.postText)
+						curUser.fullName + ' posted to CO-WORKER: '+ post.postText)
 					bulkData.push(userFeed)
 				})
 				console.log('coworkerIds: '+JSON.stringify(coworkerIds, null, 4))
@@ -1432,7 +1432,8 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					// coworkerIds.push(group.groupBLUserId):""
 					// group.users[0].userGroups.status === 'Coworker'?
 					colleagueIds.push(group.groupBLUserId)
-					var userFeed = new UserFeed(post.id, group.groupBLUserId)
+					var userFeed = new UserFeed(post.id, group.groupBLUserId, curUserId, 
+						curUser.fullName + ' posted to COLLEAGUE '+ post.postText)
 						bulkData.push(userFeed)
 				})
 				console.log('colleagueIds: '+JSON.stringify(colleagueIds, null, 4))
@@ -1475,7 +1476,8 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					colleagueGroupIds.push(group.id):""
 					console.log('colleagueGroupIds: '+JSON.stringify(colleagueGroupIds, null, 4))
 					colleagueIds.push(group.groupBLUserId)
-					var userFeed = new UserFeed(post.id, group.groupBLUserId)
+					var userFeed = new UserFeed(post.id, group.groupBLUserId, curUserId, 
+						curUser.fullName + ' posted to COWORKER OF COLLEAGUE: '+ post.postText)
 						bulkData.push(userFeed)
 				})
 
@@ -1499,7 +1501,8 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					//removing duplicate if exist
 					// if(coworkerofColleagueUserIds.indexOf(userGroup.userId)===-1){
 					// 	coworkerofColleagueUserIds.push(userGroup.userId)
-						var userFeed = new UserFeed(post.id, userGroup.userId)
+						var userFeed = new UserFeed(post.id, userGroup.userId, curUserId, 
+						curUser.fullName + ' posted to COWORKER OF COLLEAGUE: '+ post.postText)
 						bulkData.push(userFeed)
 					// }
 					
@@ -1639,6 +1642,22 @@ router.post('/replyPost', middleware.requireAuthentication, function(req, res) {
 		mainPostId:mainPostId
 	}).then(function(comment){
 		console.log(JSON.stringify(comment, null, 4))
+		var bulkData = []
+
+		groups.forEach(function(group, i){
+			console.log(curUser.fullName + ' posted '+ post.postText)
+			// group.users[0].userGroups.status === 'Owner'?
+			// coworkerIds.push(group.groupBLUserId):""
+			// group.users[0].userGroups.status === 'Coworker'?
+			coworkerIds.push(group.groupBLUserId)
+			var userFeed = new UserFeed(post.id, 
+				group.groupBLUserId, curUserId, 
+				curUser.fullName + ' posted: '+ post.postText)
+			bulkData.push(userFeed)
+		})
+		console.log('coworkerIds: '+JSON.stringify(coworkerIds, null, 4))
+		console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+		return db.userFeed.bulkCreate(bulkData)
 		res.json({
 			comment:comment
 		})
