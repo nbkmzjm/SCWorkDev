@@ -7,7 +7,7 @@ function postDB(postTo, postText, filter, userArray){
 		filter:filter,
 		userArray:userArrayString
 	}).done(function(Rdata){
-		location.reload()
+		// location.reload()
 		console.log(Rdata)
 	})
 					
