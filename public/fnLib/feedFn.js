@@ -87,7 +87,10 @@ function getPostDB(option){
 
 							//Posted users with date and time
 							var pUser = document.createElement('span')
-							pUser.innerHTML =  post.user.fullName + " posted " + moment(post.createdAt).calendar() + '  '
+							pUser.innerHTML =  post.user.fullName + ' ('+
+							post.user.title + ', ' + post.user.department.name + 
+
+							") posted " + moment(post.createdAt).calendar() + '  '
 							divTitle.appendChild(pUser)
 
 							
@@ -155,7 +158,10 @@ function getPostDB(option){
 										
 												if(comment.commentEmoj !== ''){
 													var pUser = document.createElement('p')
-													pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName + ' </b>' 
+													pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName + ' ('+
+													post.user.title + ', ' + post.user.department.name + 
+
+													") "+ ' </b>' 
 													+ moment(comment.createdAt).calendar()
 													pUser.style.fontSize = '10px'
 													pUser.style.color = '#B0AAC4'
@@ -172,8 +178,10 @@ function getPostDB(option){
 													// spanEmoj.className='glyphicon glyphicon-thumbs-up'
 													// spanEmoj.style.color = 'gray'
 													var pUser = document.createElement('p')
-													pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName + ' </b>' 
-													+ moment(comment.createdAt).fromNow()
+													pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName 
+													+ ' ('+ post.user.title + ', ' + post.user.department.name + 
+													") "+ ' </b>' 
+													+ moment(comment.createdAt).calendar()
 													pUser.style.color = '#B0AAC4'
 													pUser.style.fontSize = '10px'
 

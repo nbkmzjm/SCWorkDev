@@ -441,7 +441,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				})
 			});
 		}else if(feedSetting.value==='Coworker'){
-			var post
+			var posts
 			db.userFeed.findAll({
 				attributes:['mainPostId'],
 				where:{
@@ -449,10 +449,25 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				},
 				include:[{
 					model:db.mainPost,
+					include:[{
+						model:db.user,
+						attributes:['name', 'lastname','departmentId', 'title'],
+						include:[{
+							model:db.department,
+							attributes:['name']
+						}]		
+					}]					
 
-				}]
+				}],
+				limit: 12,
+				offset: loadNumber
 			}).then(function(userFeeds){
-				console.log('userFeeds:' + JSON.stringify(userFeeds, null, 4))
+				posts = userFeeds.map(function(userFeed){
+					return userFeed.mainPost
+				})
+				console.log('posts:' + JSON.stringify(posts, null, 4))
+				res.json({posts:posts})
+
 			})
 			// var workGroupName
 			// db.userGroups.findAll({
