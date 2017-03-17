@@ -110,11 +110,13 @@ append scripts
 							if(select.value === "WorkGroup" && selectWorkGroup.value ===''){
 							alert('Please select a WorkGroup')
 							}else if(select.value === "WorkGroup" && selectWorkGroup.value !== ''){
-							inputPost.value!==''?postDB(selectWorkGroup.value, inputPost.value, selectFilter.value,userIdSelected):''
+							inputPost.value!==''?postDB(selectWorkGroup.value, 
+							inputPost.value, selectFilter.value,userIdSelected):''
 							location.reload()
 							}else{
 							console.log('xxxbeforepost...')
-							inputPost.value!==''?postDB(select.value, inputPost.value, selectFilter.value,userIdSelected):''
+							inputPost.value!==''?postDB(select.value, 
+							inputPost.value, selectFilter.value,userIdSelected):''
 							//- location.reload()
 							}
 

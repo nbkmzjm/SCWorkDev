@@ -280,8 +280,7 @@ router.post('/setFeedSetting', middleware.requireAuthentication, function(req, r
 	}
 })
 
-
-
+ 
 	
 router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	var curUser = req.user
@@ -295,6 +294,35 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	console.log('offset: '+ loadNumber)
 	console.log('viewOnly: '+ viewOnly)
 
+
+	var getFeedsPara = function(postTo){
+		return {
+			attributes:['mainPostId'],
+			where:{
+				receivedUserId:curUserId
+			},
+			include:[{
+				model:db.mainPost,
+				where:{
+					postTo:postTo
+				},
+				include:[{
+					model:db.user,
+					attributes:['name', 'lastname','departmentId', 'title'],
+					include:[{
+						model:db.department,
+						attributes:['name']
+					}]		
+				}]					
+
+			}],
+			order:[
+				[db.mainPost, 'createdAt', 'DESC']
+			],
+			limit: 12,
+			offset: loadNumber
+		}
+	}
 	// console.log('lodingNumber: '+ loadNumber)
 	db.feedSetting.findOne({
 		where:{
@@ -322,26 +350,14 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				res.json({posts:posts})
 			})
 		}else if(feedSetting.value==='Private'){
-			db.mainPost.findAll({
-				include:[{
-					model:db.user
-				}],
-				where:{
-					$or:[{
-						userId:curUserId
-					},{	
-						include:{
-							$like:'%'+curUserId+'%'
-						}
-					}]
-				},
-				order:[
-					['createdAt', 'DESC']
-				],
-				limit: 12,
-				offset: loadNumber
-			}).then(function(posts){
-				// console.log(JSON.stringify(posts, null, 4))
+			
+			db.userFeed.findAll(
+				getFeedsPara('Private')
+			).then(function(userFeeds){
+				var posts = userFeeds.map(function(userFeed){
+					return userFeed.mainPost
+				})
+				console.log('posts:' + JSON.stringify(posts, null, 4))
 				res.json({posts:posts})
 			}).catch(function(e) {
 				console.log(e)
@@ -350,98 +366,115 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				})
 			})
 		}else if(feedSetting.value==='WorkGroup'){
-			var workGroupName
-			db.userGroups.findAll({
-					where:{
-						userId:curUserId,
-						status:{
-							$like:'WorkGroup%'
-						}
-					}
-			}).then(function(userGroups){
-				console.log('userGroups:' + JSON.stringify(userGroups, null, 4))
-				workGroupName = userGroups.map(function(userGroup){
-					return userGroup.status
+			db.userFeed.findAll(
+				getFeedsPara({
+						$like:'WORKGROUP%'
+					})
+			).then(function(userFeeds){
+				var posts = userFeeds.map(function(userFeed){
+					return userFeed.mainPost
 				})
-				console.log('workGroupName:' + JSON.stringify(workGroupName, null, 4))
-				return db.userGroups.findAll({
-					where:{
-						status:{
-							$in:workGroupName
-						}
-					}
-				})
-
-			}).then(function(userGroups){
-				// console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
-				var workGroupIds = []
-
-				userGroups.forEach(function(userGroup, i){
-					workGroupIds.indexOf(userGroup.userId)===-1?
-					workGroupIds.push(userGroup.userId):""
-				})
-				console.log('workGroupIds: '+JSON.stringify(workGroupIds, null, 4))
-
-				if(viewOnly==='true'){
-					wherePara={
-						userId:{
-								$in:workGroupIds
-							},
-							exclude:{
-								$notLike:'%'+curUserId+'%'
-							},
-							postTo:{
-								$in:workGroupName
-							}
-					}
-				}else{
-					wherePara={
-						$or:[{
-							userId:req.user.id
-						},{
-							userId:{
-								$in:workGroupIds
-							},
-							exclude:{
-								$notLike:'%'+curUserId+'%'
-							},
-							postTo:{
-								$in:workGroupName
-							}
-
-						},{
-							include:{
-							$like:'%'+curUserId+'%'
-							}
-						}]
-						
-					}
-
-				}
-
-				return [db.mainPost.findAll({
-				include:[{
-					model:db.user
-				}],
-				where:wherePara
-				,
-				order:[
-					['createdAt', 'DESC']
-				],
-				limit: 12,
-				offset: loadNumber
-				})]
-			}).spread(function(posts){
-				// console.log(JSON.stringify(posts, null, 4))
+				console.log('posts:' + JSON.stringify(posts, null, 4))
 				res.json({posts:posts})
 			}).catch(function(e) {
 				console.log(e)
 				res.render('error', {
-					error: e.toString()
+				error: e.toString()
 				})
-			});
+			})
+
+
+			// var workGroupName
+			// db.userGroups.findAll({
+			// 		where:{
+			// 			userId:curUserId,
+			// 			status:{
+			// 				$like:'WorkGroup%'
+			// 			}
+			// 		}
+			// }).then(function(userGroups){
+			// 	console.log('userGroups:' + JSON.stringify(userGroups, null, 4))
+			// 	workGroupName = userGroups.map(function(userGroup){
+			// 		return userGroup.status
+			// 	})
+			// 	console.log('workGroupName:' + JSON.stringify(workGroupName, null, 4))
+			// 	return db.userGroups.findAll({
+			// 		where:{
+			// 			status:{
+			// 				$in:workGroupName
+			// 			}
+			// 		}
+			// 	})
+
+			// }).then(function(userGroups){
+			// 	// console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
+			// 	var workGroupIds = []
+
+			// 	userGroups.forEach(function(userGroup, i){
+			// 		workGroupIds.indexOf(userGroup.userId)===-1?
+			// 		workGroupIds.push(userGroup.userId):""
+			// 	})
+			// 	console.log('workGroupIds: '+JSON.stringify(workGroupIds, null, 4))
+
+			// 	if(viewOnly==='true'){
+			// 		wherePara={
+			// 			userId:{
+			// 					$in:workGroupIds
+			// 				},
+			// 				exclude:{
+			// 					$notLike:'%'+curUserId+'%'
+			// 				},
+			// 				postTo:{
+			// 					$in:workGroupName
+			// 				}
+			// 		}
+			// 	}else{
+			// 		wherePara={
+			// 			$or:[{
+			// 				userId:req.user.id
+			// 			},{
+			// 				userId:{
+			// 					$in:workGroupIds
+			// 				},
+			// 				exclude:{
+			// 					$notLike:'%'+curUserId+'%'
+			// 				},
+			// 				postTo:{
+			// 					$in:workGroupName
+			// 				}
+
+			// 			},{
+			// 				include:{
+			// 				$like:'%'+curUserId+'%'
+			// 				}
+			// 			}]
+						
+			// 		}
+
+			// 	}
+
+			// 	return [db.mainPost.findAll({
+			// 	include:[{
+			// 		model:db.user
+			// 	}],
+			// 	where:wherePara
+			// 	,
+			// 	order:[
+			// 		['createdAt', 'DESC']
+			// 	],
+			// 	limit: 12,
+			// 	offset: loadNumber
+			// 	})]
+			// }).spread(function(posts){
+			// 	// console.log(JSON.stringify(posts, null, 4))
+			// 	res.json({posts:posts})
+			// }).catch(function(e) {
+			// 	console.log(e)
+			// 	res.render('error', {
+			// 		error: e.toString()
+			// 	})
+			// });
 		}else if(feedSetting.value==='Coworker'){
-			var posts
 			db.userFeed.findAll({
 				attributes:['mainPostId'],
 				where:{
@@ -449,6 +482,9 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				},
 				include:[{
 					model:db.mainPost,
+					where:{
+						postTo:'Colleague'
+					},
 					include:[{
 						model:db.user,
 						attributes:['name', 'lastname','departmentId', 'title'],
@@ -459,6 +495,9 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					}]					
 
 				}],
+				order:[
+					[db.mainPost, 'createdAt', 'DESC']
+				],
 				limit: 12,
 				offset: loadNumber
 			}).then(function(userFeeds){
@@ -1260,11 +1299,11 @@ router.post('/getUserPost', middleware.requireAuthentication, function(req, res)
 	})
 
 })
-function UserFeed(mainPostId, receivedUserId, userId, notifText){
+function UserFeed(mainPostId, receivedUserId, notification, userId, notifText){
 	this.mainPostId = mainPostId
 	this.receivedUserId = receivedUserId
 	this.status = 'active',
-	this.notification = 'new'
+	this.notification = notification|| 'new'
 	this.userId = userId,
 	this.notifText = notifText
 }
@@ -1352,8 +1391,11 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 		console.log('post:'+JSON.stringify(post, null, 4))
 		// console.log(JSON.stringify(user, null, 4))
 		var postTo = post.postTo
-
-		if(postTo.indexOf('WORKGROUP') !== -1){
+		if(postTo === 'Private'){
+			var userFeed = new UserFeed(post.id, curUserId, 'None', curUserId, 
+						curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
+			db.userFeed.create(userFeed)
+		}else if(postTo.indexOf('WORKGROUP') !== -1){
 			console.log('WorkGroup...')
 			var workGroupIds = []
 			db.userGroups.findAll({
@@ -1366,11 +1408,13 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				var bulkData = []
 				//add id of owner of post for notification
 				workGroupIds.push(curUserId)
-
+				var userFeed = new UserFeed(post.id, curUserId, 'None', curUserId, 
+				curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
+				bulkData.push(userFeed)
 				userGroups.forEach(function(userGroup, i){
 					if (workGroupIds.indexOf(userGroup.userId)===-1){
 						workGroupIds.push(userGroup.userId)
-						var userFeed = new UserFeed(post.id, userGroup.userId, curUserId, 
+						var userFeed = new UserFeed(post.id, userGroup.userId, 'new', curUserId, 
 						curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
 						bulkData.push(userFeed)
 					}

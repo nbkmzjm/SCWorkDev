@@ -50,9 +50,6 @@ function getPostDB(option){
 		viewOnly:viewOnly,
 		postId:postId
 	}).done(function(Rdata){
-		console.log(Rdata)
-		
-						
 		
 		Rdata.posts.forEach(function(post, i){
 

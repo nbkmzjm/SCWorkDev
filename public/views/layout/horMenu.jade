@@ -98,21 +98,23 @@ script.
 				Rdata.userFeeds.forEach(function(userFeed){
 					console.log(userFeed)
 					var tr = document.createElement('tr')
-						if(userFeed.notification === 'read'){
-							tr.style.backgroundColor = '#82C3FF'
-						} else if(userFeed.notification === 'viewed'){
-							tr.style.backgroundColor = '#C0FFFD'
-						}
+						if (userFeed.notification !== 'None'){
+							if(userFeed.notification === 'read'){
+								tr.style.backgroundColor = '#82C3FF'
+							} else if(userFeed.notification === 'viewed'){
+								tr.style.backgroundColor = '#C0FFFD'
+							}
 
-						
-						var td = document.createElement('td')
-						td.innerHTML = '<b>'+userFeed.notifText + '</b><br>' + moment(userFeed.createdAt).calendar()
-						td.addEventListener('click', function(){
-							document.location = ("/notif?postId="+ userFeed.mainPost.id)
-							$.post('notif/viewedNotif',{
-								userFeedId:userFeed.id
-							}).done(function(){})
-						})
+							
+							var td = document.createElement('td')
+							td.innerHTML = '<b>'+userFeed.notifText + '</b><br>' + moment(userFeed.createdAt).calendar()
+							td.addEventListener('click', function(){
+								document.location = ("/notif?postId="+ userFeed.mainPost.id)
+								$.post('notif/viewedNotif',{
+									userFeedId:userFeed.id
+								}).done(function(){})
+							})
+						}
 
 					tr.appendChild(td)
 
