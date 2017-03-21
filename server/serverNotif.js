@@ -491,16 +491,35 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 			// 	})
 			// });
 		}else if(feedSetting.value==='Coworker'){
+			var byMe = false
+			var byOther = true
+			if(byMe && byOther !== true){
+					userIdPara = curUserId
+				}else if(byOther && byMe !== true){
+					userIdPara = {
+						$ne:curUserId
+					}
+
+				}else{
+					userIdPara = {
+						$gt:0
+					}
+			}
 			if(viewOnly!=='true'){
+				
+				
 				var filter = getFeedsPara({
 					$or:[{
 							postTo:{
 								$in:['Private', 'Coworker']
 							}
+							,
+							userId:userIdPara
 						},{
 							postTo:{
 								$like:'WORKGROUP%'
-							}
+							},
+							userId:userIdPara
 						}
 					]
 				})
@@ -509,6 +528,8 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					postTo:{
 						$in:['Coworker']
 					}
+					,
+					userId:userIdPara
 				})
 			}
 			
@@ -833,186 +854,221 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 			// });
 		
 		}else if(feedSetting.value==='Coworker of Colleague'){
-			var workGroupName
-			db.userGroups.findAll({
-					where:{
-						userId:curUserId,
-						status:{
-							$like:'WorkGroup%'
-						}
-					}
-			}).then(function(userGroups){
-				console.log('userGroups:' + JSON.stringify(userGroups, null, 4))
-				workGroupName = userGroups.map(function(userGroup){
-					return userGroup.status
-				})
-				console.log('workGroupName:' + JSON.stringify(workGroupName, null, 4))
-				return db.userGroups.findAll({
-					where:{
-						status:{
-							$in:workGroupName
-						}
-					}
-				})
-
-			}).then(function(userGroupWorkGroups){
-
-			return [db.group.findAll({
-				include:[{
-					model:db.user,
-					where:{
-						id:curUserId
-					},
-					through:{
-						where:{
-							status:{
-								$in:['Coworker','Colleague']
+			if(viewOnly!=='true'){
+				var filter = getFeedsPara({
+					$or:[{
+							postTo:{
+								$in:['Private', 'Coworker', 'Colleague', 'Coworker of Colleague']
+							}
+						},{
+							postTo:{
+								$like:'WORKGROUP%'
 							}
 						}
-					}
-				}]
-			}), userGroupWorkGroups]
-			}).spread(function(groups, userGroupWorkGroups){
-
-				console.log('friend Group:'+JSON.stringify(groups, null, 4))
-				var colleagueUserIds = []
-				var coworkerUserIds = []
-				var coworkerofColleagueGroupIds = []
-				var workGroupIds = []
-
-				userGroupWorkGroups.forEach(function(userGroupWorkGroup, i){
-					workGroupIds.indexOf(userGroupWorkGroup.userId)===-1?
-					workGroupIds.push(userGroupWorkGroup.userId):""
+					]
 				})
-				
-				groups.forEach(function(group, i){
-					
-					console.log(group.users[0].userGroups.status)
-					if(group.users[0].userGroups.status === 'Colleague'){
-						colleagueUserIds.push(group.groupBLUserId)
-						coworkerofColleagueGroupIds.push(group.id)
-							
-					}else if(group.users[0].userGroups.status === 'Coworker'){
-						coworkerUserIds.push(group.groupBLUserId)
+			}else{
+				var filter = getFeedsPara({
+					postTo:{
+						$in:['Coworker of Colleague']
 					}
 				})
-				//Finding for Coworker of Colleague
-				db.userGroups.findAll({
-					where:{
-						groupId:{
-							$in:coworkerofColleagueGroupIds
-						},
-						userId:{
-							$notIn:[curUserId]
-						},
-						status:{
-							$in:['Coworker']
-						}
-					}
-				}).then(function(userGroups){
-					//adding userId of Coworker of Colleague to coworkerofColleagueUserIds Array
-					var coworkerofColleagueUserIds = []
-					userGroups.forEach(function(userGroup, i){
-						//removing duplicate if exist
-						coworkerofColleagueUserIds.indexOf(userGroup.userId)===-1?
-						coworkerofColleagueUserIds.push(userGroup.userId):""
-					})
-					
-					console.log('colleagueUserIds: '+JSON.stringify(colleagueUserIds, null, 4))
-					console.log('workGroupIds: '+JSON.stringify(workGroupIds, null, 4))
-					console.log('coworkerUserIds: '+JSON.stringify(coworkerUserIds, null, 4))
-				
-				
-
-					console.log('coworkerofColleagueUserIds: '+JSON.stringify(coworkerofColleagueUserIds, null, 4))
-					if(viewOnly==='true'){
-						wherePara={
-							userId:{
-									$in:colleagueUserIds
-								},
-								exclude:{
-									$notLike:'%'+curUserId+'%'
-								},
-									
-								postTo:{
-									$in:['Coworker of Colleague']
-								}
-						}
-					}else{
-						wherePara={
-							$or:[{
-								userId:req.user.id
-							},{
-								userId:{
-									$in:colleagueUserIds
-								},
-								exclude:{
-									$notLike:'%'+curUserId+'%'
-								},
-								postTo:{
-									$notIn:['Private','Coworker']
-								}
-							},{
-								userId:{
-									$in:coworkerUserIds
-								},
-								exclude:{
-									$notLike:'%'+curUserId+'%'
-								},
-																
-								postTo:{
-									$notIn:['Private']
-								}
-							},{
-								userId:{
-									$in:coworkerofColleagueUserIds
-								},
-								exclude:{
-									$notLike:'%'+curUserId+'%'
-								},
-								postTo:{
-									$in:['Coworker of Colleague']
-								}
-
-							},{
-								userId:{
-									$in:workGroupIds
-								},
-								exclude:{
-									$notLike:'%'+curUserId+'%'
-								},
-								postTo:{
-									$in:workGroupName
-								}
-							},{
-								include:{
-								$like:'%'+curUserId+'%'
-								}
-							}]
-						}
-
-					}
-					db.mainPost.findAll({
-					include:[{
-						model:db.user
-					}],
-					where:wherePara,
-					order:[
-						['createdAt', 'DESC']
-					],
-					limit: 12,
-					offset: loadNumber
-					}).then(function(posts){
-						res.json({posts:posts})
-					})
-				})
+			}
 			
+			db.userFeed.findAll(filter).then(function(userFeeds){
+				var posts = userFeeds.map(function(userFeed){
+					return userFeed.mainPost
+				})
+				console.log('posts:' + JSON.stringify(posts, null, 4))
+				res.json({posts:posts})
 			}).catch(function(e) {
 				console.log(e)
 				res.render('error', {
-					error: e.toString()
+				error: e.toString()
 				})
-			});
+			})
+
+
+			// var workGroupName
+			// db.userGroups.findAll({
+			// 		where:{
+			// 			userId:curUserId,
+			// 			status:{
+			// 				$like:'WorkGroup%'
+			// 			}
+			// 		}
+			// }).then(function(userGroups){
+			// 	console.log('userGroups:' + JSON.stringify(userGroups, null, 4))
+			// 	workGroupName = userGroups.map(function(userGroup){
+			// 		return userGroup.status
+			// 	})
+			// 	console.log('workGroupName:' + JSON.stringify(workGroupName, null, 4))
+			// 	return db.userGroups.findAll({
+			// 		where:{
+			// 			status:{
+			// 				$in:workGroupName
+			// 			}
+			// 		}
+			// 	})
+
+			// }).then(function(userGroupWorkGroups){
+
+			// return [db.group.findAll({
+			// 	include:[{
+			// 		model:db.user,
+			// 		where:{
+			// 			id:curUserId
+			// 		},
+			// 		through:{
+			// 			where:{
+			// 				status:{
+			// 					$in:['Coworker','Colleague']
+			// 				}
+			// 			}
+			// 		}
+			// 	}]
+			// }), userGroupWorkGroups]
+			// }).spread(function(groups, userGroupWorkGroups){
+
+			// 	console.log('friend Group:'+JSON.stringify(groups, null, 4))
+			// 	var colleagueUserIds = []
+			// 	var coworkerUserIds = []
+			// 	var coworkerofColleagueGroupIds = []
+			// 	var workGroupIds = []
+
+			// 	userGroupWorkGroups.forEach(function(userGroupWorkGroup, i){
+			// 		workGroupIds.indexOf(userGroupWorkGroup.userId)===-1?
+			// 		workGroupIds.push(userGroupWorkGroup.userId):""
+			// 	})
+				
+			// 	groups.forEach(function(group, i){
+					
+			// 		console.log(group.users[0].userGroups.status)
+			// 		if(group.users[0].userGroups.status === 'Colleague'){
+			// 			colleagueUserIds.push(group.groupBLUserId)
+			// 			coworkerofColleagueGroupIds.push(group.id)
+							
+			// 		}else if(group.users[0].userGroups.status === 'Coworker'){
+			// 			coworkerUserIds.push(group.groupBLUserId)
+			// 		}
+			// 	})
+			// 	//Finding for Coworker of Colleague
+			// 	db.userGroups.findAll({
+			// 		where:{
+			// 			groupId:{
+			// 				$in:coworkerofColleagueGroupIds
+			// 			},
+			// 			userId:{
+			// 				$notIn:[curUserId]
+			// 			},
+			// 			status:{
+			// 				$in:['Coworker']
+			// 			}
+			// 		}
+			// 	}).then(function(userGroups){
+			// 		//adding userId of Coworker of Colleague to coworkerofColleagueUserIds Array
+			// 		var coworkerofColleagueUserIds = []
+			// 		userGroups.forEach(function(userGroup, i){
+			// 			//removing duplicate if exist
+			// 			coworkerofColleagueUserIds.indexOf(userGroup.userId)===-1?
+			// 			coworkerofColleagueUserIds.push(userGroup.userId):""
+			// 		})
+					
+			// 		console.log('colleagueUserIds: '+JSON.stringify(colleagueUserIds, null, 4))
+			// 		console.log('workGroupIds: '+JSON.stringify(workGroupIds, null, 4))
+			// 		console.log('coworkerUserIds: '+JSON.stringify(coworkerUserIds, null, 4))
+				
+				
+
+			// 		console.log('coworkerofColleagueUserIds: '+JSON.stringify(coworkerofColleagueUserIds, null, 4))
+			// 		if(viewOnly==='true'){
+			// 			wherePara={
+			// 				userId:{
+			// 						$in:colleagueUserIds
+			// 					},
+			// 					exclude:{
+			// 						$notLike:'%'+curUserId+'%'
+			// 					},
+									
+			// 					postTo:{
+			// 						$in:['Coworker of Colleague']
+			// 					}
+			// 			}
+			// 		}else{
+			// 			wherePara={
+			// 				$or:[{
+			// 					userId:req.user.id
+			// 				},{
+			// 					userId:{
+			// 						$in:colleagueUserIds
+			// 					},
+			// 					exclude:{
+			// 						$notLike:'%'+curUserId+'%'
+			// 					},
+			// 					postTo:{
+			// 						$notIn:['Private','Coworker']
+			// 					}
+			// 				},{
+			// 					userId:{
+			// 						$in:coworkerUserIds
+			// 					},
+			// 					exclude:{
+			// 						$notLike:'%'+curUserId+'%'
+			// 					},
+																
+			// 					postTo:{
+			// 						$notIn:['Private']
+			// 					}
+			// 				},{
+			// 					userId:{
+			// 						$in:coworkerofColleagueUserIds
+			// 					},
+			// 					exclude:{
+			// 						$notLike:'%'+curUserId+'%'
+			// 					},
+			// 					postTo:{
+			// 						$in:['Coworker of Colleague']
+			// 					}
+
+			// 				},{
+			// 					userId:{
+			// 						$in:workGroupIds
+			// 					},
+			// 					exclude:{
+			// 						$notLike:'%'+curUserId+'%'
+			// 					},
+			// 					postTo:{
+			// 						$in:workGroupName
+			// 					}
+			// 				},{
+			// 					include:{
+			// 					$like:'%'+curUserId+'%'
+			// 					}
+			// 				}]
+			// 			}
+
+			// 		}
+			// 		db.mainPost.findAll({
+			// 		include:[{
+			// 			model:db.user
+			// 		}],
+			// 		where:wherePara,
+			// 		order:[
+			// 			['createdAt', 'DESC']
+			// 		],
+			// 		limit: 12,
+			// 		offset: loadNumber
+			// 		}).then(function(posts){
+			// 			res.json({posts:posts})
+			// 		})
+			// 	})
+			
+			// }).catch(function(e) {
+			// 	console.log(e)
+			// 	res.render('error', {
+			// 		error: e.toString()
+			// 	})
+			// });
 		}else if(feedSetting.value==='Public'){
 			var workGroupName
 			db.userGroups.findAll({
@@ -1618,10 +1674,24 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					group.users[0].userGroups.status === 'Colleague'?
 					colleagueGroupIds.push(group.id):""
 					console.log('colleagueGroupIds: '+JSON.stringify(colleagueGroupIds, null, 4))
-					colleagueIds.push(group.groupBLUserId)
-					var userFeed = new UserFeed(post.id, group.groupBLUserId, curUserId, 
-						curUser.fullName + ' posted to COWORKER OF COLLEAGUE: '+ post.postText)
-						bulkData.push(userFeed)
+
+					if(group.users[0].userGroups.status === 'Owner'){
+						var userFeed = new UserFeed(post.id, 
+							group.groupBLUserId, 'None', curUserId, 
+							curUser.fullName + ' posted to COWORKER OF COLLEAGUE: '+ post.postText)
+					}else if (group.users[0].userGroups.status === 'Coworker'){
+						colleagueIds.push(group.groupBLUserId)
+						var userFeed = new UserFeed(post.id, 
+							group.groupBLUserId, 'new', curUserId, 
+							curUser.fullName + ' posted to COWORKER OF COLLEAGUE: '+ post.postText)
+					
+					}else if (group.users[0].userGroups.status === 'Colleague'){
+						colleagueIds.push(group.groupBLUserId)
+						var userFeed = new UserFeed(post.id, 
+							group.groupBLUserId, 'new', curUserId, 
+							curUser.fullName + ' posted to COWORKER OF COLLEAGUE: '+ post.postText)
+					}
+					bulkData.push(userFeed)
 				})
 
 				return db.userGroups.findAll({
@@ -1642,12 +1712,14 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				var coworkerofColleagueUserIds = []
 				userGroups.forEach(function(userGroup, i){
 					//removing duplicate if exist
-					// if(coworkerofColleagueUserIds.indexOf(userGroup.userId)===-1){
-					// 	coworkerofColleagueUserIds.push(userGroup.userId)
-						var userFeed = new UserFeed(post.id, userGroup.userId, curUserId, 
-						curUser.fullName + ' posted to COWORKER OF COLLEAGUE: '+ post.postText)
-						bulkData.push(userFeed)
-					// }
+					if(coworkerofColleagueUserIds.indexOf(userGroup.userId)===-1){
+						if(colleagueIds.indexOf(userGroup.userId)=== -1){
+							coworkerofColleagueUserIds.push(userGroup.userId)
+							var userFeed = new UserFeed(post.id, userGroup.userId, 'new', curUserId, 
+							curUser.fullName + ' posted to COWORKER OF COLLEAGUE: '+ post.postText)
+							bulkData.push(userFeed)
+						}
+					}
 					
 				})
 				

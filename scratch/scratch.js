@@ -156,3 +156,30 @@ ul.className = 'nav navbar-nav'
         
 
       })
+
+var getFeedsPara = function(wherePara){
+    return {
+      attributes:['mainPostId'],
+      where:{
+        receivedUserId:curUserId
+      },
+      include:[{
+        model:db.mainPost,
+        where:wherePara,
+        include:[{
+          model:db.user,
+          attributes:['name', 'lastname','departmentId', 'title'],
+          include:[{
+            model:db.department,
+            attributes:['name']
+          }]    
+        }]          
+
+      }],
+      order:[
+        [db.mainPost, 'createdAt', 'DESC']
+      ],
+      limit: 12,
+      offset: loadNumber
+    }
+  }
