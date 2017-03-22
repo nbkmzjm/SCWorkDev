@@ -1,3 +1,5 @@
+
+
 function calendarPick(){
 
 
@@ -249,8 +251,8 @@ function clearEvent(sDate, eDate){
 }
 
 function dateSCSubmit(memo, type, userId, dateSC, taskSC, td, detailListArr){
-
-	
+	testalert('hello')
+	alert('done')
 	$.post('/dateSC', {
 		postdata:{
 			userId: userId, 
@@ -261,6 +263,7 @@ function dateSCSubmit(memo, type, userId, dateSC, taskSC, td, detailListArr){
 			detailListArr:detailListArr
 		}
 	}).done(function(pData){
+
 		if(!!pData.Note){
 			td.innerHTML=pData.Note;
 			td.style.backgroundColor = 'yellow'

@@ -162,7 +162,7 @@ append scripts
 								divViewFilter.className = 'form-group col-sm-12'
 
 									var label = document.createElement('label')
-									label.className = 'col-sm-2'
+									label.className = 'col-sm-1'
 									label.innerHTML = 'View Filter: '
 									divViewFilter.appendChild(label)
 
@@ -210,10 +210,10 @@ append scripts
 										divSelectViewFilter.appendChild(selectViewFilter)
 									divViewFilter.appendChild(divSelectViewFilter)
 
-									var label = document.createElement('label')
-									label.className = 'col-sm-2'
-									label.innerHTML = 'View Only: '
-									divViewFilter.appendChild(label)
+									var labelViewOnly = document.createElement('label')
+									labelViewOnly.className = 'col-sm-1'
+									labelViewOnly.innerHTML = 'View Only: '
+									divViewFilter.appendChild(labelViewOnly)
 
 									var divViewOnly = document.createElement('div')
 									divViewOnly.className = 'col-sm-1'
@@ -224,23 +224,99 @@ append scripts
 										viewOnly.id = 'viewOnly'
 										viewOnly.value = 'false'
 										viewOnly.addEventListener('click', function(){
-
 											if(this.checked === true){
 												getPostDB({
 													viewOption:selectViewFilter.value,
-													viewOnly:true
+													viewOnly:true,
+													byMe:$('#byMe').is(':checked'),
+													byOther:$('#byOther').is(':checked')
+
 												})
 												$('#divPostContainer').html('')
 											}else{
 												getPostDB({
 													viewOption:selectViewFilter.value,
-													viewOnly:false
+													viewOnly:false,
+													byMe:$('#byMe').is(':checked'),
+													byOther:$('#byOther').is(':checked')
 												})
 												$('#divPostContainer').html('')
 											}
 										})
 										divViewOnly.appendChild(viewOnly)
 									divViewFilter.appendChild(divViewOnly)
+
+									var labelByMe = document.createElement('label')
+									labelByMe.className = 'col-sm-1'
+									labelByMe.innerHTML = 'My Post:'
+									divViewFilter.appendChild(labelByMe)
+
+									var divByMe = document.createElement('div')
+									divByMe.className = 'col-sm-1'
+										
+										var byMe = document.createElement('input')
+										byMe.type = 'checkbox'
+										byMe.className = 'form-control'
+										byMe.id = 'byMe'
+										byMe.value = 'false'
+										byMe.addEventListener('click', function(){
+
+											if(this.checked === true){
+												getPostDB({
+													viewOption:selectViewFilter.value,
+													viewOnly:$('#viewOnly').is(':checked'),
+													byMe:true,
+													byOther:$('#byOther').is(':checked')
+												})
+												$('#divPostContainer').html('')
+											}else{
+												getPostDB({
+													viewOption:selectViewFilter.value,
+													viewOnly:$('#viewOnly').is(':checked'),
+													byMe:false,
+													byOther:$('#byOther').is(':checked')
+												})
+												$('#divPostContainer').html('')
+											}
+										})
+										divByMe.appendChild(byMe)
+									divViewFilter.appendChild(divByMe)
+
+									var labelByOther = document.createElement('label')
+									labelByOther.className = 'col-sm-1'
+									labelByOther.innerHTML = 'PostBy Other:'
+									divViewFilter.appendChild(labelByOther)
+
+									var divByOther = document.createElement('div')
+									divByOther.className = 'col-sm-1'
+										
+										var byOther = document.createElement('input')
+										byOther.type = 'checkbox'
+										byOther.className = 'form-control'
+										byOther.id = 'byOther'
+										byOther.value = 'false'
+										byOther.addEventListener('click', function(){
+
+											if(this.checked === true){
+												getPostDB({
+													viewOption:selectViewFilter.value,
+													viewOnly:$('#viewOnly').is(':checked'),
+													byMe:$('#byMe').is(':checked'),
+													byOther:true
+												})
+												$('#divPostContainer').html('')
+											}else{
+												getPostDB({
+													viewOption:selectViewFilter.value,
+													viewOnly:$('#viewOnly').is(':checked'),
+													byMe:$('#byMe').is(':checked'),
+													byOther:false
+												})
+												$('#divPostContainer').html('')
+											}
+										})
+										divByOther.appendChild(byOther)
+									divViewFilter.appendChild(divByOther)
 
 								$('#Feed').append(divViewFilter)
 							} else if(setting.settingDescriptionId === 2){

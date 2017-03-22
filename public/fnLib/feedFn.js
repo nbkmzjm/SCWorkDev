@@ -33,6 +33,9 @@ function glyphiconColor(name){
 		default:
 	} 
 }
+function testalert(text){
+	alert('testalert: '+text)
+}
 
 function getPostDB(option){
 	if(option===undefined){
@@ -40,14 +43,19 @@ function getPostDB(option){
 	}
 	var loadNumber = option.loadNumber||undefined
 	var viewOption = option.viewOption||false
+	var byMe = option.byMe||false
+	var byOther = option.byOther||false
 	var viewOnly = option.viewOnly||false
 	var postId = option.postId||false
-
+	console.log('byMe:'+ byMe)
+	console.log('byOther:'+ byOther)
 	// console.log('feedNumber:'+loadNumber)
 	$.post('/notif/getFeed',{
 		loadNumber:loadNumber,
 		viewOption:viewOption,
 		viewOnly:viewOnly,
+		byMe:byMe,
+		byOther:byOther,
 		postId:postId
 	}).done(function(Rdata){
 		

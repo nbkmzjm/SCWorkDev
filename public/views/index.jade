@@ -35,10 +35,12 @@ block content
 
 append scripts 
 	script(src="public/fnLib/homeFn.js")
+	script(src="public/fnLib/feedFn.js")
 	script.
 
 		
 		$(function (){
+
 			var isChrome = function() {
 			    return Boolean(window.chrome);
 			}()
@@ -1204,6 +1206,7 @@ append scripts
 												}
 												console.log(detailListArr0)
 												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memoCheckOpts[0].value, type:memoCheckOpts[0].name, detailListArr:detailListArr0}}).done(function(pData){
+													testalert('hello')
 													if(!!pData.Note){
 														td.innerHTML=pData.Note;
 														td.style.backgroundColor = 'yellow'

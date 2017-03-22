@@ -289,10 +289,31 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	console.log('curUserId'+ curUserId)
 	var loadNumber = req.body.loadNumber
 	var viewOption = req.body.viewOption
+	var byMe = req.body.byMe
+	var byOther = req.body.byOther
 	var viewOnly = req.body.viewOnly
 	var postId = req.body.postId
 	console.log('offset: '+ loadNumber)
 	console.log('viewOnly: '+ viewOnly)
+
+	console.log('byMe:'+ byMe)
+	console.log('byOther:'+ byOther)
+	console.log('viewOnly:'+ viewOnly)
+	if(byMe==='true' && byOther !== 'true'){
+		console.log('by me ')
+			userIdPara = curUserId
+	}else if(byOther==='true' && byMe !== 'true'){
+		console.log('by other ')
+		userIdPara = {
+			$ne:curUserId
+		}
+
+	}else{
+		console.log('not by me nor other')
+		userIdPara = {
+			$gt:0
+		}
+	}
 
 
 	var getFeedsPara = function(wherePara){
@@ -335,17 +356,33 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 		console.log(feedSetting.value)
 		if(postId !== 'false'){
 			console.log('postId: '+postId)
-			db.mainPost.findOne({
-				include:[{
-					model:db.user
-				}],
-				where:{
+			// db.mainPost.findOne({
+			// 	include:[{
+			// 		model:db.user
+			// 	}],
+			// 	where:{
+			// 		id:postId
+			// 	}
+			// }).then(function(post){
+			// 	var posts = []
+			// 	posts.push(post)
+			// 	res.json({posts:posts})
+			// })
+			db.userFeed.findAll(
+				getFeedsPara({
 					id:postId
-				}
-			}).then(function(post){
-				var posts = []
-				posts.push(post)
+				})
+			).then(function(userFeeds){
+				var posts = userFeeds.map(function(userFeed){
+					return userFeed.mainPost
+				})
+				console.log('posts:' + JSON.stringify(posts, null, 4))
 				res.json({posts:posts})
+			}).catch(function(e) {
+				console.log(e)
+				res.render('error', {
+				error: e.toString()
+				})
 			})
 		}else if(feedSetting.value==='Private'){
 			
@@ -371,11 +408,13 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					$or:[{
 							postTo:{
 								$in:['Private']
-							}
+							},
+							userId:userIdPara
 						},{
 							postTo:{
 								$like:'WORKGROUP%'
-							}
+							},
+							userId:userIdPara
 						}
 					]
 				})
@@ -383,7 +422,8 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				var filter = getFeedsPara({
 					postTo:{
 						$like:'WORKGROUP%'
-					}
+					},
+							userId:userIdPara
 				})
 			}
 			db.userFeed.findAll(filter).then(function(userFeeds){
@@ -491,20 +531,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 			// 	})
 			// });
 		}else if(feedSetting.value==='Coworker'){
-			var byMe = false
-			var byOther = true
-			if(byMe && byOther !== true){
-					userIdPara = curUserId
-				}else if(byOther && byMe !== true){
-					userIdPara = {
-						$ne:curUserId
-					}
 
-				}else{
-					userIdPara = {
-						$gt:0
-					}
-			}
 			if(viewOnly!=='true'){
 				
 				
@@ -512,8 +539,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					$or:[{
 							postTo:{
 								$in:['Private', 'Coworker']
-							}
-							,
+							},
 							userId:userIdPara
 						},{
 							postTo:{
@@ -680,11 +706,13 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					$or:[{
 							postTo:{
 								$in:['Private', 'Coworker', 'Colleague']
-							}
+							},
+							userId:userIdPara
 						},{
 							postTo:{
 								$like:'WORKGROUP%'
-							}
+							},
+							userId:userIdPara
 						}
 					]
 				})
@@ -692,7 +720,8 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				var filter = getFeedsPara({
 					postTo:{
 						$in:['Colleague']
-					}
+					},
+					userId:userIdPara
 				})
 			}
 			
@@ -859,11 +888,13 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					$or:[{
 							postTo:{
 								$in:['Private', 'Coworker', 'Colleague', 'Coworker of Colleague']
-							}
+							},
+							userId:userIdPara
 						},{
 							postTo:{
 								$like:'WORKGROUP%'
-							}
+							},
+							userId:userIdPara
 						}
 					]
 				})
@@ -871,7 +902,8 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				var filter = getFeedsPara({
 					postTo:{
 						$in:['Coworker of Colleague']
-					}
+					},
+					userId:userIdPara
 				})
 			}
 			
@@ -1992,7 +2024,10 @@ router.post('/getNewNotif', middleware.requireAuthentication, function(req, res)
 	var curUserId = req.user.id
 	db.userFeed.findAll({ 
 		where:{
-			receivedUserId:curUserId
+			receivedUserId:curUserId,
+			notification:{
+				$not:'None'
+			}
 		},
 		include:[{
 			model:db.mainPost

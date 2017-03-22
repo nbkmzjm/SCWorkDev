@@ -98,7 +98,6 @@ script.
 				Rdata.userFeeds.forEach(function(userFeed){
 					console.log(userFeed)
 					var tr = document.createElement('tr')
-						if (userFeed.notification !== 'None'){
 							if(userFeed.notification === 'read'){
 								tr.style.backgroundColor = '#82C3FF'
 							} else if(userFeed.notification === 'viewed'){
@@ -114,7 +113,6 @@ script.
 									userFeedId:userFeed.id
 								}).done(function(){})
 							})
-						}
 
 					tr.appendChild(td)
 
