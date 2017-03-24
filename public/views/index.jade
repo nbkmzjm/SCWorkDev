@@ -377,12 +377,6 @@ append scripts
 										tbody.appendChild(tr)
 									})
 								})
-
-
-								
-
-
-
 								
 							tblOverview.appendChild(tbody)
 						divSCOverview.appendChild(tblOverview)
@@ -487,10 +481,13 @@ append scripts
 								//- taskSCData.dateSC = users[i].name;
 								//- taskSCData.title = users[i].title
 							//- }else{
-								taskSCData.userId = users[i].id;
+
+								taskSCData.user = users[i];
+								
 								taskSCData.dateSC = arrDateSC.format('MM-DD-YYYY');
-								taskSCData.name = users[i].name;
-								taskSCData.title = users[i].title
+								//- taskSCData.userId = users[i].id;
+								//- taskSCData.name = users[i].name;
+								//- taskSCData.title = users[i].title
 								arrDateSC.add(1, 'days')
 							//- }
 							arrListDateSC.push(taskSCData);
@@ -545,10 +542,11 @@ append scripts
 					
 					
 					arrListDateSC.forEach(function(item,i){
-					
-						var userId = item.userId
-						var userTitle = item.title
+						//- alert(JSON.stringify(item.user, null, 4))
+						var userId = item.user.id
+						var userTitle = item.user.title
 						var dateSC = item.dateSC
+						var fullName = item.user.fullName
 
 						var foundSC = function(assign, item){
 							for (x = 0; x< assign.length; x++ ){
@@ -1133,7 +1131,7 @@ append scripts
 								td.setAttribute('class','cell')
 								td.appendChild(document.createTextNode(""));
 
-							td.addEventListener('click',function(userId,dateSC){
+							td.addEventListener('click',function(userId,dateSC, fullName){
 								
 								return function(){
 									var memo = $('#memo').val()
@@ -1188,17 +1186,31 @@ append scripts
 										})
 									
 									}else{
+										var userArray = []
+										if (taskSC==='PTO-A'){
+										
+										postText = 'PTO is  approved for '+ fullName +' on ' + dateSC
+										}else if(taskSC==='SWIT-R' && user.id == curUser.id){
+										postText = curUser.fullName + ' is looking for coverage on ' + dateSC
 
+										
+										
+										
+										}else if (taskSC==='PTO-R'||taskSC==='PTO-X' || taskSC==='SWIT-R'||taskSC==='SWIT-A'){
+										console.log('PTO-R SWIT-R SWIT-A' + taskSC)
+										postText = user.fullName + ' requested PTO' +' for ' + dateSC
+										}else{
+										var postTo = 'Private'
+										var postText = 'Assigned ' + taskSC + ' for '+ fullName +' on ' + dateSC
+										var filter = 'Include'
+										userArray.push(userId)
+										}
 										var memoCheckOpts = document.getElementsByClassName('checkedMemo')||false
-										
-										
-										
-										
 										if (memoCheckOpts.length!=0){
 											var detailListArr0 = []
 											var detailList = memoCheckOpts[0].parentNode.childNodes[2].getElementsByTagName('li')
 											console.log(memoCheckOpts[0].name)
-											if(detailList.length!=0){
+											//- if(detailList.length!=0){
 												console.log('in loop:'+memoCheckOpts[0].name)
 												for(var u = 0; u<detailList.length;u++){
 													detailListArr0.push(detailList[u].innerHTML)
@@ -1206,52 +1218,56 @@ append scripts
 												}
 												console.log(detailListArr0)
 												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memoCheckOpts[0].value, type:memoCheckOpts[0].name, detailListArr:detailListArr0}}).done(function(pData){
-													testalert('hello')
+													//- testalert('hello')
+													
 													if(!!pData.Note){
 														td.innerHTML=pData.Note;
 														td.style.backgroundColor = 'yellow'
+														//add feed and notification for this scheduling events
+														postDB(postTo, postText, filter, userArray)
 														for(var i = 1; i<memoCheckOpts.length;i++){
 															var detailListArr = []
 															var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
-															if (detailList.length!=0 ){
+															//- if (detailList.length!=0 ){
 																for(var u = 0; u<detailList.length;u++){
 																	detailListArr.push(detailList[u].innerHTML)
 																}
 																
 																dateSCSubmit(memoCheckOpts[i].value,memoCheckOpts[i].name, userId, dateSC, taskSC, td,detailListArr)
 
-															}else{
-																dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name, userId, dateSC, taskSC, td,null)
-															}
+															//- }else{
+															//- 	dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name, userId, dateSC, taskSC, td,null)
+															//- }
 														}
 													} 
 
 												});
-											}else{
+											//- }
+											//- else{
 
-												$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memoCheckOpts[0].value, type:memoCheckOpts[0].name, detailListArr:null}}).done(function(pData){
-													if(!!pData.Note){
-														td.innerHTML=pData.Note;
-														td.style.backgroundColor = 'yellow'
-														for(var i = 1; i<memoCheckOpts.length;i++){
-															var detailListArr = []
-															var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
-															if (detailList.length!=0){
-																for(var u = 0; u<detailList.length;u++){
-																	detailListArr.push(detailList[u].innerHTML)
-																}
+											//- 	$.post('/dateSC', {postdata:{userId: userId, dateSC:dateSC, taskSC:taskSC, memo:memoCheckOpts[0].value, type:memoCheckOpts[0].name, detailListArr:null}}).done(function(pData){
+											//- 		if(!!pData.Note){
+											//- 			td.innerHTML=pData.Note;
+											//- 			td.style.backgroundColor = 'yellow'
+											//- 			for(var i = 1; i<memoCheckOpts.length;i++){
+											//- 				var detailListArr = []
+											//- 				var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
+											//- 				if (detailList.length!=0){
+											//- 					for(var u = 0; u<detailList.length;u++){
+											//- 						detailListArr.push(detailList[u].innerHTML)
+											//- 					}
 																
-																dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name, userId, dateSC, taskSC, td,detailListArr)
+											//- 					dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name, userId, dateSC, taskSC, td,detailListArr)
 
-															}else{
-																dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name, userId, dateSC, taskSC, td,null)
-															}
-														}
-													}
-												})
+											//- 				}else{
+											//- 					dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name, userId, dateSC, taskSC, td,null)
+											//- 				}
+											//- 			}
+											//- 		}
+											//- 	})
 
 
-											}
+											//- }
 										}
 											
 											//- var i = 0;
@@ -1271,7 +1287,7 @@ append scripts
 									}
 
 								}
-							}(userId, dateSC));
+							}(userId, dateSC, fullName));
 						}
 						//- Reset schedule date position for new user
 						//- console.log(userId+'-'+userTitle+'-'+dateSC)
@@ -1282,7 +1298,7 @@ append scripts
 						if(userId != userDelta && userTitle != titleDelta ){
 							var tdUser = document.createElement('td');
 							tdUser.setAttribute('class','cell')
-							tdUser.appendChild(document.createTextNode(item.name));
+							tdUser.appendChild(document.createTextNode(item.user.fullName));
 							tdUser.userId = userId
 							tdUser.addEventListener('click', scOverview)
 							//- alert(arr[i].dateSC)
@@ -1294,7 +1310,7 @@ append scripts
 						}else if(userId != userDelta && userTitle == titleDelta){
 							var tdUser = document.createElement('td');
 							tdUser.setAttribute('class','cell')
-							tdUser.appendChild(document.createTextNode(item.name));
+							tdUser.appendChild(document.createTextNode(item.user.fullName));
 							tdUser.userId = userId
 							tdUser.addEventListener('click', scOverview)
 							//- alert(arr[i].dateSC)

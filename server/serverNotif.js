@@ -1532,7 +1532,9 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 		console.log('post:'+JSON.stringify(post, null, 4))
 		// console.log(JSON.stringify(user, null, 4))
 		var postTo = post.postTo
+		var include = post.include
 		if(postTo === 'Private'){
+			console.log('typeof'+ typeof include)
 			var userFeed = new UserFeed(post.id, curUserId, 'None', curUserId, 
 						curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
 			db.userFeed.create(userFeed)

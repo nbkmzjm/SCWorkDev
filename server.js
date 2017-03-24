@@ -452,7 +452,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var taskSC = req.body.postdata.taskSC;
 	var memo = req.body.postdata.memo;
 	var type = req.body.postdata.type;
-	var detailListArr = req.body.postdata.detailListArr;
+	var detailListArr = req.body.postdata.detailListArr||false;
 
 	var curUser = req.user
 	console.log(JSON.stringify(detailListArr, null, 4))
@@ -629,21 +629,21 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 					console.log('xxxxxxxxx'+ postText)
 				// }
 				
-				db.mainPost.create({
-					postText:postText,
-					postTo:'mine',
-					userId:curUser.id,
-					include:'['+user.id+']',
-					exclude:''
-				}).then(function(post){
-					console.log(JSON.stringify(post, null, 4))
+				// db.mainPost.create({
+				// 	postText:postText,
+				// 	postTo:'mine',
+				// 	userId:curUser.id,
+				// 	include:'['+user.id+']',
+				// 	exclude:''
+				// }).then(function(post){
+				// 	console.log(JSON.stringify(post, null, 4))
 					
-				}).catch(function(e) {
-					console.log(e)
-					res.render('error', {
-						error: e.toString()
-					})
-				});
+				// }).catch(function(e) {
+				// 	console.log(e)
+				// 	res.render('error', {
+				// 		error: e.toString()
+				// 	})
+				// });
 			}
 
 			res.json({
@@ -660,7 +660,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				return assignTracer.reload()
 			})
 
-			if(detailListArr.length>0){
+			if(detailListArr !== false){
 				var data = []
 				detailListArr.forEach(function(memoDetail){
 					data.push({

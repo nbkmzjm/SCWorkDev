@@ -1,4 +1,5 @@
 function postDB(postTo, postText, filter, userArray){
+
 	var userArrayString = JSON.stringify(userArray,4, null)
 	console.log('aaaaaaaaaaaa')
 	$.post('/notif/post',{
