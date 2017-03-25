@@ -39,125 +39,125 @@ append scripts
 	script.
 
 		
-		//- $(function (){
+		$(function (){
 
-		//- 	var isChrome = function() {
-		//- 	    return Boolean(window.chrome);
-		//- 	}()
-		//- 	if(isChrome){
-		//- 		if(!localStorage.getItem('vapid')){
-		//- 			localStorage.setItem('vapid', '')
-		//- 		}
-		//- 		var JSONdata = !{JSONdata}
-		//- 		var vapidPub = JSONdata.vapidPub
+			//- var isChrome = function() {
+			//-     return Boolean(window.chrome);
+			//- }()
+			//- if(isChrome){
+			//- 	if(!localStorage.getItem('vapid')){
+			//- 		localStorage.setItem('vapid', '')
+			//- 	}
+			//- 	var JSONdata = !{JSONdata}
+			//- 	var vapidPub = JSONdata.vapidPub
 
-		//- 		function urlBase64ToUint8Array(base64String) {
-		//- 		  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-		//- 		  const base64 = (base64String + padding)
-		//- 		    .replace(/\-/g, '+')
-		//- 		    .replace(/_/g, '/');
+			//- 	function urlBase64ToUint8Array(base64String) {
+			//- 	  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+			//- 	  const base64 = (base64String + padding)
+			//- 	    .replace(/\-/g, '+')
+			//- 	    .replace(/_/g, '/');
 				 
-		//- 		  const rawData = window.atob(base64);
-		//- 		  const outputArray = new Uint8Array(rawData.length);
+			//- 	  const rawData = window.atob(base64);
+			//- 	  const outputArray = new Uint8Array(rawData.length);
 				 
-		//- 		  for (let i = 0; i < rawData.length; ++i) {
-		//- 		    outputArray[i] = rawData.charCodeAt(i);
-		//- 		  }
-		//- 		  return outputArray;
-		//- 		}
+			//- 	  for (let i = 0; i < rawData.length; ++i) {
+			//- 	    outputArray[i] = rawData.charCodeAt(i);
+			//- 	  }
+			//- 	  return outputArray;
+			//- 	}
 				 
-		//- 		const vapidPublicKey = vapidPub;
-		//- 		const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+			//- 	const vapidPublicKey = vapidPub;
+			//- 	const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
 
-		//- 		if ('serviceWorker' in navigator && 'PushManager' in window) {
-		//- 		  console.log('Service Worker and Push is supported');
+			//- 	if ('serviceWorker' in navigator && 'PushManager' in window) {
+			//- 	  console.log('Service Worker and Push is supported');
 
-		//- 		  navigator.serviceWorker.register('sw.js').then(function(swReg){
-		//- 		    console.log('Service Worker is registered', swReg);
+			//- 	  navigator.serviceWorker.register('sw.js').then(function(swReg){
+			//- 	    console.log('Service Worker is registered', swReg);
 
-		//- 		    swRegistration = swReg;
-		//- 		    unSubcription()
-		//- 		    checkSubcription();
-		//- 		  }).catch(function(error) {
-		//- 		    console.error('Service Worker Error', error);
-		//- 		  });
-		//- 		} else {
-		//- 		  console.warn('Push messaging is not supported');
-		//- 		  //- pushButton.textContent = 'Push Not Supported';
-		//- 		}
-		//- 		function unSubcription(){
-		//- 			if(localStorage.getItem('vapid')!=vapidPub){
-		//- 				localStorage.setItem('vapid', vapidPub)
-		//- 				navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-		//- 					serviceWorkerRegistration.pushManager.getSubscription()
-		//- 					.then(function(subscription) {
-		//- 					    if (subscription) {
-		//- 					      return subscription.unsubscribe();
-		//- 					    }
-		//- 				  	})
-		//- 				})
-		//- 			}
-		//- 		}
+			//- 	    swRegistration = swReg;
+			//- 	    unSubcription()
+			//- 	    checkSubcription();
+			//- 	  }).catch(function(error) {
+			//- 	    console.error('Service Worker Error', error);
+			//- 	  });
+			//- 	} else {
+			//- 	  console.warn('Push messaging is not supported');
+			//- 	  //- pushButton.textContent = 'Push Not Supported';
+			//- 	}
+			//- 	function unSubcription(){
+			//- 		if(localStorage.getItem('vapid')!=vapidPub){
+			//- 			localStorage.setItem('vapid', vapidPub)
+			//- 			navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+			//- 				serviceWorkerRegistration.pushManager.getSubscription()
+			//- 				.then(function(subscription) {
+			//- 				    if (subscription) {
+			//- 				      return subscription.unsubscribe();
+			//- 				    }
+			//- 			  	})
+			//- 			})
+			//- 		}
+			//- 	}
 
-		//- 		function checkSubcription(){
-		//- 			swRegistration.pushManager.getSubscription().then(function(subscription){
+			//- 	function checkSubcription(){
+			//- 		swRegistration.pushManager.getSubscription().then(function(subscription){
 						
-		//- 				if(subscription==null){
-		//- 				console.log('no subscription and add subscription now')
-		//- 					navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-		//- 						console.log('ppppp')
-		//- 						console.log(serviceWorkerRegistration)
-		//- 						serviceWorkerRegistration.pushManager.subscribe({ 
-		//- 					    	userVisibleOnly: true,
-		//- 					   		applicationServerKey:convertedVapidKey
-		//- 				    	}).then(function(subscription){
-		//- 				    		console.log()
-		//- 				    		$.post('/endpoint', {
-		//- 					  		endpoint:JSON.stringify(subscription)
-		//- 					  		}).done(function(){
+			//- 			if(subscription==null){
+			//- 			console.log('no subscription and add subscription now')
+			//- 				navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+			//- 					console.log('ppppp')
+			//- 					console.log(serviceWorkerRegistration)
+			//- 					serviceWorkerRegistration.pushManager.subscribe({ 
+			//- 				    	userVisibleOnly: true,
+			//- 				   		applicationServerKey:convertedVapidKey
+			//- 			    	}).then(function(subscription){
+			//- 			    		console.log()
+			//- 			    		$.post('/endpoint', {
+			//- 				  		endpoint:JSON.stringify(subscription)
+			//- 				  		}).done(function(){
 
-		//- 					  		})
+			//- 				  		})
 
-		//- 				  		})
-		//- 					})
+			//- 			  		})
+			//- 				})
 							
-		//- 				}else{
-		//- 				console.log('yes subscription and continue')
-		//- 					$.post('/endpoint', {
-		//- 			  			endpoint:JSON.stringify(subscription)
-		//- 			  		}).done(function(){
+			//- 			}else{
+			//- 			console.log('yes subscription and continue')
+			//- 				$.post('/endpoint', {
+			//- 		  			endpoint:JSON.stringify(subscription)
+			//- 		  		}).done(function(){
 
-		//- 			  		})
+			//- 		  		})
 
-		//- 				}
+			//- 			}
 						
-		//- 				console.log('subscription')
-		//- 				console.log(JSON.stringify(subscription))
+			//- 			console.log('subscription')
+			//- 			console.log(JSON.stringify(subscription))
 
 						
-		//- 		  	})
-		//- 		}
+			//- 	  	})
+			//- 	}
 
-		//- 		(function push_update_activation(msg){
-		//- 			if(navigator.serviceWorker.controller){
+			//- 	(function push_update_activation(msg){
+			//- 		if(navigator.serviceWorker.controller){
 
-		//- 		        navigator.serviceWorker.addEventListener('message', function(event){
-		//- 		        	if(event.data.command == 'pushActivation'){
-		//- 		        		console.log("run push activation");
-		//- 		        		$.post('/notif/getNewNotifCount').done(function(Rdata){
+			//- 	        navigator.serviceWorker.addEventListener('message', function(event){
+			//- 	        	if(event.data.command == 'pushActivation'){
+			//- 	        		console.log("run push activation");
+			//- 	        		$.post('/notif/getNewNotifCount').done(function(Rdata){
 
-		//- 		        			console.log('recieving update contain..')
-		//- 		        			$('#badgeNotif').html(Rdata.userFeed)
-		//- 		        		})
-		//- 		        	} else if(event.data.command == 'updateNotif'){
-		//- 		        		console.log('recieving update contain..')
-		//- 		        		$('#notifBtn').html(event.data.message)
-		//- 		        	} 
-		//- 		        })
-		//- 			    navigator.serviceWorker.controller.postMessage({'command':'POST'});
-		//- 		   	}
-		//- 		})()
-		//- 	}
+			//- 	        			console.log('recieving update contain..')
+			//- 	        			$('#badgeNotif').html(Rdata.userFeed)
+			//- 	        		})
+			//- 	        	} else if(event.data.command == 'updateNotif'){
+			//- 	        		console.log('recieving update contain..')
+			//- 	        		$('#notifBtn').html(event.data.message)
+			//- 	        	} 
+			//- 	        })
+			//- 		    navigator.serviceWorker.controller.postMessage({'command':'POST'});
+			//- 	   	}
+			//- 	})()
+			//- }
 
 		
 
