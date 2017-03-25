@@ -1405,7 +1405,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 							}	
 						}
 					}
-				}]⌂
+				}]
 			}).then(function(groups){
 				console.log('friend Group:'+JSON.stringify(groups, null, 4))
 				// var coworkerIds = []
