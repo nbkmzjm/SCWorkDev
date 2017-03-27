@@ -126,6 +126,15 @@ append scripts
 							
 						}) 
 						divInputGroupBtn.appendChild(btn)
+
+						var btntest = document.createElement('button')
+						btntest.className = 'btn btn-primary'
+						btntest.innerHTML = 'TEST'
+						btntest.addEventListener('click', function(){
+							console.log($('#selectCoworker:selected'))
+						})
+						divInputGroupBtn.appendChild(btntest)
+
 					divInputGroup.appendChild(divInputGroupBtn)
 
 					//- var divbtn = document.createElement('div')
@@ -327,6 +336,8 @@ append scripts
 									label.className = 'col-sm-2'
 									label.innerHTML = 'Post Filter: '
 									divInputGroupFilter.appendChild(label)
+
+
 						
 									divSelect = document.createElement('div')
 									divSelect.className = 'col-sm-3'
@@ -357,7 +368,40 @@ append scripts
 										select.addEventListener('change', function(){
 
 											//- alert(select.value)
-											if(select.value === "WorkGroup" && $('selectWorkGroup').length <1){
+											if(select.value === 'Coworker'){
+												$.post('/notif/getUserPostFilter',{
+													userPostFilter:select.value
+												}).done(function(Rdata){
+													console.log(Rdata)
+													divSelectCoworker = document.createElement('div')
+													divSelectCoworker.className = 'col-sm-3'
+														selectCoworker = document.createElement('select')
+														selectCoworker.className = 'form-control'
+														selectCoworker.classList.add('col-sm-4')
+
+														//- select.className = ''
+														//- select.name = 'postTo'
+														selectCoworker.id = 'selectCoworker'
+														selectCoworker.multiple = 'multiple'
+														selectCoworker.name = 'multiselect[]'
+														Rdata.usersPostfilter.forEach(function(item, i){
+																var option = document.createElement('option')
+																option.value = item.id
+																option.innerHTML = item.fullName
+																selectCoworker.appendChild(option)
+														})
+														divSelectCoworker.appendChild(selectCoworker)
+													divInputGroupFilter.insertBefore(divSelectCoworker, divSelectFilter)
+
+													$('#selectCoworker').multiselect({
+														buttonText: function(){
+															return 'Select Coworker'
+														},
+														includeSelectAllOption:true
+													});
+
+												})
+											}else if(select.value === "WorkGroup" && $('selectWorkGroup').length <1){
 												$.post('/notif/getMyWorkGroup').done(function(Rdata){
 
 													divSelectWorkGroup = document.createElement('div')
@@ -401,7 +445,7 @@ append scripts
 									
 
 										selectFilter = document.createElement('select')
-										selectFilter.className = 'form-control'
+										selectFilter.className = 'form-control selectpicker'
 
 										selectFilter.classList.add('col-sm-4')
 										selectFilter.name = 'selectFilter'

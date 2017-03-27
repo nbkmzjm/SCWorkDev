@@ -62,7 +62,7 @@ block content
 						div(class="form-group")
 							label(class="control-label col-sm-2" for="title") Title
 							div(class="col-sm-4")
-								select(name="title" class="form-control" id="title")
+								select(name="title" class="form-control" id="title" multiple="multiple")
 									option(value="") Select One
 									option(value="Admin") Administrator
 									option(value="RPh") RPh
@@ -158,7 +158,7 @@ append scripts
 
 		$(function(){
 			
-			
+			 $('#title').multiselect();
 			var JSONdata = !{JSONdata};
 			var curUser = JSONdata.curUser
 			var firstUser = JSONdata.firstUser

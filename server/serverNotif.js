@@ -1310,6 +1310,43 @@ function showNotification(idArray, post){
 
 }
 
+router.post('/getUserPostFilter', middleware.requireAuthentication, function(req, res) {
+	var userPostFilter = req.body.userPostFilter
+	var curUserId = req.user.id
+	db.group.findOne({
+		where:{
+			groupBLUserId:curUserId
+		}
+	}).then(function(group){
+		db.user.findAll({
+			include:[{
+				model:db.group,
+				where:{
+					id:group.id
+				},
+				through:{
+					where:{
+						status:userPostFilter
+						
+					}
+				}
+			}]
+		}).then(function(groups){
+			console.log('groups:'+JSON.stringify(groups, null, 4))
+			var usersPostfilter = groups.map(function(group){
+				return {fullName:group.fullName, id:group.id}
+
+			})
+			
+			console.log('usersPostfilter:'+JSON.stringify(usersPostfilter, null, 4))
+			res.json({usersPostfilter:usersPostfilter})
+		})
+	})
+
+
+})
+
+
 router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var curUserId = req.user.id
 	var curUser = req.user
