@@ -110,14 +110,31 @@ append scripts
 							if(select.value === "WorkGroup" && selectWorkGroup.value ===''){
 							alert('Please select a WorkGroup')
 							}else if(select.value === "WorkGroup" && selectWorkGroup.value !== ''){
-							inputPost.value!==''?postDB(selectWorkGroup.value, 
-							inputPost.value, selectFilter.value,userIdSelected):''
-							location.reload()
-							}else{
+								inputPost.value!==''?postDB(selectWorkGroup.value, 
+								inputPost.value, selectFilter.value,userIdSelected):''
+								location.reload()
+							}else if(select.value === 'Coworker'){
 							console.log('xxxbeforepost...')
-							inputPost.value!==''?postDB(select.value, 
-							inputPost.value, selectFilter.value,userIdSelected):''
+								if($('#selectCoworker').val().length === $('#selectCoworker').get(0).childElementCount){
+									inputPost.value!==''?postDB(select.value, 'ALL', 
+									inputPost.value, selectFilter.value, userIdSelected):''
+								}else{
+									inputPost.value!==''?postDB(select.value, $('#selectCoworker').val().map(Number), 
+									inputPost.value, selectFilter.value, userIdSelected):''
+								}
+							
 							//- location.reload()
+							}else if(select.value === 'Colleague'){
+							console.log('xxxbeforepost...')
+								if($('#selectColleague').val().length === $('#selectColleague').get(0).childElementCount){
+									inputPost.value!==''?postDB(select.value, 'ALL', 
+									inputPost.value, selectFilter.value, userIdSelected):''
+								}else{
+									inputPost.value!==''?postDB(select.value, $('#selectColleague').val().map(Number), 
+									inputPost.value, selectFilter.value, userIdSelected):''
+								}
+							}else{
+
 							}
 
 							
@@ -131,7 +148,11 @@ append scripts
 						btntest.className = 'btn btn-primary'
 						btntest.innerHTML = 'TEST'
 						btntest.addEventListener('click', function(){
-							console.log($('#selectCoworker:selected'))
+							
+							console.log($('#selectCoworker').val().map(Number))
+							console.log(document.getElementById('selectCoworker').length)
+							//- console.log($('#selectCoworker').0.length)
+
 						})
 						divInputGroupBtn.appendChild(btntest)
 
@@ -367,7 +388,7 @@ append scripts
 											})
 										select.addEventListener('change', function(){
 
-											//- alert(select.value)
+											console.log(this.parentNode.parentNode.childNodes[1])
 											if(select.value === 'Coworker'){
 												$.post('/notif/getUserPostFilter',{
 													userPostFilter:select.value
@@ -394,12 +415,45 @@ append scripts
 													divInputGroupFilter.insertBefore(divSelectCoworker, divSelectFilter)
 
 													$('#selectCoworker').multiselect({
-														buttonText: function(){
-															return 'Select Coworker'
-														},
 														includeSelectAllOption:true
 													});
+													$('#selectCoworker').multiselect('selectAll', false);
+													$('#selectCoworker').multiselect('updateButtonText');
+													
+													 
+												})
+											}else if(select.value === 'Colleague'){
+												$.post('/notif/getUserPostFilter',{
+													userPostFilter:select.value
+												}).done(function(Rdata){
+													console.log(Rdata)
+													divSelectColleague = document.createElement('div')
+													divSelectColleague.className = 'col-sm-3'
+														selectColleague = document.createElement('select')
+														selectColleague.className = 'form-control'
+														selectColleague.classList.add('col-sm-4')
 
+														//- select.className = ''
+														//- select.name = 'postTo'
+														selectColleague.id = 'selectColleague'
+														selectColleague.multiple = 'multiple'
+														selectColleague.name = 'multiselect[]'
+														Rdata.usersPostfilter.forEach(function(item, i){
+																var option = document.createElement('option')
+																option.value = item.id
+																option.innerHTML = item.fullName
+																selectColleague.appendChild(option)
+														})
+														divSelectColleague.appendChild(selectColleague)
+													divInputGroupFilter.insertBefore(divSelectColleague, divSelectFilter)
+
+													$('#selectColleague').multiselect({
+														includeSelectAllOption:true
+													});
+													$('#selectColleague').multiselect('selectAll', false);
+													$('#selectColleague').multiselect('updateButtonText');
+													
+													 
 												})
 											}else if(select.value === "WorkGroup" && $('selectWorkGroup').length <1){
 												$.post('/notif/getMyWorkGroup').done(function(Rdata){
@@ -413,10 +467,9 @@ append scripts
 														//- select.className = ''
 														//- select.name = 'postTo'
 														selectWorkGroup.id = 'selectWorkGroup'
-														var option = document.createElement('option')
-														option.value = ''
-														option.innerHTML = 'Select WorkGroup'
-														selectWorkGroup.appendChild(option)
+														//- option.innerHTML = 'Select WorkGroup'
+														selectWorkGroup.multiple = 'multiple'
+														selectWorkGroup.name = 'multiselect[]'
 														Rdata.userGroups.forEach(function(item, i){
 															if(item !== setting.value){
 																var option = document.createElement('option')
@@ -427,6 +480,14 @@ append scripts
 														})
 														divSelectWorkGroup.appendChild(selectWorkGroup)
 													divInputGroupFilter.insertBefore(divSelectWorkGroup, divSelectFilter)
+													$('#selectWorkGroup').multiselect({
+														buttonText: function(){
+															return 'Select WorkGroup'
+														},
+														includeSelectAllOption:true
+													});
+													//- $('#selectWorkGroup').multiselect('selectAll', false);
+													$('#selectWorkGroup').multiselect('updateButtonText');
 												})
 
 											}else{

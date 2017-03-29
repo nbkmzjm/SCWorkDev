@@ -13,6 +13,10 @@ module.exports = function(sequelize, DataTypes) {
         postTo:{
             type: DataTypes.STRING
         },
+        postToValue:{
+            type: DataTypes.STRING,
+            defaultValue: "ALL"
+        },
         type:{
             type: DataTypes.STRING
         },

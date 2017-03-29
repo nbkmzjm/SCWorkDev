@@ -1,9 +1,13 @@
-function postDB(postTo, postText, filter, userArray){
+function postDB(postTo, postToValue, postText, filter, userArray){
 
 	var userArrayString = JSON.stringify(userArray,4, null)
+	if(postToValue !== "ALL"){
+	var postToValue = JSON.stringify(postToValue,4, null)
+	}
 	console.log('aaaaaaaaaaaa')
 	$.post('/notif/post',{
 		postTo:postTo,
+		postToValue:postToValue,
 		postText:postText,
 		filter:filter,
 		userArray:userArrayString

@@ -1352,6 +1352,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var curUser = req.user
 	var postText = req.body.postText
 	var postTo = req.body.postTo
+	var postToValue = req.body.postToValue
 	var filter = req.body.filter
 	var userArray = req.body.userArray
 	var userArrayIn = ""
@@ -1360,11 +1361,13 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbb')
 	if (filter ==="Include"||filter ==='Include Department'){
 		userArrayIn= userArray
+
 	}else{
 		userArrayEx = userArray
 	}
 	
 	console.log('userArray:'+JSON.stringify(userArray, null, 4))
+	console.log('postToValue:'+JSON.stringify(postToValue, null, 4))
 	db.user.findOne({
 		where:{
 			id:curUserId
@@ -1374,6 +1377,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 		return [db.mainPost.create({
 			postText:postText,
 			postTo:postTo,
+			postToValue:postToValue,
 			userId:curUserId,
 			include:userArrayIn,
 			exclude:userArrayEx,
