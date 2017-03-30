@@ -1385,6 +1385,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 
 	}).spread(function(post, user){
 		console.log('post:'+JSON.stringify(post, null, 4))
+		arrayPostToValue = JSON.parse(post.postToValue)
 		// console.log(JSON.stringify(user, null, 4))
 		var postTo = post.postTo
 		var include = post.include
@@ -1434,6 +1435,11 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			var coworkerIds = []
 
 			db.group.findAll({
+				where:{
+					groupBLUserId:{
+						$in:arrayPostToValue
+					}
+				},
 				include:[{
 					model:db.user,
 					where:{
@@ -1443,7 +1449,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 						where:{
 							status:{
 								$in:['Owner','Coworker']
-							}	
+							}
 						}
 					}
 				}]
@@ -1484,6 +1490,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			
 
 			db.group.findAll({
+
 				include:[{
 					model:db.user,
 					where:{
