@@ -411,19 +411,15 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							},
 							userId:userIdPara
 						},{
-							postTo:{
-								$like:'WORKGROUP%'
-							},
+							postTo: 'WorkGroup',
 							userId:userIdPara
 						}
 					]
 				})
 			}else{
 				var filter = getFeedsPara({
-					postTo:{
-						$like:'WORKGROUP%'
-					},
-							userId:userIdPara
+					postTo:'WorkGroup',
+					userId:userIdPara
 				})
 			}
 			db.userFeed.findAll(filter).then(function(userFeeds){
@@ -1385,10 +1381,9 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 
 	}).spread(function(post, user){
 		console.log('post:'+JSON.stringify(post.postToValue, null, 4))
-		if(post.postToValue != "ALL"){
-			var stringPostToValue = post.postToValue
+		var stringPostToValue = post.postToValue
+		if(post.postToValue != 'ALL'){
 			var arrayPostToValue = JSON.parse(stringPostToValue)
-			console.log('!all')
 		}
 		
 		// console.log(JSON.stringify(user, null, 4))
@@ -1396,8 +1391,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 		var include = post.include
 		if(postTo === 'Private'){
 			console.log('typeof'+ typeof include)
-			var userFeed = new UserFeed(post.id, curUserId, 'None', curUserId, 
-						curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
+			var userFeed = new UserFeed(post.id, curUserId, 'None', curUserId, curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
 			db.userFeed.create(userFeed)
 		}else if(postTo.indexOf('WORKGROUP') !== -1){
 			console.log('WorkGroup...')
@@ -1463,7 +1457,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					through:{
 						where:{
 							status:{
-								$in:['Owner','Coworker']
+								$in:['Coworker']
 							}
 						}
 					}
@@ -1472,20 +1466,15 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				console.log('friend Group:'+JSON.stringify(groups, null, 4))
 				// var coworkerIds = []
 				var bulkData = []
-
+				var userFeed = new UserFeed(post.id, 
+				curUserId, 'None', curUserId, 
+				curUser.fullName + ' posted to CO-WORKER: '+ post.postText)
+				bulkData.push(userFeed)
 				groups.forEach(function(group, i){
-					console.log(curUser.fullName + ' posted '+ post.postText)
-					if(group.users[0].userGroups.status === 'Owner'){
-						var userFeed = new UserFeed(post.id, 
-							group.groupBLUserId, 'None', curUserId, 
-							curUser.fullName + ' posted to CO-WORKER: '+ post.postText)
-						
-					}else if (group.users[0].userGroups.status === 'Coworker'){
 						coworkerIds.push(group.groupBLUserId)
 						var userFeed = new UserFeed(post.id, 
 							group.groupBLUserId, 'new', curUserId, 
 							curUser.fullName + ' posted to CO-WORKER: '+ post.postText)
-					}
 					bulkData.push(userFeed)
 				})
 				console.log('coworkerIds: '+JSON.stringify(coworkerIds, null, 4))

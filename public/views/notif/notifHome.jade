@@ -110,9 +110,9 @@ append scripts
 							if(select.value === "WorkGroup" && selectWorkGroup.value ===''){
 							alert('Please select a WorkGroup')
 							}else if(select.value === "WorkGroup" && selectWorkGroup.value !== ''){
-								inputPost.value!==''?postDB(selectWorkGroup.value, 
+								inputPost.value!==''?postDB('WorkGroup', $('#selectWorkGroup').val(),
 								inputPost.value, selectFilter.value,userIdSelected):''
-								location.reload()
+								//- location.reload()
 							}else if(select.value === 'Coworker'){
 							console.log('xxxbeforepost...')
 								if($('#selectCoworker').val().length === $('#selectCoworker').get(0).childElementCount){
@@ -149,8 +149,8 @@ append scripts
 						btntest.innerHTML = 'TEST'
 						btntest.addEventListener('click', function(){
 							
-							console.log($('#selectCoworker').val().map(Number))
-							console.log(document.getElementById('selectCoworker').length)
+							console.log($('#selectWorkGroup').val())
+							//- console.log(document.getElementById('selectCoworker').length)
 							//- console.log($('#selectCoworker').0.length)
 
 						})
@@ -423,6 +423,7 @@ append scripts
 													 
 												})
 											}else if(select.value === 'Colleague'){
+												$('#selectColleague').length != 0?$('#selectColleague').remove():""
 												$.post('/notif/getUserPostFilter',{
 													userPostFilter:select.value
 												}).done(function(Rdata){
