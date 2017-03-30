@@ -1384,8 +1384,13 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 		}), user]
 
 	}).spread(function(post, user){
-		console.log('post:'+JSON.stringify(post, null, 4))
-		arrayPostToValue = JSON.parse(post.postToValue)
+		console.log('post:'+JSON.stringify(post.postToValue, null, 4))
+		if(post.postToValue != "ALL"){
+			var stringPostToValue = post.postToValue
+			var arrayPostToValue = JSON.parse(stringPostToValue)
+			console.log('!all')
+		}
+		
 		// console.log(JSON.stringify(user, null, 4))
 		var postTo = post.postTo
 		var include = post.include
@@ -1433,12 +1438,22 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 		} else if(postTo === 'Coworker'){
 			console.log('Coworker...')
 			var coworkerIds = []
+			if(stringPostToValue !== 'ALL'){
+				console.log('!ALL')
+				var groupBLUserIdPara = {
+					$in:arrayPostToValue
+				}
+			}else{
+				console.log('ALL')
+				var groupBLUserIdPara = {
+					$ne:0
+				}
+			}
+			
 
 			db.group.findAll({
 				where:{
-					groupBLUserId:{
-						$in:arrayPostToValue
-					}
+					groupBLUserId:groupBLUserIdPara
 				},
 				include:[{
 					model:db.user,
