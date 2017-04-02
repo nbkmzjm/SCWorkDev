@@ -110,7 +110,12 @@ append scripts
 							if(select.value === "WorkGroup" && selectWorkGroup.value ===''){
 							alert('Please select a WorkGroup')
 							}else if(select.value === "WorkGroup" && selectWorkGroup.value !== ''){
-								inputPost.value!==''?postDB('WorkGroup', $('#selectWorkGroup').val(),
+								if(curUser.title === 'WorkGroup'){
+									var selectWorkGroupVal = $('#selectWorkGroup').val().map(Number)
+								}else{
+									var selectWorkGroupVal = $('#selectWorkGroup').val()
+								}
+								inputPost.value!==''?postDB('WorkGroup', selectWorkGroupVal,
 								inputPost.value, selectFilter.value,userIdSelected):''
 								//- location.reload()
 							}else if(select.value === 'Coworker'){
@@ -471,14 +476,25 @@ append scripts
 														//- option.innerHTML = 'Select WorkGroup'
 														selectWorkGroup.multiple = 'multiple'
 														selectWorkGroup.name = 'multiselect[]'
-														Rdata.userGroups.forEach(function(item, i){
-															if(item !== setting.value){
-																var option = document.createElement('option')
-																option.value = item.status
-																option.innerHTML = item.status
-																selectWorkGroup.appendChild(option)
-															}
-														})
+														if (curUser.title === 'WorkGroup'){
+															Rdata.userGroups.forEach(function(item, i){
+																if(item !== setting.value){
+																	var option = document.createElement('option')
+																	option.value = item.groupBLUserId
+																	option.innerHTML = item.name
+																	selectWorkGroup.appendChild(option)
+																}
+															})
+														}else {
+															Rdata.userGroups.forEach(function(item, i){
+																if(item !== setting.value){
+																	var option = document.createElement('option')
+																	option.value = item.users[0].userGroups.status
+																	option.innerHTML = item.users[0].userGroups.status
+																	selectWorkGroup.appendChild(option)
+																}
+															})
+														}
 														divSelectWorkGroup.appendChild(selectWorkGroup)
 													divInputGroupFilter.insertBefore(divSelectWorkGroup, divSelectFilter)
 													$('#selectWorkGroup').multiselect({

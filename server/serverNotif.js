@@ -1393,41 +1393,71 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			console.log('typeof'+ typeof include)
 			var userFeed = new UserFeed(post.id, curUserId, 'None', curUserId, curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
 			db.userFeed.create(userFeed)
-		}else if(postTo.indexOf('WORKGROUP') !== -1){
-			console.log('WorkGroup...')
+		}else if(postTo.indexOf('WorkGroup') !== -1){
+			console.log('WorkGroup...'+ curUserId)
+			var bulkData = []
 			var workGroupIds = []
-			db.userGroups.findAll({
-					where:{
-						status:postTo
-					}
-			}).then(function(userGroups){
-				// console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
-				
-				var bulkData = []
-				//add id of owner of post for notification
-				workGroupIds.push(curUserId)
-				var userFeed = new UserFeed(post.id, curUserId, 'None', curUserId, 
-				curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
+			if(!arrayPostToValue.some(isNaN)){
+
+				var userFeed = new UserFeed(post.id, curUserId, 'None',
+						curUserId, curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
 				bulkData.push(userFeed)
-				userGroups.forEach(function(userGroup, i){
-					if (workGroupIds.indexOf(userGroup.userId)===-1){
-						workGroupIds.push(userGroup.userId)
-						var userFeed = new UserFeed(post.id, userGroup.userId, 'new', curUserId, 
-						curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
-						bulkData.push(userFeed)
-					}
+
+				arrayPostToValue.forEach(function(id){
+					
+					var userFeed = new UserFeed(post.id, id, 'new',
+					curUserId, curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
+					bulkData.push(userFeed)
+					
 				})
 				console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
-				return db.userFeed.bulkCreate(bulkData)
-			}).then(function(created){
+				db.userFeed.bulkCreate(bulkData).then(function(created){
+					showNotification(arrayPostToValue, post)
+				}).catch(function(e) {
+					console.log(e)
+					res.render('error', {
+						error: e.toString()
+					})
+				});
+			}else{
 			
-				showNotification(workGroupIds, post)
-			}).catch(function(e) {
-				console.log(e)
-				res.render('error', {
-					error: e.toString()
-				})
-			});
+				
+				db.userGroups.findAll({
+						where:{
+							status:{
+								$in:arrayPostToValue
+							}
+						}
+				}).then(function(userGroups){
+					// console.log('friend Group:'+JSON.stringify(userGroups, null, 4))
+					
+					
+					//add id of owner of post for notification
+					workGroupIds.push(curUserId)
+					var userFeed = new UserFeed(post.id, curUserId, 'None', curUserId, 
+					curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
+					bulkData.push(userFeed)
+					userGroups.forEach(function(userGroup, i){
+						if (workGroupIds.indexOf(userGroup.userId)===-1){
+							workGroupIds.push(userGroup.userId)
+							var userFeed = new UserFeed(post.id, userGroup.userId, 'new', curUserId, 
+							curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
+							bulkData.push(userFeed)
+						}
+					})
+					console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+					return db.userFeed.bulkCreate(bulkData)
+				}).then(function(created){
+				
+					showNotification(workGroupIds, post)
+				}).catch(function(e) {
+					console.log(e)
+					res.render('error', {
+						error: e.toString()
+					})
+				});
+			}
+
 
 		} else if(postTo === 'Coworker'){
 			console.log('Coworker...')
@@ -1871,15 +1901,31 @@ router.post('/getDept', middleware.requireAuthentication, function(req, res) {
 
 router.post('/getMyWorkGroup', middleware.requireAuthentication, function(req, res) {
 	var curUserId = req.user.id
-	db.userGroups.findAll({ 
-		where:{
-			userId:curUserId,
-			status: {
-				$like:'WorkGroup%'
-			}
-		}
+	// db.userGroups.findAll({ 
+	// 	where:{
+	// 		userId:curUserId,
+	// 		status: {
+	// 			$like:'WorkGroup%'
+	// 		}
+	// 	}
 		
-	}).then(function(userGroups) {
+	// })
+	db.group.findAll({
+				include:[{
+					// attributes:['userGroup'],
+					model:db.user,
+					where:{
+						id:curUserId
+					},
+					through:{
+						where:{
+							status:{
+								$like:'WorkGroup%'
+							}	
+						}
+					}
+				}]
+			}).then(function(userGroups) {
 
  	 	
  	 	console.log(JSON.stringify(userGroups, null, 4))
