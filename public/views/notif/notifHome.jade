@@ -107,8 +107,10 @@ append scripts
 						btn.innerHTML = 'POST'
 						btn.addEventListener('click', function(){
 							push_update_notification()
-							if(select.value === "WorkGroup" && selectWorkGroup.value ===''){
-							alert('Please select a WorkGroup')
+							if(select.value === 'Private'){
+								postDB(select.value, 'Private', 
+									inputPost.value, selectFilter.value, userIdSelected)
+							
 							}else if(select.value === "WorkGroup" && selectWorkGroup.value !== ''){
 								if(curUser.title === 'WorkGroup'){
 									var selectWorkGroupVal = $('#selectWorkGroup').val().map(Number)
@@ -138,6 +140,16 @@ append scripts
 									inputPost.value!==''?postDB(select.value, $('#selectColleague').val().map(Number), 
 									inputPost.value, selectFilter.value, userIdSelected):''
 								}
+							}else if(select.value === 'Coworker of Colleague'){
+							console.log('xxxbeforepost...')
+								if($('#selectCoofColleague').val().length === $('#selectCoofColleague').get(0).childElementCount){
+									inputPost.value!==''?postDB(select.value, 'ALL', 
+									inputPost.value, selectFilter.value, userIdSelected):''
+								}else{
+									inputPost.value!==''?postDB(select.value, $('#selectCoofColleague').val().map(Number), 
+									inputPost.value, selectFilter.value, userIdSelected):''
+								}
+
 							}else{
 
 							}
@@ -458,6 +470,40 @@ append scripts
 													});
 													$('#selectColleague').multiselect('selectAll', false);
 													$('#selectColleague').multiselect('updateButtonText');
+													
+													 
+												})
+											}else if(select.value === 'Coworker of Colleague'){
+												$('#selectCoofColleague').length != 0?$('#selectCoofColleague').remove():""
+												$.post('/notif/getUserPostFilter',{
+													userPostFilter:'Colleague'
+												}).done(function(Rdata){
+													console.log(Rdata)
+													divSelectCoofColleague = document.createElement('div')
+													divSelectCoofColleague.className = 'col-sm-3'
+														selectCoofColleague = document.createElement('select')
+														selectCoofColleague.className = 'form-control'
+														selectCoofColleague.classList.add('col-sm-4')
+
+														//- select.className = ''
+														//- select.name = 'postTo'
+														selectCoofColleague.id = 'selectCoofColleague'
+														selectCoofColleague.multiple = 'multiple'
+														selectCoofColleague.name = 'multiselect[]'
+														Rdata.usersPostfilter.forEach(function(item, i){
+																var option = document.createElement('option')
+																option.value = item.id
+																option.innerHTML = item.fullName
+																selectCoofColleague.appendChild(option)
+														})
+														divSelectCoofColleague.appendChild(selectCoofColleague)
+													divInputGroupFilter.insertBefore(divSelectCoofColleague, divSelectFilter)
+
+													$('#selectCoofColleague').multiselect({
+														includeSelectAllOption:true
+													});
+													$('#selectCoofColleague').multiselect('selectAll', false);
+													$('#selectCoofColleague').multiselect('updateButtonText');
 													
 													 
 												})

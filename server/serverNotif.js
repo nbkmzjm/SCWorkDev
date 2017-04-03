@@ -1406,7 +1406,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				arrayPostToValue.forEach(function(id){
 					
 					var userFeed = new UserFeed(post.id, id, 'new',
-					curUserId, curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
+					curUserId, curUser.fullName + ' posted to members' +  ': ' + post.postText)
 					bulkData.push(userFeed)
 					
 				})
@@ -1521,10 +1521,24 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			});
 		} else if(postTo === 'Colleague'){
 			console.log('Colleague...')
-			
+			// var coworkerIds = []
+			var colleagueIds = []
+			if(stringPostToValue !== 'ALL'){
+				console.log('!ALL')
+				var groupBLUserIdPara = {
+					$in:arrayPostToValue
+				}
+			}else{
+				console.log('ALL')
+				var groupBLUserIdPara = {
+					$ne:0
+				}
+			}
 
 			db.group.findAll({
-
+				where:{
+					groupBLUserId:groupBLUserIdPara
+				},
 				include:[{
 					model:db.user,
 					where:{
@@ -1533,7 +1547,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					through:{
 						where:{
 							status:{
-								$in:['Owner','Coworker','Colleague']
+								$in:['Coworker','Colleague']
 							}	
 						}
 					}
@@ -1543,13 +1557,13 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				// var coworkerIds = []
 				var colleagueIds = []
 				var bulkData = []
+				var userFeed = new UserFeed(post.id, 
+				curUserId, 'None', curUserId, 
+				curUser.fullName + ' posted to COLLEAGUE: '+ post.postText)
+				bulkData.push(userFeed)
 
 				groups.forEach(function(group, i){
-					if(group.users[0].userGroups.status === 'Owner'){
-						var userFeed = new UserFeed(post.id, 
-							group.groupBLUserId, 'None', curUserId, 
-							curUser.fullName + ' posted to COLLEAGUE: '+ post.postText)
-					}else if (group.users[0].userGroups.status === 'Coworker'){
+					if (group.users[0].userGroups.status === 'Coworker'){
 						colleagueIds.push(group.groupBLUserId)
 						var userFeed = new UserFeed(post.id, 
 							group.groupBLUserId, 'new', curUserId, 
@@ -1581,7 +1595,22 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			console.log('Coworker of Colleague...')
 			var colleagueIds = []
 			var bulkData = []
+			if(stringPostToValue !== 'ALL'){
+				console.log('!ALL')
+				var groupBLUserIdPara = {
+					$in:arrayPostToValue
+				}
+			}else{
+				console.log('ALL')
+				var groupBLUserIdPara = {
+					$ne:0
+				}
+			}
+
 			db.group.findAll({
+				where:{
+					groupBLUserId:groupBLUserIdPara
+				},
 				include:[{
 					model:db.user,
 					where:{
@@ -1590,7 +1619,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					through:{
 						where:{
 							status:{
-								$in:['Owner','Coworker','Colleague']
+								$in:['Coworker','Colleague']
 							}	
 						}
 					}
@@ -1598,18 +1627,20 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			}).then(function(groups){
 				console.log('friend Group:'+JSON.stringify(groups, null, 4))
 				// var coworkerIds = []
-				
 				var colleagueGroupIds = []
+				var userFeed = new UserFeed(post.id, 
+				curUserId, 'None', curUserId, 
+				curUser.fullName + ' posted to COWORKER OF COLLEAGUE:'+ post.postText)
+				bulkData.push(userFeed)
+
+				
+
 				groups.forEach(function(group, i){
 					group.users[0].userGroups.status === 'Colleague'?
 					colleagueGroupIds.push(group.id):""
 					console.log('colleagueGroupIds: '+JSON.stringify(colleagueGroupIds, null, 4))
 
-					if(group.users[0].userGroups.status === 'Owner'){
-						var userFeed = new UserFeed(post.id, 
-							group.groupBLUserId, 'None', curUserId, 
-							curUser.fullName + ' posted to COWORKER OF COLLEAGUE: '+ post.postText)
-					}else if (group.users[0].userGroups.status === 'Coworker'){
+					if (group.users[0].userGroups.status === 'Coworker'){
 						colleagueIds.push(group.groupBLUserId)
 						var userFeed = new UserFeed(post.id, 
 							group.groupBLUserId, 'new', curUserId, 
