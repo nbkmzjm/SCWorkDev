@@ -370,7 +370,13 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 			// })
 			db.userFeed.findAll(
 				getFeedsPara({
-					id:postId
+					$or:[{
+						id:postId,
+						include:{
+							$like:'%'+curUserId+'%'
+						}
+					}]
+					
 				})
 			).then(function(userFeeds){
 				var posts = userFeeds.map(function(userFeed){
@@ -1386,13 +1392,31 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			var arrayPostToValue = JSON.parse(stringPostToValue)
 		}
 		
+		
 		// console.log(JSON.stringify(user, null, 4))
 		var postTo = post.postTo
 		var include = post.include
 		if(postTo === 'Private'){
+			var bulkData = []
 			console.log('typeof'+ typeof include)
 			var userFeed = new UserFeed(post.id, curUserId, 'None', curUserId, curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
-			db.userFeed.create(userFeed)
+			bulkData.push(userFeed)
+
+			userArrayIn.forEach(function(id){
+				var userFeed = new UserFeed(post.id, id, 'new',
+				curUserId, curUser.fullName + ' posted to you' +  ': ' + post.postText)
+				bulkData.push(userFeed)
+			})
+
+			console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+				db.userFeed.bulkCreate(bulkData).then(function(created){
+					showNotification(arrayPostToValue, post)
+				}).catch(function(e) {
+					console.log(e)
+					res.render('error', {
+						error: e.toString()
+					})
+				});
 		}else if(postTo.indexOf('WorkGroup') !== -1){
 			console.log('WorkGroup...'+ curUserId)
 			var bulkData = []
