@@ -371,10 +371,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 			db.userFeed.findAll(
 				getFeedsPara({
 					$or:[{
-						id:postId,
-						include:{
-							$like:'%'+curUserId+'%'
-						}
+						id:postId
 					}]
 					
 				})
@@ -394,7 +391,19 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 			
 			db.userFeed.findAll(
 				getFeedsPara({
-					postTo:'Private'
+					$or:[{
+						postTo:'Private',
+						include:{
+							$or:[{
+								$like:'%['+curUserId+']%'},{
+								$like:'%['+curUserId+',%'},{
+								$like:'%,'+curUserId+',%'},{
+								$like:'%,'+curUserId+',%'
+
+							}]
+						}
+
+					}]
 				})
 			).then(function(userFeeds){
 				var posts = userFeeds.map(function(userFeed){
@@ -1357,15 +1366,17 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var postToValue = req.body.postToValue
 	var filter = req.body.filter
 	var userArray = req.body.userArray
-	var userArrayIn = ""
-	var userArrayEx =""
+	var userIncString = ""
+	var userExcString =""
 
 	console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbb')
 	if (filter ==="Include"||filter ==='Include Department'){
-		userArrayIn= userArray
+		userIncString= userArray
+		userIncArray = JSON.parse(userIncString)
 
 	}else{
-		userArrayEx = userArray
+		userExcString = userArray
+		userExcArray = JSON.parse(userExcString)
 	}
 	
 	console.log('userArray:'+JSON.stringify(userArray, null, 4))
@@ -1381,8 +1392,8 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			postTo:postTo,
 			postToValue:postToValue,
 			userId:curUserId,
-			include:userArrayIn,
-			exclude:userArrayEx,
+			include:userIncString,
+			exclude:userExcString,
 		}), user]
 
 	}).spread(function(post, user){
@@ -1402,7 +1413,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			var userFeed = new UserFeed(post.id, curUserId, 'None', curUserId, curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
 			bulkData.push(userFeed)
 
-			userArrayIn.forEach(function(id){
+			userIncArray.forEach(function(id){
 				var userFeed = new UserFeed(post.id, id, 'new',
 				curUserId, curUser.fullName + ' posted to you' +  ': ' + post.postText)
 				bulkData.push(userFeed)
@@ -1410,7 +1421,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 
 			console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
 				db.userFeed.bulkCreate(bulkData).then(function(created){
-					showNotification(arrayPostToValue, post)
+					showNotification(userIncArray, post)
 				}).catch(function(e) {
 					console.log(e)
 					res.render('error', {
