@@ -557,8 +557,20 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 								$like:'WORKGROUP%'
 							},
 							userId:userIdPara
+						},{
+							include:{
+								$or:[{
+									$like:'%['+curUserId+']%'},{
+									$like:'%['+curUserId+',%'},{
+									$like:'%,'+curUserId+',%'},{
+									$like:'%,'+curUserId+',%'
+								}]
+							}
 						}
-					]
+					],
+					exclude:{
+						$notLike:'%'+curUserId+'%'
+					}
 				})
 			}else{
 				var filter = getFeedsPara({
@@ -1497,6 +1509,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 		} else if(postTo === 'Coworker'){
 			console.log('Coworker...')
 			var coworkerIds = []
+			var bulkData = []
 			if(stringPostToValue !== 'ALL'){
 				console.log('!ALL')
 				var groupBLUserIdPara = {
@@ -1529,8 +1542,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				}]
 			}).then(function(groups){
 				console.log('friend Group:'+JSON.stringify(groups, null, 4))
-				// var coworkerIds = []
-				var bulkData = []
+
 				var userFeed = new UserFeed(post.id, 
 				curUserId, 'None', curUserId, 
 				curUser.fullName + ' posted to CO-WORKER: '+ post.postText)
@@ -1542,12 +1554,25 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 							curUser.fullName + ' posted to CO-WORKER: '+ post.postText)
 					bulkData.push(userFeed)
 				})
+				userIncArray.forEach(function(id){
+					var userFeed = new UserFeed(post.id, id, 'new',
+					curUserId, curUser.fullName + ' include you in a post to coworkers' +  ': ' + post.postText)
+					bulkData.push(userFeed)
+				})
 				console.log('coworkerIds: '+JSON.stringify(coworkerIds, null, 4))
 				console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
 				return db.userFeed.bulkCreate(bulkData)
 			}).then(function(created){
-			
-				showNotification(coworkerIds, post)
+				var pushUserId = bulkData.map(function(data){
+					if(data.notification !== "None"){
+						return data.receivedUserId
+					}else{
+						return 0
+					}
+
+				})
+				console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+				showNotification(pushUserId, post)
 			}).catch(function(e) {
 				console.log(e)
 				res.render('error', {
