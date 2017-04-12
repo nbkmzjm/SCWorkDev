@@ -1201,6 +1201,22 @@ app.get('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 	});
 })
 
+app.get('/getManagement', middleware.requireAuthentication, function(req, res) {
+	var departmentId = req.body.departmentId
+
+	db.user.findAll({
+		where:{
+			departmentId:departmentId,
+			title:{
+				$in:['Admin', 'Manager']
+			}
+		}
+	}).then(function(users){
+		console.log('users manager:'+JSON.stringify(users, null, 4))
+		res.json({users:users})
+	})
+})
+
 
 
 

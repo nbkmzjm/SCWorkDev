@@ -553,9 +553,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							},
 							userId:userIdPara
 						},{
-							postTo:{
-								$like:'WORKGROUP%'
-							},
+							postTo:'WorkGroup',
 							userId:userIdPara
 						},{
 							include:{
@@ -565,12 +563,14 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 									$like:'%,'+curUserId+',%'},{
 									$like:'%,'+curUserId+',%'
 								}]
-							}
+							},
+							userId:userIdPara
+
 						}
-					],
-					exclude:{
-						$notLike:'%'+curUserId+'%'
-					}
+					]
+					// exclude:{
+					// 	$notLike:'%'+curUserId+'%'
+					// }
 				})
 			}else{
 				var filter = getFeedsPara({
@@ -732,10 +732,19 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							},
 							userId:userIdPara
 						},{
-							postTo:{
-								$like:'WORKGROUP%'
+							postTo:'WorkGroup',
+							userId:userIdPara
+						},{
+							include:{
+								$or:[{
+									$like:'%['+curUserId+']%'},{
+									$like:'%['+curUserId+',%'},{
+									$like:'%,'+curUserId+',%'},{
+									$like:'%,'+curUserId+',%'
+								}]
 							},
 							userId:userIdPara
+
 						}
 					]
 				})
@@ -914,10 +923,19 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 							},
 							userId:userIdPara
 						},{
-							postTo:{
-								$like:'WORKGROUP%'
+							postTo:'WorkGroup',
+							userId:userIdPara
+						},{
+							include:{
+								$or:[{
+									$like:'%['+curUserId+']%'},{
+									$like:'%['+curUserId+',%'},{
+									$like:'%,'+curUserId+',%'},{
+									$like:'%,'+curUserId+',%'
+								}]
 							},
 							userId:userIdPara
+
 						}
 					]
 				})
@@ -1353,11 +1371,13 @@ router.post('/getUserPostFilter', middleware.requireAuthentication, function(req
 						
 					}
 				}
+			}, {
+				model:db.department
 			}]
 		}).then(function(groups){
 			console.log('groups:'+JSON.stringify(groups, null, 4))
 			var usersPostfilter = groups.map(function(group){
-				return {fullName:group.fullName, id:group.id}
+				return {fullName:group.fullName, id:group.id, department:group.department.name}
 
 			})
 			
@@ -1548,7 +1568,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				curUser.fullName + ' posted to CO-WORKER: '+ post.postText)
 				bulkData.push(userFeed)
 				groups.forEach(function(group, i){
-						coworkerIds.push(group.groupBLUserId)
+						// coworkerIds.push(group.groupBLUserId)
 						var userFeed = new UserFeed(post.id, 
 							group.groupBLUserId, 'new', curUserId, 
 							curUser.fullName + ' posted to CO-WORKER: '+ post.postText)
@@ -1559,10 +1579,11 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					curUserId, curUser.fullName + ' include you in a post to coworkers' +  ': ' + post.postText)
 					bulkData.push(userFeed)
 				})
-				console.log('coworkerIds: '+JSON.stringify(coworkerIds, null, 4))
+				// console.log('coworkerIds: '+JSON.stringify(coworkerIds, null, 4))
 				console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
 				return db.userFeed.bulkCreate(bulkData)
 			}).then(function(created){
+				//check notification type and push in array pushUserId. Do not send notification for 'NONE'
 				var pushUserId = bulkData.map(function(data){
 					if(data.notification !== "None"){
 						return data.receivedUserId
@@ -1581,8 +1602,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			});
 		} else if(postTo === 'Colleague'){
 			console.log('Colleague...')
-			// var coworkerIds = []
-			var colleagueIds = []
+			var bulkData = []
 			if(stringPostToValue !== 'ALL'){
 				console.log('!ALL')
 				var groupBLUserIdPara = {
@@ -1614,9 +1634,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				}]
 			}).then(function(groups){
 				console.log('friend Group:'+JSON.stringify(groups, null, 4))
-				// var coworkerIds = []
-				var colleagueIds = []
-				var bulkData = []
+				
 				var userFeed = new UserFeed(post.id, 
 				curUserId, 'None', curUserId, 
 				curUser.fullName + ' posted to COLLEAGUE: '+ post.postText)
@@ -1624,13 +1642,13 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 
 				groups.forEach(function(group, i){
 					if (group.users[0].userGroups.status === 'Coworker'){
-						colleagueIds.push(group.groupBLUserId)
+						// colleagueIds.push(group.groupBLUserId)
 						var userFeed = new UserFeed(post.id, 
 							group.groupBLUserId, 'new', curUserId, 
 							curUser.fullName + ' posted to COLLEAGUE: '+ post.postText)
 					
 					}else if (group.users[0].userGroups.status === 'Colleague'){
-						colleagueIds.push(group.groupBLUserId)
+						// colleagueIds.push(group.groupBLUserId)
 						var userFeed = new UserFeed(post.id, 
 							group.groupBLUserId, 'new', curUserId, 
 							curUser.fullName + ' posted to COLLEAGUE: '+ post.postText)
@@ -1638,13 +1656,22 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					bulkData.push(userFeed)
 				
 				})
-				console.log('colleagueIds: '+JSON.stringify(colleagueIds, null, 4))
+				// console.log('colleagueIds: '+JSON.stringify(colleagueIds, null, 4))
 				// console.log('coworkerIds: '+JSON.stringify(coworkerIds, null, 4))
 				console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
 				return db.userFeed.bulkCreate(bulkData)
 			}).then(function(created){
-			
-				showNotification(colleagueIds, post)
+				//check notification type and push in array pushUserId. Do not send notification for 'NONE'
+				var pushUserId = bulkData.map(function(data){
+					if(data.notification !== "None"){
+						return data.receivedUserId
+					}else{
+						return 0
+					}
+
+				})
+				console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+				showNotification(pushUserId, post)
 			}).catch(function(e) {
 				console.log(e)
 				res.render('error', {
@@ -1749,8 +1776,16 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				return db.userFeed.bulkCreate(bulkData)
 
 			}).then(function(created){
-			
-				showNotification(colleagueIds, post)
+				var pushUserId = bulkData.map(function(data){
+					if(data.notification !== "None"){
+						return data.receivedUserId
+					}else{
+						return 0
+					}
+
+				})
+				console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+				showNotification(pushUserId, post)
 			}).catch(function(e) {
 				console.log(e)
 				res.render('error', {

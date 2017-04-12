@@ -547,6 +547,7 @@ append scripts
 						var userTitle = item.user.title
 						var dateSC = item.dateSC
 						var fullName = item.user.fullName
+						var departmentId = item.user.departmentId
 
 						var foundSC = function(assign, item){
 							for (x = 0; x< assign.length; x++ ){
@@ -1186,6 +1187,14 @@ append scripts
 										})
 									
 									}else{
+										alert('sgsg')
+										$.post('/getManagement', {
+											department:departmentId
+
+										}).done(function(rData){
+											console.log('manager:')
+												console.log(rData)
+										}) 
 										var userArray = []
 										if (taskSC==='PTO-A'){
 										
@@ -1201,6 +1210,7 @@ append scripts
 										postText = user.fullName + ' requested PTO' +' for ' + dateSC
 										}else{
 										var postTo = 'Private'
+										var postToValue = 'Private'
 										var postText = 'Assigned ' + taskSC + ' for '+ fullName +' on ' + dateSC
 										var filter = 'Include'
 										userArray.push(userId)
@@ -1224,7 +1234,7 @@ append scripts
 														td.innerHTML=pData.Note;
 														td.style.backgroundColor = 'yellow'
 														//add feed and notification for this scheduling events
-														postDB(postTo, postText, filter, userArray)
+														postDB(postTo,postToValue, postText, filter, userArray)
 														for(var i = 1; i<memoCheckOpts.length;i++){
 															var detailListArr = []
 															var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')

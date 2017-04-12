@@ -405,7 +405,11 @@ append scripts
 											})
 										select.addEventListener('change', function(){
 
-											console.log(this.parentNode.parentNode.childNodes[1])
+											console.log(this.parentNode.parentNode.childNodes[3])
+											$('#divSelectColleague').length != 0?$('#divSelectColleague').remove():""
+											//- $('#divSelectCoworker').length != 0?$('#divSelectCoworker').remove():""
+											$('#divSelectCoofColleague').length != 0?$('#divSelectCoofColleague').remove():""
+											$('#divSelectWorkGroup').length != 0?$('#divSelectWorkGroup').remove():""
 											if(select.value === 'Coworker'){
 												$.post('/notif/getUserPostFilter',{
 													userPostFilter:select.value
@@ -413,6 +417,7 @@ append scripts
 													console.log(Rdata)
 													divSelectCoworker = document.createElement('div')
 													divSelectCoworker.className = 'col-sm-3'
+													divSelectCoworker.id = 'divSelectCoworker'
 														selectCoworker = document.createElement('select')
 														selectCoworker.className = 'form-control'
 														selectCoworker.classList.add('col-sm-4')
@@ -423,6 +428,7 @@ append scripts
 														selectCoworker.multiple = 'multiple'
 														selectCoworker.name = 'multiselect[]'
 														Rdata.usersPostfilter.forEach(function(item, i){
+																console.log('item:'+ item)
 																var option = document.createElement('option')
 																option.value = item.id
 																option.innerHTML = item.fullName
@@ -440,13 +446,17 @@ append scripts
 													 
 												})
 											}else if(select.value === 'Colleague'){
-												$('#selectColleague').length != 0?$('#selectColleague').remove():""
+												//- $('#divSelectColleague').length != 0?$('#divSelectColleague').remove():""
+												$('#divSelectCoworker').length != 0?$('#divSelectCoworker').remove():""
+												$('#divSelectCoofColleague').length != 0?$('#divSelectCoofColleague').remove():""
+												$('#divSelectWorkGroup').length != 0?$('#divSelectWorkGroup').remove():""
 												$.post('/notif/getUserPostFilter',{
 													userPostFilter:select.value
 												}).done(function(Rdata){
 													console.log(Rdata)
 													divSelectColleague = document.createElement('div')
 													divSelectColleague.className = 'col-sm-3'
+													divSelectColleague.id = 'divSelectColleague'
 														selectColleague = document.createElement('select')
 														selectColleague.className = 'form-control'
 														selectColleague.classList.add('col-sm-4')
@@ -459,7 +469,8 @@ append scripts
 														Rdata.usersPostfilter.forEach(function(item, i){
 																var option = document.createElement('option')
 																option.value = item.id
-																option.innerHTML = item.fullName
+																option.innerHTML = item.fullName + ' (' + item.department+
+																')'
 																selectColleague.appendChild(option)
 														})
 														divSelectColleague.appendChild(selectColleague)
@@ -474,13 +485,18 @@ append scripts
 													 
 												})
 											}else if(select.value === 'Coworker of Colleague'){
-												$('#selectCoofColleague').length != 0?$('#selectCoofColleague').remove():""
+												$('#divSelectColleague').length != 0?$('#divSelectColleague').remove():""
+												$('#divSelectCoworker').length != 0?$('#divSelectCoworker').remove():""
+												$('#divSelectWorkGroup').length != 0?$('#divSelectWorkGroup').remove():""
+
+												//- $('#divSelectCoofColleague').length != 0?$('#divSelectCoofColleague').remove():""
 												$.post('/notif/getUserPostFilter',{
 													userPostFilter:'Colleague'
 												}).done(function(Rdata){
 													console.log(Rdata)
 													divSelectCoofColleague = document.createElement('div')
 													divSelectCoofColleague.className = 'col-sm-3'
+													divSelectCoofColleague.id = 'divSelectCoofColleague'
 														selectCoofColleague = document.createElement('select')
 														selectCoofColleague.className = 'form-control'
 														selectCoofColleague.classList.add('col-sm-4')
@@ -493,7 +509,8 @@ append scripts
 														Rdata.usersPostfilter.forEach(function(item, i){
 																var option = document.createElement('option')
 																option.value = item.id
-																option.innerHTML = item.fullName
+																option.innerHTML = item.fullName + ' (' + item.department+
+																')'
 																selectCoofColleague.appendChild(option)
 														})
 														divSelectCoofColleague.appendChild(selectCoofColleague)
@@ -502,16 +519,20 @@ append scripts
 													$('#selectCoofColleague').multiselect({
 														includeSelectAllOption:true
 													});
-													$('#selectCoofColleague').multiselect('selectAll', false);
+													//- $('#selectCoofColleague').multiselect('selectAll', false);
 													$('#selectCoofColleague').multiselect('updateButtonText');
 													
 													 
 												})
 											}else if(select.value === "WorkGroup" && $('selectWorkGroup').length <1){
+												$('#divSelectColleague').length != 0?$('#divSelectColleague').remove():""
+												$('#divSelectCoworker').length != 0?$('#divSelectCoworker').remove():""
+												$('#divSelectCoofColleague').length != 0?$('#divSelectCoofColleague').remove():""
 												$.post('/notif/getMyWorkGroup').done(function(Rdata){
 
 													divSelectWorkGroup = document.createElement('div')
 													divSelectWorkGroup.className = 'col-sm-3'
+													divSelectWorkGroup.id = 'divSelectWorkGroup'
 														selectWorkGroup = document.createElement('select')
 														selectWorkGroup.className = 'form-control'
 														selectWorkGroup.classList.add('col-sm-4')
@@ -574,7 +595,12 @@ append scripts
 										selectFilter.classList.add('col-sm-4')
 										selectFilter.name = 'selectFilter'
 										selectFilter.id = 'selectFilter'
-											var optionList = ['Select Filter','Include', 'Exclude', 'Include Department']
+											var optionList = [
+													'Select Filter',
+													'Include' 
+													//- 'Exclude', '
+													//- Include Department'
+													]
 
 											optionList.forEach(function(item, i){
 												//- if(item !== setting.value){
