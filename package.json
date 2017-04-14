@@ -30,6 +30,7 @@
     "sqlite3": "^3.1.1",
     "web-push":"3.2.1",
     "urlsafe-base64":"1.0.0",
+    "tinymce":"4.5.6",
     "umzug": "^1.11.0"
   }
 }

@@ -1402,13 +1402,9 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var userExcString =""
 
 	console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbb')
-	if (filter ==="Include"||filter ==='Include Department'){
+	if (filter ==="Include"){
 		userIncString= userArray
 		userIncArray = JSON.parse(userIncString)
-
-	}else{
-		userExcString = userArray
-		userExcArray = JSON.parse(userExcString)
 	}
 	
 	console.log('userArray:'+JSON.stringify(userArray, null, 4))
@@ -1445,11 +1441,13 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			var userFeed = new UserFeed(post.id, curUserId, 'None', curUserId, curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
 			bulkData.push(userFeed)
 
-			userIncArray.forEach(function(id){
-				var userFeed = new UserFeed(post.id, id, 'new',
-				curUserId, curUser.fullName + ' posted to you' +  ': ' + post.postText)
-				bulkData.push(userFeed)
-			})
+			if (filter ==="Include"){
+				userIncArray.forEach(function(id){
+					var userFeed = new UserFeed(post.id, id, 'new',
+					curUserId, curUser.fullName + ' posted to you' +  ': ' + post.postText)
+					bulkData.push(userFeed)
+				})
+			}
 
 			console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
 				db.userFeed.bulkCreate(bulkData).then(function(created){
@@ -1478,8 +1476,19 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					
 				})
 				console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+
 				db.userFeed.bulkCreate(bulkData).then(function(created){
-					showNotification(arrayPostToValue, post)
+					//check notification type and push in array pushUserId. Do not send notification for 'NONE'
+					var pushUserId = bulkData.map(function(data){
+						if(data.notification !== "None"){
+							return data.receivedUserId
+						}else{
+							return 0
+						}
+
+					})
+					console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+					showNotification(pushUserId, post)
 				}).catch(function(e) {
 					console.log(e)
 					res.render('error', {
@@ -1515,8 +1524,16 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
 					return db.userFeed.bulkCreate(bulkData)
 				}).then(function(created){
-				
-					showNotification(workGroupIds, post)
+					var pushUserId = bulkData.map(function(data){
+						if(data.notification !== "None"){
+							return data.receivedUserId
+						}else{
+							return 0
+						}
+
+					})
+					console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+					showNotification(pushUserId, post)
 				}).catch(function(e) {
 					console.log(e)
 					res.render('error', {
@@ -1574,11 +1591,13 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 							curUser.fullName + ' posted to CO-WORKER: '+ post.postText)
 					bulkData.push(userFeed)
 				})
-				userIncArray.forEach(function(id){
-					var userFeed = new UserFeed(post.id, id, 'new',
-					curUserId, curUser.fullName + ' include you in a post to coworkers' +  ': ' + post.postText)
-					bulkData.push(userFeed)
-				})
+				if (filter ==="Include"){
+					userIncArray.forEach(function(id){
+						var userFeed = new UserFeed(post.id, id, 'new',
+						curUserId, curUser.fullName + ' include you in a post to coworkers' +  ': ' + post.postText)
+						bulkData.push(userFeed)
+					})
+				}
 				// console.log('coworkerIds: '+JSON.stringify(coworkerIds, null, 4))
 				console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
 				return db.userFeed.bulkCreate(bulkData)
