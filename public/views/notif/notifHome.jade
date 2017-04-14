@@ -40,9 +40,18 @@ append scripts
 			var JSONdata = !{JSONdata};
 			var curUser = JSONdata.curUser
 			var postId = JSONdata.postId
-			//- tinymce.init({
-			//-     selector: '#post'
-			//-   });
+			tinymce.init({
+			    selector: '#post',
+			    //- statusbar: false,
+		        setup: function (editor) {
+		            editor.on('change', function () {
+		                editor.save();
+		            });
+		            
+		        },
+		        plugins: "paste",
+		        paste_data_images: true
+			});
 
 			  
 			feedHome()

@@ -1451,7 +1451,17 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 
 			console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
 				db.userFeed.bulkCreate(bulkData).then(function(created){
-					showNotification(userIncArray, post)
+					//check notification type and push in array pushUserId. Do not send notification for 'NONE'
+					var pushUserId = bulkData.map(function(data){
+						if(data.notification !== "None"){
+							return data.receivedUserId
+						}else{
+							return 0
+						}
+
+					})
+					console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+					showNotification(pushUserId, post)
 				}).catch(function(e) {
 					console.log(e)
 					res.render('error', {
