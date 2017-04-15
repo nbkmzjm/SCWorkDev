@@ -392,18 +392,24 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 			db.userFeed.findAll(
 				getFeedsPara({
 					$or:[{
-						postTo:'Private',
-						include:{
-							$or:[{
-								$like:'%['+curUserId+']%'},{
-								$like:'%['+curUserId+',%'},{
-								$like:'%,'+curUserId+',%'},{
-								$like:'%,'+curUserId+',%'
+							postTo:{
+								$in:['Private']
+							}
+							// userId:userIdPara
+						
+						},{
+							include:{
+								$or:[{
+									$like:'%['+curUserId+']%'},{
+									$like:'%['+curUserId+',%'},{
+									$like:'%,'+curUserId+',%'},{
+									$like:'%,'+curUserId+',%'
+								}]
+							},
+							userId:userIdPara
 
-							}]
 						}
-
-					}]
+					]
 				})
 			).then(function(userFeeds){
 				var posts = userFeeds.map(function(userFeed){
