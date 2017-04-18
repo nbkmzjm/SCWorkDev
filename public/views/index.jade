@@ -1089,7 +1089,6 @@ append scripts
 												postdata:{
 													userId: userId, 
 													dateSC:dateSC
-													
 												}
 											}).done(function(pData){
 												if(pData.updated>0){
@@ -1099,31 +1098,88 @@ append scripts
 											});
 										
 										}else{
-											var memoCheckOpts = document.getElementsByClassName('checkedMemo')||false
-											console.log(memoCheckOpts)
-											//- console.log(memoCheckOpts[1].parentNode.childNodes[2])
-											if (memoCheckOpts.length!=0){
-												for(var i = 0; i<memoCheckOpts.length;i++){
-													var detailListArr = []
-													var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
-													if (detailList.length!=0){
-														for(var u = 0; u<detailList.length;u++){
-															detailListArr.push(detailList[u].innerHTML)
+											$.post('/getManagement', {
+											departmentId:departmentId
+
+											}).done(function(rData){
+												console.log('manager:')
+												console.log(rData)
+												var managementIds = rData.users.map(function(user){
+													return user.id
+												})
+												var userArray = []
+												if (taskSC==='PTO-R'||taskSC==='PTO-X' ){
+												var postTo = 'Private'
+												var postToValue = 'Private'
+												var filter = 'Include'
+												userArray = managementIds
+												userArray.push(userId)
+												postText =(taskSC=='PTO-R')?' requested PTO':"'s PTO was denied"
+												postText = fullName + postText +' for ' + dateSC
+												}else if (taskSC==='PTO-A'){
+													alert('PTOA')
+													var postTo = 'Coworker'
+													var postToValue = 'ALL'
+													var postText = 'PTO is  approved for '+ fullName +' on ' + dateSC
+												}else if(taskSC==='SWIT-R' ){
+
+													if(userId == curUserId){
+														var postTo = 'Coworker'
+														var postToValue = 'ALL'
+														postText = fullName + ' is looking for coverage on ' + dateSC
+													}else{
+														var postTo = 'Private'
+														var postToValue = 'Private'
+														var filter = 'Include'
+														userArray = managementIds
+														userArray.push(userId)
+														postText = curUser.name + ' want to work for ' + fullName + ' on ' + dateSC + ' in exchange for pending SWIT-R day'
+													}
+
+												}else if(taskSC==='SWIT-A' ){
+													var postTo = 'Private'
+													var postToValue = 'Private'
+													var filter = 'Include'
+													userArray = managementIds
+													userArray.push(userId)
+													if(userId == curUserId){
+														var postText = curUser.name + ' agree to take off work ' + dateSC + 'in exchange for another day'
+													}else{
+														var postText = curUser.name + ' agree to work for ' + fullName + ' on ' + dateSC
+													}
+												
+												}else{
+												var postTo = 'Private'
+												var postToValue = 'Private'
+												var postText = 'Assigned ' + taskSC + ' for '+ fullName +' on ' + dateSC
+												var filter = 'Include'
+												userArray.push(userId)
+												}
+
+
+												var memoCheckOpts = document.getElementsByClassName('checkedMemo')||false
+												console.log(memoCheckOpts)
+												//- console.log(memoCheckOpts[1].parentNode.childNodes[2])
+												if (memoCheckOpts.length!=0){
+													for(var i = 0; i<memoCheckOpts.length;i++){
+														var detailListArr = []
+														var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
+														postDB(postTo,postToValue, postText, filter, userArray)
+														if (detailList.length!=0){
+															for(var u = 0; u<detailList.length;u++){
+																detailListArr.push(detailList[u].innerHTML)
+															}
+															
+															dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name,userId, dateSC, taskSC, td,detailListArr)
+
+														}else{
+															dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name,userId, dateSC, taskSC, td,null)
 														}
 														
-														dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name,userId, dateSC, taskSC, td,detailListArr)
-
-													}else{
-														dateSCSubmit(memoCheckOpts[i].value, memoCheckOpts[i].name,userId, dateSC, taskSC, td,null)
 													}
-													
 												}
-											}
-											//- }else{
-											//- 	dateSCSubmit("", userId, dateSC, taskSC, td)
-											//- }
-											
-											
+
+											})
 										}
 									}
 								}(assign[x], userId))
@@ -1187,7 +1243,6 @@ append scripts
 										})
 									
 									}else{
-										alert('sgsg')
 										$.post('/getManagement', {
 											departmentId:departmentId
 
@@ -1198,28 +1253,46 @@ append scripts
 												return user.id
 											})
 											var userArray = []
-											if (taskSC==='PTO-R'){
+											if (taskSC==='PTO-R'||taskSC==='PTO-X' ){
 											var postTo = 'Private'
 											var postToValue = 'Private'
 											var filter = 'Include'
 											userArray = managementIds
-											
-											postText = fullName + ' requested PTO' +' for ' + dateSC
-
+											userArray.push(userId)
+											postText =(taskSC=='PTO-R')?' requested PTO':"'s PTO was denied"
+											postText = fullName + postText +' for ' + dateSC
 											}else if (taskSC==='PTO-A'){
-											var postTo = 'Coworker'
-											var postToValue = 'ALL'
-											
-											var postText = 'PTO is  approved for '+ fullName +' on ' + dateSC
-											}else if(taskSC==='SWIT-R' && userId == curUserId){
-											postText = curUser.fullName + ' is looking for coverage on ' + dateSC
+												alert('PTOA')
+												var postTo = 'Coworker'
+												var postToValue = 'ALL'
+												var postText = 'PTO is  approved for '+ fullName +' on ' + dateSC
+											}else if(taskSC==='SWIT-R' ){
 
+												if(userId == curUserId){
+													var postTo = 'Coworker'
+													var postToValue = 'ALL'
+													postText = fullName + ' is looking for coverage on ' + dateSC
+												}else{
+													var postTo = 'Private'
+													var postToValue = 'Private'
+													var filter = 'Include'
+													userArray = managementIds
+													userArray.push(userId)
+													postText = curUser.name + ' want to work for ' + fullName + ' on ' + dateSC + ' in exchange for pending SWIT-R day'
+												}
+
+											}else if(taskSC==='SWIT-A' ){
+												var postTo = 'Private'
+												var postToValue = 'Private'
+												var filter = 'Include'
+												userArray = managementIds
+												userArray.push(userId)
+												if(userId == curUserId){
+													var postText = curUser.name + ' agree to take off work ' + dateSC + 'in exchange for another day'
+												}else{
+													var postText = curUser.name + ' agree to work for ' + fullName + ' on ' + dateSC
+												}
 											
-											
-											
-											}else if (taskSC==='PTO-R'||taskSC==='PTO-X' || taskSC==='SWIT-R'||taskSC==='SWIT-A'){
-											console.log('PTO-R SWIT-R SWIT-A' + taskSC)
-											postText = user.fullName + ' requested PTO' +' for ' + dateSC
 											}else{
 											var postTo = 'Private'
 											var postToValue = 'Private'

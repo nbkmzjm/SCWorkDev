@@ -1449,10 +1449,13 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 
 			if (filter ==="Include"){
 				userIncArray.forEach(function(id){
-					var userFeed = new UserFeed(post.id, id, 'new',
-					curUserId, curUser.fullName + ' posted to you' +  ': ' + post.postText)
-					bulkData.push(userFeed)
+					if(id!==curUserId){
+						var userFeed = new UserFeed(post.id, id, 'new',
+						curUserId, curUser.fullName + ' posted to you' +  ': ' + post.postText)
+						bulkData.push(userFeed)
+					}
 				})
+
 			}
 
 			console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
