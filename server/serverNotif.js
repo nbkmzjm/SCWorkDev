@@ -1301,10 +1301,10 @@ router.post('/getUserPost', middleware.requireAuthentication, function(req, res)
 	})
 
 })
-function UserFeed(mainPostId, receivedUserId, notification, userId, notifText){
+function UserFeed(mainPostId, receivedUserId, notification, userId, notifText, type){
 	this.mainPostId = mainPostId
 	this.receivedUserId = receivedUserId
-	this.status = 'active',
+	this.status = type||'active',
 	this.notification = notification|| 'new'
 	this.userId = userId,
 	this.notifText = notifText
@@ -1939,36 +1939,50 @@ router.post('/getCommentCount', middleware.requireAuthentication, function(req, 
 })
 
 router.post('/replyPost', middleware.requireAuthentication, function(req, res) {
-	var commentUser = req.user.id
+	var commentUser = req.user
+	var commentUserId = req.user.id
 	var comment = req.body.comment
 	var mainPostId = req.body.mainPostId
-	console.log(mainPostId+"--"+comment+'--'+commentUser)
+	console.log(mainPostId+"--"+comment+'--'+commentUserId)
 	// console.log(typeOf dfsdf)
 	db.comment.create({
 		comment:comment,
 		reaction:'',
-		userId:commentUser,
+		userId:commentUserId,
 		mainPostId:mainPostId
 	}).then(function(comment){
 		console.log(JSON.stringify(comment, null, 4))
-		var bulkData = []
 
-		groups.forEach(function(group, i){
-			console.log(curUser.fullName + ' posted '+ post.postText)
-			// group.users[0].userGroups.status === 'Owner'?
-			// coworkerIds.push(group.groupBLUserId):""
-			// group.users[0].userGroups.status === 'Coworker'?
-			coworkerIds.push(group.groupBLUserId)
-			var userFeed = new UserFeed(post.id, 
-				group.groupBLUserId, curUserId, 
-				curUser.fullName + ' posted: '+ post.postText)
-			bulkData.push(userFeed)
-		})
-		console.log('coworkerIds: '+JSON.stringify(coworkerIds, null, 4))
-		console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
-		return db.userFeed.bulkCreate(bulkData)
-		res.json({
-			comment:comment
+		db.userFeed.findAll({
+			attributes:[db.Sequelize.literal('DISTINCT `receivedUserId`'),'receivedUserId'],
+			where:{
+				mainPostId:mainPostId
+			}
+		}).then(function(notifications){
+
+			console.log('notifications: '+JSON.stringify(notifications, null, 4))
+			var notificationIds = notifications.map(function(notification){
+					return	notification.receivedUserId
+			})
+		
+			var bulkData = []
+			// //push NEW commenter userId into the array to get included into converstation
+			// if(notificationIds.indexOf(commentUserId) === -1){
+			// 	notificationIds.push(commentUserId)
+			// }
+			notificationIds.forEach(function(notificationId, i){
+				if(notificationId !== commentUserId){
+					var userFeed = new UserFeed(mainPostId, 
+						notificationId, 'new', commentUserId, 
+						commentUser.fullName + ' commented: '+ comment.comment, 'comment')
+					bulkData.push(userFeed)
+				}
+			})
+			console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+			return db.userFeed.bulkCreate(bulkData)
+			res.json({
+				comment:comment
+			})
 		})
 	}).catch(function(e) {
 		console.log(e)
