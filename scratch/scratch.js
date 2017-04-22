@@ -161,7 +161,8 @@ var getFeedsPara = function(wherePara){
     return {
       attributes:['mainPostId'],
       where:{
-        receivedUserId:curUserId
+        receivedUserId:curUserId,
+        status:'commnet'
       },
       include:[{
         model:db.mainPost,

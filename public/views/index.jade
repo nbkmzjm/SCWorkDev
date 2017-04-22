@@ -1116,7 +1116,6 @@ append scripts
 												userArray = managementIds
 												//add userId to include array if PTO-R for somebody else
 												userId!==curUserId?userArray.push(userId):""
-												userArray.push(userId)
 												postText =(taskSC=='PTO-R')?' requested PTO':"'s PTO was denied"
 												postText = fullName + postText +' for ' + dateSC
 												}else if (taskSC==='PTO-A'){
@@ -1349,7 +1348,7 @@ append scripts
 																td.innerHTML=pData.Note;
 																td.style.backgroundColor = 'yellow'
 																//add feed and notification for this scheduling events
-																//- postDB(postTo,postToValue, postText, filter, userArray)
+																postDB(postTo,postToValue, postText, filter, userArray)
 																for(var i = 1; i<memoCheckOpts.length;i++){
 																	var detailListArr = []
 																	var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
@@ -1705,7 +1704,7 @@ append scripts
 											var taskOptionData = $("#taskOption").val().toUpperCase();
 											var taskCategoryData = $("#taskCategory").val().toUpperCase();
 											if (taskOptionData!=''&& taskCategoryData!=''){
-										 		 $.getJSON('/taskOption',{
+										 		 $.post('/taskOption',{
 						                          taskOption:taskOptionData,
 						                          taskCategory:taskCategoryData
 						                        }).done(function(pData){

@@ -803,8 +803,13 @@ app.post('/clearEvent', middleware.requireAuthentication, function(req,res){
 
 
 app.get('/taskOption', middleware.requireAuthentication, function(req, res){
+	var departmentId = req.user.departmentId
 	var curUserTitle = req.user.title;
+	console.log('cateing option')
 	db.taskOption.findAll({
+		where:{
+			departmentId:departmentId
+		},
 		order: [
 			['description']
 		]
@@ -821,6 +826,41 @@ app.get('/taskOption', middleware.requireAuthentication, function(req, res){
 	})
 
 })
+
+app.post('/taskOption', middleware.requireAuthentication, function(req, res) {
+	var curUser = req.user
+	var description = req.body.taskOption
+	var category = req.body.taskCategory
+	db.taskOption.findOrCreate({
+		where:{
+			description:description,
+			departmentId: curUser.departmentId
+		}
+	}).spread(function(taskOption, created) {
+		return [db.taskOption.update({
+			category:category
+			
+		}, {
+			where:{
+				description: description,
+				departmentId: curUser.departmentId
+				
+			}
+		}), taskOption]	
+	}).spread(function(created, taskOption){
+		
+		taskOption.category = category
+		res.json({
+				created,
+				taskOption:taskOption
+			})
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+});
 
 
 app.get('/taskOptionDefault', middleware.requireAuthentication, function(req, res) {

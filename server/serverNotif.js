@@ -320,7 +320,8 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 		return {
 			attributes:['mainPostId'],
 			where:{
-				receivedUserId:curUserId
+				receivedUserId:curUserId,
+				status: 'active'
 			},
 			include:[{
 				model:db.mainPost,
@@ -1993,12 +1994,44 @@ router.post('/replyPost', middleware.requireAuthentication, function(req, res) {
 
 })
 
+
+function emojToText(commentEmoj){
+	var emojText;
+	switch(commentEmoj){
+		case 'glyphicon glyphicon-thumbs-up':
+		emojText = ' likes '
+		break;
+		case 'glyphicon glyphicon-thumbs-down':
+		emojText = ' dislikes '
+		break;
+		case 'glyphicon glyphicon-heart':
+		emojText = ' loves '
+		break;
+		case 'glyphicon glyphicon-star':
+		emojText = ' give a star to '
+		break;
+		case 'glyphicon glyphicon-remove-sign':
+		emojText = ' denies '
+		break;
+	}
+
+
+	return emojText
+
+}
+
 router.post('/addPostEmoj', middleware.requireAuthentication, function(req, res) {
 	var curUserId = req.user.id
+	var commentUser = req.user
+	var commentUserId = req.user.id
 	var commentEmoj = req.body.commentEmoj
 	var mainPostId = req.body.mainPostId
 	console.log(mainPostId+"--"+commentEmoj+'--'+curUserId)
 	db.comment.findOne({
+		include:{
+			model:db.mainPost,
+			attributes:['userId']
+		},
 		where:{
 			mainPostId:mainPostId,
 			userId:curUserId,
@@ -2008,48 +2041,91 @@ router.post('/addPostEmoj', middleware.requireAuthentication, function(req, res)
 		}
 	}).then(function(comment){
 		console.log("xxx"+JSON.stringify(comment, null, 4))
-		if(!!comment){
-			console.log('updating')
-			db.comment.update({
-				commentEmoj:commentEmoj
-			},{
-				where:{
+		db.userFeed.findAll({
+			attributes:[db.Sequelize.literal('DISTINCT `receivedUserId`'),'receivedUserId'],
+			where:{
+				mainPostId:mainPostId
+			}
+		}).then(function(notifications){
+
+			console.log('notifications: '+JSON.stringify(notifications, null, 4))
+			var notificationIds = notifications.map(function(notification){
+					return	notification.receivedUserId
+			})
+		
+			var bulkData = []
+			// //push NEW commenter userId into the array to get included into converstation
+			// if(notificationIds.indexOf(commentUserId) === -1){
+			// 	notificationIds.push(commentUserId)
+			// }
+			
+		
+		
+			if(!!comment){
+				console.log('updating')
+				db.comment.update({
+					commentEmoj:commentEmoj
+				},{
+					where:{
+						mainPostId:mainPostId,
+						userId:curUserId,
+						commentEmoj:{
+							$not:''
+						}
+					}
+				}).then(function(updated){
+					notificationIds.forEach(function(notificationId, i){
+						if(notificationId !== commentUserId){
+							var emojDescription = (notificationId ===comment.mainPost.userId)? ' your post ':'a post that you are in '
+							var userFeed = new UserFeed(mainPostId, 
+								notificationId, 'new', commentUserId, 
+								commentUser.fullName + emojToText(commentEmoj) + emojDescription, 'emoj')
+							bulkData.push(userFeed)
+						}
+					})
+					console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+					return db.userFeed.bulkCreate(bulkData)
+
+					res.json({
+						updated:updated
+					})
+				}).catch(function(e) {
+					console.log(e)
+					res.render('error', {
+						error: e.toString()
+					})
+				});
+				
+			}else{
+				console.log('creating new')
+				db.comment.create({
 					mainPostId:mainPostId,
 					userId:curUserId,
-					commentEmoj:{
-						$not:''
-					}
-				}
-			}).then(function(updated){
-				res.json({
-					updated:updated
-				})
-			}).catch(function(e) {
-				console.log(e)
-				res.render('error', {
-					error: e.toString()
-				})
-			});
-			
-		}else{
-			console.log('creating new')
-			db.comment.create({
-				mainPostId:mainPostId,
-				userId:curUserId,
-				commentEmoj:commentEmoj
-			}).then(function(comment){
-				res.json({
-					comment:comment
-				})
-			}).catch(function(e) {
-				console.log(e)
-				res.render('error', {
-					error: e.toString()
-				})
-			});
-			
-		}
-		
+					commentEmoj:commentEmoj
+				}).then(function(comment){
+					notificationIds.forEach(function(notificationId, i){
+						if(notificationId !== commentUserId){
+							var userFeed = new UserFeed(mainPostId, 
+								notificationId, 'new', commentUserId, 
+								commentUser.fullName + emojToText(commentEmoj) + 'a post that you are in ', 'emoj')
+							bulkData.push(userFeed)
+						}
+					})
+					console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+					return db.userFeed.bulkCreate(bulkData)
+
+					res.json({
+						comment:comment
+					})
+				}).catch(function(e) {
+					console.log(e)
+					res.render('error', {
+						error: e.toString()
+					})
+				});
+				
+			}
+		})
 	})
 })
 

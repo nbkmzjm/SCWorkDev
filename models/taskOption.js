@@ -22,7 +22,11 @@ module.exports = function(sequelize, DataTypes) {
 				len: [0, 20]	
 			}
 			
-		}
+		},
+		departmentId:{
+			type: DataTypes.INTEGER,
+	        defaultValue:1
+	    }
 
 	}, { timestamps: false})
 
