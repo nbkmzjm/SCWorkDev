@@ -864,18 +864,21 @@ app.post('/taskOption', middleware.requireAuthentication, function(req, res) {
 
 
 app.get('/taskOptionDefault', middleware.requireAuthentication, function(req, res) {
+	var curUser = req.user
 	var description = req.query.taskOption
 	var category = req.query.taskCategory
 	db.taskOption.findOrCreate({
 		where:{
-			description:description
+			description:description,
+			departmentId: curUser.departmentId
 		}
 	}).spread(function(taskOption, created) {
 		return [db.taskOption.update({
 			category:category
 		}, {
 			where:{
-				description: description
+				description: description,
+				departmentId: curUser.departmentId
 			}
 		}), taskOption]	
 	}).spread(function(created, taskOption){
