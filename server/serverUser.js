@@ -197,6 +197,7 @@ router.post('/addUser', function(req, res) {
 											transaction:t
 										}).then(function(){
 											console.log('User created successfully')
+											
 										})
 
 									})

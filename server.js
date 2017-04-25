@@ -143,13 +143,23 @@ app.post('/showNoti', function(req, res){
 
 })
 
-app.get('/test', test)
+app.get('/test', middleware.requireAuthentication, test)
 
 function test(req, res){
+	curUser = req.user
 
 
-
-
+	db.group.findAll({
+			include:[{
+			model:db.user,
+			as:'groupBLUser',
+			where:{
+				departmentId:curUser.departmentId
+			}
+		}]
+	}).then(function(groups){
+		console.log(JSON.stringify(groups, null, 4))
+	})
 	res.render('test',{
 			JSONdata: JSON.stringify({
 				vapidPub:vapidKeys.publicKey
