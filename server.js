@@ -158,7 +158,35 @@ function test(req, res){
 			}
 		}]
 	}).then(function(groups){
-		console.log(JSON.stringify(groups, null, 4))
+		var bulkData = []
+		groups.forEach(function(group){
+			console.log('xx'+JSON.stringify(group.groupBLUser.title, null, 4))
+			//filter out workgroup and curUser
+			if(group.groupBLUserId!==curUser.id&&group.groupBLUser.title!=='WorkGroup'){
+				var obj = {}
+				obj.userId = curUser.id
+				obj.groupId = group.id
+				obj.status = 'Coworker'
+				bulkData.push(obj)
+			}
+		})
+		var curGroupId 
+		groups
+		groups.forEach(function(group){
+			//filter out workgroup and curUser
+			if(group.groupBLUserId!==curUser.id&&group.groupBLUser.title!=='WorkGroup'){
+				var obj = {}
+				obj.userId = group.groupBLUserId
+				obj.groupId = 29
+				obj.status = 'Coworker'
+				bulkData.push(obj)
+			}
+		})
+
+		console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+		db.userGroups.bulkCreate(bulkData)
+		
+
 	})
 	res.render('test',{
 			JSONdata: JSON.stringify({

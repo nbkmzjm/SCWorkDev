@@ -140,6 +140,7 @@ router.post('/addUser', function(req, res) {
 				}, {
 					transaction:t
 				}).then(function(group){
+					//****CREATE SEPERATE LEVEL WITH TRANSACTION***
 					return db.userGroups.create({
 						userId:user.id,
 						groupId:group.id,
@@ -163,10 +164,96 @@ router.post('/addUser', function(req, res) {
 									}
 									data.push(feedSettingObj)
 								})
+
 								return db.feedSetting.bulkCreate(data,{
 									transaction:t
 								}).then(function(){
-									console.log('User created successfully')
+									console.log('User created successfullyx')
+									//****FIND SAME LEVEL WITH TRANSACTION***
+									return db.group.findAll({
+										transaction:t,
+										include:[{
+											model:db.user,
+											as:'groupBLUser',
+											where:{
+												departmentId:user.departmentId
+											}
+										}]
+									}).then(function(groups){
+										// console.log('xxy'+JSON.stringify(groups, null, 4))
+										var bulkData = []
+										groups.forEach(function(groupx){
+											console.log('xx'+JSON.stringify(groupx.groupBLUser.title, null, 4))
+											//filter out workgroup and curUser
+											if(groupx.groupBLUserId!==user.id&&groupx.groupBLUser.title!=='WorkGroup'){
+												var obj = {}
+												obj.userId = user.id
+												obj.groupId = groupx.id
+												obj.status = 'Coworker'
+												bulkData.push(obj)
+											}
+										})
+										
+										groups.forEach(function(groupx){
+											//filter out workgroup and curUser
+											if(groupx.groupBLUserId!==user.id&&groupx.groupBLUser.title!=='WorkGroup'){
+												var obj = {}
+												obj.userId = groupx.groupBLUserId
+												obj.groupId = group.id
+												obj.status = 'Coworker'
+												bulkData.push(obj)
+											}
+										})
+
+										console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+										return db.userGroups.bulkCreate(bulkData,{
+											transaction:t
+										}).then(function(){
+											console.log('Coworker successfully added')
+										})
+									})
+
+									//Adding all user from same dept as Coworker
+									// return db.group.findAll({
+									// 	include:[{
+									// 	model:db.user,
+									// 	as:'groupBLUser',
+									// 	where:{
+									// 		departmentId:curUser.departmentId
+									// 	}
+									// 	}]
+									// },{
+									// transaction:t
+									// }).then(function(groups){
+									// var bulkData = []
+									// groups.forEach(function(groupx){
+									// 	console.log('xx'+JSON.stringify(groupx.groupBLUser.title, null, 4))
+									// 	//filter out workgroup and curUser
+									// 	if(groupx.groupBLUserId!==curUser.id&&groupx.groupBLUser.title!=='WorkGroup'){
+									// 		var obj = {}
+									// 		obj.userId = user.id
+									// 		obj.groupId = groupx.id
+									// 		obj.status = 'Coworker'
+									// 		bulkData.push(obj)
+									// 	}
+									// })
+									
+									// groups.forEach(function(groupx){
+									// 	//filter out workgroup and curUser
+									// 	if(groupx.groupBLUserId!==curUser.id&&groupx.groupBLUser.title!=='WorkGroup'){
+									// 		var obj = {}
+									// 		obj.userId = groupx.groupBLUserId
+									// 		obj.groupId = group.id
+									// 		obj.status = 'Coworker'
+									// 		bulkData.push(obj)
+									// 	}
+									// })
+
+									// console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+									// db.userGroups.bulkCreate(bulkData)
+										
+
+									// })
 								})
 							}else{
 								console.log('feedSetting not exist')
@@ -196,15 +283,15 @@ router.post('/addUser', function(req, res) {
 										return db.feedSetting.bulkCreate(data,{
 											transaction:t
 										}).then(function(){
-											console.log('User created successfully')
+											console.log('User created successfullyy')
+
+											
 											
 										})
 
 									})
 								})
 							}
-							
-
 						})
 					})
 				})
@@ -219,7 +306,7 @@ router.post('/addUser', function(req, res) {
 		}).catch(function(e) {
 			console.log(JSON.stringify(e, null, 4))
 			res.json({
-				errors: "User cannot be created due to " + e.errors[0].message
+				errors: "User cannot be created due to "
 			})
 		});
 		
