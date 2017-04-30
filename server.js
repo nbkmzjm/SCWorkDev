@@ -193,7 +193,7 @@ function test(req, res){
 	res.render('test',{
 			JSONdata: JSON.stringify({
 				vapidPub:vapidKeys.publicKey,
-				envVar: "process.env.TEST_VAR"
+				envVar: process.env.TEST_VAR
 			})
 		})
 
