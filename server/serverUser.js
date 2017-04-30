@@ -169,6 +169,7 @@ router.post('/addUser', function(req, res) {
 									transaction:t
 								}).then(function(){
 									console.log('User created successfullyx')
+
 									//****FIND SAME LEVEL WITH TRANSACTION***
 									return db.group.findAll({
 										transaction:t,
@@ -176,7 +177,8 @@ router.post('/addUser', function(req, res) {
 											model:db.user,
 											as:'groupBLUser',
 											where:{
-												departmentId:user.departmentId
+												departmentId:user.departmentId,
+												active:1
 											}
 										}]
 									}).then(function(groups){
@@ -213,7 +215,7 @@ router.post('/addUser', function(req, res) {
 										})
 									})
 
-									//Adding all user from same dept as Coworker
+									
 									// return db.group.findAll({
 									// 	include:[{
 									// 	model:db.user,

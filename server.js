@@ -19,6 +19,8 @@ localStorage = new LocalStorage('./scratch')
 // const urlsafeBase64 = require('urlsafe-base64')
 var Umzug = require('umzug')
 
+
+
 const vapidKeys = webpush.generateVAPIDKeys();
 webpush.setGCMAPIKey("AIzaSyAVHtFMejQX7To7UwVqi4MWzWIfBP1qWAc");
 webpush.setVapidDetails(
@@ -190,7 +192,8 @@ function test(req, res){
 	})
 	res.render('test',{
 			JSONdata: JSON.stringify({
-				vapidPub:vapidKeys.publicKey
+				vapidPub:vapidKeys.publicKey,
+				envVar: "process.env.TEST_VAR"
 			})
 		})
 
