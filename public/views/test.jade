@@ -11,7 +11,7 @@ block content
 	p(id="status") Please select a file
 	img(style="border:1px solid gray;width:300px;"  id="preview" src="/images/default.png")
 	form(method="POST" action="/save-details")
-		input(type="file" id="file-input")
+		input(type="file" id="file-input" multiple size="5")
 		input(type="hidden" id="avatar-url" name="avatar-url" value="/images/default.png")
 		input(type="text" name="username" placeholder="Username")
 		input(type="text" name="full-name" placeholder="Full name")
@@ -105,7 +105,6 @@ append scripts
 
 
 			var JSONdata = !{JSONdata};
-			alert(JSONdata.envVar)
 			var newP = document.createElement('input')
 			newP.type = 'text'
 			newP.id = 'text'
@@ -118,16 +117,47 @@ append scripts
 			showBut.value = 'Show Notification'
 
 			container.appendChild(showBut);
-
+			var testString = 'string'
 
 			$('#testBut').click(function(){
 				$.post('/showNoti',{
 					text:$('#text').val()
 				}).then(function(Rdata){
+					console.log(testString)
 					$('#test').html(Rdata.endpoint)
 
 				})
 			})
+
+			document.getElementById('file-input').addEventListener('change', function(){
+				var testString = 'string'
+				var files = document.getElementById('file-input').files
+				for(var x=0; x<files.length; x++){
+					console.log(files[x])
+					$.post('/sign-s3', {
+						fileName:files[x].name,
+						fileType:files[x].type
+					}).then(function(Rdata){
+						console.log(Rdata.url)
+						console.log(files)
+						$.ajax({
+						    url: Rdata.url, // your api url
+						    method: 'PUT', // method is any HTTP method
+						    data: files[x], // data as js object
+						    success: function() {
+						    	console.log('uploaded file')
+						    },
+						    error: function(jqXHR, textStatus, errorThrown){
+
+						    	console.log('can not upload file: '+textStatus+ '----'+jqXHR+'----'+errorThrown)
+						    	console.log(jqXHR)
+						    }
+						});
+
+					})
+				}
+			})
+			
 			
 		});
 

@@ -1,6 +1,12 @@
 var PORT = process.env.PORT || 3000;
 var express = require('express');
 var app = express();
+var dotenv = require('dotenv').config()
+var aws = require('aws-sdk')
+aws.config = {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+};
 var path = require('path');
 var http = require('http').Server(app);
 // var io = require('socket.io')(http);
@@ -18,11 +24,13 @@ var LocalStorage = require('node-localstorage').LocalStorage
 localStorage = new LocalStorage('./scratch')
 // const urlsafeBase64 = require('urlsafe-base64')
 var Umzug = require('umzug')
+var S3Bucket = process.env.S3Bucket
+
 
 
 
 const vapidKeys = webpush.generateVAPIDKeys();
-webpush.setGCMAPIKey("AIzaSyAVHtFMejQX7To7UwVqi4MWzWIfBP1qWAc");
+webpush.setGCMAPIKey(process.env.GCMAPIKey);
 webpush.setVapidDetails(
   'mailto:tkngo85@gmail.com',
   vapidKeys.publicKey,
@@ -143,6 +151,33 @@ app.post('/showNoti', function(req, res){
 		})
 	})	
 
+})
+
+app.post('/sign-s3', middleware.requireAuthentication, function(req, res){
+	const s3 = new aws.S3();
+	const fileName = req.body.fileName
+	const fileType = req.body.fileType
+	const s3Params = {
+		Bucket: process.env.S3Bucket,
+		Key: fileName,
+		Expires: 900,
+		ContentType: fileType,
+		ACL: 'public-read'
+
+	}
+
+	s3.getSignedUrl('putObject', s3Params, function(err, url){
+		if(err){
+			console.log(err);
+			return res.end();
+		}
+		console.log('returnS3:'+ JSON.stringify(url, null, 4))
+		const returnData = {
+			signedRequest: url,
+			url: url
+		};
+		res.json({url:url});
+	})
 })
 
 app.get('/test', middleware.requireAuthentication, test)

@@ -31,6 +31,8 @@
     "web-push":"3.2.1",
     "urlsafe-base64":"1.0.0",
     "tinymce":"4.5.6",
-    "umzug": "^1.11.0"
+    "umzug": "^1.11.0",
+    "aws-sdk":"2.48.0",
+    "dotenv":"4.0.0"
   }
 }
