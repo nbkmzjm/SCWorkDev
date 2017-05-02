@@ -10,6 +10,6 @@ module.exports = {
     )
   },  
   down: function(queryInterface, Sequelize) {
-    return queryInterface.removeColumn('mainPosts', 'mainPost');
+    return queryInterface.removeColumn('mainPosts', 'postToValue');
   }
 };

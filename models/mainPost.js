@@ -16,6 +16,9 @@ module.exports = function(sequelize, DataTypes) {
         postToValue:{
             type: DataTypes.STRING,
             defaultValue: "ALL"
+        },storageLink:{
+            type: DataTypes.STRING,
+            defaultValue: ""
         },
         type:{
             type: DataTypes.STRING

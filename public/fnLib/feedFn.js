@@ -1,4 +1,4 @@
-function postDB(postTo, postToValue, postText, filter, userArray){
+function postDB(postTo, postToValue, postText, filter, userArray, storageLink){
 
 	var userArrayString = JSON.stringify(userArray,4, null)
 	if(postToValue !== "ALL"){
@@ -8,6 +8,7 @@ function postDB(postTo, postToValue, postText, filter, userArray){
 	$.post('/notif/post',{
 		postTo:postTo,
 		postToValue:postToValue,
+		storageLink:storageLink,
 		postText:postText,
 		filter:filter,
 		userArray:userArrayString
@@ -77,6 +78,10 @@ function getPostDB(option){
 			// div.style.borderTopStyle = 'solid'
 				var divBody = document.createElement('div')
 				divBody.className = 'panel-body'
+					console.log(post.storageLink)
+					var img = document.createElement('img')
+					img.src = post.storageLink
+					divBody.appendChild(img)
 					var h3 = document.createElement('pre')
 					h3.innerHTML = post.postText
 					// h3.style.background = 'red'

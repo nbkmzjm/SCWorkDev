@@ -132,30 +132,75 @@ append scripts
 			document.getElementById('file-input').addEventListener('change', function(){
 				var testString = 'string'
 				var files = document.getElementById('file-input').files
-				for(var x=0; x<files.length; x++){
-					console.log(files[x])
+				
+
+				var fileArray = $.map(files, function(file, index) {
+				    return [file];
+				});
+
+
+
+				//- BASE64Decoder decoder = new BASE64Decoder();
+			 //-        byte[] imgBytes = decoder.decodeBuffer(value);        
+			 
+			 //-       BufferedImage bufImg = ImageIO.read(new ByteArrayInputStream(imgBytes));
+			 //-       File imgOutFile = new File("newLabel.png");
+			 //-    ImageIO.write(bufImg, "png", imgOutFile);
+
+				fileArray.forEach(function(file,i){
 					$.post('/sign-s3', {
-						fileName:files[x].name,
-						fileType:files[x].type
+						fileName:file.name,
+						fileType:file.type
 					}).then(function(Rdata){
 						console.log(Rdata.url)
-						console.log(files)
-						$.ajax({
-						    url: Rdata.url, // your api url
-						    method: 'PUT', // method is any HTTP method
-						    data: files[x], // data as js object
-						    success: function() {
-						    	console.log('uploaded file')
-						    },
-						    error: function(jqXHR, textStatus, errorThrown){
-
-						    	console.log('can not upload file: '+textStatus+ '----'+jqXHR+'----'+errorThrown)
-						    	console.log(jqXHR)
-						    }
-						});
+						const xhr = new XMLHttpRequest();
+						xhr.open('PUT', Rdata.url);
+						xhr.onreadystatechange = () => {
+						if(xhr.readyState === 4){
+						  if(xhr.status === 200){
+						    console.log('uploaded file')
+						  }
+						  else{
+						    alert('Could not upload file.');
+						  }
+						}
+						};
+						xhr.send(file);
 
 					})
-				}
+				})
+
+				//- var x=0;
+				//- 	function uploadS3loop(arr){
+				//- 		console.log(files[x])
+				//- 		$.post('/sign-s3', {
+				//- 			fileName:files[x].name,
+				//- 			fileType:files[x].type
+				//- 		}).then(function(Rdata){
+				//- 			console.log(Rdata.url)
+				//- 			console.log(x)
+				//- 			$.ajax({
+				//- 			    url: Rdata.url, // your api url
+				//- 			    method: 'PUT', // method is any HTTP method
+				//- 			    data: files[x], // data as js object
+				//- 			    success: function() {
+				//- 			    	console.log('uploaded file')
+				//- 			    },
+				//- 			    error: function(jqXHR, textStatus, errorThrown){
+
+				//- 			    	console.log('can not upload file: '+textStatus+ '----'+jqXHR+'----'+errorThrown)
+				//- 			    	console.log(jqXHR)
+				//- 			    }
+				//- 			});
+
+				//- 		})
+
+				//- 		x++
+				//- 		x<arr.length?uploadS3loop(arr):""
+				//- 	}
+				
+				//- uploadS3loop(files)
+
 			})
 			
 			

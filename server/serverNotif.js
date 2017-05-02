@@ -1405,6 +1405,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var postToValue = req.body.postToValue
 	var filter = req.body.filter
 	var userArray = req.body.userArray
+	var storageLink = req.body.storageLink
 	var userIncString = ""
 	var userExcString =""
 
@@ -1415,7 +1416,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	}
 	
 	console.log('userArray:'+JSON.stringify(userArray, null, 4))
-	console.log('postToValue:'+JSON.stringify(postToValue, null, 4))
+	console.log('storageLink:'+JSON.stringify(storageLink, null, 4))
 	db.user.findOne({
 		where:{
 			id:curUserId
@@ -1426,13 +1427,14 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			postText:postText,
 			postTo:postTo,
 			postToValue:postToValue,
+			storageLink:storageLink,
 			userId:curUserId,
 			include:userIncString,
 			exclude:userExcString,
 		}), user]
 
 	}).spread(function(post, user){
-		console.log('post:'+JSON.stringify(post.postToValue, null, 4))
+		console.log('post:'+JSON.stringify(post, null, 4))
 		var stringPostToValue = post.postToValue
 		if(post.postToValue != 'ALL'){
 			var arrayPostToValue = JSON.parse(stringPostToValue)

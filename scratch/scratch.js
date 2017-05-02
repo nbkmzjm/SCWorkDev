@@ -184,3 +184,18 @@ var getFeedsPara = function(wherePara){
       offset: loadNumber
     }
   }
+
+
+var i = 0;
+  function loopArrMemoOpt (arr){
+
+    //- console.log(memoCheckOpts[i].value)
+    dateSCSubmit(memoCheckOpts[i].value, userId, dateSC, taskSC, td)
+
+    i++
+    if (i < arr.length){
+      loopArrMemoOpt(arr);
+    }
+
+  }
+  loopArrMemoOpt(memoCheckOpts)
