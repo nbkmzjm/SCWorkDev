@@ -272,6 +272,60 @@
 	width: 250px;
 }
 
+.modalx {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+.floating-image {
+    float: left;
+    /*width: 150px;
+    height: 75px;*/
+    margin: 10px;
+    border: 2px solid #73AD21;  
+}
+.imageThumb {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 2px solid #73AD21; 
+}
+.close {
+    position: absolute;
+    top: 600px;
+    right: 25px;
+    color: #000000;
+    font-size: 40px;
+    font-weight: bold;
+    z-index: 1
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.imageThumb:hover {opacity: 0.7;}
+
 .pre {
   background-color: #FFFFFF;
   font: bold 12px  arial, sans-serif;

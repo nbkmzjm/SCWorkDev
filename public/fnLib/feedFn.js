@@ -47,6 +47,7 @@ function getPostDB(option){
 	if(option===undefined){
 		var option = {}
 	}
+
 	var loadNumber = option.loadNumber||undefined
 	var viewOption = option.viewOption||false
 	var byMe = option.byMe||false
@@ -78,15 +79,38 @@ function getPostDB(option){
 			// div.style.borderTopStyle = 'solid'
 				var divBody = document.createElement('div')
 				divBody.className = 'panel-body'
-					console.log(post.storageLink)
-					var img = document.createElement('img')
-					img.src = post.storageLink
-					divBody.appendChild(img)
-					var h3 = document.createElement('pre')
-					h3.innerHTML = post.postText
-					// h3.style.background = 'red'
-					h3.className = 'pre'
-					divBody.appendChild(h3)
+					// var h3 = document.createElement('pre')
+
+					divBody.innerHTML = post.postText
+
+					let textInPost = function(){
+						let result = false;
+						let pTags = [].slice.call(divBody.getElementsByTagName('p'))
+						pTags.forEach(function(pTag, u){
+							if(pTag.firstChild.nodeName!=='IMG'){
+								result =  true
+							}
+						})
+						return result
+					}
+
+					var imgTags = [].slice.call(divBody.getElementsByTagName('img'))
+					imgTags.forEach(function(imgTag, u){
+						if(imgTag !== undefined){
+							imgTag.setAttribute("style","width:128px;height:128px;")
+							imgTag.className = 'imageThumb' 
+							textInPost()===false?imgTag.classList.add('floating-image'):""
+							
+							// imgTag.id = 'image'+ i + u
+							imgTag.addEventListener('click', function(){
+								// console.log(this)
+								document.getElementById('myModal').style.display = 'block'
+								document.getElementById('imgModal').src = this.src
+							})
+						}
+					})
+					
+
 				div.appendChild(divBody)
 				getComment()
 				function getComment(){

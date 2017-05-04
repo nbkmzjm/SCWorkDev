@@ -15,6 +15,9 @@ block content
 	#container
 		#userContainer
 			input(name="image" type="file" id="upload" class="input" onchange="" style="display: none;")
+			div(id='myModal' class='modalx')
+				span(class="glyphicon glyphicon-remove close")
+				img(id='imgModal' class = 'modal-content')
 			ul(class="nav nav-tabs")
 				li(class="active" id='feedTab')
 
@@ -33,12 +36,34 @@ block content
 				div(id="Profile" class="tab-pane")
 				div(id="Relationships" class="tab-pane")
 				div(id="Setting" class="tab-pane")
+
 append scripts 
 	script(src="public/fnLib/feedFn.js")
 
 	script.
 
 		$(function(){
+			var span = document.getElementsByClassName("close")[0];
+
+			span.onclick = function() { 
+			    document.getElementById('myModal').style.display = "none";
+			}
+			$(document).keyup(function(e) {
+				 if (e.keyCode == 27){
+				 	document.getElementById('myModal').style.display = "none";
+				 }
+			})
+
+			//- var divModal = document.createElement('div')
+			//- divModal.id = 'myModal'
+			//- divModal.className = 'modal'
+			//- divModal.innerHTML = 'xxxxxxxxxxxxxxxxxxxxxxx'
+			//- 	var imgModal = document.createElement('img')
+
+			//- 	imgModal.className = 'modal-content'
+			//- 	imgModal.id = 'imgModal'
+			//- 	divModal.appendChild(imgModal)
+			//- $('#userContainer').append(divModal)
 			
 			var JSONdata = !{JSONdata};
 			var curUser = JSONdata.curUser
@@ -58,13 +83,15 @@ append scripts
 			    paste_as_text: false,
 			    paste_data_images: true,
 			    paste_enable_default_filters: false,
-
-			    plugins: [
-			      "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-			      "searchreplace wordcount visualblocks visualchars code fullscreen",
-			      "insertdatetime media nonbreaking save table contextmenu directionality",
-			      "emoticons template textcolor paste colorpicker textpattern"
+			    plugins:[
+			    	'paste'
 			    ],
+			    //- plugins: [
+			    //-   "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+			    //-   "searchreplace wordcount visualblocks visualchars code fullscreen",
+			    //-   "insertdatetime media nonbreaking save table contextmenu directionality",
+			    //-   "emoticons template textcolor paste colorpicker textpattern"
+			    //- ],
 			    theme_advanced_buttons3_add : "emotions",
 			    table_default_styles: {
 				    fontWeight: 'bold',
@@ -266,58 +293,7 @@ append scripts
 								
 
 						    }
-							//- if(inputPostValue.indexOf('src="data')!==-1){
-							//- 	//- var x = inputPostValue.indexOf('src="data')
-							//- 	//- console.log(x + ":"+ inputPostValue)
-							//- 	var inputValueImage = inputPostValue.substring(inputPostValue.indexOf('src="data')+5, inputPostValue.indexOf('"',inputPostValue.indexOf('src="data')+20))
-							//- 	console.log('inputValueImage:'+inputValueImage)
-							//- 		signS3Paste(inputValueImage)
-							//- 	inputPostValue = inputPostValue.replace(inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS"))
-							//- 	//- console.log("inputPostValueinlopp:"+inputPostValue)
-							//- }
-							
-							//- console.log("inputPostValueAfter:"+inputPostValue)
-							//- postDBGroupSelect(inputValueNoImage, returnData.url)
-
-							//- if(inputPostValue.indexOf('src=')<9 && inputPostValue.indexOf('src=')>0 &&
-							//- 	){
-						 //-    	var string = inputPostValue.substring(inputPostValue.indexOf('"')+1,inputPostValue.indexOf('"',50));
-							//- 	var decodedImage = dataURItoBlob(string)
-							//- 	$.post('/sign-s3', {
-							//- 		fileName:'image'+curUser.id+moment().format("MMDDYYHHmmss"),
-							//- 		fileType:decodedImage.type
-							//- 	}).then(function(returnData){
-							//- 		console.log(returnData)
-							//- 		const xhr = new XMLHttpRequest();
-							//- 		xhr.open('PUT', returnData.signedRequest);
-							//- 		xhr.onreadystatechange = () => {
-							//- 			if(xhr.readyState === 4){
-							//- 				if(xhr.status === 200){
-							//- 					console.log('uploaded file')
-							//- 					var inputValueNoImage = inputPost.value.substring(inputPost.value.indexOf("<p>",20))
-							//- 					console.log(inputValueNoImage)
-							//- 					inputValueNoImage.toString().length>600?inputValueNoImage = "":""
-												
-												
-							//- 				}
-							//- 				else{
-							//- 					console.log('Unable to process your post');
-							//- 				}
-							//- 			}
-							//- 		};
-							//- 		//- xhr.send(decodedImage);
-									
-							//- 	})
-							//- }else if(inputPostValue.indexOf('src=') === -1){
-							//- 	postDBGroupSelect(inputPost.value)
-							//- }else{
-							//- 	alert("Please enter text after an image")
-							//- }
-							
-							
-							
-
-							
+													
 							
 							
 						}) 
@@ -337,27 +313,7 @@ append scripts
 
 					divInputGroup.appendChild(divInputGroupBtn)
 
-					//- var divbtn = document.createElement('div')
-					//- divbtn.className = 'input-group-btn'
-					//- 	var btn = document.createElement('button')
-					//- 	btn.className = 'btn btn-primary dropdown-toggle'
-					//- 	btn.setAttribute('data-toggle', 'dropdown')
-					//- 	btn.innerHTML = 'include'
-					//- 		var span = document.createElement('span')
-					//- 		span.className = 'caret'
-					//- 		btn.appendChild(span)
-					//- 	divbtn.appendChild(btn)
-
-					//- 	var ul = document.createElement('ul')
-					//- 	ul.className = 'dropdown-menu'
-					//- 		var li = document.createElement('li')
-					//- 			var a = document.createElement('a')
-					//- 			a.href = 'www.yahoo.com'
-					//- 			a.innerHTML = 'YAHOO'
-					//- 			li.appendChild(a)
-					//- 		ul.appendChild(li)
-					//- 	divbtn.appendChild(ul)
-					//- div.appendChild(divbtn)
+					
 					$('#Feed').append(divInputGroup)
 					document.getElementById("post").focus()
 
