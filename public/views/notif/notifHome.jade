@@ -14,7 +14,7 @@ block horMenu
 block content
 	#container
 		#userContainer
-			input(name="image" type="file" id="upload" class="input" onchange="")
+			input(name="image" type="file" id="upload" class="input" onchange="" style="display: none;")
 			ul(class="nav nav-tabs")
 				li(class="active" id='feedTab')
 
@@ -39,6 +39,7 @@ append scripts
 	script.
 
 		$(function(){
+			
 			var JSONdata = !{JSONdata};
 			var curUser = JSONdata.curUser
 			var postId = JSONdata.postId
@@ -64,9 +65,19 @@ append scripts
 			      "insertdatetime media nonbreaking save table contextmenu directionality",
 			      "emoticons template textcolor paste colorpicker textpattern"
 			    ],
+			    theme_advanced_buttons3_add : "emotions",
+			    table_default_styles: {
+				    fontWeight: 'bold',
+				    borderTop: '1px solid black'
+				},
 			    toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
 			    toolbar2: "print preview media | forecolor backcolor emoticons",
-			    image_advtab: true,
+			     theme_advanced_buttons3_add : "tablecontrols",
+		        //- table_styles : "Header 1=header1;Header 2=header2;Header 3=header3",
+		        table_cell_default_styles : {
+		        	border:"1px solid black",
+		        },
+		       
 			    file_picker_callback: function(callback, value, meta) {
 					if (meta.filetype == 'image') {
 						$('#upload').trigger('click');
@@ -142,38 +153,7 @@ append scripts
 				    return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
 			    }
 
-			    function signS3Paste (inputPostValue){
-			    	if(inputPostValue.indexOf('src=')<9){
-				    	var string = inputPostValue.substring(inputPostValue.indexOf('"')+1,inputPostValue.indexOf('"',50));
-						var decodedImage = dataURItoBlob(string)
-						$.post('/sign-s3', {
-							fileName:'image'+curUser.id+moment().format("MMDDYYHHmmss"),
-							fileType:decodedImage.type
-						}).then(function(returnData){
-							console.log(returnData)
-							const xhr = new XMLHttpRequest();
-							xhr.open('PUT', returnData.signedRequest);
-							xhr.onreadystatechange = () => {
-							if(xhr.readyState === 4){
-							  if(xhr.status === 200){
-							    console.log('uploaded file')
-							  }
-							  else{
-							    alert('Could not upload file.');
-							  }
-							}
-							};
-							xhr.send(decodedImage);
-							return returnData.url
-						})
-					}else{
-						alert("Please enter text after an image")
-						return null
-
-
-					}
-
-			    }
+			   
 				function feedHome(){
 					//- push_update_notification()
 					var userSelected = []
@@ -200,10 +180,9 @@ append scripts
 						
 							
 							function postDBGroupSelect(inputValue, returnURL){
-								
 
 								if(select.value === 'Private'){
-									//- postDB(select.value, 'Private', inputValue, selectFilter.value, userIdSelected, returnURL)
+									postDB(select.value, 'Private', inputValue, selectFilter.value, userIdSelected, returnURL)
 								
 								}else if(select.value === "WorkGroup" && selectWorkGroup.value !== ''){
 									if(curUser.title === 'WorkGroup'){
@@ -245,19 +224,60 @@ append scripts
 							push_update_notification()
 							var inputPostValue = inputPost.value
 							console.log(inputPostValue)
-							
-							//- inputPostValue.match(new RegExp("str", "g")) || []).length)
-							while(inputPostValue.indexOf('src="data')!==-1){
-								var x = inputPostValue.indexOf('src="data')
-								console.log(x)
-								var inputValueImage = inputPostValue.substring(inputPostValue.indexOf('src="')+5, inputPostValue.indexOf('"',inputPostValue.indexOf('src="data')+20))
-								inputPostValue = inputPostValue.replace(inputValueImage,'image'+curUser.id+moment().format("MMDDYYHHmmss"))
-								console.log("inputPostValueinlopp:"+inputPostValue)
-							}
-							
-							console.log("inputPostValueAfter:"+inputPostValue)
+							if(inputPostValue.indexOf('src="data')!==-1){
+								signS3dataURI(inputPost.value)
+							}else{
+								postDBGroupSelect(inputPost.value)
+							}	
+							 function signS3dataURI (inputPostValue){
+					 			var inputValueImage = inputPostValue.substring(inputPostValue.indexOf('src="data')+5, inputPostValue.indexOf('"',inputPostValue.indexOf('src="data')+20))
 
-							//- if(inputPostValue.substring(inputPostValue.indexOf('"')+1,inputPostValue.indexOf('"',50))
+								var decodedImage = dataURItoBlob(inputValueImage)
+								$.post('/sign-s3', {
+									fileName:curUser.id+'image'+moment().format("DDHHmmssSSSS"),
+									fileType:decodedImage.type
+								}).then(function(returnData){
+									console.log(returnData)
+									const xhr = new XMLHttpRequest();
+									xhr.open('PUT', returnData.signedRequest);
+									xhr.onreadystatechange = () => {
+									if(xhr.readyState === 4){
+									  if(xhr.status === 200){
+									    console.log('uploaded file')
+									    var inputPostValuewithURL = inputPostValue.replace(inputValueImage,returnData.url)
+									    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
+									    console.log("inputPostValuewithURL:"+inputPostValuewithURL)
+									    if(inputPostValuewithURL.indexOf('src="data')!==-1){
+									    	signS3dataURI(inputPostValuewithURL)
+									    }else{
+									    	//- alert('all done ready for DB save')
+									    	console.log("inputPostValuewithURLFinal:"+inputPostValuewithURL)
+									    	postDBGroupSelect(inputPostValuewithURL)
+									    }
+									  }
+									  else{
+									    alert('Could not upload file.');
+									  }
+									}
+									};
+									xhr.send(decodedImage);
+									//- return returnData.url
+								})
+								
+
+						    }
+							//- if(inputPostValue.indexOf('src="data')!==-1){
+							//- 	//- var x = inputPostValue.indexOf('src="data')
+							//- 	//- console.log(x + ":"+ inputPostValue)
+							//- 	var inputValueImage = inputPostValue.substring(inputPostValue.indexOf('src="data')+5, inputPostValue.indexOf('"',inputPostValue.indexOf('src="data')+20))
+							//- 	console.log('inputValueImage:'+inputValueImage)
+							//- 		signS3Paste(inputValueImage)
+							//- 	inputPostValue = inputPostValue.replace(inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS"))
+							//- 	//- console.log("inputPostValueinlopp:"+inputPostValue)
+							//- }
+							
+							//- console.log("inputPostValueAfter:"+inputPostValue)
+							//- postDBGroupSelect(inputValueNoImage, returnData.url)
 
 							//- if(inputPostValue.indexOf('src=')<9 && inputPostValue.indexOf('src=')>0 &&
 							//- 	){
@@ -277,7 +297,7 @@ append scripts
 							//- 					var inputValueNoImage = inputPost.value.substring(inputPost.value.indexOf("<p>",20))
 							//- 					console.log(inputValueNoImage)
 							//- 					inputValueNoImage.toString().length>600?inputValueNoImage = "":""
-							//- 					postDBGroupSelect(inputValueNoImage, returnData.url)
+												
 												
 							//- 				}
 							//- 				else{
