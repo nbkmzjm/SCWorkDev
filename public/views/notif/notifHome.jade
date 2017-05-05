@@ -14,7 +14,7 @@ block horMenu
 block content
 	#container
 		#userContainer
-			input(name="image" type="file" id="upload" class="input" onchange="" style="display: none;")
+			
 			div(id='myModal' class='modalx')
 				span(class="glyphicon glyphicon-remove close")
 				img(id='imgModal' class = 'modal-content')
@@ -54,6 +54,8 @@ append scripts
 				 }
 			})
 
+
+
 			//- var divModal = document.createElement('div')
 			//- divModal.id = 'myModal'
 			//- divModal.className = 'modal'
@@ -83,15 +85,15 @@ append scripts
 			    paste_as_text: false,
 			    paste_data_images: true,
 			    paste_enable_default_filters: false,
-			    //- plugins:[
-			    //- 	'paste'
-			    //- ],
-			    plugins: [
-			      "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-			      "searchreplace wordcount visualblocks visualchars code fullscreen",
-			      "insertdatetime media nonbreaking save table contextmenu directionality",
-			      "emoticons template textcolor paste colorpicker textpattern"
+			    plugins:[
+			    	'paste'
 			    ],
+			    //- plugins: [
+			    //-   "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+			    //-   "searchreplace wordcount visualblocks visualchars code fullscreen",
+			    //-   "insertdatetime media nonbreaking save table contextmenu directionality",
+			    //-   "emoticons template textcolor paste colorpicker textpattern"
+			    //- ],
 			    theme_advanced_buttons3_add : "emotions",
 			    table_default_styles: {
 				    fontWeight: 'bold',
@@ -206,48 +208,7 @@ append scripts
 						btn.addEventListener('click', function(){
 						
 							
-							function postDBGroupSelect(inputValue, returnURL){
-
-								if(select.value === 'Private'){
-									postDB(select.value, 'Private', inputValue, selectFilter.value, userIdSelected, returnURL)
-								
-								}else if(select.value === "WorkGroup" && selectWorkGroup.value !== ''){
-									if(curUser.title === 'WorkGroup'){
-										var selectWorkGroupVal = $('#selectWorkGroup').val().map(Number)
-									}else{
-										var selectWorkGroupVal = $('#selectWorkGroup').val()
-									}
-									inputPost.value!==''?postDB('WorkGroup', selectWorkGroupVal,
-									inputPost.value, selectFilter.value,userIdSelected):''
-									//- location.reload()
-								}else if(select.value === 'Coworker'){
-									if($('#selectCoworker').val().length === $('#selectCoworker').get(0).childElementCount){
-										inputPost.value!==''?postDB(select.value, 'ALL', 
-										inputPost.value, selectFilter.value, userIdSelected):''
-									}else{
-										inputPost.value!==''?postDB(select.value, $('#selectCoworker').val().map(Number), 
-										inputPost.value, selectFilter.value, userIdSelected):''
-									}
-								
-								}else if(select.value === 'Colleague'){
-									if($('#selectColleague').val().length === $('#selectColleague').get(0).childElementCount){
-										inputPost.value!==''?postDB(select.value, 'ALL', 
-										inputPost.value, selectFilter.value, userIdSelected):''
-									}else{
-										inputPost.value!==''?postDB(select.value, $('#selectColleague').val().map(Number), 
-										inputPost.value, selectFilter.value, userIdSelected):''
-									}
-								}else if(select.value === 'Coworker of Colleague'){
-									if($('#selectCoofColleague').val().length === $('#selectCoofColleague').get(0).childElementCount){
-										inputPost.value!==''?postDB(select.value, 'ALL', 
-										inputPost.value, selectFilter.value, userIdSelected):''
-									}else{
-										inputPost.value!==''?postDB(select.value, $('#selectCoofColleague').val().map(Number), 
-										inputPost.value, selectFilter.value, userIdSelected):''
-									}
-
-								}
-							}
+							
 							push_update_notification()
 							var inputPostValue = inputPost.value
 							console.log(inputPostValue)
@@ -312,9 +273,120 @@ append scripts
 
 					divInputGroup.appendChild(divInputGroupBtn)
 
+
+			
+
+
+					
+
 					
 					$('#Feed').append(divInputGroup)
 					document.getElementById("post").focus()
+
+					document.createElement('input')
+					var fileUpload = document.createElement("input");
+					fileUpload.type = "file"
+					fileUpload.id = 'upload'
+					fileUpload.multiple = true
+					$("#Feed").append(fileUpload)
+
+
+					fileUpload.addEventListener('change', function(){
+						var testString = 'string'
+						var files = document.getElementById('upload').files
+						
+
+						var fileArray = $.map(files, function(file, index) {
+						    return [file];
+						});
+						let i=0
+						let returnURLs =''
+						function uploadReturnURL(arrayFile){
+							//- var decodedImage = dataURItoBlob(inputValueImage)
+							
+							$.post('/sign-s3', {
+								fileName:curUser.id+'image'+moment().format("DDHHmmssSSSS"),
+								fileType:arrayFile[0].type
+							}).then(function(returnData){
+								console.log(returnData)
+								const xhr = new XMLHttpRequest();
+								xhr.open('PUT', returnData.signedRequest);
+								xhr.onreadystatechange = function(){
+									if(xhr.readyState === 4){
+									  	if(xhr.status === 200){
+										    console.log('uploaded file')
+										    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
+										    returnURLs = returnURLs + '<p><img src="'+returnData.url+'"/></p>'
+										    console.log("returnURLs:"+returnURLs)
+										    i++
+										    if(i< arrayFile.length){
+										    	uploadReturnURL(arrayFile)
+										    }else{
+										    	//- alert('all done ready for DB save')
+										    	console.log("returnURLsFinal:"+returnURLs)
+										    	postDBGroupSelect(returnURLs)
+										    }
+									  	}else{
+									    	alert('Could not upload file.');
+									  	}
+									}
+								};
+								xhr.send(arrayFile[i]);
+								//- return returnData.url
+							})
+
+
+						}
+						uploadReturnURL(fileArray)
+
+					})
+
+					function postDBGroupSelect(inputValue, returnURL){
+
+						if(select.value === 'Private'){
+							postDB(select.value, 'Private', inputValue, selectFilter.value, userIdSelected, returnURL)
+						
+						}else if(select.value === "WorkGroup" && selectWorkGroup.value !== ''){
+							if(curUser.title === 'WorkGroup'){
+								var selectWorkGroupVal = $('#selectWorkGroup').val().map(Number)
+							}else{
+								var selectWorkGroupVal = $('#selectWorkGroup').val()
+							}
+							inputPost.value!==''?postDB('WorkGroup', selectWorkGroupVal,
+							inputPost.value, selectFilter.value,userIdSelected):''
+							//- location.reload()
+						}else if(select.value === 'Coworker'){
+							if($('#selectCoworker').val().length === $('#selectCoworker').get(0).childElementCount){
+								inputPost.value!==''?postDB(select.value, 'ALL', 
+								inputPost.value, selectFilter.value, userIdSelected):''
+							}else{
+								inputPost.value!==''?postDB(select.value, $('#selectCoworker').val().map(Number), 
+								inputPost.value, selectFilter.value, userIdSelected):''
+							}
+						
+						}else if(select.value === 'Colleague'){
+							if($('#selectColleague').val().length === $('#selectColleague').get(0).childElementCount){
+								inputPost.value!==''?postDB(select.value, 'ALL', 
+								inputPost.value, selectFilter.value, userIdSelected):''
+							}else{
+								inputPost.value!==''?postDB(select.value, $('#selectColleague').val().map(Number), 
+								inputPost.value, selectFilter.value, userIdSelected):''
+							}
+						}else if(select.value === 'Coworker of Colleague'){
+							if($('#selectCoofColleague').val().length === $('#selectCoofColleague').get(0).childElementCount){
+								inputPost.value!==''?postDB(select.value, 'ALL', 
+								inputPost.value, selectFilter.value, userIdSelected):''
+							}else{
+								inputPost.value!==''?postDB(select.value, $('#selectCoofColleague').val().map(Number), 
+								inputPost.value, selectFilter.value, userIdSelected):''
+							}
+
+						}
+					}
+					
+
+					//- document.getElementById('upload').style.display = 'block'
+
 
 					var select;
 					var selectFilter

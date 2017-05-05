@@ -11,7 +11,7 @@ block content
 	p(id="status") Please select a file
 	img(style="border:1px solid gray;width:300px;"  id="preview" src="/images/default.png")
 	form(method="POST" action="/save-details")
-		input(type="file" id="file-input" multiple size="5")
+		input(type="file" id="file-input" multiple=false size="5")
 		input(type="hidden" id="avatar-url" name="avatar-url" value="/images/default.png")
 		input(type="text" name="username" placeholder="Username")
 		input(type="text" name="full-name" placeholder="Full name")
