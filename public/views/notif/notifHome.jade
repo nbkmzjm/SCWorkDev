@@ -130,7 +130,7 @@ append scripts
 			//- });
 
 			  
-			feedHome()
+			//- feedHome()
 			//- var groups = [{name:'a'}, {name:'b'}, {name:'c'}]
 			//- ul = document.createElement('ul')
 			//- groups.forEach(function(group, i){
@@ -143,45 +143,45 @@ append scripts
 			//- 	ul.appendChild(li)
 			//- 	console.log(group.name)
 			//- })
-				//- function push_update_notification(msg){
-				//- 	if(navigator.serviceWorker.controller){
+			//- function push_update_notification(msg){
+			//- 	if(navigator.serviceWorker.controller){
 
-				//-         navigator.serviceWorker.addEventListener('message', function(event){
-				//-         	if(event.data.command == 'pushActivation'){
-				//-         		console.log("run push activation");
-				//-         		$.post('/notif/getNewNotifCount').done(function(Rdata){
+			//-         navigator.serviceWorker.addEventListener('message', function(event){
+			//-         	if(event.data.command == 'pushActivation'){
+			//-         		console.log("run push activation");
+			//-         		$.post('/notif/getNewNotifCount').done(function(Rdata){
 
-				//-         			console.log('recieving update contain..')
-				//-         			$('#badgeNotif').html(Rdata.userFeed)
-				//-         		})
-				//-         	}else if(event.data.command == 'updateNotif'){
-				//-         		//- $.post('/notif/getNewNotif').done(function(Rdata){
+			//-         			console.log('recieving update contain..')
+			//-         			$('#badgeNotif').html(Rdata.userFeed)
+			//-         		})
+			//-         	}else if(event.data.command == 'updateNotif'){
+			//-         		//- $.post('/notif/getNewNotif').done(function(Rdata){
 
-				//-         		//- 	console.log('recieving update contain..')
-				//-         		//- 	$('#notifBtn').html(Rdata.userFeed)
-				//-         		//- })
-				        		
-				//-         	}
-				        	
-				//-         })
-				//-         navigator.serviceWorker.controller.postMessage({'command':'POST'});
-					    
-				//-    	}
-				//- }
+			//-         		//- 	console.log('recieving update contain..')
+			//-         		//- 	$('#notifBtn').html(Rdata.userFeed)
+			//-         		//- })
+			        		
+			//-         	}
+			        	
+			//-         })
+			//-         navigator.serviceWorker.controller.postMessage({'command':'POST'});
+				    
+			//-    	}
+			//- }
 				//ok
 
 				
-				function dataURItoBlob(dataURI) {
-				    var binary = atob(dataURI.split(',')[1]);
-				    var array = [];
-				    for(var i = 0; i < binary.length; i++) {
-				        array.push(binary.charCodeAt(i));
-				    }
-				    return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
+			function dataURItoBlob(dataURI) {
+			    var binary = atob(dataURI.split(',')[1]);
+			    var array = [];
+			    for(var i = 0; i < binary.length; i++) {
+			        array.push(binary.charCodeAt(i));
 			    }
+			    return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
+		    }
 
 			   
-				function feedHome(){
+			function feedHome(){
 					//- push_update_notification()
 					var userSelected = []
 					var userIdSelected = []
@@ -215,7 +215,7 @@ append scripts
 							}else{
 								postDBGroupSelect(inputPost.value)
 							}	
-							 function signS3dataURI (inputPostValue){
+							function signS3dataURI (inputPostValue){
 					 			var inputValueImage = inputPostValue.substring(inputPostValue.indexOf('src="data')+5, inputPostValue.indexOf('"',inputPostValue.indexOf('src="data')+20))
 
 								var decodedImage = dataURItoBlob(inputValueImage)
@@ -877,22 +877,22 @@ append scripts
 															divSelectDept.appendChild(selectDept)
 														divInputGroupFilter.appendChild(divSelectDept)
 														document.addEventListener('mousemove', function(){
-														selectDept.setAttribute('data-content', JSON.stringify(deptSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
-														$('[data-toggle="popover"]').popover({html:true})
+															selectDept.setAttribute('data-content', JSON.stringify(deptSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
+															$('[data-toggle="popover"]').popover({html:true})
 														
-													})
+														})
 													}
 												})
 											}
 										})
 									divSelectFilter.appendChild(selectFilter)
 								divInputGroupFilter.appendChild(divSelectFilter)
-							$('#Feed').append(divInputGroupFilter)
+								$('#Feed').append(divInputGroupFilter)
 							}
 						})
 						var divPostContainer = document.createElement('div')
 						divPostContainer.id = 'divPostContainer'
-						//- $('#Feed').append(divPostContainer)
+						$('#Feed').append(divPostContainer)
 
 					})
 						
