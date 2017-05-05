@@ -70,24 +70,24 @@ append scripts
 			var JSONdata = !{JSONdata};
 			var curUser = JSONdata.curUser
 			var postId = JSONdata.postId
-			tinymce.init({
-			    selector: 'textarea',
-			    //- statusbar: false,
-		        setup: function (editor) {
-		            editor.on('change', function () {
-		                editor.save();
-		            });
+			//- tinymce.init({
+			//-     selector: 'textarea',
+			//-     //- statusbar: false,
+		 //-        setup: function (editor) {
+		 //-            editor.on('change', function () {
+		 //-                editor.save();
+		 //-            });
 		            
-		        },
-			    selector: "textarea",
-			    theme: "modern",
+		 //-        },
+			//-     selector: "textarea",
+			//-     theme: "modern",
 			   
-			    //- paste_as_text: false,
-			    paste_data_images: true,
-			    //- paste_enable_default_filters: false,
-			    plugins:[
-			    	'paste'
-			    ]
+			//-     //- paste_as_text: false,
+			//-     paste_data_images: true,
+			//-     //- paste_enable_default_filters: false,
+			//-     plugins:[
+			//-     	'paste'
+			//-     ]
 			    //- plugins: [
 			    //-   "advlist autolink lists link image charmap print preview hr anchor pagebreak",
 			    //-   "searchreplace wordcount visualblocks visualchars code fullscreen",
@@ -127,7 +127,7 @@ append scripts
 			  //-       title: 'Test template 2',
 			  //-       content: 'Test 2'
 			  //-   }]
-			});
+			//- });
 
 			  
 			feedHome()
