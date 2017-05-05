@@ -43,16 +43,16 @@ append scripts
 	script.
 
 		$(function(){
-			var span = document.getElementsByClassName("close")[0];
+			//- var span = document.getElementsByClassName("close")[0];
 
-			span.onclick = function() { 
-			    document.getElementById('myModal').style.display = "none";
-			}
-			$(document).keyup(function(e) {
-				 if (e.keyCode == 27){
-				 	document.getElementById('myModal').style.display = "none";
-				 }
-			})
+			//- span.onclick = function() { 
+			//-     document.getElementById('myModal').style.display = "none";
+			//- }
+			//- $(document).keyup(function(e) {
+			//- 	 if (e.keyCode == 27){
+			//- 	 	document.getElementById('myModal').style.display = "none";
+			//- 	 }
+			//- })
 
 
 
@@ -143,31 +143,31 @@ append scripts
 			//- 	ul.appendChild(li)
 			//- 	console.log(group.name)
 			//- })
-				function push_update_notification(msg){
-					if(navigator.serviceWorker.controller){
+				//- function push_update_notification(msg){
+				//- 	if(navigator.serviceWorker.controller){
 
-				        navigator.serviceWorker.addEventListener('message', function(event){
-				        	if(event.data.command == 'pushActivation'){
-				        		console.log("run push activation");
-				        		$.post('/notif/getNewNotifCount').done(function(Rdata){
+				//-         navigator.serviceWorker.addEventListener('message', function(event){
+				//-         	if(event.data.command == 'pushActivation'){
+				//-         		console.log("run push activation");
+				//-         		$.post('/notif/getNewNotifCount').done(function(Rdata){
 
-				        			console.log('recieving update contain..')
-				        			$('#badgeNotif').html(Rdata.userFeed)
-				        		})
-				        	}else if(event.data.command == 'updateNotif'){
-				        		//- $.post('/notif/getNewNotif').done(function(Rdata){
+				//-         			console.log('recieving update contain..')
+				//-         			$('#badgeNotif').html(Rdata.userFeed)
+				//-         		})
+				//-         	}else if(event.data.command == 'updateNotif'){
+				//-         		//- $.post('/notif/getNewNotif').done(function(Rdata){
 
-				        		//- 	console.log('recieving update contain..')
-				        		//- 	$('#notifBtn').html(Rdata.userFeed)
-				        		//- })
+				//-         		//- 	console.log('recieving update contain..')
+				//-         		//- 	$('#notifBtn').html(Rdata.userFeed)
+				//-         		//- })
 				        		
-				        	}
+				//-         	}
 				        	
-				        })
-				        navigator.serviceWorker.controller.postMessage({'command':'POST'});
+				//-         })
+				//-         navigator.serviceWorker.controller.postMessage({'command':'POST'});
 					    
-				   	}
-				}
+				//-    	}
+				//- }
 				//ok
 
 				
@@ -892,7 +892,7 @@ append scripts
 						})
 						var divPostContainer = document.createElement('div')
 						divPostContainer.id = 'divPostContainer'
-						$('#Feed').append(divPostContainer)
+						//- $('#Feed').append(divPostContainer)
 
 					})
 						
