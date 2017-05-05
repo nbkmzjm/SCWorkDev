@@ -267,24 +267,23 @@ append scripts
 									console.log(returnData)
 									const xhr = new XMLHttpRequest();
 									xhr.open('PUT', returnData.signedRequest);
-									xhr.onreadystatechange = () => {
+									xhr.onreadystatechange = function(){
 									if(xhr.readyState === 4){
-									  if(xhr.status === 200){
-									    console.log('uploaded file')
-									    var inputPostValuewithURL = inputPostValue.replace(inputValueImage,returnData.url)
-									    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
-									    console.log("inputPostValuewithURL:"+inputPostValuewithURL)
-									    if(inputPostValuewithURL.indexOf('src="data')!==-1){
-									    	signS3dataURI(inputPostValuewithURL)
-									    }else{
-									    	//- alert('all done ready for DB save')
-									    	console.log("inputPostValuewithURLFinal:"+inputPostValuewithURL)
-									    	postDBGroupSelect(inputPostValuewithURL)
-									    }
-									  }
-									  else{
-									    alert('Could not upload file.');
-									  }
+									  	if(xhr.status === 200){
+										    console.log('uploaded file')
+										    var inputPostValuewithURL = inputPostValue.replace(inputValueImage,returnData.url)
+										    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
+										    console.log("inputPostValuewithURL:"+inputPostValuewithURL)
+										    if(inputPostValuewithURL.indexOf('src="data')!==-1){
+										    	signS3dataURI(inputPostValuewithURL)
+										    }else{
+										    	//- alert('all done ready for DB save')
+										    	console.log("inputPostValuewithURLFinal:"+inputPostValuewithURL)
+										    	postDBGroupSelect(inputPostValuewithURL)
+										    }
+									  	}else{
+									    	alert('Could not upload file.');
+									  	}
 									}
 									};
 									xhr.send(decodedImage);
