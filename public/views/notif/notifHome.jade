@@ -130,7 +130,7 @@ append scripts
 			//- });
 
 			  
-			//- feedHome()
+		
 			//- var groups = [{name:'a'}, {name:'b'}, {name:'c'}]
 			//- ul = document.createElement('ul')
 			//- groups.forEach(function(group, i){
@@ -180,33 +180,30 @@ append scripts
 			    return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
 		    }
 
-			   
+			feedHome()
 			function feedHome(){
-					//- push_update_notification()
-					var userSelected = []
-					var userIdSelected = []
-					var deptSelected = []
+				//- push_update_notification()
+				var userSelected = []
+				var userIdSelected = []
+				var deptSelected = []
 
-					var divInputGroup = document.createElement('div')
-					divInputGroup.className = 'input-group'
-					//- divInputGroup.classList.add('col-sm-3')
-					
-					
+				var divInputGroup = document.createElement('div')
+				divInputGroup.className = 'input-group'
+				
+					//Main text editor
 					var inputPost = document.createElement('textarea')
 					inputPost.id = 'post'
 					inputPost.className = 'form-control'
 					inputPost.placeholder = 'Post announcement here'
 					divInputGroup.appendChild(inputPost)
-					
+
+					//DIV contain POST button and its action
 					var divInputGroupBtn = document.createElement('div')
 					divInputGroupBtn.className = 'input-group-btn'
 						var btn = document.createElement('button')
 						btn.className = 'btn btn-primary'
 						btn.innerHTML = 'POST'
 						btn.addEventListener('click', function(){
-						
-							
-							
 							//- push_update_notification()
 							var inputPostValue = inputPost.value
 							console.log(inputPostValue)
@@ -251,9 +248,6 @@ append scripts
 								
 
 						    }
-													
-							
-							
 						}) 
 						divInputGroupBtn.appendChild(btn)
 
@@ -270,25 +264,17 @@ append scripts
 						//- divInputGroupBtn.appendChild(btntest)
 
 					divInputGroup.appendChild(divInputGroupBtn)
+				$('#Feed').append(divInputGroup)
 
 
-			
+				document.getElementById("post").focus()
 
-
-					
-
-					
-					$('#Feed').append(divInputGroup)
-					document.getElementById("post").focus()
-
-					
+					//DIV contain fileupload and its action
 					var fileUpload = document.createElement("input")
 					fileUpload.type = "file"
 					fileUpload.id = 'upload'
 					fileUpload.multiple = true
-					$("#Feed").append(fileUpload)
-
-
+					//send file to s3 upload after selected
 					fileUpload.addEventListener('change', function(){
 						var testString = 'string'
 						var files = document.getElementById('upload').files
@@ -338,579 +324,607 @@ append scripts
 						uploadReturnURL(fileArray)
 
 					})
+				$("#Feed").append(fileUpload)
 
-					function postDBGroupSelect(inputValue, returnURL){
+				
 
-						if(select.value === 'Private'){
-							postDB(select.value, 'Private', inputValue, selectFilter.value, userIdSelected, returnURL)
-						
-						}else if(select.value === "WorkGroup" && selectWorkGroup.value !== ''){
-							if(curUser.title === 'WorkGroup'){
-								var selectWorkGroupVal = $('#selectWorkGroup').val().map(Number)
-							}else{
-								var selectWorkGroupVal = $('#selectWorkGroup').val()
-							}
-							inputPost.value!==''?postDB('WorkGroup', selectWorkGroupVal,
-							inputPost.value, selectFilter.value,userIdSelected):''
-							//- location.reload()
-						}else if(select.value === 'Coworker'){
-							if($('#selectCoworker').val().length === $('#selectCoworker').get(0).childElementCount){
-								inputPost.value!==''?postDB(select.value, 'ALL', 
-								inputPost.value, selectFilter.value, userIdSelected):''
-							}else{
-								inputPost.value!==''?postDB(select.value, $('#selectCoworker').val().map(Number), 
-								inputPost.value, selectFilter.value, userIdSelected):''
-							}
-						
-						}else if(select.value === 'Colleague'){
-							if($('#selectColleague').val().length === $('#selectColleague').get(0).childElementCount){
-								inputPost.value!==''?postDB(select.value, 'ALL', 
-								inputPost.value, selectFilter.value, userIdSelected):''
-							}else{
-								inputPost.value!==''?postDB(select.value, $('#selectColleague').val().map(Number), 
-								inputPost.value, selectFilter.value, userIdSelected):''
-							}
-						}else if(select.value === 'Coworker of Colleague'){
-							if($('#selectCoofColleague').val().length === $('#selectCoofColleague').get(0).childElementCount){
-								inputPost.value!==''?postDB(select.value, 'ALL', 
-								inputPost.value, selectFilter.value, userIdSelected):''
-							}else{
-								inputPost.value!==''?postDB(select.value, $('#selectCoofColleague').val().map(Number), 
-								inputPost.value, selectFilter.value, userIdSelected):''
-							}
+				function postDBGroupSelect(inputValue, returnURL){
 
-						}
-					}
+					if(select.value === 'Private'){
+						postDB(select.value, 'Private', inputValue, selectFilter.value, userIdSelected, returnURL)
 					
+					}else if(select.value === "WorkGroup" && selectWorkGroup.value !== ''){
+						if(curUser.title === 'WorkGroup'){
+							var selectWorkGroupVal = $('#selectWorkGroup').val().map(Number)
+						}else{
+							var selectWorkGroupVal = $('#selectWorkGroup').val()
+						}
+						inputPost.value!==''?postDB('WorkGroup', selectWorkGroupVal,
+						inputPost.value, selectFilter.value,userIdSelected):''
+						//- location.reload()
+					}else if(select.value === 'Coworker'){
+						if($('#selectCoworker').val().length === $('#selectCoworker').get(0).childElementCount){
+							inputPost.value!==''?postDB(select.value, 'ALL', 
+							inputPost.value, selectFilter.value, userIdSelected):''
+						}else{
+							inputPost.value!==''?postDB(select.value, $('#selectCoworker').val().map(Number), 
+							inputPost.value, selectFilter.value, userIdSelected):''
+						}
+					
+					}else if(select.value === 'Colleague'){
+						if($('#selectColleague').val().length === $('#selectColleague').get(0).childElementCount){
+							inputPost.value!==''?postDB(select.value, 'ALL', 
+							inputPost.value, selectFilter.value, userIdSelected):''
+						}else{
+							inputPost.value!==''?postDB(select.value, $('#selectColleague').val().map(Number), 
+							inputPost.value, selectFilter.value, userIdSelected):''
+						}
+					}else if(select.value === 'Coworker of Colleague'){
+						if($('#selectCoofColleague').val().length === $('#selectCoofColleague').get(0).childElementCount){
+							inputPost.value!==''?postDB(select.value, 'ALL', 
+							inputPost.value, selectFilter.value, userIdSelected):''
+						}else{
+							inputPost.value!==''?postDB(select.value, $('#selectCoofColleague').val().map(Number), 
+							inputPost.value, selectFilter.value, userIdSelected):''
+						}
 
-					//- document.getElementById('upload').style.display = 'block'
+					}
+				}
+				
+
+				//- document.getElementById('upload').style.display = 'block'
 
 
-					var select;
-					var selectFilter
-					$.post('/notif/getFeedSetting').done(function(Rdata){
+				var select;
+				var selectFilter
+				$.post('/notif/getFeedSetting').done(function(Rdata){
 
-						Rdata.settings.forEach(function(setting){
-							if(setting.settingDescriptionId === 1){
-								var divViewFilter = document.createElement('div')
-								divViewFilter.className = 'form-group col-sm-12'
+					Rdata.settings.forEach(function(setting){
+						//View Filter
+						if(setting.settingDescriptionId === 1){
+							// DIV contain view filter options
+							var divViewFilter = document.createElement('div')
+							divViewFilter.className = 'form-group col-sm-12'
 
-									var label = document.createElement('label')
-									label.className = 'col-sm-1'
-									label.innerHTML = 'View Filter: '
-									divViewFilter.appendChild(label)
-
-									var divSelectViewFilter = document.createElement('div')
-									divSelectViewFilter.className = 'col-sm-3'
+								// DIV contain label for VIEW FILTER
+								var label = document.createElement('label')
+								label.className = 'col-sm-1'
+								label.innerHTML = 'View Filter: '
+								divViewFilter.appendChild(label)
 
 
-										var selectViewFilter = document.createElement('select')
-										selectViewFilter.className = 'form-control'
-										selectViewFilter.name = 'viewPostFrom'
-										selectViewFilter.id = 'viewPostFrom'
-											var optionList = ['Coworker','Colleague','WorkGroup', 'Coworker of Colleague','Private', 'Public']
-												var optionDB = document.createElement('option')
-												optionDB.value = setting.value
-												optionDB.innerHTML = setting.value
-												selectViewFilter.appendChild(optionDB)
+								// DIV contain selections for VIEW FILTER
+								var divSelectViewFilter = document.createElement('div')
+								divSelectViewFilter.className = 'col-sm-3'
 
-											optionList.forEach(function(item, i){
-												if(item !== setting.value){
-													var option = document.createElement('option')
-													option.value = item
-													option.innerHTML = item
-													selectViewFilter.appendChild(option)
-												}
+									//List option from the Array 
+									var selectViewFilter = document.createElement('select')
+									selectViewFilter.className = 'form-control'
+									selectViewFilter.name = 'viewPostFrom'
+									selectViewFilter.id = 'viewPostFrom'
+										var optionList = ['Coworker','Colleague','WorkGroup', 'Coworker of Colleague','Private', 'Public']
+											var optionDB = document.createElement('option')
+											optionDB.value = setting.value
+											optionDB.innerHTML = setting.value
+											selectViewFilter.appendChild(optionDB)
+
+										optionList.forEach(function(item, i){
+											if(item !== setting.value){
+												var option = document.createElement('option')
+												option.value = item
+												option.innerHTML = item
+												selectViewFilter.appendChild(option)
+											}
+
+										})
+									selectViewFilter.addEventListener('change', function(){
+										console.log(selectViewFilter.value)
+										$('#divPostContainer').html('')
+										$('#viewOnly').attr('checked', false)
+										
+
+										getPostDB({viewOption:selectViewFilter.value})
+
+										//- alert(select.value)
+										//- $.post('/notif/setFeedSetting',{
+										//- 	settingId:setting.id,
+										//- 	settingValue:selectViewFilter.value,
+										//- 	action:'update'
+										//- }).done(function(Rdata){
+
+										//- })
+									})
+									
+									divSelectViewFilter.appendChild(selectViewFilter)
+								divViewFilter.appendChild(divSelectViewFilter)
+
+								// DIV contain label for VIEW ONLY
+								var labelViewOnly = document.createElement('label')
+								labelViewOnly.className = 'col-sm-1'
+								labelViewOnly.innerHTML = 'View Only: '
+								divViewFilter.appendChild(labelViewOnly)
+
+							
+								//DIV contain checkbox for VIEW ONLY and its action
+								var divViewOnly = document.createElement('div')
+								divViewOnly.className = 'col-sm-1'
+									
+									var viewOnly = document.createElement('input')
+									viewOnly.type = 'checkbox'
+									viewOnly.className = 'form-control'
+									viewOnly.id = 'viewOnly'
+									viewOnly.value = 'false'
+									viewOnly.addEventListener('click', function(){
+										if(this.checked === true){
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:true,
+												byMe:$('#byMe').is(':checked'),
+												byOther:$('#byOther').is(':checked')
 
 											})
-										selectViewFilter.addEventListener('change', function(){
-											console.log(selectViewFilter.value)
 											$('#divPostContainer').html('')
-											$('#viewOnly').attr('checked', false)
-											
-
-											getPostDB({viewOption:selectViewFilter.value})
-
-											//- alert(select.value)
-											//- $.post('/notif/setFeedSetting',{
-											//- 	settingId:setting.id,
-											//- 	settingValue:selectViewFilter.value,
-											//- 	action:'update'
-											//- }).done(function(Rdata){
-
-											//- })
-										})
-										
-										divSelectViewFilter.appendChild(selectViewFilter)
-									divViewFilter.appendChild(divSelectViewFilter)
-
-									var labelViewOnly = document.createElement('label')
-									labelViewOnly.className = 'col-sm-1'
-									labelViewOnly.innerHTML = 'View Only: '
-									divViewFilter.appendChild(labelViewOnly)
-
-									var divViewOnly = document.createElement('div')
-									divViewOnly.className = 'col-sm-1'
-										
-										var viewOnly = document.createElement('input')
-										viewOnly.type = 'checkbox'
-										viewOnly.className = 'form-control'
-										viewOnly.id = 'viewOnly'
-										viewOnly.value = 'false'
-										viewOnly.addEventListener('click', function(){
-											if(this.checked === true){
-												getPostDB({
-													viewOption:selectViewFilter.value,
-													viewOnly:true,
-													byMe:$('#byMe').is(':checked'),
-													byOther:$('#byOther').is(':checked')
-
-												})
-												$('#divPostContainer').html('')
-											}else{
-												getPostDB({
-													viewOption:selectViewFilter.value,
-													viewOnly:false,
-													byMe:$('#byMe').is(':checked'),
-													byOther:$('#byOther').is(':checked')
-												})
-												$('#divPostContainer').html('')
-											}
-										})
-										divViewOnly.appendChild(viewOnly)
-									divViewFilter.appendChild(divViewOnly)
-
-									var labelByMe = document.createElement('label')
-									labelByMe.className = 'col-sm-1'
-									labelByMe.innerHTML = 'My Post Only:'
-									divViewFilter.appendChild(labelByMe)
-
-									var divByMe = document.createElement('div')
-									divByMe.className = 'col-sm-1'
-										
-										var byMe = document.createElement('input')
-										byMe.type = 'checkbox'
-										byMe.className = 'form-control'
-										byMe.id = 'byMe'
-										byMe.value = 'false'
-										byMe.addEventListener('click', function(){
-
-											if(this.checked === true){
-												getPostDB({
-													viewOption:selectViewFilter.value,
-													viewOnly:$('#viewOnly').is(':checked'),
-													byMe:true,
-													byOther:$('#byOther').is(':checked')
-												})
-												$('#divPostContainer').html('')
-											}else{
-												getPostDB({
-													viewOption:selectViewFilter.value,
-													viewOnly:$('#viewOnly').is(':checked'),
-													byMe:false,
-													byOther:$('#byOther').is(':checked')
-												})
-												$('#divPostContainer').html('')
-											}
-										})
-										divByMe.appendChild(byMe)
-									divViewFilter.appendChild(divByMe)
-
-									var labelByOther = document.createElement('label')
-									labelByOther.className = 'col-sm-1'
-									labelByOther.innerHTML = 'PostBy Others:'
-									divViewFilter.appendChild(labelByOther)
-
-									var divByOther = document.createElement('div')
-									divByOther.className = 'col-sm-1'
-										
-										var byOther = document.createElement('input')
-										byOther.type = 'checkbox'
-										byOther.className = 'form-control'
-										byOther.id = 'byOther'
-										byOther.value = 'false'
-										byOther.addEventListener('click', function(){
-
-											if(this.checked === true){
-												getPostDB({
-													viewOption:selectViewFilter.value,
-													viewOnly:$('#viewOnly').is(':checked'),
-													byMe:$('#byMe').is(':checked'),
-													byOther:true
-												})
-												$('#divPostContainer').html('')
-											}else{
-												getPostDB({
-													viewOption:selectViewFilter.value,
-													viewOnly:$('#viewOnly').is(':checked'),
-													byMe:$('#byMe').is(':checked'),
-													byOther:false
-												})
-												$('#divPostContainer').html('')
-											}
-										})
-										divByOther.appendChild(byOther)
-									divViewFilter.appendChild(divByOther)
-
-								$('#Feed').append(divViewFilter)
-							} else if(setting.settingDescriptionId === 2){
-								var divInputGroupFilter = document.createElement('div')
-								//- divInputGroupFilter.className = 'input-group'
-								divInputGroupFilter.className = 'col-sm-12'
-									var label = document.createElement('label')
-									label.className = 'col-sm-2'
-									label.innerHTML = 'Post Filter: '
-									divInputGroupFilter.appendChild(label)
-
-
-						
-									divSelect = document.createElement('div')
-									divSelect.className = 'col-sm-3'
-										select = document.createElement('select')
-										select.className = 'form-control'
-										select.classList.add('col-sm-4')
-
-										//- select.className = ''
-										select.name = 'postTo'
-										select.id = 'postTo'
-											
-											var option = document.createElement('option')
-											option.value = setting.value
-											option.innerHTML = setting.value
-											select.appendChild(option)
-											
-
-											var optionList = ['Coworker','Colleague', 'Coworker of Colleague','WorkGroup','Private', 'Public']
-
-											optionList.forEach(function(item, i){
-												if(item !== setting.value){
-													var option = document.createElement('option')
-													option.value = item
-													option.innerHTML = item
-													select.appendChild(option)
-												}
+										}else{
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:false,
+												byMe:$('#byMe').is(':checked'),
+												byOther:$('#byOther').is(':checked')
 											})
-										select.addEventListener('change', function(){
+											$('#divPostContainer').html('')
+										}
+									})
+									divViewOnly.appendChild(viewOnly)
+								divViewFilter.appendChild(divViewOnly)
 
-											console.log(this.parentNode.parentNode.childNodes[3])
-											$('#divSelectColleague').length != 0?$('#divSelectColleague').remove():""
-											//- $('#divSelectCoworker').length != 0?$('#divSelectCoworker').remove():""
+								// DIV contain label for MY POST ONLY
+								var labelByMe = document.createElement('label')
+								labelByMe.className = 'col-sm-1'
+								labelByMe.innerHTML = 'My Post Only:'
+								divViewFilter.appendChild(labelByMe)
+
+
+								//DIV contain checkbox for MY POST ONLY and its action
+								var divByMe = document.createElement('div')
+								divByMe.className = 'col-sm-1'
+									
+									var byMe = document.createElement('input')
+									byMe.type = 'checkbox'
+									byMe.className = 'form-control'
+									byMe.id = 'byMe'
+									byMe.value = 'false'
+									byMe.addEventListener('click', function(){
+
+										if(this.checked === true){
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:$('#viewOnly').is(':checked'),
+												byMe:true,
+												byOther:$('#byOther').is(':checked')
+											})
+											$('#divPostContainer').html('')
+										}else{
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:$('#viewOnly').is(':checked'),
+												byMe:false,
+												byOther:$('#byOther').is(':checked')
+											})
+											$('#divPostContainer').html('')
+										}
+									})
+									divByMe.appendChild(byMe)
+								divViewFilter.appendChild(divByMe)
+
+
+								// DIV contain label for BY OTHER
+								var labelByOther = document.createElement('label')
+								labelByOther.className = 'col-sm-1'
+								labelByOther.innerHTML = 'PostBy Others:'
+								divViewFilter.appendChild(labelByOther)
+
+								//DIV contain checkbox for BY OTHER and its action
+								var divByOther = document.createElement('div')
+								divByOther.className = 'col-sm-1'
+									
+									var byOther = document.createElement('input')
+									byOther.type = 'checkbox'
+									byOther.className = 'form-control'
+									byOther.id = 'byOther'
+									byOther.value = 'false'
+									byOther.addEventListener('click', function(){
+
+										if(this.checked === true){
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:$('#viewOnly').is(':checked'),
+												byMe:$('#byMe').is(':checked'),
+												byOther:true
+											})
+											$('#divPostContainer').html('')
+										}else{
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:$('#viewOnly').is(':checked'),
+												byMe:$('#byMe').is(':checked'),
+												byOther:false
+											})
+											$('#divPostContainer').html('')
+										}
+									})
+									divByOther.appendChild(byOther)
+								divViewFilter.appendChild(divByOther)
+
+							$('#Feed').append(divViewFilter)
+
+						//Post Filter	
+						} else if(setting.settingDescriptionId === 2){
+
+							//DIV contain POST FILTER options
+							var divInputGroupFilter = document.createElement('div')
+							divInputGroupFilter.className = 'col-sm-12'
+
+								//
+								var label = document.createElement('label')
+								label.className = 'col-sm-2'
+								label.innerHTML = 'Post Filter: '
+								divInputGroupFilter.appendChild(label)
+					
+								divSelect = document.createElement('div')
+								divSelect.className = 'col-sm-3'
+									select = document.createElement('select')
+									select.className = 'form-control'
+									select.classList.add('col-sm-4')
+
+									//- select.className = ''
+									select.name = 'postTo'
+									select.id = 'postTo'
+										
+										var option = document.createElement('option')
+										option.value = setting.value
+										option.innerHTML = setting.value
+										select.appendChild(option)
+										
+
+										var optionList = ['Coworker','Colleague', 'Coworker of Colleague','WorkGroup','Private', 'Public']
+
+										optionList.forEach(function(item, i){
+											if(item !== setting.value){
+												var option = document.createElement('option')
+												option.value = item
+												option.innerHTML = item
+												select.appendChild(option)
+											}
+										})
+									select.addEventListener('change', function(){
+
+										console.log(this.parentNode.parentNode.childNodes[3])
+										$('#divSelectColleague').length != 0?$('#divSelectColleague').remove():""
+										//- $('#divSelectCoworker').length != 0?$('#divSelectCoworker').remove():""
+										$('#divSelectCoofColleague').length != 0?$('#divSelectCoofColleague').remove():""
+										$('#divSelectWorkGroup').length != 0?$('#divSelectWorkGroup').remove():""
+										if(select.value === 'Coworker'){
+											$.post('/notif/getUserPostFilter',{
+												userPostFilter:select.value
+											}).done(function(Rdata){
+												console.log(Rdata)
+												divSelectCoworker = document.createElement('div')
+												divSelectCoworker.className = 'col-sm-3'
+												divSelectCoworker.id = 'divSelectCoworker'
+													selectCoworker = document.createElement('select')
+													selectCoworker.className = 'form-control'
+													selectCoworker.classList.add('col-sm-4')
+
+													//- select.className = ''
+													//- select.name = 'postTo'
+													selectCoworker.id = 'selectCoworker'
+													selectCoworker.multiple = 'multiple'
+													selectCoworker.name = 'multiselect[]'
+													Rdata.usersPostfilter.forEach(function(item, i){
+															console.log('item:'+ item)
+															var option = document.createElement('option')
+															option.value = item.id
+															option.innerHTML = item.fullName
+															selectCoworker.appendChild(option)
+													})
+													divSelectCoworker.appendChild(selectCoworker)
+												divInputGroupFilter.insertBefore(divSelectCoworker, divSelectFilter)
+
+												$('#selectCoworker').multiselect({
+													includeSelectAllOption:true
+												});
+												$('#selectCoworker').multiselect('selectAll', false);
+												$('#selectCoworker').multiselect('updateButtonText');
+												
+												 
+											})
+										}else if(select.value === 'Colleague'){
+											//- $('#divSelectColleague').length != 0?$('#divSelectColleague').remove():""
+											$('#divSelectCoworker').length != 0?$('#divSelectCoworker').remove():""
 											$('#divSelectCoofColleague').length != 0?$('#divSelectCoofColleague').remove():""
 											$('#divSelectWorkGroup').length != 0?$('#divSelectWorkGroup').remove():""
-											if(select.value === 'Coworker'){
-												$.post('/notif/getUserPostFilter',{
-													userPostFilter:select.value
-												}).done(function(Rdata){
-													console.log(Rdata)
-													divSelectCoworker = document.createElement('div')
-													divSelectCoworker.className = 'col-sm-3'
-													divSelectCoworker.id = 'divSelectCoworker'
-														selectCoworker = document.createElement('select')
-														selectCoworker.className = 'form-control'
-														selectCoworker.classList.add('col-sm-4')
+											$.post('/notif/getUserPostFilter',{
+												userPostFilter:select.value
+											}).done(function(Rdata){
+												console.log(Rdata)
+												divSelectColleague = document.createElement('div')
+												divSelectColleague.className = 'col-sm-3'
+												divSelectColleague.id = 'divSelectColleague'
+													selectColleague = document.createElement('select')
+													selectColleague.className = 'form-control'
+													selectColleague.classList.add('col-sm-4')
 
-														//- select.className = ''
-														//- select.name = 'postTo'
-														selectCoworker.id = 'selectCoworker'
-														selectCoworker.multiple = 'multiple'
-														selectCoworker.name = 'multiselect[]'
-														Rdata.usersPostfilter.forEach(function(item, i){
-																console.log('item:'+ item)
-																var option = document.createElement('option')
-																option.value = item.id
-																option.innerHTML = item.fullName
-																selectCoworker.appendChild(option)
-														})
-														divSelectCoworker.appendChild(selectCoworker)
-													divInputGroupFilter.insertBefore(divSelectCoworker, divSelectFilter)
-
-													$('#selectCoworker').multiselect({
-														includeSelectAllOption:true
-													});
-													$('#selectCoworker').multiselect('selectAll', false);
-													$('#selectCoworker').multiselect('updateButtonText');
-													
-													 
-												})
-											}else if(select.value === 'Colleague'){
-												//- $('#divSelectColleague').length != 0?$('#divSelectColleague').remove():""
-												$('#divSelectCoworker').length != 0?$('#divSelectCoworker').remove():""
-												$('#divSelectCoofColleague').length != 0?$('#divSelectCoofColleague').remove():""
-												$('#divSelectWorkGroup').length != 0?$('#divSelectWorkGroup').remove():""
-												$.post('/notif/getUserPostFilter',{
-													userPostFilter:select.value
-												}).done(function(Rdata){
-													console.log(Rdata)
-													divSelectColleague = document.createElement('div')
-													divSelectColleague.className = 'col-sm-3'
-													divSelectColleague.id = 'divSelectColleague'
-														selectColleague = document.createElement('select')
-														selectColleague.className = 'form-control'
-														selectColleague.classList.add('col-sm-4')
-
-														//- select.className = ''
-														//- select.name = 'postTo'
-														selectColleague.id = 'selectColleague'
-														selectColleague.multiple = 'multiple'
-														selectColleague.name = 'multiselect[]'
-														Rdata.usersPostfilter.forEach(function(item, i){
-																var option = document.createElement('option')
-																option.value = item.id
-																option.innerHTML = item.fullName + ' (' + item.department+
-																')'
-																selectColleague.appendChild(option)
-														})
-														divSelectColleague.appendChild(selectColleague)
-													divInputGroupFilter.insertBefore(divSelectColleague, divSelectFilter)
-
-													$('#selectColleague').multiselect({
-														includeSelectAllOption:true
-													});
-													$('#selectColleague').multiselect('selectAll', false);
-													$('#selectColleague').multiselect('updateButtonText');
-													
-													 
-												})
-											}else if(select.value === 'Coworker of Colleague'){
-												$('#divSelectColleague').length != 0?$('#divSelectColleague').remove():""
-												$('#divSelectCoworker').length != 0?$('#divSelectCoworker').remove():""
-												$('#divSelectWorkGroup').length != 0?$('#divSelectWorkGroup').remove():""
-
-												//- $('#divSelectCoofColleague').length != 0?$('#divSelectCoofColleague').remove():""
-												$.post('/notif/getUserPostFilter',{
-													userPostFilter:'Colleague'
-												}).done(function(Rdata){
-													console.log(Rdata)
-													divSelectCoofColleague = document.createElement('div')
-													divSelectCoofColleague.className = 'col-sm-3'
-													divSelectCoofColleague.id = 'divSelectCoofColleague'
-														selectCoofColleague = document.createElement('select')
-														selectCoofColleague.className = 'form-control'
-														selectCoofColleague.classList.add('col-sm-4')
-
-														//- select.className = ''
-														//- select.name = 'postTo'
-														selectCoofColleague.id = 'selectCoofColleague'
-														selectCoofColleague.multiple = 'multiple'
-														selectCoofColleague.name = 'multiselect[]'
-														Rdata.usersPostfilter.forEach(function(item, i){
-																var option = document.createElement('option')
-																option.value = item.id
-																option.innerHTML = item.fullName + ' (' + item.department+
-																')'
-																selectCoofColleague.appendChild(option)
-														})
-														divSelectCoofColleague.appendChild(selectCoofColleague)
-													divInputGroupFilter.insertBefore(divSelectCoofColleague, divSelectFilter)
-
-													$('#selectCoofColleague').multiselect({
-														includeSelectAllOption:true
-													});
-													//- $('#selectCoofColleague').multiselect('selectAll', false);
-													$('#selectCoofColleague').multiselect('updateButtonText');
-													
-													 
-												})
-											}else if(select.value === "WorkGroup" && $('selectWorkGroup').length <1){
-												$('#divSelectColleague').length != 0?$('#divSelectColleague').remove():""
-												$('#divSelectCoworker').length != 0?$('#divSelectCoworker').remove():""
-												$('#divSelectCoofColleague').length != 0?$('#divSelectCoofColleague').remove():""
-												$.post('/notif/getMyWorkGroup').done(function(Rdata){
-
-													divSelectWorkGroup = document.createElement('div')
-													divSelectWorkGroup.className = 'col-sm-3'
-													divSelectWorkGroup.id = 'divSelectWorkGroup'
-														selectWorkGroup = document.createElement('select')
-														selectWorkGroup.className = 'form-control'
-														selectWorkGroup.classList.add('col-sm-4')
-
-														//- select.className = ''
-														//- select.name = 'postTo'
-														selectWorkGroup.id = 'selectWorkGroup'
-														//- option.innerHTML = 'Select WorkGroup'
-														selectWorkGroup.multiple = 'multiple'
-														selectWorkGroup.name = 'multiselect[]'
-														if (curUser.title === 'WorkGroup'){
-															Rdata.userGroups.forEach(function(item, i){
-																if(item !== setting.value){
-																	var option = document.createElement('option')
-																	option.value = item.groupBLUserId
-																	option.innerHTML = item.name
-																	selectWorkGroup.appendChild(option)
-																}
-															})
-														}else {
-															Rdata.userGroups.forEach(function(item, i){
-																if(item !== setting.value){
-																	var option = document.createElement('option')
-																	option.value = item.users[0].userGroups.status
-																	option.innerHTML = item.users[0].userGroups.status
-																	selectWorkGroup.appendChild(option)
-																}
-															})
-														}
-														divSelectWorkGroup.appendChild(selectWorkGroup)
-													divInputGroupFilter.insertBefore(divSelectWorkGroup, divSelectFilter)
-													$('#selectWorkGroup').multiselect({
-														buttonText: function(){
-															return 'Select WorkGroup'
-														},
-														includeSelectAllOption:true
-													});
-													//- $('#selectWorkGroup').multiselect('selectAll', false);
-													$('#selectWorkGroup').multiselect('updateButtonText');
-												})
-
-											}else{
-												$('#selectWorkGroup').remove()
-											}
-											
-										})
-
-										divSelect.appendChild(select)
-									divInputGroupFilter.appendChild(divSelect)
-									
-
-
-									divSelectFilter = document.createElement('div')
-									divSelectFilter.className = 'col-sm-3'
-									
-
-										selectFilter = document.createElement('select')
-										selectFilter.className = 'form-control selectpicker'
-
-										selectFilter.classList.add('col-sm-4')
-										selectFilter.name = 'selectFilter'
-										selectFilter.id = 'selectFilter'
-											var optionList = [
-													'Select Filter',
-													'Include' 
-													//- 'Exclude', '
-													//- Include Department'
-													]
-
-											optionList.forEach(function(item, i){
-												//- if(item !== setting.value){
-													var option = document.createElement('option')
-													option.value = item
-													option.innerHTML = item
-													selectFilter.appendChild(option)
-												//- }
-
-											})
-										selectFilter.addEventListener('change', function(){
-											selectFilter.value === 'Exclude'?$('#divSelectDept').remove():""
-											
-											if((selectFilter.value === 'Include'||selectFilter.value === 'Exclude')&& $('#friendSearch').length <1){
-												
-												
-												divfriendSearch = document.createElement('div')
-												divfriendSearch.className = 'col-sm-3'
-												divfriendSearch.id = 'divfriendSearch'
-													var input = document.createElement('input')
-													input.type = 'text'
-													
-													input.placeholder = 'Search Person'
-													input.className ='form-control'
-													input.id = 'friendSearch'
-													input.setAttribute('href','#');
-													input.setAttribute('data-toggle','popover');
-													input.setAttribute('data-trigger','hover');
-													input.setAttribute('data-placement','auto');
-													input.style.fontWeight = 'bold'
-													input.setAttribute('title', 'Selected User');
-													
-													document.addEventListener('mousemove', function(){
-														input.setAttribute('data-content', JSON.stringify(userSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
-														$('[data-toggle="popover"]').popover({html:true})
-														
+													//- select.className = ''
+													//- select.name = 'postTo'
+													selectColleague.id = 'selectColleague'
+													selectColleague.multiple = 'multiple'
+													selectColleague.name = 'multiselect[]'
+													Rdata.usersPostfilter.forEach(function(item, i){
+															var option = document.createElement('option')
+															option.value = item.id
+															option.innerHTML = item.fullName + ' (' + item.department+
+															')'
+															selectColleague.appendChild(option)
 													})
-													divfriendSearch.appendChild(input)
-												divInputGroupFilter.appendChild(divfriendSearch)
-												BHUserList("friendSearch")
-												$('#friendSearch').bind('typeahead:selected', function(obj, group, name){
-													$('#friendSearch').typeahead('val', '')
-													userSelected.push(group.name.substring(0,group.name.indexOf("_")))
-													userIdSelected.push(group.groupBLUserId)
-													//- $('#friendSearch').val('.....')
-													console.log(obj)
-													console.log(group)
-													console.log(name)
+													divSelectColleague.appendChild(selectColleague)
+												divInputGroupFilter.insertBefore(divSelectColleague, divSelectFilter)
+
+												$('#selectColleague').multiselect({
+													includeSelectAllOption:true
+												});
+												$('#selectColleague').multiselect('selectAll', false);
+												$('#selectColleague').multiselect('updateButtonText');
 												
-												})
-											}else if (selectFilter.value === 'Include Department'){
-												//- $('#divfriendSearch').remove()
-												$.post('/notif/getDept').done(function(Rdata){
-													if($('#selectDept').length<1){
+												 
+											})
+										}else if(select.value === 'Coworker of Colleague'){
+											$('#divSelectColleague').length != 0?$('#divSelectColleague').remove():""
+											$('#divSelectCoworker').length != 0?$('#divSelectCoworker').remove():""
+											$('#divSelectWorkGroup').length != 0?$('#divSelectWorkGroup').remove():""
 
-														var divSelectDept = document.createElement('div')
-														divSelectDept.className = 'col-sm-3'
-														divSelectDept.id = 'divSelectDept'
-															var selectDept = document.createElement('select')
-															selectDept.className = 'form-control'
-															selectDept.setAttribute('href','#');
-															selectDept.setAttribute('data-toggle','popover');
-															selectDept.setAttribute('data-trigger','hover');
-															selectDept.setAttribute('data-placement','auto');
-															selectDept.style.fontWeight = 'bold'
-															selectDept.setAttribute('title', 'Selected Department');
-															
-															var optionDefault = document.createElement('option')
-															optionDefault.innerHTML = 'Select Department'
-															selectDept.appendChild(optionDefault)
-															//- selectDept.classList.add('col-sm-4')
-															Rdata.department.forEach(function(dept, i){
-																//- if(item !== setting.value){
-																	var option = document.createElement('option')
-																	option.value = JSON.stringify(dept, null, 4)
-																	option.innerHTML = dept.name
+											//- $('#divSelectCoofColleague').length != 0?$('#divSelectCoofColleague').remove():""
+											$.post('/notif/getUserPostFilter',{
+												userPostFilter:'Colleague'
+											}).done(function(Rdata){
+												console.log(Rdata)
+												divSelectCoofColleague = document.createElement('div')
+												divSelectCoofColleague.className = 'col-sm-3'
+												divSelectCoofColleague.id = 'divSelectCoofColleague'
+													selectCoofColleague = document.createElement('select')
+													selectCoofColleague.className = 'form-control'
+													selectCoofColleague.classList.add('col-sm-4')
 
-																	selectDept.appendChild(option)
-																//- }
-															})
-															selectDept.addEventListener('change', function(){
-																var dept = JSON.parse(selectDept.value)
-																userIdSelected.push(dept.status)
-																deptSelected.push(dept.name)
-																//- console.log(selectDept.value.name)
-															})
-															divSelectDept.appendChild(selectDept)
-														divInputGroupFilter.appendChild(divSelectDept)
-														document.addEventListener('mousemove', function(){
-															selectDept.setAttribute('data-content', JSON.stringify(deptSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
-															$('[data-toggle="popover"]').popover({html:true})
-														
+													//- select.className = ''
+													//- select.name = 'postTo'
+													selectCoofColleague.id = 'selectCoofColleague'
+													selectCoofColleague.multiple = 'multiple'
+													selectCoofColleague.name = 'multiselect[]'
+													Rdata.usersPostfilter.forEach(function(item, i){
+															var option = document.createElement('option')
+															option.value = item.id
+															option.innerHTML = item.fullName + ' (' + item.department+
+															')'
+															selectCoofColleague.appendChild(option)
+													})
+													divSelectCoofColleague.appendChild(selectCoofColleague)
+												divInputGroupFilter.insertBefore(divSelectCoofColleague, divSelectFilter)
+
+												$('#selectCoofColleague').multiselect({
+													includeSelectAllOption:true
+												});
+												//- $('#selectCoofColleague').multiselect('selectAll', false);
+												$('#selectCoofColleague').multiselect('updateButtonText');
+												
+												 
+											})
+										}else if(select.value === "WorkGroup" && $('selectWorkGroup').length <1){
+											$('#divSelectColleague').length != 0?$('#divSelectColleague').remove():""
+											$('#divSelectCoworker').length != 0?$('#divSelectCoworker').remove():""
+											$('#divSelectCoofColleague').length != 0?$('#divSelectCoofColleague').remove():""
+											$.post('/notif/getMyWorkGroup').done(function(Rdata){
+
+												divSelectWorkGroup = document.createElement('div')
+												divSelectWorkGroup.className = 'col-sm-3'
+												divSelectWorkGroup.id = 'divSelectWorkGroup'
+													selectWorkGroup = document.createElement('select')
+													selectWorkGroup.className = 'form-control'
+													selectWorkGroup.classList.add('col-sm-4')
+
+													//- select.className = ''
+													//- select.name = 'postTo'
+													selectWorkGroup.id = 'selectWorkGroup'
+													//- option.innerHTML = 'Select WorkGroup'
+													selectWorkGroup.multiple = 'multiple'
+													selectWorkGroup.name = 'multiselect[]'
+													if (curUser.title === 'WorkGroup'){
+														Rdata.userGroups.forEach(function(item, i){
+															if(item !== setting.value){
+																var option = document.createElement('option')
+																option.value = item.groupBLUserId
+																option.innerHTML = item.name
+																selectWorkGroup.appendChild(option)
+															}
+														})
+													}else {
+														Rdata.userGroups.forEach(function(item, i){
+															if(item !== setting.value){
+																var option = document.createElement('option')
+																option.value = item.users[0].userGroups.status
+																option.innerHTML = item.users[0].userGroups.status
+																selectWorkGroup.appendChild(option)
+															}
 														})
 													}
-												})
-											}
-										})
-									divSelectFilter.appendChild(selectFilter)
-								divInputGroupFilter.appendChild(divSelectFilter)
-								$('#Feed').append(divInputGroupFilter)
-							}
-						})
-						var divPostContainer = document.createElement('div')
-						divPostContainer.id = 'divPostContainer'
-						$('#Feed').append(divPostContainer)
+													divSelectWorkGroup.appendChild(selectWorkGroup)
+												divInputGroupFilter.insertBefore(divSelectWorkGroup, divSelectFilter)
+												$('#selectWorkGroup').multiselect({
+													buttonText: function(){
+														return 'Select WorkGroup'
+													},
+													includeSelectAllOption:true
+												});
+												//- $('#selectWorkGroup').multiselect('selectAll', false);
+												$('#selectWorkGroup').multiselect('updateButtonText');
+											})
 
+										}else{
+											$('#selectWorkGroup').remove()
+										}
+										
+									})
+
+									divSelect.appendChild(select)
+								divInputGroupFilter.appendChild(divSelect)
+								
+
+								//DIV include, exclude person and/or departments with in post and its actions
+								divSelectFilter = document.createElement('div')
+								divSelectFilter.className = 'col-sm-3'
+								
+
+									selectFilter = document.createElement('select')
+									selectFilter.className = 'form-control selectpicker'
+
+									selectFilter.classList.add('col-sm-4')
+									selectFilter.name = 'selectFilter'
+									selectFilter.id = 'selectFilter'
+										var optionList = [
+												'Select Filter',
+												'Include' 
+												//- 'Exclude', '
+												//- Include Department'
+												]
+
+										optionList.forEach(function(item, i){
+											//- if(item !== setting.value){
+												var option = document.createElement('option')
+												option.value = item
+												option.innerHTML = item
+												selectFilter.appendChild(option)
+											//- }
+
+										})
+									selectFilter.addEventListener('change', function(){
+										selectFilter.value === 'Exclude'?$('#divSelectDept').remove():""
+
+
+										//Whether include or exclude selected
+										if((selectFilter.value === 'Include'||selectFilter.value === 'Exclude')&& $('#friendSearch').length <1){
+											
+											//DIV contain input search
+											divfriendSearch = document.createElement('div')
+											divfriendSearch.className = 'col-sm-3'
+											divfriendSearch.id = 'divfriendSearch'
+												var input = document.createElement('input')
+												input.type = 'text'
+												
+												input.placeholder = 'Search Person'
+												input.className ='form-control'
+												input.id = 'friendSearch'
+												input.setAttribute('href','#');
+												input.setAttribute('data-toggle','popover');
+												input.setAttribute('data-trigger','hover');
+												input.setAttribute('data-placement','auto');
+												input.style.fontWeight = 'bold'
+												input.setAttribute('title', 'Selected User');
+												
+												//popover selected users when hovering over the input search
+												document.addEventListener('mousemove', function(){
+													input.setAttribute('data-content', JSON.stringify(userSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
+													$('[data-toggle="popover"]').popover({html:true})
+													
+												})
+												divfriendSearch.appendChild(input)
+											divInputGroupFilter.appendChild(divfriendSearch)
+											BHUserList("friendSearch")
+
+											//typeahead display person info during search
+											$('#friendSearch').bind('typeahead:selected', function(obj, group, name){
+												$('#friendSearch').typeahead('val', '')
+												userSelected.push(group.name.substring(0,group.name.indexOf("_")))
+												userIdSelected.push(group.groupBLUserId)
+												//- $('#friendSearch').val('.....')
+												console.log(obj)
+												console.log(group)
+												console.log(name)
+											
+											})
+										//When department is selected
+										}else if (selectFilter.value === 'Include Department'){
+											//- $('#divfriendSearch').remove()
+
+											//get list of dept from server
+											$.post('/notif/getDept').done(function(Rdata){
+												if($('#selectDept').length<1){
+
+													var divSelectDept = document.createElement('div')
+													divSelectDept.className = 'col-sm-3'
+													divSelectDept.id = 'divSelectDept'
+														var selectDept = document.createElement('select')
+														selectDept.className = 'form-control'
+														selectDept.setAttribute('href','#');
+														selectDept.setAttribute('data-toggle','popover');
+														selectDept.setAttribute('data-trigger','hover');
+														selectDept.setAttribute('data-placement','auto');
+														selectDept.style.fontWeight = 'bold'
+														selectDept.setAttribute('title', 'Selected Department');
+														
+														var optionDefault = document.createElement('option')
+														optionDefault.innerHTML = 'Select Department'
+														selectDept.appendChild(optionDefault)
+														//adding depts to dropdown menu
+														Rdata.department.forEach(function(dept, i){
+															//- if(item !== setting.value){
+																var option = document.createElement('option')
+																option.value = JSON.stringify(dept, null, 4)
+																option.innerHTML = dept.name
+
+																selectDept.appendChild(option)
+															//- }
+														})
+														selectDept.addEventListener('change', function(){
+															var dept = JSON.parse(selectDept.value)
+															userIdSelected.push(dept.status)
+															deptSelected.push(dept.name)
+															//- console.log(selectDept.value.name)
+														})
+														divSelectDept.appendChild(selectDept)
+													divInputGroupFilter.appendChild(divSelectDept)
+													document.addEventListener('mousemove', function(){
+														selectDept.setAttribute('data-content', JSON.stringify(deptSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
+														$('[data-toggle="popover"]').popover({html:true})
+													
+													})
+												}
+											})
+										}
+									})
+								divSelectFilter.appendChild(selectFilter)
+							divInputGroupFilter.appendChild(divSelectFilter)
+							$('#Feed').append(divInputGroupFilter)
+						}
 					})
+					var divPostContainer = document.createElement('div')
+					divPostContainer.id = 'divPostContainer'
+					$('#Feed').append(divPostContainer)
+
+				})
 						
 					
-
+				//Expandable Post Textarea
 				$('#post').autogrow({vertical: true, horizontal: false});
 				
-				
-				
-				
+				//Reload Feed Contain when clicking on FeedTAB
 				$('#feedTab').on('click', function(){
 					location.reload()
 				})
+
+
 				var windowHt = window.innerHeight
 				var loadNumber = 12
 				var loadPoint = 0
 				var scrollPointLoad = 0 
-
+				//Active scrolling: loading main post as users scrolling
 				window.addEventListener('scroll', function(event){
 					
 					scrollPointLoad++
@@ -948,8 +962,6 @@ append scripts
 						//- console.log('feednumber: '+feednumber)
 						//- windowHt = windowHt*loadNumber
 					}
-					
-
 				 
 				})
 				if(postId !== undefined){
@@ -957,18 +969,9 @@ append scripts
 				}else{
 					getPostDB()
 				}
-				
-
-
-				//- $.getJSON('/notif/mainFeed').done(function(Rdata){
-				//- 	Rdata.posts.forEach(function(post, i){
-				//- 		console.log(post.postText)
-				//- 	})
-					
-				//- })
 			}
 
-
+			//Profile tab contain
 			$('#ProfileTab').on('click', function(){
 				$('#Profile').html('')
 				$.post('/notif/getUserPost').done(function(Rdata){
@@ -998,7 +1001,7 @@ append scripts
 				})
 			})
 
-
+			//Relationships TAB contain
 			$('#RelationshipTab').on('click',function(){
 				console.log('Relationships')
 				ul = document.createElement('ul')
@@ -1238,9 +1241,9 @@ append scripts
 					//- })
 				})
 				$('#Relationships').html(ul)
-			
 			})
 
+			//Setting TAB contain
 			$('#SettingTab').on('click', function(){
 				$('#Setting').html('')
 				var settingList = ['I want to view post from', 'who can see my post']
@@ -1300,11 +1303,6 @@ append scripts
 
 					})
 				})
-
-
-				
-					
-				
 			})
 			
 				
