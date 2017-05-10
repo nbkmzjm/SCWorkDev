@@ -83,9 +83,9 @@ function getPostDB(option){
 
 					divBody.innerHTML = post.postText
 
-					let textInPost = function(){
-						let result = false;
-						let pTags = [].slice.call(divBody.getElementsByTagName('p'))
+					var textInPost = function(){
+						var result = false;
+						var pTags = [].slice.call(divBody.getElementsByTagName('p'))
 						pTags.forEach(function(pTag, u){
 							if(pTag.firstChild.nodeName!=='IMG'){
 								result =  true
