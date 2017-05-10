@@ -223,7 +223,9 @@ append scripts
 									console.log(returnData)
 									const xhr = new XMLHttpRequest();
 									xhr.open('PUT', returnData.signedRequest);
+									console.log('decodedImage:'+ decodedImage)
 									xhr.onreadystatechange = function(){
+
 									if(xhr.readyState === 4){
 									  	if(xhr.status === 200){
 										    console.log('uploaded file')
@@ -292,7 +294,9 @@ append scripts
 							fileName:curUser.id+'image'+moment().format("DDHHmmssSSSS"),
 							fileType:arrayFile[0].type
 						}).then(function(returnData){
-							console.log(returnData)
+							console.log(returnData.signedRequest)
+							console.log('file:')
+							console.log(arrayFile[i])
 							const xhr = new XMLHttpRequest();
 							xhr.open('PUT', returnData.signedRequest);
 							xhr.onreadystatechange = function(){
