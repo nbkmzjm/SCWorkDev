@@ -72,43 +72,43 @@ function getPostDB(option){
 			
 			div.className = 'panel panel-primary'
 			div.classList.add('col-sm-6')
-			div.style.margin = '1px'
-			div.style.float = 'left'
-			div.style.maxWidth = '150px'
-			div.style.borderStyle = 'none'
-			div.style.borderTopStyle = 'solid'
+			// div.style.margin = '1px'
+			// div.style.float = 'left'
+			// div.style.maxWidth = '150px'
+			// div.style.borderStyle = 'none'
+			// div.style.borderTopStyle = 'solid'
 				var divBody = document.createElement('div')
 				divBody.className = 'panel-body'
 					// var h3 = document.createElement('pre')
 
 					divBody.innerHTML = post.postText
 
-					// var textInPost = function(){
-					// 	var result = false;
-					// 	var pTags = [].slice.call(divBody.getElementsByTagName('p'))
-					// 	pTags.forEach(function(pTag, u){
-					// 		if(pTag.firstChild.nodeName!=='IMG'){
-					// 			result =  true
-					// 		}
-					// 	})
-					// 	return result
-					// }
+					var textInPost = function(){
+						var result = false;
+						var pTags = [].slice.call(divBody.getElementsByTagName('p'))
+						pTags.forEach(function(pTag, u){
+							if(pTag.firstChild.nodeName!=='IMG'){
+								result =  true
+							}
+						})
+						return result
+					}
 
-					// var imgTags = [].slice.call(divBody.getElementsByTagName('img'))
-					// imgTags.forEach(function(imgTag, u){
-					// 	if(imgTag !== undefined){
-					// 		imgTag.setAttribute("style","width:128px;height:128px;")
-					// 		imgTag.className = 'imageThumb' 
-					// 		textInPost()===false?imgTag.classList.add('floating-image'):""
+					var imgTags = [].slice.call(divBody.getElementsByTagName('img'))
+					imgTags.forEach(function(imgTag, u){
+						if(imgTag !== undefined){
+							imgTag.setAttribute("style","width:128px;height:128px;")
+							imgTag.className = 'imageThumb' 
+							textInPost()===false?imgTag.classList.add('floating-image'):""
 							
-					// 		// imgTag.id = 'image'+ i + u
-					// 		imgTag.addEventListener('click', function(){
-					// 			// console.log(this)
-					// 			document.getElementById('myModal').style.display = 'block'
-					// 			document.getElementById('imgModal').src = this.src
-					// 		})
-					// 	}
-					// })
+							// imgTag.id = 'image'+ i + u
+							imgTag.addEventListener('click', function(){
+								// console.log(this)
+								document.getElementById('myModal').style.display = 'block'
+								document.getElementById('imgModal').src = this.src
+							})
+						}
+					})
 					
 
 				div.appendChild(divBody)
