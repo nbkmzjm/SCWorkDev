@@ -269,62 +269,62 @@ append scripts
 
 				document.getElementById("post").focus()
 
-					//DIV contain fileupload and its action
-					var fileUpload = document.createElement("input")
-					fileUpload.type = "file"
-					fileUpload.id = 'upload'
-					fileUpload.multiple = true
-					//send file to s3 upload after selected
-					fileUpload.addEventListener('change', function(){
-						var testString = 'string'
-						var files = document.getElementById('upload').files
+				//- //DIV contain fileupload and its action
+				//- var fileUpload = document.createElement("input")
+				//- fileUpload.type = "file"
+				//- fileUpload.id = 'upload'
+				//- fileUpload.multiple = true
+				//- //send file to s3 upload after selected
+				//- fileUpload.addEventListener('change', function(){
+				//- 	var testString = 'string'
+				//- 	var files = document.getElementById('upload').files
+					
+
+				//- 	var fileArray = $.map(files, function(file, index) {
+				//- 	    return [file];
+				//- 	});
+				//- 	var i=0
+				//- 	var returnURLs =''
+				//- 	function uploadReturnURL(arrayFile){
+				//- 		//- var decodedImage = dataURItoBlob(inputValueImage)
 						
-
-						var fileArray = $.map(files, function(file, index) {
-						    return [file];
-						});
-						var i=0
-						var returnURLs =''
-						function uploadReturnURL(arrayFile){
-							//- var decodedImage = dataURItoBlob(inputValueImage)
-							
-							$.post('/sign-s3', {
-								fileName:curUser.id+'image'+moment().format("DDHHmmssSSSS"),
-								fileType:arrayFile[0].type
-							}).then(function(returnData){
-								console.log(returnData)
-								const xhr = new XMLHttpRequest();
-								xhr.open('PUT', returnData.signedRequest);
-								xhr.onreadystatechange = function(){
-									if(xhr.readyState === 4){
-									  	if(xhr.status === 200){
-										    console.log('uploaded file')
-										    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
-										    returnURLs = returnURLs + '<p><img src="'+returnData.url+'"/></p>'
-										    console.log("returnURLs:"+returnURLs)
-										    i++
-										    if(i< arrayFile.length){
-										    	uploadReturnURL(arrayFile)
-										    }else{
-										    	//- alert('all done ready for DB save')
-										    	console.log("returnURLsFinal:"+returnURLs)
-										    	postDBGroupSelect(returnURLs)
-										    }
-									  	}else{
-									    	alert('Could not upload file.');
-									  	}
-									}
-								};
-								xhr.send(arrayFile[i]);
-								//- return returnData.url
-							})
+				//- 		$.post('/sign-s3', {
+				//- 			fileName:curUser.id+'image'+moment().format("DDHHmmssSSSS"),
+				//- 			fileType:arrayFile[0].type
+				//- 		}).then(function(returnData){
+				//- 			console.log(returnData)
+				//- 			const xhr = new XMLHttpRequest();
+				//- 			xhr.open('PUT', returnData.signedRequest);
+				//- 			xhr.onreadystatechange = function(){
+				//- 				if(xhr.readyState === 4){
+				//- 				  	if(xhr.status === 200){
+				//- 					    console.log('uploaded file')
+				//- 					    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
+				//- 					    returnURLs = returnURLs + '<p><img src="'+returnData.url+'"/></p>'
+				//- 					    console.log("returnURLs:"+returnURLs)
+				//- 					    i++
+				//- 					    if(i< arrayFile.length){
+				//- 					    	uploadReturnURL(arrayFile)
+				//- 					    }else{
+				//- 					    	//- alert('all done ready for DB save')
+				//- 					    	console.log("returnURLsFinal:"+returnURLs)
+				//- 					    	postDBGroupSelect(returnURLs)
+				//- 					    }
+				//- 				  	}else{
+				//- 				    	alert('Could not upload file.');
+				//- 				  	}
+				//- 				}
+				//- 			};
+				//- 			xhr.send(arrayFile[i]);
+				//- 			//- return returnData.url
+				//- 		})
 
 
-						}
-						uploadReturnURL(fileArray)
+				//- 	}
+				//- 	uploadReturnURL(fileArray)
 
-					})
-				$("#Feed").append(fileUpload)
+				//- })
+				//- $("#Feed").append(fileUpload)
 
 				
 
