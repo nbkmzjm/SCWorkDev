@@ -300,6 +300,8 @@ append scripts
 							const xhr = new XMLHttpRequest();
 							xhr.open('PUT', returnData.signedRequest);
 							xhr.onreadystatechange = function(){
+							console.log('readyState:' + xhr.readyState)
+							console.log('status:' + xhr.status)
 								if(xhr.readyState === 4){
 								  	if(xhr.status === 200){
 									    console.log('uploaded file')
