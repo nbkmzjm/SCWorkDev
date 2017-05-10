@@ -187,84 +187,84 @@ append scripts
 				var userIdSelected = []
 				var deptSelected = []
 
-				var divInputGroup = document.createElement('div')
-				divInputGroup.className = 'input-group'
+				//- var divInputGroup = document.createElement('div')
+				//- divInputGroup.className = 'input-group'
 				
-					//Main text editor
-					var inputPost = document.createElement('textarea')
-					inputPost.id = 'post'
-					inputPost.className = 'form-control'
-					inputPost.placeholder = 'Post announcement here'
-					divInputGroup.appendChild(inputPost)
+				//- 	//Main text editor
+				//- 	var inputPost = document.createElement('textarea')
+				//- 	inputPost.id = 'post'
+				//- 	inputPost.className = 'form-control'
+				//- 	inputPost.placeholder = 'Post announcement here'
+				//- 	divInputGroup.appendChild(inputPost)
 
-					//DIV contain POST button and its action
-					var divInputGroupBtn = document.createElement('div')
-					divInputGroupBtn.className = 'input-group-btn'
-						var btn = document.createElement('button')
-						btn.className = 'btn btn-primary'
-						btn.innerHTML = 'POST'
-						btn.addEventListener('click', function(){
-							//- push_update_notification()
-							var inputPostValue = inputPost.value
-							console.log(inputPostValue)
-							if(inputPostValue.indexOf('src="data')!==-1){
-								signS3dataURI(inputPost.value)
-							}else{
-								postDBGroupSelect(inputPost.value)
-							}	
-							function signS3dataURI (inputPostValue){
-					 			var inputValueImage = inputPostValue.substring(inputPostValue.indexOf('src="data')+5, inputPostValue.indexOf('"',inputPostValue.indexOf('src="data')+20))
+				//- 	//DIV contain POST button and its action
+				//- 	var divInputGroupBtn = document.createElement('div')
+				//- 	divInputGroupBtn.className = 'input-group-btn'
+				//- 		var btn = document.createElement('button')
+				//- 		btn.className = 'btn btn-primary'
+				//- 		btn.innerHTML = 'POST'
+				//- 		btn.addEventListener('click', function(){
+				//- 			//- push_update_notification()
+				//- 			var inputPostValue = inputPost.value
+				//- 			console.log(inputPostValue)
+				//- 			if(inputPostValue.indexOf('src="data')!==-1){
+				//- 				signS3dataURI(inputPost.value)
+				//- 			}else{
+				//- 				postDBGroupSelect(inputPost.value)
+				//- 			}	
+				//- 			function signS3dataURI (inputPostValue){
+				//- 	 			var inputValueImage = inputPostValue.substring(inputPostValue.indexOf('src="data')+5, inputPostValue.indexOf('"',inputPostValue.indexOf('src="data')+20))
 
-								var decodedImage = dataURItoBlob(inputValueImage)
-								$.post('/sign-s3', {
-									fileName:curUser.id+'image'+moment().format("DDHHmmssSSSS"),
-									fileType:decodedImage.type
-								}).then(function(returnData){
-									console.log(returnData)
-									const xhr = new XMLHttpRequest();
-									xhr.open('PUT', returnData.signedRequest);
-									xhr.onreadystatechange = function(){
-									if(xhr.readyState === 4){
-									  	if(xhr.status === 200){
-										    console.log('uploaded file')
-										    var inputPostValuewithURL = inputPostValue.replace(inputValueImage,returnData.url)
-										    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
-										    console.log("inputPostValuewithURL:"+inputPostValuewithURL)
-										    if(inputPostValuewithURL.indexOf('src="data')!==-1){
-										    	signS3dataURI(inputPostValuewithURL)
-										    }else{
-										    	//- alert('all done ready for DB save')
-										    	console.log("inputPostValuewithURLFinal:"+inputPostValuewithURL)
-										    	postDBGroupSelect(inputPostValuewithURL)
-										    }
-									  	}else{
-									    	alert('Could not upload file.');
-									  	}
-									}
-									};
-									xhr.send(decodedImage);
-									//- return returnData.url
-								})
+				//- 				var decodedImage = dataURItoBlob(inputValueImage)
+				//- 				$.post('/sign-s3', {
+				//- 					fileName:curUser.id+'image'+moment().format("DDHHmmssSSSS"),
+				//- 					fileType:decodedImage.type
+				//- 				}).then(function(returnData){
+				//- 					console.log(returnData)
+				//- 					const xhr = new XMLHttpRequest();
+				//- 					xhr.open('PUT', returnData.signedRequest);
+				//- 					xhr.onreadystatechange = function(){
+				//- 					if(xhr.readyState === 4){
+				//- 					  	if(xhr.status === 200){
+				//- 						    console.log('uploaded file')
+				//- 						    var inputPostValuewithURL = inputPostValue.replace(inputValueImage,returnData.url)
+				//- 						    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
+				//- 						    console.log("inputPostValuewithURL:"+inputPostValuewithURL)
+				//- 						    if(inputPostValuewithURL.indexOf('src="data')!==-1){
+				//- 						    	signS3dataURI(inputPostValuewithURL)
+				//- 						    }else{
+				//- 						    	//- alert('all done ready for DB save')
+				//- 						    	console.log("inputPostValuewithURLFinal:"+inputPostValuewithURL)
+				//- 						    	postDBGroupSelect(inputPostValuewithURL)
+				//- 						    }
+				//- 					  	}else{
+				//- 					    	alert('Could not upload file.');
+				//- 					  	}
+				//- 					}
+				//- 					};
+				//- 					xhr.send(decodedImage);
+				//- 					//- return returnData.url
+				//- 				})
 								
 
-						    }
-						}) 
-						divInputGroupBtn.appendChild(btn)
+				//- 		    }
+				//- 		}) 
+				//- 		divInputGroupBtn.appendChild(btn)
 
-						//- var btntest = document.createElement('button')
-						//- btntest.className = 'btn btn-primary'
-						//- btntest.innerHTML = 'TEST'
-						//- btntest.addEventListener('click', function(){
+				//- 		//- var btntest = document.createElement('button')
+				//- 		//- btntest.className = 'btn btn-primary'
+				//- 		//- btntest.innerHTML = 'TEST'
+				//- 		//- btntest.addEventListener('click', function(){
 							
-						//- 	console.log($('#selectWorkGroup').val())
-						//- 	//- console.log(document.getElementById('selectCoworker').length)
-						//- 	//- console.log($('#selectCoworker').0.length)
+				//- 		//- 	console.log($('#selectWorkGroup').val())
+				//- 		//- 	//- console.log(document.getElementById('selectCoworker').length)
+				//- 		//- 	//- console.log($('#selectCoworker').0.length)
 
-						//- })
-						//- divInputGroupBtn.appendChild(btntest)
+				//- 		//- })
+				//- 		//- divInputGroupBtn.appendChild(btntest)
 
-					divInputGroup.appendChild(divInputGroupBtn)
-				$('#Feed').append(divInputGroup)
+				//- 	divInputGroup.appendChild(divInputGroupBtn)
+				//- $('#Feed').append(divInputGroup)
 
 
 				document.getElementById("post").focus()
