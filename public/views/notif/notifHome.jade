@@ -423,16 +423,16 @@ append scripts
 										$('#viewOnly').attr('checked', false)
 										
 
-										//- getPostDB({viewOption:selectViewFilter.value})
+										getPostDB({viewOption:selectViewFilter.value})
 
-										//- alert(select.value)
-										//- $.post('/notif/setFeedSetting',{
-										//- 	settingId:setting.id,
-										//- 	settingValue:selectViewFilter.value,
-										//- 	action:'update'
-										//- }).done(function(Rdata){
+										alert(select.value)
+										$.post('/notif/setFeedSetting',{
+											settingId:setting.id,
+											settingValue:selectViewFilter.value,
+											action:'update'
+										}).done(function(Rdata){
 
-										//- })
+										})
 									})
 									
 									divSelectViewFilter.appendChild(selectViewFilter)
@@ -456,22 +456,22 @@ append scripts
 									viewOnly.value = 'false'
 									viewOnly.addEventListener('click', function(){
 										if(this.checked === true){
-											//- getPostDB({
-											//- 	viewOption:selectViewFilter.value,
-											//- 	viewOnly:true,
-											//- 	byMe:$('#byMe').is(':checked'),
-											//- 	byOther:$('#byOther').is(':checked')
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:true,
+												byMe:$('#byMe').is(':checked'),
+												byOther:$('#byOther').is(':checked')
 
-											//- })
-											//- $('#divPostContainer').html('')
+											})
+											$('#divPostContainer').html('')
 										}else{
-											//- getPostDB({
-											//- 	viewOption:selectViewFilter.value,
-											//- 	viewOnly:false,
-											//- 	byMe:$('#byMe').is(':checked'),
-											//- 	byOther:$('#byOther').is(':checked')
-											//- })
-											//- $('#divPostContainer').html('')
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:false,
+												byMe:$('#byMe').is(':checked'),
+												byOther:$('#byOther').is(':checked')
+											})
+											$('#divPostContainer').html('')
 										}
 									})
 									divViewOnly.appendChild(viewOnly)
@@ -496,21 +496,21 @@ append scripts
 									byMe.addEventListener('click', function(){
 
 										if(this.checked === true){
-											//- getPostDB({
-											//- 	viewOption:selectViewFilter.value,
-											//- 	viewOnly:$('#viewOnly').is(':checked'),
-											//- 	byMe:true,
-											//- 	byOther:$('#byOther').is(':checked')
-											//- })
-											//- $('#divPostContainer').html('')
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:$('#viewOnly').is(':checked'),
+												byMe:true,
+												byOther:$('#byOther').is(':checked')
+											})
+											$('#divPostContainer').html('')
 										}else{
-											//- getPostDB({
-											//- 	viewOption:selectViewFilter.value,
-											//- 	viewOnly:$('#viewOnly').is(':checked'),
-											//- 	byMe:false,
-											//- 	byOther:$('#byOther').is(':checked')
-											//- })
-											//- $('#divPostContainer').html('')
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:$('#viewOnly').is(':checked'),
+												byMe:false,
+												byOther:$('#byOther').is(':checked')
+											})
+											$('#divPostContainer').html('')
 										}
 									})
 									divByMe.appendChild(byMe)
@@ -535,21 +535,21 @@ append scripts
 									byOther.addEventListener('click', function(){
 
 										if(this.checked === true){
-											//- getPostDB({
-											//- 	viewOption:selectViewFilter.value,
-											//- 	viewOnly:$('#viewOnly').is(':checked'),
-											//- 	byMe:$('#byMe').is(':checked'),
-											//- 	byOther:true
-											//- })
-											//- $('#divPostContainer').html('')
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:$('#viewOnly').is(':checked'),
+												byMe:$('#byMe').is(':checked'),
+												byOther:true
+											})
+											$('#divPostContainer').html('')
 										}else{
-											//- getPostDB({
-											//- 	viewOption:selectViewFilter.value,
-											//- 	viewOnly:$('#viewOnly').is(':checked'),
-											//- 	byMe:$('#byMe').is(':checked'),
-											//- 	byOther:false
-											//- })
-											//- $('#divPostContainer').html('')
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:$('#viewOnly').is(':checked'),
+												byMe:$('#byMe').is(':checked'),
+												byOther:false
+											})
+											$('#divPostContainer').html('')
 										}
 									})
 									divByOther.appendChild(byOther)
@@ -953,7 +953,7 @@ append scripts
 						
 						console.log('loading...'+ loadNumber)
 						
-						//- getPostDB({loadNumber:loadNumber})
+						getPostDB({loadNumber:loadNumber})
 						loadNumber += 12
 						//- preventDefault(event);
 						
@@ -965,9 +965,9 @@ append scripts
 				 
 				})
 				if(postId !== undefined){
-					//- getPostDB({postId:postId})
+					getPostDB({postId:postId})
 				}else{
-					//- getPostDB()
+					getPostDB()
 				}
 			}
 
