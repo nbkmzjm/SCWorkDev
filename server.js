@@ -157,7 +157,6 @@ app.post('/sign-s3', middleware.requireAuthentication, function(req, res){
 	});
 	const fileName = req.body.fileName
 	const fileType = req.body.fileType
-	const fileSize = req.body.fileSize
 	const s3Params = {
 		Bucket: process.env.S3Bucket,
 		Key: fileName,
@@ -165,8 +164,11 @@ app.post('/sign-s3', middleware.requireAuthentication, function(req, res){
 		ContentType: fileType,
 		// ContentLength: fileSize,
 		ACL: 'public-read'
+		// ContentMD5:'true'
 
 	}
+	console.log('fileName:'+fileName)
+	console.log('fileType:'+fileType)
 
 	s3.getSignedUrl('putObject', s3Params, function(err, url){
 		if(err){

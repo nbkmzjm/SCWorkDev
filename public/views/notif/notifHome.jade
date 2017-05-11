@@ -291,9 +291,9 @@ append scripts
 						//- var decodedImage = dataURItoBlob(inputValueImage)
 						
 						$.post('/sign-s3', {
-							fileName:curUser.id+'image'+moment().format("DDHHmmssSSSS"),
-							fileType:arrayFile[i].type,
-							fileSize:arrayFile[i].size
+							//- fileName:curUser.id+'image'+moment().format("DDHHmmssSSSS"),
+							fileName:arrayFile[i].name,
+							fileType:arrayFile[i].type
 						}).then(function(returnData){
 							console.log(returnData.signedRequest)
 							console.log('file:')
