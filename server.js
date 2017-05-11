@@ -64,8 +64,6 @@ app.use(express.static(__dirname));
 app.use('/users', express.static(__dirname));
 app.use(expValidator());
 
-
-
 var umzug = new Umzug({
 	storage: 'sequelize',
 
