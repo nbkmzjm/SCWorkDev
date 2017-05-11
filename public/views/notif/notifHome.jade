@@ -292,11 +292,13 @@ append scripts
 						
 						$.post('/sign-s3', {
 							fileName:curUser.id+'image'+moment().format("DDHHmmssSSSS"),
-							fileType:arrayFile[0].type
+							fileType:arrayFile[i].type,
+							fileSize:arrayFile[i].size
 						}).then(function(returnData){
 							console.log(returnData.signedRequest)
 							console.log('file:')
 							console.log(arrayFile[i])
+							console.log(arrayFile[i].size)
 							const xhr = new XMLHttpRequest();
 							xhr.open('PUT', returnData.signedRequest);
 							xhr.onreadystatechange = function(){

@@ -153,15 +153,17 @@ app.post('/showNoti', function(req, res){
 
 app.post('/sign-s3', middleware.requireAuthentication, function(req, res){
 	const s3 = new aws.S3({
-		signatureVersion: 'v4'
+		// signatureVersion: 'v4'
 	});
 	const fileName = req.body.fileName
 	const fileType = req.body.fileType
+	const fileSize = req.body.fileSize
 	const s3Params = {
 		Bucket: process.env.S3Bucket,
 		Key: fileName,
 		Expires: 900,
 		ContentType: fileType,
+		// ContentLength: fileSize,
 		ACL: 'public-read'
 
 	}
