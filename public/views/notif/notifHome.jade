@@ -299,7 +299,7 @@ append scripts
 							console.log('file:')
 							console.log(arrayFile[i])
 							const xhr = new XMLHttpRequest();
-							xhr.open('PUT', returnData.signedRequest);
+							xhr.open('PUT', returnData.url);
 							xhr.onreadystatechange = function(){
 							console.log('readyState:' + xhr.readyState)
 							console.log('status:' + xhr.status)
