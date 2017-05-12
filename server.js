@@ -7,6 +7,7 @@ aws.config.update({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
+aws.config.update({region: 'us-east-1'})
 var path = require('path');
 var http = require('http').Server(app);
 // var io = require('socket.io')(http);
@@ -151,18 +152,18 @@ app.post('/showNoti', function(req, res){
 
 })
 
-app.get('/sign-s3', middleware.requireAuthentication, function(req, res){
+app.post('/sign-s3', middleware.requireAuthentication, function(req, res){
 	const s3 = new aws.S3({
-		// signatureVersion: 'v4'
+		apiVersion: '2006-03-01'
 	});
-	const fileName = req.query['fileName']
-	const fileType = req.query['fileType']
+	const fileName = req.body.fileName
+	const fileType = req.body.fileType
 	const s3Params = {
 		Bucket: process.env.S3Bucket,
 		Key: fileName,
 		Expires: 900,
 		ContentType: fileType,
-		// ContentLength: fileSize,
+		// "ContentLength": 9875,
 		ACL: 'public-read'
 		// ContentMD5:'true'
 
