@@ -222,7 +222,7 @@ append scripts
 								}).then(function(returnData){
 									console.log(returnData)
 									const xhr = new XMLHttpRequest();
-									xhr.open('PUT', returnData.signedRequest);
+									xhr.open('PUT', returnData.url);
 									console.log('decodedImage:'+ decodedImage)
 									xhr.onreadystatechange = function(){
 
