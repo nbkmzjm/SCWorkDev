@@ -290,15 +290,16 @@ append scripts
 					function uploadReturnURL(arrayFile){
 						//- var decodedImage = dataURItoBlob(inputValueImage)
 						
-						$.post('/sign-s3', {
-							//- fileName:curUser.id+'image'+moment().format("DDHHmmssSSSS"),
-							fileName:arrayFile[i].name,
-							fileType:arrayFile[i].type
-						}).then(function(returnData){
+						$.getJSON(`/sign-s3?fileName=${arrayFile[i].name}&fileType=${arrayFile[i].type}`
+						//- {
+						//- 	//- fileName:curUser.id+'image'+moment().format("DDHHmmssSSSS"),
+						//- 	fileName:arrayFile[i].name,
+						//- 	fileType:arrayFile[i].type
+						//- }
+						).then(function(returnData){
 							console.log(returnData.signedRequest)
 							console.log('file:')
 							console.log(arrayFile[i])
-							console.log(arrayFile[i].size)
 							const xhr = new XMLHttpRequest();
 							xhr.open('PUT', returnData.signedRequest);
 							xhr.onreadystatechange = function(){

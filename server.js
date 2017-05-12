@@ -3,10 +3,10 @@ var express = require('express');
 var app = express();
 var dotenv = require('dotenv').config()
 var aws = require('aws-sdk')
-aws.config = {
+aws.config.update({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-};
+});
 var path = require('path');
 var http = require('http').Server(app);
 // var io = require('socket.io')(http);
@@ -151,12 +151,12 @@ app.post('/showNoti', function(req, res){
 
 })
 
-app.post('/sign-s3', middleware.requireAuthentication, function(req, res){
+app.get('/sign-s3', middleware.requireAuthentication, function(req, res){
 	const s3 = new aws.S3({
 		// signatureVersion: 'v4'
 	});
-	const fileName = req.body.fileName
-	const fileType = req.body.fileType
+	const fileName = req.query['fileName']
+	const fileType = req.query['fileType']
 	const s3Params = {
 		Bucket: process.env.S3Bucket,
 		Key: fileName,
