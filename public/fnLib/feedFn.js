@@ -163,11 +163,42 @@ function getPostDB(option){
 							
 							// imgTag.id = 'image'+ i + u
 							imgTag.addEventListener('click', function(){
-								// console.log(this)
+								console.log(this)
 								document.getElementById('myModal').style.display = 'block'
 								document.getElementById('imgModal').src = this.src
 							})
 						}
+					})
+
+					var iframes = [].slice.call(divBody.getElementsByTagName('iframe'))
+					iframes.forEach(function(iframe, u){
+						if(iframe !== undefined){
+								imgTag.setAttribute("style","width:128px;height:128px;")
+								imgTag.className = 'imageThumb' 
+								textInPost()===false?imgTag.classList.add('floating-image'):""
+								
+								imgTag.id = 'image'+ i + u
+								console.log(imgTag)
+								var iframe = $('#image'+i+u)
+								iframe.on("load", function () { //Make sure it is fully loaded
+									var iframex = iframe.contents()
+						            // iframe.contents().click(function (event) {
+						            //     iframe.trigger("click");
+						            // });
+								alert('sagasg')
+						        });
+
+						  //       iframe.click(function () {
+						  //          alert('sadfasg')
+						  //       });
+
+							}
+							// document.getElementById('image'+i+u).contentWindow.document.body.onclick = function(){
+							// 		alert('iframe')
+							// 		console.log(this)
+							// 		document.getElementById('myModal').style.display = 'block'
+							// 		document.getElementById('imgModal').src = this.src
+							// 	
 					})
 					
 

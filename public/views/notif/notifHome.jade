@@ -17,7 +17,7 @@ block content
 			
 			div(id='myModal' class='modalx')
 				span(class="glyphicon glyphicon-remove close")
-				img(id='imgModal' class = 'modal-content')
+				iframe(id='imgModal' class = 'modal-content')
 			ul(class="nav nav-tabs")
 				li(class="active" id='feedTab')
 
@@ -58,16 +58,7 @@ append scripts
 
 
 
-			//- var divModal = document.createElement('div')
-			//- divModal.id = 'myModal'
-			//- divModal.className = 'modal'
-			//- divModal.innerHTML = 'xxxxxxxxxxxxxxxxxxxxxxx'
-			//- 	var imgModal = document.createElement('img')
-
-			//- 	imgModal.className = 'modal-content'
-			//- 	imgModal.id = 'imgModal'
-			//- 	divModal.appendChild(imgModal)
-			//- $('#userContainer').append(divModal)
+		
 			
 			var JSONdata = !{JSONdata};
 			var curUser = JSONdata.curUser
@@ -77,7 +68,7 @@ append scripts
 		    var is_explorer = navigator.userAgent.indexOf('MSIE') > -1;
 		    var is_firefox = navigator.userAgent.indexOf('Firefox') > -1;
 		    var is_safari = navigator.userAgent.indexOf("Safari") > -1;
-			alert(navigator.userAgent)
+			//- alert(navigator.userAgent)
 			if(is_safari && !is_chrome){
 				//this is Safari. myMCE is not loaded
 			}else{
@@ -86,18 +77,7 @@ append scripts
 
 			  
 		
-			//- var groups = [{name:'a'}, {name:'b'}, {name:'c'}]
-			//- ul = document.createElement('ul')
-			//- groups.forEach(function(group, i){
-			//- 	li = document.createElement('li')
-			//- 	li.appendChild(document.createTextNode(group.name))
-			//- 	console.log(li)
-			//- 	li.addEventListener('click', function(){
-			//- 		console.log(li)
-			//- 	})
-			//- 	ul.appendChild(li)
-			//- 	console.log(group.name)
-			//- })
+			
 			function push_update_notification(msg){
 				if(navigator.serviceWorker.controller){
 
@@ -231,6 +211,7 @@ append scripts
 				var fileUpload = document.createElement("input")
 				fileUpload.type = "file"
 				fileUpload.id = 'upload'
+				fileUpload.name = 'Upload'
 				fileUpload.multiple = true
 				//send file to s3 upload after selected
 				fileUpload.addEventListener('change', function(){
@@ -263,7 +244,7 @@ append scripts
 								  	if(xhr.status === 200){
 									    console.log('uploaded file')
 									    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
-									    returnURLs = returnURLs + '<p><img src="'+returnData.url+'"/></p>'
+									    returnURLs = returnURLs + '<p><iframe src="'+returnData.url+'"/></p>'
 									    console.log("returnURLs:"+returnURLs)
 									    i++
 									    if(i< arrayFile.length){
