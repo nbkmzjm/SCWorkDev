@@ -318,7 +318,7 @@ append scripts
 
 				//- document.getElementById('upload').style.display = 'block'
 
-
+				var loadNumber = 12
 				var select;
 				var selectFilter
 				$.post('/notif/getFeedSetting').done(function(Rdata){
@@ -369,7 +369,7 @@ append scripts
 
 										getPostDB({viewOption:selectViewFilter.value})
 
-										alert(select.value)
+										
 										$.post('/notif/setFeedSetting',{
 											settingId:setting.id,
 											settingValue:selectViewFilter.value,
@@ -483,7 +483,8 @@ append scripts
 												viewOption:selectViewFilter.value,
 												viewOnly:$('#viewOnly').is(':checked'),
 												byMe:$('#byMe').is(':checked'),
-												byOther:true
+												byOther:true,
+												loadNumber:12
 											})
 											$('#divPostContainer').html('')
 										}else{
@@ -865,7 +866,7 @@ append scripts
 
 
 				var windowHt = window.innerHeight
-				var loadNumber = 12
+				
 				var loadPoint = 0
 				var scrollPointLoad = 0 
 				//Active scrolling: loading main post as users scrolling

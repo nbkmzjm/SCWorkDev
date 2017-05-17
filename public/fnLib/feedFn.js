@@ -73,7 +73,8 @@ function postDB(postTo, postToValue, postText, filter, userArray, storageLink){
 		filter:filter,
 		userArray:userArrayString
 	}).done(function(Rdata){
-		// location.reload()
+		//****undo to work with notification
+		location.reload()
 		console.log(Rdata)
 	})
 					
@@ -142,6 +143,7 @@ function getPostDB(option){
 					// var h3 = document.createElement('pre')
 
 					divBody.innerHTML = post.postText
+					divBody.id = 'divBody'+ i
 
 					var textInPost = function(){
 						var result = false;
@@ -154,55 +156,68 @@ function getPostDB(option){
 						return result
 					}
 
-					var imgTags = [].slice.call(divBody.getElementsByTagName('img'))
-					imgTags.forEach(function(imgTag, u){
-						if(imgTag !== undefined){
-							imgTag.setAttribute("style","width:128px;height:128px;")
-							imgTag.className = 'imageThumb' 
-							textInPost()===false?imgTag.classList.add('floating-image'):""
+					// var imgTags = [].slice.call(divBody.getElementsByTagName('img'))
+					// imgTags.forEach(function(imgTag, u){
+					// 	if(imgTag !== undefined){
+					// 		imgTag.setAttribute("style","width:128px;height:128px;")
+					// 		imgTag.className = 'imageThumb' 
+					// 		textInPost()===false?imgTag.classList.add('floating-image'):""
 							
-							// imgTag.id = 'image'+ i + u
-							imgTag.addEventListener('click', function(){
-								console.log(this)
-								document.getElementById('myModal').style.display = 'block'
-								document.getElementById('imgModal').src = this.src
-							})
-						}
-					})
+					// 		// imgTag.id = 'image'+ i + u
+					// 		imgTag.addEventListener('click', function(){
+					// 			console.log(this)
+					// 			document.getElementById('myModal').style.display = 'block'
+					// 			document.getElementById('imgModal').src = this.src
+					// 		})
+					// 	}
+					// })
 
-					var iframes = [].slice.call(divBody.getElementsByTagName('iframe'))
-					iframes.forEach(function(iframe, u){
-						if(iframe !== undefined){
-								imgTag.setAttribute("style","width:128px;height:128px;")
-								imgTag.className = 'imageThumb' 
-								textInPost()===false?imgTag.classList.add('floating-image'):""
+					
+
+					// $("#iframe").each(function () {
+					// 	console.log($(this))
+				 //        //Using closures to capture each one
+				 //        var iframe = $(this);
+				 //        console.log(iframe)
+				 //        iframe.on("load", function () { //Make sure it is fully loaded
+				 //            iframe.contents().click(function (event) {
+				 //                iframe.trigger("click");
+				 //            });
+				 //        });
+
+				 //        iframe.click(function () {
+				 //        	alert('sdgas')
+				 //            //Handle what you need it to do
+				 //        });
+				 //    });
+
+					// var iframes = [].slice.call(divBody.getElementsByTagName('iframe'))
+					// iframes.forEach(function(iframe, u){
+					// 	if(iframe !== undefined){
+					// 			console.log(iframe)
+					// 			iframe.parentNode.addEventListener('click',function(){
+					// 				alert('cadgag')
+					// 			})
+					// 			iframe.setAttribute("style","width:128px;height:128px;")
+					// 			iframe.className = 'imageThumb' 
+					// 			textInPost()===false?iframe.classList.add('floating-image'):""
 								
-								imgTag.id = 'image'+ i + u
-								console.log(imgTag)
-								var iframe = $('#image'+i+u)
-								iframe.on("load", function () { //Make sure it is fully loaded
-									var iframex = iframe.contents()
-						            // iframe.contents().click(function (event) {
-						            //     iframe.trigger("click");
-						            // });
-								alert('sagasg')
-						        });
+					// 			iframe.id = 'image'+ i + u
+					// 			console.log(iframe.contentDocument)
+								
 
-						  //       iframe.click(function () {
-						  //          alert('sadfasg')
-						  //       });
-
-							}
-							// document.getElementById('image'+i+u).contentWindow.document.body.onclick = function(){
-							// 		alert('iframe')
-							// 		console.log(this)
-							// 		document.getElementById('myModal').style.display = 'block'
-							// 		document.getElementById('imgModal').src = this.src
-							// 	
-					})
+					// 	}
+					// 		// document.getElementById('image'+i+u).contentWindow.document.body.onclick = function(){
+					// 		// 		alert('iframe')
+					// 		// 		console.log(this)
+					// 		// 		document.getElementById('myModal').style.display = 'block'
+					// 		// 		document.getElementById('imgModal').src = this.src
+					// 		// 	
+					// })
 					
 
 				div.appendChild(divBody)
+
 				getComment()
 				function getComment(){
 				
@@ -528,6 +543,42 @@ function getPostDB(option){
 				}	
 
 			divPostContainer.appendChild(div)
+			
+			$("#divBody"+i).find('img').each(function(){
+				var img = $(this)
+				img.click(function(){
+					document.getElementById('myModal').style.display = 'block'
+					document.getElementById('imgModal').src = this.src
+				})
+			})
+			
+			$("#divBody"+i).find('iframe').each(function(){
+
+				var iframe = $(this);
+				console.log(iframe)
+		        iframe.load(function () {
+		   //      	this.contentWindow.document.body.onclick = 
+					// function() {
+					//   alert("iframe clicked");
+					// }
+		        	console.log(this.contentWindow.document)
+		        	console.log(iframe)
+
+		        	// alert('asdfsg')
+		        	// var x = iframe.contents()
+		            // iframe.contents().click(function(event){
+		            // 	alert('asdgasg')
+		                // iframe.trigger("click")
+		            // });
+		        	// this.contents()
+		        	// iframe.click(function () {
+		         //   		alert('adsgd')
+		        	// });
+		        })
+
+		       
+			})
+
 			
 
 		})

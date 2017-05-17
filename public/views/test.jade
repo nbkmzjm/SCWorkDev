@@ -110,23 +110,18 @@ append scripts
 			newP.id = 'text'
 			container.appendChild(newP);
 
-			container.appendChild(newP);
 			var showBut = document.createElement('input')
 			showBut.type = 'button'
 			showBut.id = 'testBut'
 			showBut.value = 'Show Notification'
+			console.log($('#testBut'))
 
 			container.appendChild(showBut);
 			var testString = 'string'
 
 			$('#testBut').click(function(){
-				$.post('/showNoti',{
-					text:$('#text').val()
-				}).then(function(Rdata){
-					console.log(testString)
-					$('#test').html(Rdata.endpoint)
+				console.log($('#testBut'))
 
-				})
 			})
 
 			document.getElementById('file-input').addEventListener('change', function(){
