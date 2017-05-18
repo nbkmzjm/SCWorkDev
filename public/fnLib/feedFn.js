@@ -12,7 +12,7 @@ function myMCEini(selector){
 	   
 	    //- paste_as_text: false,
 	    paste_data_images: true,
-	    //- paste_enable_default_filters: false,
+	    paste_enable_default_filters: false,
 	    //- plugins:[
 	    //- 	'paste'
 	    //- ]
@@ -131,7 +131,7 @@ function getPostDB(option){
 
 			var div = document.createElement('div')
 			
-			div.className = 'panel panel-primary'
+			div.className = 'panel panel-success'
 			div.classList.add('col-sm-6')
 			// div.style.margin = '1px'
 			// div.style.float = 'left'
@@ -141,36 +141,12 @@ function getPostDB(option){
 				var divBody = document.createElement('div')
 				divBody.className = 'panel-body'
 					// var h3 = document.createElement('pre')
-
 					divBody.innerHTML = post.postText
 					divBody.id = 'divBody'+ i
 
-					var textInPost = function(){
-						var result = false;
-						var pTags = [].slice.call(divBody.getElementsByTagName('p'))
-						pTags.forEach(function(pTag, u){
-							if(pTag.firstChild.nodeName!=='IMG'){
-								result =  true
-							}
-						})
-						return result
-					}
+					
 
-					// var imgTags = [].slice.call(divBody.getElementsByTagName('img'))
-					// imgTags.forEach(function(imgTag, u){
-					// 	if(imgTag !== undefined){
-					// 		imgTag.setAttribute("style","width:128px;height:128px;")
-					// 		imgTag.className = 'imageThumb' 
-					// 		textInPost()===false?imgTag.classList.add('floating-image'):""
-							
-					// 		// imgTag.id = 'image'+ i + u
-					// 		imgTag.addEventListener('click', function(){
-					// 			console.log(this)
-					// 			document.getElementById('myModal').style.display = 'block'
-					// 			document.getElementById('imgModal').src = this.src
-					// 		})
-					// 	}
-					// })
+					
 
 					
 
@@ -543,39 +519,62 @@ function getPostDB(option){
 				}	
 
 			divPostContainer.appendChild(div)
+
+			// var imgTags = [].slice.call(divBody.getElementsByTagName('img'))
+			// 		imgTags.forEach(function(imgTag, u){
+			// 			if(imgTag !== undefined){
+			// 				imgTag.setAttribute("style","width:128px;height:128px;")
+			// 				imgTag.className = 'imageThumb' 
+			// 				textInPost()===false?imgTag.classList.add('floating-image'):""
+							
+			// 				// imgTag.id = 'image'+ i + u
+			// 				imgTag.addEventListener('click', function(){
+			// 					console.log(this)
+			// 					document.getElementById('myModal').style.display = 'block'
+			// 					document.getElementById('imgModal').src = this.src
+			// 				})
+			// 			}
+			// 		})
+			var textInPost = function(){
+				var result = false;
+				var pTags = [].slice.call(document.getElementById('divBody'+i).getElementsByTagName('p'))
+				pTags.forEach(function(pTag, u){
+					// alert(pTag.firstChild.nodeName)
+					if(pTag.firstChild.nodeName!=='IMG'&&pTag.firstChild.nodeName!=='IFRAME'){
+						result =  true
+					}
+				})
+				return result
+			}
 			
 			$("#divBody"+i).find('img').each(function(){
-				var img = $(this)
-				img.click(function(){
+				var jqImg = $(this)
+				jqImg.attr("style","width:164px;height:164px;")
+				jqImg.attr('class','imageThumb')
+				textInPost()===false?jqImg.addClass('floating-image'):""
+				jqImg.click(function(){
 					document.getElementById('myModal').style.display = 'block'
 					document.getElementById('imgModal').src = this.src
 				})
 			})
 			
 			$("#divBody"+i).find('iframe').each(function(){
+				
+				
+				var iframe = this
+				var jqIframe = $(this)
 
-				var iframe = $(this);
-				console.log(iframe)
-		        iframe.load(function () {
-		   //      	this.contentWindow.document.body.onclick = 
-					// function() {
-					//   alert("iframe clicked");
-					// }
-		        	console.log(this.contentWindow.document)
-		        	console.log(iframe)
+				jqIframe.attr("style","width:420px;height:240px;")
+				jqIframe.attr('class','imageThumb')
+				jQuery(document).ready(function($){
+					jqIframe.iframeTracker({
+						blurCallback: function(){
 
-		        	// alert('asdfsg')
-		        	// var x = iframe.contents()
-		            // iframe.contents().click(function(event){
-		            // 	alert('asdgasg')
-		                // iframe.trigger("click")
-		            // });
-		        	// this.contents()
-		        	// iframe.click(function () {
-		         //   		alert('adsgd')
-		        	// });
-		        })
-
+							document.getElementById('myModal').style.display = 'block'
+							document.getElementById('imgModal').src = iframe.src
+						}
+					});
+				});
 		       
 			})
 

@@ -33,6 +33,8 @@
     "tinymce":"4.5.6",
     "umzug": "^1.11.0",
     "aws-sdk":"2.48.0",
-    "dotenv":"4.0.0"
+    "dotenv":"4.0.0",
+    "jquery.iframetracker":"1.1.0"
+
   }
 }

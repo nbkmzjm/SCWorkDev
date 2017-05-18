@@ -39,6 +39,7 @@ block content
 
 append scripts 
 	script(src="public/fnLib/feedFn.js")
+	script(src="node_modules/jquery.iframetracker/jquery.iframetracker.js")
 
 	script.
 
@@ -153,7 +154,7 @@ append scripts
 
 								var decodedImage = dataURItoBlob(inputValueImage)
 								$.post('/sign-s3', {
-									fileName:curUser.id+'image'+moment().format("DDHHmmssSSSS"),
+									fileName:'image'+moment().format("DDHHmmssSSSS")+'.jpeg',
 									fileType:decodedImage.type
 								}).then(function(returnData){
 									console.log(returnData)
@@ -226,9 +227,28 @@ append scripts
 					var returnURLs =''
 					function uploadReturnURL(arrayFile){
 						//- var decodedImage = dataURItoBlob(inputValueImage)
-						
+						console.log('type:')
+						console.log(arrayFile[i].type)
+						var fileNameNoSpace = arrayFile[i].name.replace(/ /g,"_")
+						var fileType = arrayFile[i].type
+						var fileName
+						if(fileType.indexOf('image')!== -1){
+							fileName = moment().format("MMDDHHmmssSSSS")+ 'image.jpeg'
+						}else if(fileType.indexOf('pdf')!== -1){
+							fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
+						}else if(fileType.indexOf('msword')!== -1 || fileType.indexOf('wordprocessingml')!== -1){
+							fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
+						}else if(fileType.indexOf('ms-excel')!== -1 || fileType.indexOf('spreadsheetml')!== -1){
+							fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
+						}else if(fileType.indexOf('ms-powerpoint')!== -1 || fileType.indexOf('presentationml')!== -1){
+							fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
+						}else{
+							fileName = moment().format("MMDDHHmmssSSSS")+ '.raw'
+						}
+						console.log(fileName)
+
 						$.post('/sign-s3', {
-							fileName:curUser.id+'image'+moment().format("DDHHmmssSSSS"),
+							fileName:fileName,
 							//- fileName:arrayFile[i].name,
 							fileType:arrayFile[i].type
 						}).then(function(returnData){
@@ -243,8 +263,15 @@ append scripts
 								if(xhr.readyState === 4){
 								  	if(xhr.status === 200){
 									    console.log('uploaded file')
+									    var url = returnData.url
 									    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
-									    returnURLs = returnURLs + '<p><iframe src="'+returnData.url+'"/></p>'
+									    if(url.indexOf('.doc')!==-1||url.indexOf('.xls')!==-1||url.indexOf('.ppt')!==-1){
+									    	returnURLs = returnURLs + '<p><iframe src="https://view.officeapps.live.com/op/embed.aspx?src='+returnData.url+'"></iframe></p>'
+									    }else if(url.indexOf('.pdf')!==-1){
+									   		returnURLs = returnURLs + '<p><iframe src="'+returnData.url+'"></iframe></p>'
+									    }else{
+									    	returnURLs = returnURLs + '<p><img src="'+returnData.url+'"/></p>'
+									    }
 									    console.log("returnURLs:"+returnURLs)
 									    i++
 									    if(i< arrayFile.length){
@@ -260,7 +287,6 @@ append scripts
 								}
 							};
 							xhr.send(arrayFile[i]);
-							//- return returnData.url
 						})
 
 
