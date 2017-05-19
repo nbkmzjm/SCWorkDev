@@ -290,9 +290,9 @@
 .modal-content {
     margin: auto;
     display: block;
-    width: 80%;
+    /*width: 80%;*/
     /*max-width: 700px;*/
-    height: 90%;
+    /*height: 90%;*/
 }
 
 .floating-image {
