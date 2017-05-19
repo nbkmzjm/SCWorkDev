@@ -46,6 +46,10 @@ append scripts
 		$(function(){
 
 			//close modal Pictures
+			var myModal = document.getElementById('myModal')
+			myModal.onclick = function(){
+				document.getElementById('myModal').style.display = "none";
+			}
 			var span = document.getElementsByClassName("close")[0];
 
 			span.onclick = function() { 

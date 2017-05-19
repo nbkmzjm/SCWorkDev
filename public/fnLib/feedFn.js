@@ -1,61 +1,61 @@
 function myMCEini(selector){
-	tinymce.init({
-	    selector: selector,
-	    //- statusbar: false,
-        setup: function (editor) {
-            editor.on('change', function () {
-                editor.save();
-            });
+	// tinymce.init({
+	//     selector: selector,
+	//     //- statusbar: false,
+ //        setup: function (editor) {
+ //            editor.on('change', function () {
+ //                editor.save();
+ //            });
             
-        },
-	    theme: "modern",
+ //        },
+	//     theme: "modern",
 	   
-	    //- paste_as_text: false,
-	    paste_data_images: true,
-	    paste_enable_default_filters: false,
-	    //- plugins:[
-	    //- 	'paste'
-	    //- ]
-	    plugins: [
-	      "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-	      "searchreplace wordcount visualblocks visualchars code fullscreen",
-	      "insertdatetime media nonbreaking save table contextmenu directionality",
-	      "emoticons template textcolor paste colorpicker textpattern"
-	    ],
-	    theme_advanced_buttons3_add : "emotions",
-	    table_default_styles: {
-		    fontWeight: 'bold',
-		    borderTop: '1px solid black'
-		},
-	    toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-	    toolbar2: "print preview media | forecolor backcolor emoticons",
-	     theme_advanced_buttons3_add : "tablecontrols",
-        table_styles : "Header 1=header1;Header 2=header2;Header 3=header3",
+	//     //- paste_as_text: false,
+	//     paste_data_images: true,
+	//     paste_enable_default_filters: false,
+	//     //- plugins:[
+	//     //- 	'paste'
+	//     //- ]
+	//     plugins: [
+	//       "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+	//       "searchreplace wordcount visualblocks visualchars code fullscreen",
+	//       "insertdatetime media nonbreaking save table contextmenu directionality",
+	//       "emoticons template textcolor paste colorpicker textpattern"
+	//     ],
+	//     theme_advanced_buttons3_add : "emotions",
+	//     table_default_styles: {
+	// 	    fontWeight: 'bold',
+	// 	    borderTop: '1px solid black'
+	// 	},
+	//     toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+	//     toolbar2: "print preview media | forecolor backcolor emoticons",
+	//      theme_advanced_buttons3_add : "tablecontrols",
+ //        table_styles : "Header 1=header1;Header 2=header2;Header 3=header3",
         
        
-	    file_picker_callback: function(callback, value, meta) {
-			if (meta.filetype == 'image') {
-				$('#upload').trigger('click');
-				$('#upload').on('change', function() {
-				    var file = this.files[0];
-				    var reader = new FileReader();
-				    reader.onload = function(e) {
-					    callback(e.target.result, {
-					       alt: ''
-					    });
-				 	};
-				  	reader.readAsDataURL(file);
-				});
-			}
-	    },
-	    templates: [{
-	        title: 'Test template 1',
-	        content: 'Test 1'
-	    }, {
-	        title: 'Test template 2',
-	        content: 'Test 2'
-	    }]
-	});
+	//     file_picker_callback: function(callback, value, meta) {
+	// 		if (meta.filetype == 'image') {
+	// 			$('#upload').trigger('click');
+	// 			$('#upload').on('change', function() {
+	// 			    var file = this.files[0];
+	// 			    var reader = new FileReader();
+	// 			    reader.onload = function(e) {
+	// 				    callback(e.target.result, {
+	// 				       alt: ''
+	// 				    });
+	// 			 	};
+	// 			  	reader.readAsDataURL(file);
+	// 			});
+	// 		}
+	//     },
+	//     templates: [{
+	//         title: 'Test template 1',
+	//         content: 'Test 1'
+	//     }, {
+	//         title: 'Test template 2',
+	//         content: 'Test 2'
+	//     }]
+	// });
 }
 
 function postDB(postTo, postToValue, postText, filter, userArray, storageLink){
@@ -140,9 +140,20 @@ function getPostDB(option){
 			// div.style.borderTopStyle = 'solid'
 				var divBody = document.createElement('div')
 				divBody.className = 'panel-body'
+				// divBody.classList.add('embed-responsive embed-responsive-4by3')
 					// var h3 = document.createElement('pre')
-					divBody.innerHTML = post.postText
-					divBody.id = 'divBody'+ i
+				divBody.innerHTML = post.postText
+				divBody.id = 'divBody'+ i
+					// var testDiv = document.createElement('div')
+					// testDiv.className = ''
+					// testDiv.id = 'testDiv'+i
+					// testDiv.style.border = '2px solid red'
+					// // testDiv.style.width = '400px'
+					// // testDiv.style.height = '100px'
+					// 	var p = document.createElement('p')
+					// 	p.innerHTML= 'asdfas dfasdd  dfasd dsdfasg asdfgasg asdgasgh asdghas hdfhdf'
+					// 	testDiv.appendChild(p)
+					// divBody.appendChild(testDiv)
 
 					
 
@@ -558,23 +569,25 @@ function getPostDB(option){
 				})
 			})
 			
-			$("#divBody"+i).find('iframe').each(function(){
+			$("#divBody"+i).find('p').each(function(){
+				var pIframe = this
 				
-				
-				var iframe = this
-				var jqIframe = $(this)
+				if(pIframe.firstChild.nodeName === 'IFRAME'){
+					pIframe.className = 'embed-responsive embed-responsive-4by3'
+					pIframe.setAttribute('style','clear:both')
 
-				jqIframe.attr("style","width:420px;height:240px;")
-				jqIframe.attr('class','imageThumb')
-				jQuery(document).ready(function($){
-					jqIframe.iframeTracker({
-						blurCallback: function(){
-
-							document.getElementById('myModal').style.display = 'block'
-							document.getElementById('imgModal').src = iframe.src
-						}
+					var jqIframe = $(this).first()
+					
+					jQuery(document).ready(function($){
+						jqIframe.iframeTracker({
+							blurCallback: function(){
+								document.getElementById('myModal').style.display = 'block'
+								document.getElementById('imgModal').src = pIframe.firstChild.src
+							}
+						});
 					});
-				});
+				}
+				
 		       
 			})
 
