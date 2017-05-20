@@ -17,7 +17,8 @@ block content
 			
 			div(id='myModal' class='modalx' style="overflow:auto;-webkit-overflow-scrolling:touch")
 				span(class="glyphicon glyphicon-remove close")
-				iframe(id='imgModal' class = 'modal-content' style="width:90%;height:90%")
+				img(id='imgModal' class='modal-content')
+				iframe(id='iframeModal' class='modal-content')
 			ul(class="nav nav-tabs")
 				li(class="active" id='feedTab')
 
@@ -879,8 +880,11 @@ append scripts
 							$('#Feed').append(divInputGroupFilter)
 						}
 					})
+
+
 					var divPostContainer = document.createElement('div')
 					divPostContainer.id = 'divPostContainer'
+					divPostContainer.style ='text-align: center;'
 					$('#Feed').append(divPostContainer)
 
 				})

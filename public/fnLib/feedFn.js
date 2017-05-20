@@ -132,75 +132,14 @@ function getPostDB(option){
 			var div = document.createElement('div')
 			
 			div.className = 'panel panel-success'
-			div.classList.add('col-sm-6')
-			// div.style.margin = '1px'
-			// div.style.float = 'left'
-			// div.style.maxWidth = '150px'
-			// div.style.borderStyle = 'none'
-			// div.style.borderTopStyle = 'solid'
+			div.classList.add('postPanel')
 				var divBody = document.createElement('div')
 				divBody.className = 'panel-body'
-				// divBody.classList.add('embed-responsive embed-responsive-4by3')
-					// var h3 = document.createElement('pre')
+
 				divBody.innerHTML = post.postText
 				divBody.id = 'divBody'+ i
-					// var testDiv = document.createElement('div')
-					// testDiv.className = ''
-					// testDiv.id = 'testDiv'+i
-					// testDiv.style.border = '2px solid red'
-					// // testDiv.style.width = '400px'
-					// // testDiv.style.height = '100px'
-					// 	var p = document.createElement('p')
-					// 	p.innerHTML= 'asdfas dfasdd  dfasd dsdfasg asdfgasg asdgasgh asdghas hdfhdf'
-					// 	testDiv.appendChild(p)
-					// divBody.appendChild(testDiv)
 
 					
-
-					
-
-					
-
-					// $("#iframe").each(function () {
-					// 	console.log($(this))
-				 //        //Using closures to capture each one
-				 //        var iframe = $(this);
-				 //        console.log(iframe)
-				 //        iframe.on("load", function () { //Make sure it is fully loaded
-				 //            iframe.contents().click(function (event) {
-				 //                iframe.trigger("click");
-				 //            });
-				 //        });
-
-				 //        iframe.click(function () {
-				 //        	alert('sdgas')
-				 //            //Handle what you need it to do
-				 //        });
-				 //    });
-
-					// var iframes = [].slice.call(divBody.getElementsByTagName('iframe'))
-					// iframes.forEach(function(iframe, u){
-					// 	if(iframe !== undefined){
-					// 			console.log(iframe)
-					// 			iframe.parentNode.addEventListener('click',function(){
-					// 				alert('cadgag')
-					// 			})
-					// 			iframe.setAttribute("style","width:128px;height:128px;")
-					// 			iframe.className = 'imageThumb' 
-					// 			textInPost()===false?iframe.classList.add('floating-image'):""
-								
-					// 			iframe.id = 'image'+ i + u
-					// 			console.log(iframe.contentDocument)
-								
-
-					// 	}
-					// 		// document.getElementById('image'+i+u).contentWindow.document.body.onclick = function(){
-					// 		// 		alert('iframe')
-					// 		// 		console.log(this)
-					// 		// 		document.getElementById('myModal').style.display = 'block'
-					// 		// 		document.getElementById('imgModal').src = this.src
-					// 		// 	
-					// })
 					
 
 				div.appendChild(divBody)
@@ -560,11 +499,13 @@ function getPostDB(option){
 			
 			$("#divBody"+i).find('img').each(function(){
 				var jqImg = $(this)
-				jqImg.attr("style","width:164px;height:164px;")
+				jqImg.attr("style","width:164px;height:164px")
 				jqImg.attr('class','imageThumb')
 				textInPost()===false?jqImg.addClass('floating-image'):""
 				jqImg.click(function(){
 					document.getElementById('myModal').style.display = 'block'
+					document.getElementById('iframeModal').style.display = 'none'
+					document.getElementById('imgModal').style.display = 'block'
 					document.getElementById('imgModal').src = this.src
 				})
 			})
@@ -581,8 +522,11 @@ function getPostDB(option){
 					jQuery(document).ready(function($){
 						jqIframe.iframeTracker({
 							blurCallback: function(){
+								
 								document.getElementById('myModal').style.display = 'block'
-								document.getElementById('imgModal').src = pIframe.firstChild.src
+								document.getElementById('imgModal').style.display = 'none'
+								document.getElementById('iframeModal').style.display = 'block'
+								document.getElementById('iframeModal').src = pIframe.firstChild.src
 							}
 						});
 					});

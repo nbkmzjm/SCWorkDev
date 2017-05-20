@@ -54,8 +54,8 @@
 
 #container{
 	position: relative;
-	max-width:1200px;
-	margin:0 auto;
+	max-width:1800px;
+	margin:auto;
 	top: 50px;
 
 }
@@ -272,6 +272,14 @@
 	width: 250px;
 }
 
+.postPanel{
+	display: inline-block;
+	vertical-align:middle;
+	max-width: 600px;
+	margin: 10px;
+
+}
+
 .modalx {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
@@ -290,17 +298,16 @@
 .modal-content {
     margin: auto;
     display: block;
-    /*width: 80%;*/
-    /*max-width: 700px;*/
-    /*height: 90%;*/
+    width: 100%;
+    height: 95%;
 }
 
 .floating-image {
-
-    float: left;
-    /*width: 150px;
-    height: 75px;*/
-    margin: 10px;
+	float:left;
+    /*display: inline-block;*/
+    /*vertical-align: middle;*/
+   
+    margin: 3px;
     border: 2px solid #73AD21;  
 }
 .imageThumb {
