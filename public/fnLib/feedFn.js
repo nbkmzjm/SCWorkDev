@@ -74,7 +74,7 @@ function postDB(postTo, postToValue, postText, filter, userArray, storageLink){
 		userArray:userArrayString
 	}).done(function(Rdata){
 		//****undo to work with notification
-		location.reload()
+		// location.reload()
 		console.log(Rdata)
 	})
 					
@@ -527,7 +527,7 @@ function getPostDB(option){
 								document.getElementById('myModal').style.display = 'block'
 								document.getElementById('imgModal').style.display = 'none'
 								document.getElementById('iframeModal').style.display = 'block'
-								document.getElementById('iframeModal').setAttribute('style','width:100%;height:100%;')
+								document.getElementById('iframeModal').setAttribute('style','width:90%;height:90%;')
 								document.getElementById('iframeModal').src = pIframe.firstChild.src
 							}
 						});
