@@ -15,7 +15,7 @@ block content
 	#container
 		#userContainer
 			
-			div(id='myModal' class='modalx' )
+			div(id='myModal' class='modalx' draggable='true')
 				span(class="glyphicon glyphicon-remove close")
 				img(id='imgModal' class='modal-content')
 				iframe(id='iframeModal' class='modal-content')
@@ -48,7 +48,8 @@ append scripts
 
 			//close modal Pictures
 			var myModal = document.getElementById('myModal')
-			myModal.onclick = function(){
+
+			myModal.ondrag = function(){
 				document.getElementById('myModal').style.display = "none";
 			}
 			var span = document.getElementsByClassName("close")[0];

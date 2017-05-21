@@ -499,7 +499,7 @@ function getPostDB(option){
 			
 			$("#divBody"+i).find('img').each(function(){
 				var jqImg = $(this)
-				jqImg.attr("style","max-width:164px;max-height:164px")
+				jqImg.attr("style","max-width:132px;max-height:132px")
 				jqImg.attr('class','imageThumb')
 				textInPost()===false?jqImg.addClass('floating-image'):""
 				jqImg.click(function(){
