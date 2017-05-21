@@ -506,6 +506,7 @@ function getPostDB(option){
 					document.getElementById('myModal').style.display = 'block'
 					document.getElementById('iframeModal').style.display = 'none'
 					document.getElementById('imgModal').style.display = 'block'
+					document.getElementById('imgModal').setAttribute('style','max-width:90%;max-height:90%;')
 					document.getElementById('imgModal').src = this.src
 				})
 			})
@@ -526,6 +527,7 @@ function getPostDB(option){
 								document.getElementById('myModal').style.display = 'block'
 								document.getElementById('imgModal').style.display = 'none'
 								document.getElementById('iframeModal').style.display = 'block'
+								document.getElementById('iframeModal').setAttribute('style','width:100%;height:100%;')
 								document.getElementById('iframeModal').src = pIframe.firstChild.src
 							}
 						});
