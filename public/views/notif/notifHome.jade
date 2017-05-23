@@ -370,10 +370,11 @@ append scripts
 
 				
 
-				function postDBGroupSelect(inputValue, returnURL){
-
+				function postDBGroupSelect(inputValue){
+					console.log(inputValue)
+					console.log(select.value)
 					if(select.value === 'Private'){
-						postDB(select.value, 'Private', inputValue, selectFilter.value, userIdSelected, returnURL)
+						postDB(select.value, 'Private', inputValue, selectFilter.value, userIdSelected)
 					
 					}else if(select.value === "WorkGroup" && selectWorkGroup.value !== ''){
 						if(curUser.title === 'WorkGroup'){
@@ -385,10 +386,13 @@ append scripts
 						inputPost.value, selectFilter.value,userIdSelected):''
 						//- location.reload()
 					}else if(select.value === 'Coworker'){
+
 						if($('#selectCoworker').val().length === $('#selectCoworker').get(0).childElementCount){
+							console.log('a')
 							inputPost.value!==''?postDB(select.value, 'ALL', 
-							inputPost.value, selectFilter.value, userIdSelected):''
+							inputValue, selectFilter.value, userIdSelected):''
 						}else{
+							console.log('b')
 							inputPost.value!==''?postDB(select.value, $('#selectCoworker').val().map(Number), 
 							inputPost.value, selectFilter.value, userIdSelected):''
 						}
