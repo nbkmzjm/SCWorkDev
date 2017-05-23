@@ -532,6 +532,9 @@ function getPostDB(option){
 							}
 						});
 					});
+				}else if(pIframe.firstChild.nodeName === 'VIDEO'){
+					console.log('VIDEO')
+					pIframe.className = 'embed-responsive embed-responsive-4by3'
 				}
 				
 		       
