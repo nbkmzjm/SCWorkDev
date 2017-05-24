@@ -280,7 +280,13 @@
 
 }
 
+#aModal{
+	color: #9AF99A;
+	font-weight: bold;
+}
+
 .modalx {
+	text-align: center;
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */

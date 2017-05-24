@@ -51,6 +51,8 @@ append scripts
 
 			myModal.onclick = function(){
 				document.getElementById('myModal').style.display = "none";
+				$('#aModal').remove()
+
 			}
 			var span = document.getElementsByClassName("close")[0];
 
@@ -79,7 +81,7 @@ append scripts
 			if(is_safari && !is_chrome){
 				//this is Safari. myMCE is not loaded
 			}else{
-				myMCEini('textarea')
+				//- myMCEini('textarea')
 			}
 
 			  
@@ -138,7 +140,7 @@ append scripts
 
 					var inputPost = document.createElement('textarea')
 					inputPost.id = 'post'
-					//- inputPost.className = 'form-control'
+					inputPost.className = 'form-control'
 					inputPost.placeholder = 'Post announcement here'
 					divInputGroup.appendChild(inputPost)
 
@@ -148,16 +150,15 @@ append scripts
 						var fileUpload = document.createElement("input")
 						fileUpload.className = 'btn btn-success'
 						fileUpload.style.display = 'inline'
+						fileUpload.style.width = '250px'
 						fileUpload.type = "file"
 						fileUpload.id = 'upload'
 						fileUpload.name = 'Upload'
 						fileUpload.multiple = true
 						//send file to s3 upload after selected
-						fileUpload.addEventListener('change', function(){
-							var testString = 'string'
+						function fileUploadProcess(textEditorValue){
 							var files = document.getElementById('upload').files
 							
-
 							var fileArray = $.map(files, function(file, index) {
 							    return [file];
 							});
@@ -234,8 +235,10 @@ append scripts
 											    	signFileType.indexOf('ms-powerpoint')!==-1||signFileType.indexOf('presentationml')!==-1){
 											    	returnURLs = returnURLs + '<p><iframe src="https://view.officeapps.live.com/op/embed.aspx?src='+returnData.url+'"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+'</a><br><br><br>'
 											    }else if(signFileType.indexOf('pdf')!==-1){
-											   		returnURLs = returnURLs + '<p><iframe src="'+returnData.url+'"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+'</a><br><br><br>'
-											    
+											   		returnURLs = returnURLs + '<p><iframe src="http://docs.google.com/gview?url='+returnData.url+'&embedded=true"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+'</a><br><br><br>'
+											   		if(i = arrayFile.length - 1){
+											   		//- alert('last')
+											    	}
 											   	}else if(signFileType.indexOf('video')!==-1){
 											   		returnURLs = returnURLs +'<p><video controls><source src="'+returnData.url+'"> </video></p>'
 											    }else if(signFileType.indexOf('image')!==-1){
@@ -251,10 +254,10 @@ append scripts
 											    }else{
 											    	//- alert('all done ready for DB save')
 											    	console.log("returnURLsFinal:"+returnURLs)
-											    	postDBGroupSelect(returnURLs)
+											    	postDBGroupSelect(textEditorValue+returnURLs)
 											    }
 										  	}else{
-										    	alert('Could not upload file.');
+										    	alert('Could not upload files.');
 										  	}
 										}
 									};
@@ -263,8 +266,9 @@ append scripts
 
 
 							}
-							uploadReturnURL(fileArray)
-						})
+							uploadReturnURL(fileArray)							
+
+						}
 						divInputBtn.appendChild(fileUpload)
 
 
@@ -278,13 +282,16 @@ append scripts
 						btnPost.className = 'btn btn-primary'
 						btnPost.innerHTML = 'POST'
 						btnPost.addEventListener('click', function(){
+
+
 							//- push_update_notification()
 							var inputPostValue = inputPost.value
 							console.log(inputPostValue)
 							if(inputPostValue.indexOf('src="data')!==-1){
 								signS3dataURI(inputPost.value)
 							}else{
-								postDBGroupSelect(inputPost.value)
+								//- postDBGroupSelect(inputPost.value)
+								fileUploadProcess(inputPost.value)
 							}	
 							function signS3dataURI (inputPostValue){
 					 			var inputValueImage = inputPostValue.substring(inputPostValue.indexOf('src="data')+5, inputPostValue.indexOf('"',inputPostValue.indexOf('src="data')+20))
@@ -311,7 +318,8 @@ append scripts
 										    }else{
 										    	//- alert('all done ready for DB save')
 										    	console.log("inputPostValuewithURLFinal:"+inputPostValuewithURL)
-										    	postDBGroupSelect(inputPostValuewithURL)
+										    	fileUploadProcess(inputPostValuewithURL)
+										    	//- postDBGroupSelect(inputPostValuewithURL)
 										    }
 									  	}else{
 									    	alert('Could not upload file.');
@@ -330,7 +338,7 @@ append scripts
 
 					//DIV contain progress-bar
 					var divProgress = document.createElement('div')
-					divProgress.style.display = 'block'
+					divProgress.style.display = 'none'
 					divProgress.className = 'progress'
 						divProgressBar = document.createElement('div')
 						divProgressBar.id = 'divProgressBar'

@@ -74,7 +74,7 @@ function postDB(postTo, postToValue, postText, filter, userArray, storageLink){
 		userArray:userArrayString
 	}).done(function(Rdata){
 		//****undo to work with notification
-		// location.reload()
+		location.reload()
 		console.log(Rdata)
 	})
 					
@@ -503,7 +503,17 @@ function getPostDB(option){
 				jqImg.attr('class','imageThumb')
 				textInPost()===false?jqImg.addClass('floating-image'):""
 				jqImg.click(function(){
-					document.getElementById('myModal').style.display = 'block'
+					console.log(this)
+					var myModal = document.getElementById('myModal')
+					myModal.style.display = 'block'
+						var aModal = document.createElement('a')
+						// aModal.style.color = 'white'
+						aModal.href = this.src
+						aModal.id = 'aModal'
+						// a.download = true
+						aModal.innerHTML = 'Full Screen'
+					myModal.appendChild(aModal)
+					// myModal.innerHTML = '<a href="'+this.scr+'" download>full Screen</a>'
 					document.getElementById('iframeModal').style.display = 'none'
 					document.getElementById('imgModal').style.display = 'block'
 					document.getElementById('imgModal').setAttribute('style','max-width:90%;max-height:90%;')
@@ -525,6 +535,13 @@ function getPostDB(option){
 							blurCallback: function(){
 								
 								document.getElementById('myModal').style.display = 'block'
+								var aModal = document.createElement('a')
+									// aModal.style.color = 'white'
+									// aModal.href = pIframe.firstChild.src
+									aModal.id = 'aModal'
+									// a.download = true
+									aModal.innerHTML = 'Full Screen'
+								myModal.appendChild(aModal)
 								document.getElementById('imgModal').style.display = 'none'
 								document.getElementById('iframeModal').style.display = 'block'
 								document.getElementById('iframeModal').setAttribute('style','width:90%;height:90%;')
