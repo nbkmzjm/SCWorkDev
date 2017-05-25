@@ -511,7 +511,7 @@ function getPostDB(option){
 						aModal.href = this.src
 						aModal.className = 'aModal'
 						// a.download = true
-						aModal.innerHTML = 'Full Screen'
+						aModal.innerHTML = 'Full Size'
 					myModal.insertBefore(aModal, myModal.firstChild)
 					// myModal.innerHTML = '<a href="'+this.scr+'" download>full Screen</a>'
 					document.getElementById('iframeModal').style.display = 'none'
@@ -535,13 +535,12 @@ function getPostDB(option){
 							blurCallback: function(){
 								console.log('x')
 								document.getElementById('myModal').style.display = 'block'
-								console.log($('.aModal').length)
 								// $('.aModal').length>1?$('.aModal').remove():""
-								var aModal = document.createElement('a')
-									aModal.href = pIframe.firstChild.src
-									aModal.className = 'aModal'
-									aModal.innerHTML = 'Full View'
-								myModal.insertBefore(aModal, myModal.firstChild)
+								// var aModal = document.createElement('a')
+								// 	aModal.href = pIframe.firstChild.src
+								// 	aModal.className = 'aModal'
+								// 	aModal.innerHTML = 'Full View'
+								// myModal.insertBefore(aModal, myModal.firstChild)
 								document.getElementById('imgModal').style.display = 'none'
 								document.getElementById('iframeModal').style.display = 'block'
 								document.getElementById('iframeModal').setAttribute('style','width:100%;height:100%;')
