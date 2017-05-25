@@ -238,7 +238,7 @@ append scripts
 											    	signFileType.indexOf('ms-powerpoint')!==-1||signFileType.indexOf('presentationml')!==-1){
 											    	returnURLs = returnURLs + '<p><iframe src="https://view.officeapps.live.com/op/embed.aspx?src='+returnData.url+'"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+'</a><br><br><br>'
 											    }else if(signFileType.indexOf('pdf')!==-1){
-											   		returnURLs = returnURLs + '<p><iframe src="http://docs.google.com/gview?url='+returnData.url+'&embedded=true"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+htmlbreak
+											   		returnURLs = returnURLs + '<p><iframe src="https://docs.google.com/gview?url='+returnData.url+'&embedded=true"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+htmlbreak
 											   		
 											   	}else if(signFileType.indexOf('video')!==-1){
 											   		returnURLs = returnURLs +'<p><video controls><source src="'+returnData.url+'"> </video></p>'

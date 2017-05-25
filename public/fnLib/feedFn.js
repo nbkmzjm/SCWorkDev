@@ -516,7 +516,7 @@ function getPostDB(option){
 					// myModal.innerHTML = '<a href="'+this.scr+'" download>full Screen</a>'
 					document.getElementById('iframeModal').style.display = 'none'
 					document.getElementById('imgModal').style.display = 'block'
-					document.getElementById('imgModal').setAttribute('style','max-width:90%;max-height:90%;')
+					document.getElementById('imgModal').setAttribute('style','max-width:100%;max-height:100%;')
 					document.getElementById('imgModal').src = this.src
 				})
 			})
@@ -544,7 +544,7 @@ function getPostDB(option){
 								myModal.insertBefore(aModal, myModal.firstChild)
 								document.getElementById('imgModal').style.display = 'none'
 								document.getElementById('iframeModal').style.display = 'block'
-								document.getElementById('iframeModal').setAttribute('style','width:90%;height:90%;')
+								document.getElementById('iframeModal').setAttribute('style','width:100%;height:100%;')
 								document.getElementById('iframeModal').src = pIframe.firstChild.src
 							}
 						});
