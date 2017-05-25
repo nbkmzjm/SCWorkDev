@@ -230,16 +230,16 @@ append scripts
 										  	if(xhr.status === 200){
 											    console.log('uploaded file')
 											    var url = returnData.url
+											    var htmlbreak = (i == arrayFile.length - 1)?'</a>':'</a><br><br><br>'
+											    console.log(htmlbreak)
 											    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
 											    if(signFileType.indexOf('msword')!==-1||signFileType.indexOf('wordprocessingml')!==-1||
 											    	signFileType.indexOf('ms-excel')!==-1||signFileType.indexOf('spreadsheetml')!==-1||
 											    	signFileType.indexOf('ms-powerpoint')!==-1||signFileType.indexOf('presentationml')!==-1){
 											    	returnURLs = returnURLs + '<p><iframe src="https://view.officeapps.live.com/op/embed.aspx?src='+returnData.url+'"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+'</a><br><br><br>'
 											    }else if(signFileType.indexOf('pdf')!==-1){
-											   		returnURLs = returnURLs + '<p><iframe src="http://docs.google.com/gview?url='+returnData.url+'&embedded=true"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+(i == arrayFile.length - 1)?'</a>':'</a><br><br><br>'
-											   		if(i = arrayFile.length - 1){
-											   		//- alert('last')
-											    	}
+											   		returnURLs = returnURLs + '<p><iframe src="http://docs.google.com/gview?url='+returnData.url+'&embedded=true"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+htmlbreak
+											   		
 											   	}else if(signFileType.indexOf('video')!==-1){
 											   		returnURLs = returnURLs +'<p><video controls><source src="'+returnData.url+'"> </video></p>'
 											    }else if(signFileType.indexOf('image')!==-1){
@@ -247,7 +247,7 @@ append scripts
 											    }else{
 											    	returnURLs = returnURLs + '<p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+'</a></p><br><br>'
 											    }
-
+											    
 											    console.log("returnURLs:"+returnURLs)
 											    i++
 											    if(i< arrayFile.length){

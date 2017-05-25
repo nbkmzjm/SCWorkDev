@@ -280,9 +280,10 @@
 
 }
 
-#aModal{
+.aModal{
 	color: #9AF99A;
 	font-weight: bold;
+	font-size: 20px;
 }
 
 .modalx {
@@ -295,7 +296,7 @@
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-    overflow: scroll; /* Enable scroll if needed */
+    overflow: auto; /* Enable scroll if needed */
     border: 5px solid red; 
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.9); /* Black w/ opacity */

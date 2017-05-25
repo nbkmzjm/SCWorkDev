@@ -74,7 +74,7 @@ function postDB(postTo, postToValue, postText, filter, userArray, storageLink){
 		userArray:userArrayString
 	}).done(function(Rdata){
 		//****undo to work with notification
-		location.reload()
+		// location.reload()
 		console.log(Rdata)
 	})
 					
@@ -512,7 +512,7 @@ function getPostDB(option){
 						aModal.className = 'aModal'
 						// a.download = true
 						aModal.innerHTML = 'Full Screen'
-					myModal.appendChild(aModal)
+					myModal.insertBefore(aModal, myModal.firstChild)
 					// myModal.innerHTML = '<a href="'+this.scr+'" download>full Screen</a>'
 					document.getElementById('iframeModal').style.display = 'none'
 					document.getElementById('imgModal').style.display = 'block'
@@ -535,14 +535,13 @@ function getPostDB(option){
 							blurCallback: function(){
 								console.log('x')
 								document.getElementById('myModal').style.display = 'block'
+								console.log($('.aModal').length)
 								// $('.aModal').length>1?$('.aModal').remove():""
 								var aModal = document.createElement('a')
-									// aModal.style.color = 'white'
 									aModal.href = pIframe.firstChild.src
 									aModal.className = 'aModal'
-									// a.download = true
-									aModal.innerHTML = 'Full Screen'
-								myModal.appendChild(aModal)
+									aModal.innerHTML = 'Full View'
+								myModal.insertBefore(aModal, myModal.firstChild)
 								document.getElementById('imgModal').style.display = 'none'
 								document.getElementById('iframeModal').style.display = 'block'
 								document.getElementById('iframeModal').setAttribute('style','width:90%;height:90%;')
