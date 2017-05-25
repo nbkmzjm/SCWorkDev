@@ -503,13 +503,13 @@ function getPostDB(option){
 				jqImg.attr('class','imageThumb')
 				textInPost()===false?jqImg.addClass('floating-image'):""
 				jqImg.click(function(){
-					console.log(this)
+					// $('.aModal').length>1?$('.aModal').remove():""
 					var myModal = document.getElementById('myModal')
 					myModal.style.display = 'block'
 						var aModal = document.createElement('a')
 						// aModal.style.color = 'white'
 						aModal.href = this.src
-						aModal.id = 'aModal'
+						aModal.className = 'aModal'
 						// a.download = true
 						aModal.innerHTML = 'Full Screen'
 					myModal.appendChild(aModal)
@@ -533,12 +533,13 @@ function getPostDB(option){
 					jQuery(document).ready(function($){
 						jqIframe.iframeTracker({
 							blurCallback: function(){
-								
+								console.log('x')
 								document.getElementById('myModal').style.display = 'block'
+								// $('.aModal').length>1?$('.aModal').remove():""
 								var aModal = document.createElement('a')
 									// aModal.style.color = 'white'
-									// aModal.href = pIframe.firstChild.src
-									aModal.id = 'aModal'
+									aModal.href = pIframe.firstChild.src
+									aModal.className = 'aModal'
 									// a.download = true
 									aModal.innerHTML = 'Full Screen'
 								myModal.appendChild(aModal)

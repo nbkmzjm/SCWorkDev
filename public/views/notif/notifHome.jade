@@ -18,7 +18,7 @@ block content
 			div(id='myModal' class='modalx' draggable='true')
 				span(class="glyphicon glyphicon-remove close")
 				img(id='imgModal' class='modal-content')
-				iframe(id='iframeModal' class='modal-content')
+				embed(id='iframeModal' class='modal-content')
 			ul(class="nav nav-tabs")
 				li(class="active" id='feedTab')
 
@@ -51,13 +51,14 @@ append scripts
 
 			myModal.onclick = function(){
 				document.getElementById('myModal').style.display = "none";
-				$('#aModal').remove()
+				$('.aModal').remove()
 
 			}
 			var span = document.getElementsByClassName("close")[0];
 
 			span.onclick = function() { 
 			    document.getElementById('myModal').style.display = "none";
+			    $('.aModal').remove()
 			}
 			$(document).keyup(function(e) {
 				 if (e.keyCode == 27){
@@ -235,7 +236,7 @@ append scripts
 											    	signFileType.indexOf('ms-powerpoint')!==-1||signFileType.indexOf('presentationml')!==-1){
 											    	returnURLs = returnURLs + '<p><iframe src="https://view.officeapps.live.com/op/embed.aspx?src='+returnData.url+'"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+'</a><br><br><br>'
 											    }else if(signFileType.indexOf('pdf')!==-1){
-											   		returnURLs = returnURLs + '<p><iframe src="http://docs.google.com/gview?url='+returnData.url+'&embedded=true"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+'</a><br><br><br>'
+											   		returnURLs = returnURLs + '<p><iframe src="http://docs.google.com/gview?url='+returnData.url+'&embedded=true"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+(i == arrayFile.length - 1)?'</a>':'</a><br><br><br>'
 											   		if(i = arrayFile.length - 1){
 											   		//- alert('last')
 											    	}
