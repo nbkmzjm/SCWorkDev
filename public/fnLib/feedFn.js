@@ -5,6 +5,14 @@ function myMCEini(selector){
         setup: function (editor) {
             editor.on('change', function () {
                 editor.save();
+                var editorContent = editor.getContent()
+                if(editorContent != ''){
+                	console.log('not black')
+                	$("#btnPost").prop("disabled",false)
+                }else{
+                	$("#btnPost").prop("disabled",true)
+                }
+
             });
             
         },

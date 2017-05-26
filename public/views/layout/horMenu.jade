@@ -113,6 +113,18 @@ script.
 									userFeedId:userFeed.id
 								}).done(function(){})
 							})
+							
+							var imgNotifs = [].slice.call(td.getElementsByTagName('img'))
+							imgNotifs.forEach(function(imgNotif){
+								imgNotif.setAttribute('style','max-width:100%;max-height:100%;')
+							})
+
+							var iframeNotifs = [].slice.call(td.getElementsByTagName('iframe'))
+							iframeNotifs.forEach(function(iframeNotif){
+								iframeNotif.setAttribute('style','width:100%;height:100%;')
+							})
+							
+							
 
 					tr.appendChild(td)
 

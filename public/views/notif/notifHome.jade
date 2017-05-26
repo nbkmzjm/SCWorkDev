@@ -82,7 +82,7 @@ append scripts
 			if(is_safari && !is_chrome){
 				//this is Safari. myMCE is not loaded
 			}else{
-				//- myMCEini('textarea')
+				myMCEini('textarea')
 			}
 
 			  
@@ -156,10 +156,23 @@ append scripts
 						fileUpload.id = 'upload'
 						fileUpload.name = 'Upload'
 						fileUpload.multiple = true
+						fileUpload.addEventListener('change',function(){
+							if(this.files.length>0){
+								btnPost.disabled = false
+							}else{
+								btnPost.disabled = true
+							}
+						})
+
+						
 						//send file to s3 upload after selected
 						function fileUploadProcess(textEditorValue){
 							var files = document.getElementById('upload').files
-							
+							console.log(files)
+							if(files.length==0){
+								postDBGroupSelect(inputPost.value)
+								return false
+							}
 							var fileArray = $.map(files, function(file, index) {
 							    return [file];
 							});
@@ -282,6 +295,8 @@ append scripts
 						var btnPost = document.createElement('button')
 						btnPost.className = 'btn btn-primary'
 						btnPost.innerHTML = 'POST'
+						btnPost.id = 'btnPost'
+						btnPost.disabled = true
 						btnPost.addEventListener('click', function(){
 
 
@@ -291,7 +306,7 @@ append scripts
 							if(inputPostValue.indexOf('src="data')!==-1){
 								signS3dataURI(inputPost.value)
 							}else{
-								//- postDBGroupSelect(inputPost.value)
+								
 								fileUploadProcess(inputPost.value)
 							}	
 							function signS3dataURI (inputPostValue){
@@ -398,12 +413,12 @@ append scripts
 
 						if($('#selectCoworker').val().length === $('#selectCoworker').get(0).childElementCount){
 							console.log('a')
-							inputPost.value!==''?postDB(select.value, 'ALL', 
-							inputValue, selectFilter.value, userIdSelected):''
+							postDB(select.value, 'ALL', 
+							inputValue, selectFilter.value, userIdSelected)
 						}else{
 							console.log('b')
-							inputPost.value!==''?postDB(select.value, $('#selectCoworker').val().map(Number), 
-							inputPost.value, selectFilter.value, userIdSelected):''
+							postDB(select.value, $('#selectCoworker').val().map(Number), 
+							inputValue, selectFilter.value, userIdSelected)
 						}
 					
 					}else if(select.value === 'Colleague'){
