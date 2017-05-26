@@ -100,11 +100,11 @@ append scripts
 			        			$('#badgeNotif').html(Rdata.userFeed)
 			        		})
 			        	}else if(event.data.command == 'updateNotif'){
-			        		//- $.post('/notif/getNewNotif').done(function(Rdata){
+			        		$.post('/notif/getNewNotif').done(function(Rdata){
 
-			        		//- 	console.log('recieving update contain..')
-			        		//- 	$('#notifBtn').html(Rdata.userFeed)
-			        		//- })
+			        			console.log('recieving update contain..')
+			        			$('#notifBtn').html(Rdata.userFeed)
+			        		})
 			        		
 			        	}
 			        	
@@ -128,7 +128,7 @@ append scripts
 			feedHome()
 			function feedHome(){
 				
-				//- push_update_notification()
+				push_update_notification()
 				var userSelected = []
 				var userIdSelected = []
 				var deptSelected = []
@@ -300,7 +300,7 @@ append scripts
 						btnPost.addEventListener('click', function(){
 
 
-							//- push_update_notification()
+							push_update_notification()
 							var inputPostValue = inputPost.value
 							console.log(inputPostValue)
 							if(inputPostValue.indexOf('src="data')!==-1){

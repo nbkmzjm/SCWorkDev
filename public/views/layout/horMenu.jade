@@ -48,7 +48,10 @@ script.
 	$(function (){
 
 		$('#testbtn').click(function(){
-			
+			 var Excel = new ActiveXObject("Excel.Application");
+			 var ExcelSheet = new ActiveXObject("Excel.Sheet"); 
+	        Excel.Visible = true;
+	        Excel.Workbooks.Open("https://scworkdevx.s3.amazonaws.com/05261512479450CompensationProrationModelingTool.xlsx");
 			
 		})
 		var span = document.createElement('span')
