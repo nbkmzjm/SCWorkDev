@@ -277,6 +277,24 @@
 	vertical-align:middle;
 	max-width: 550px;
 	margin: 3px;
+	text-align: left;
+
+}
+#postOpt{
+	display: relative;
+	top:7px;
+	font-size: 30px;
+	padding: 0 10px 0 10px;
+}
+
+#postOptContainer{
+	position: absolute;
+	z-index: 1;
+	color: black;
+	box-shadow: 10px 10px 15px #888888;
+	background-color: white;
+	overflow-y: auto;
+	border-radius: 5px;
 
 }
 

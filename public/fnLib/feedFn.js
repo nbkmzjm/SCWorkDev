@@ -1,69 +1,69 @@
 function myMCEini(selector){
-	tinymce.init({
-	    selector: selector,
-	    //- statusbar: false,
-        setup: function (editor) {
-            editor.on('change', function () {
-                editor.save();
-                var editorContent = editor.getContent()
-                if(editorContent != ''){
-                	console.log('not black')
-                	$("#btnPost").prop("disabled",false)
-                }else{
-                	$("#btnPost").prop("disabled",true)
-                }
+	// tinymce.init({
+	//     selector: selector,
+	//     //- statusbar: false,
+ //        setup: function (editor) {
+ //            editor.on('change', function () {
+ //                editor.save();
+ //                var editorContent = editor.getContent()
+ //                if(editorContent != ''){
+ //                	console.log('not black')
+ //                	$("#btnPost").prop("disabled",false)
+ //                }else{
+ //                	$("#btnPost").prop("disabled",true)
+ //                }
 
-            });
+ //            });
             
-        },
-	    theme: "modern",
+ //        },
+	//     theme: "modern",
 	   
-	    //- paste_as_text: false,
-	    paste_data_images: true,
-	    paste_enable_default_filters: false,
-	    //- plugins:[
-	    //- 	'paste'
-	    //- ]
-	    plugins: [
-	      "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-	      "searchreplace wordcount visualblocks visualchars code fullscreen",
-	      "insertdatetime media nonbreaking save table contextmenu directionality",
-	      "emoticons template textcolor paste colorpicker textpattern"
-	    ],
-	    theme_advanced_buttons3_add : "emotions",
-	    table_default_styles: {
-		    fontWeight: 'bold',
-		    borderTop: '1px solid black'
-		},
-	    toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-	    toolbar2: "print preview media | forecolor backcolor emoticons",
-	     theme_advanced_buttons3_add : "tablecontrols",
-        table_styles : "Header 1=header1;Header 2=header2;Header 3=header3",
+	//     //- paste_as_text: false,
+	//     paste_data_images: true,
+	//     paste_enable_default_filters: false,
+	//     //- plugins:[
+	//     //- 	'paste'
+	//     //- ]
+	//     plugins: [
+	//       "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+	//       "searchreplace wordcount visualblocks visualchars code fullscreen",
+	//       "insertdatetime media nonbreaking save table contextmenu directionality",
+	//       "emoticons template textcolor paste colorpicker textpattern"
+	//     ],
+	//     theme_advanced_buttons3_add : "emotions",
+	//     table_default_styles: {
+	// 	    fontWeight: 'bold',
+	// 	    borderTop: '1px solid black'
+	// 	},
+	//     toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+	//     toolbar2: "print preview media | forecolor backcolor emoticons",
+	//      theme_advanced_buttons3_add : "tablecontrols",
+ //        table_styles : "Header 1=header1;Header 2=header2;Header 3=header3",
         
        
-	    file_picker_callback: function(callback, value, meta) {
-			if (meta.filetype == 'image') {
-				$('#upload').trigger('click');
-				$('#upload').on('change', function() {
-				    var file = this.files[0];
-				    var reader = new FileReader();
-				    reader.onload = function(e) {
-					    callback(e.target.result, {
-					       alt: ''
-					    });
-				 	};
-				  	reader.readAsDataURL(file);
-				});
-			}
-	    },
-	    templates: [{
-	        title: 'Test template 1',
-	        content: 'Test 1'
-	    }, {
-	        title: 'Test template 2',
-	        content: 'Test 2'
-	    }]
-	});
+	//     file_picker_callback: function(callback, value, meta) {
+	// 		if (meta.filetype == 'image') {
+	// 			$('#upload').trigger('click');
+	// 			$('#upload').on('change', function() {
+	// 			    var file = this.files[0];
+	// 			    var reader = new FileReader();
+	// 			    reader.onload = function(e) {
+	// 				    callback(e.target.result, {
+	// 				       alt: ''
+	// 				    });
+	// 			 	};
+	// 			  	reader.readAsDataURL(file);
+	// 			});
+	// 		}
+	//     },
+	//     templates: [{
+	//         title: 'Test template 1',
+	//         content: 'Test 1'
+	//     }, {
+	//         title: 'Test template 2',
+	//         content: 'Test 2'
+	//     }]
+	// });
 }
 
 function postDB(postTo, postToValue, postText, filter, userArray, storageLink){
@@ -162,6 +162,7 @@ function getPostDB(option){
 						
 						var divTitle = document.createElement('div')
 						divTitle.className = 'panel-heading'
+						divTitle.classList.add('postPanel')
 
 
 							//Posted users with date and time
@@ -202,7 +203,7 @@ function getPostDB(option){
 								var spanBtnText = document.createElement('span')
 									// spanBtnText.style.color = '#FF8C5A'
 									
-									spanBtnText.innerHTML = 'Comments'
+									spanBtnText.innerHTML = 'Load Comments'
 								comment.appendChild(spanBtnText)
 								var spanBagdes = document.createElement('span')
 									spanBagdes.style.color = '#FF8C5A'
@@ -211,9 +212,9 @@ function getPostDB(option){
 									Rdata.commentCount > 0?spanBagdes.innerHTML = Rdata.commentCount:''
 								comment.appendChild(spanBagdes)
 							comment.style.color = 'black'
-							comment.addEventListener('click', function(){
-								spanBtnText.innerHTML == 'Comments'?spanBtnText.innerHTML = 'Collapse':spanBtnText.innerHTML= 'Comments'
-							})
+							// comment.addEventListener('click', function(){
+							// 	spanBtnText.innerHTML == 'Comments'?spanBtnText.innerHTML = 'Collapse':spanBtnText.innerHTML= 'Comments'
+							// })
 
 							comment.addEventListener('mouseenter', function(){
 								console.log('before')
@@ -228,6 +229,7 @@ function getPostDB(option){
 									
 									var divCommentContainer = document.createElement('div')
 									divCommentContainer.className='collapse'
+									divCommentContainer.setAttribute('style','margin-top:10px')
 									divCommentContainer.id = 'comment'+post.id		
 										
 									
@@ -345,6 +347,7 @@ function getPostDB(option){
 									if($('#commentPost'+ post.id).length<1){
 										var divCommentPost = document.createElement('div')
 										divCommentPost.className = 'input-group'
+
 										divCommentPost.id = 'commentPost'+post.id
 											var replyPost = document.createElement('textarea')
 											replyPost.id = 'post'
@@ -387,9 +390,34 @@ function getPostDB(option){
 							divTitle.appendChild(comment)
 
 
-							spanSpace = document.createElement('span')
-							spanSpace.innerHTML = '&nbsp&nbsp&nbsp'
-							divTitle.appendChild(spanSpace)
+						
+							var postOpt = document.createElement('span')
+							postOpt.id = 'postOpt'
+							postOpt.className = 'glyphicon glyphicon-collapse-down'
+							postOpt.onclick = function(){
+								console.log(event.clientY)
+								$('#postOptContainer').length>1?$('#postOptContainer').remove():''
+								var postOptContainer = document.createElement('div')
+								postOptContainer.style.top = event.clientY - 50+ 'px'
+								postOptContainer.style.left = event.clientX + 'px'
+								postOptContainer.id = 'postOptContainer'
+									var postOptContainerUl = document.createElement('ul')
+										postOptContainerUl.style.listStyle = 'none'
+										postOptContainerUl.style.textAlign = 'left'
+										var optList = ['Hide', 'Share', 'Email', 'Save']
+										optList.forEach(function(option){
+											var postOptContainerLi = document.createElement('li')
+											postOptContainerLi.innerHTML = option
+											postOptContainerUl.appendChild(postOptContainerLi)
+										})
+									postOptContainer.appendChild(postOptContainerUl)
+								divTitle.appendChild(postOptContainer)
+
+										
+
+							}
+							divTitle.appendChild(postOpt)
+
 
 
 							//Blank like Emoj for user input
@@ -468,9 +496,9 @@ function getPostDB(option){
 							divTitle.appendChild(spanEmoj)
 
 
-							//Horizontal line before comments
-							var divhr = document.createElement('HR')
-							divTitle.appendChild(divhr)
+							// //Horizontal line before comments
+							// var divhr = document.createElement('HR')
+							// divTitle.appendChild(divhr)
 							
 						div.appendChild(divTitle)
 					})
