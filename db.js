@@ -38,6 +38,7 @@ db.comment = sequelize.import(__dirname + '/models/comment.js');
 db.department = sequelize.import(__dirname + '/models/department.js');
 db.endpoint = sequelize.import(__dirname + '/models/endpoint.js');
 db.userFeed = sequelize.import(__dirname + '/models/userFeed.js');
+db.tagSave = sequelize.import(__dirname + '/models/tagSave.js');
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
@@ -148,6 +149,13 @@ db.userFeed.belongsTo(db.mainPost,{
 db.mainPost.hasMany(db.userFeed,{
 	onDelete:'CASCADE'
 });
+
+db.tagSave.belongsTo(db.mainPost,{
+	onDelete:'CASCADE'
+})
+db.mainPost.hasMany(db.tagSave,{
+	onDelete:'CASCADE'
+})
 
 
 module.exports = db;

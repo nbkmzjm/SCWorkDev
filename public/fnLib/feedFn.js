@@ -136,6 +136,7 @@ function getPostDB(option){
 	}).done(function(Rdata){
 		
 		Rdata.posts.forEach(function(post, i){
+			console.log(post)
 
 			var div = document.createElement('div')
 			
@@ -162,6 +163,7 @@ function getPostDB(option){
 						
 						var divTitle = document.createElement('div')
 						divTitle.className = 'panel-heading'
+
 						divTitle.classList.add('postPanel')
 
 
@@ -396,18 +398,30 @@ function getPostDB(option){
 							postOpt.className = 'glyphicon glyphicon-collapse-down'
 							postOpt.onclick = function(){
 								console.log(event.clientY)
-								$('#postOptContainer').length>1?$('#postOptContainer').remove():''
+								
+								var divTitleCoords = divTitle.getBoundingClientRect()
+								var postOptCoords = this.getBoundingClientRect()
+
+								console.log(postOptCoords)
+								console.log(divTitleCoords)
+								$('#postOptContainer').length>0?$('#postOptContainer').remove():''
 								var postOptContainer = document.createElement('div')
-								postOptContainer.style.top = event.clientY - 50+ 'px'
-								postOptContainer.style.left = event.clientX + 'px'
+								postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
+								postOptContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
 								postOptContainer.id = 'postOptContainer'
 									var postOptContainerUl = document.createElement('ul')
-										postOptContainerUl.style.listStyle = 'none'
-										postOptContainerUl.style.textAlign = 'left'
+										postOptContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
+										
 										var optList = ['Hide', 'Share', 'Email', 'Save']
 										optList.forEach(function(option){
 											var postOptContainerLi = document.createElement('li')
-											postOptContainerLi.innerHTML = option
+												var a = document.createElement('a')
+												a.href='#'
+												a.innerHTML = option
+												a.onclick = function(){
+													console.log(this.innerHTML)
+												}
+												postOptContainerLi.appendChild(a)
 											postOptContainerUl.appendChild(postOptContainerLi)
 										})
 									postOptContainer.appendChild(postOptContainerUl)

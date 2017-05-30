@@ -380,6 +380,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				var posts = userFeeds.map(function(userFeed){
 					return userFeed.mainPost
 				})
+				posts.uder
 				console.log('posts:' + JSON.stringify(posts, null, 4))
 				res.json({posts:posts})
 			}).catch(function(e) {
