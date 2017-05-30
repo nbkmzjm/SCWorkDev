@@ -397,6 +397,61 @@ function getPostDB(option){
 							postOpt.id = 'postOpt'
 							postOpt.className = 'glyphicon glyphicon-collapse-down'
 							postOpt.onclick = function(){
+
+							function postOptClick(option){
+								console.log(option)
+								if(option === "Save"){
+									
+									var saveToContainer = document.createElement('div')
+									saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
+									saveToContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
+									saveToContainer.className = 'popUpContainer'
+									saveToContainer.id = 'saveToContainer'
+										var saveToContainerUl = document.createElement('ul')
+											saveToContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
+											$.post('/notif/getTagSave').done(function(tagNames){
+												console.log(tagNames)
+												tagNames.forEach(function(option){
+													var saveToContainerLi = document.createElement('li')
+														var a = document.createElement('a')
+														a.href='#'
+														a.innerHTML = option
+														a.onclick = function(){
+															event.preventDefault()
+															var clickedTag = event.target.innerHTML
+															$.post('/notif/postTagSave',{
+																mainPostId:post.id,
+																type:'personal',
+																tagName:clickedTag
+															}).done(function(){
+
+															})
+														}
+														saveToContainerLi.appendChild(a)
+													saveToContainerUl.appendChild(saveToContainerLi)
+												})
+											})
+											
+
+											var newOpt = document.createElement('input')
+											newOpt.className = 'form-control'
+											newOpt.placeholder = 'New Tag'
+											newOpt.id = 'newTagSave'
+											newOpt.onchange = function(){
+												console.log(`${post.id},${newOpt.value}`)
+												$.post('/notif/postTagSave',{
+													mainPostId:post.id,
+													type:'personal',
+													tagName:newOpt.value
+												}).done(function(){
+
+												})
+											}
+											saveToContainer.appendChild(newOpt)
+										saveToContainer.appendChild(saveToContainerUl)
+									divTitle.appendChild(saveToContainer)
+								}
+							}
 								console.log(event.clientY)
 								
 								var divTitleCoords = divTitle.getBoundingClientRect()
@@ -408,6 +463,7 @@ function getPostDB(option){
 								var postOptContainer = document.createElement('div')
 								postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
 								postOptContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
+								postOptContainer.className = 'popUpContainer'
 								postOptContainer.id = 'postOptContainer'
 									var postOptContainerUl = document.createElement('ul')
 										postOptContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
@@ -419,20 +475,30 @@ function getPostDB(option){
 												a.href='#'
 												a.innerHTML = option
 												a.onclick = function(){
-													console.log(this.innerHTML)
+													event.preventDefault()
+													postOptClick(this.innerHTML)
 												}
 												postOptContainerLi.appendChild(a)
 											postOptContainerUl.appendChild(postOptContainerLi)
 										})
 									postOptContainer.appendChild(postOptContainerUl)
 								divTitle.appendChild(postOptContainer)
+								
 
 										
 
 							}
 							divTitle.appendChild(postOpt)
 
-
+							window.onclick = function(){
+								console.log(event.target)
+								if(event.target.id !== 'postOpt'){
+									$('#postOptContainer').remove()
+								}
+								if(event.target.innerHTML !== 'Save'&&event.target.id!=='newTagSave'){
+									$('#saveToContainer').remove()
+								}
+							}
 
 							//Blank like Emoj for user input
 							var spanEmoj = document.createElement('span')

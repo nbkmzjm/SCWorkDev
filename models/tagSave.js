@@ -20,6 +20,6 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.INTEGER
         } 
 
-	}, { timestamps: false})
+	})
 
 };

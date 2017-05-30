@@ -288,7 +288,7 @@
 	padding: 0 10px 0 10px;
 }
 
-#postOptContainer{
+.popUpContainer{
 	position: absolute;
 	z-index: 1;
 	color: black;

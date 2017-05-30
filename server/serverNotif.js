@@ -41,6 +41,55 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 	
 
 })
+router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
+	var user = req.user
+	db.tagSave.findAll({
+		attributes:[db.Sequelize.literal('DISTINCT `tagName`'),'tagName'],
+		where:{
+			userId:user.id
+		}
+	}).then(function(tagSaves){
+		console.log(JSON.stringify(tagSaves, null, 4))
+		var tagNames = tagSaves.map(function(tagSave){
+			return tagSave.tagName
+		})
+		console.log(JSON.stringify(tagNames, null, 4))
+		res.json(tagNames)
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+	
+})
+
+router.post('/postTagSave', middleware.requireAuthentication, function(req, res){
+	var user = req.user
+	var body = _.pick(req.body, 'mainPostId','type', 'tagName')
+	body.userId = user.id
+	console.log(JSON.stringify(body, null, 4))
+
+	db.tagSave.findOrCreate({
+		where:{
+			mainPostId:body.mainPostId,
+			type:body.type,
+			tagName:body.tagName,
+			userId:body.userId
+		}
+	}).spread(function(tagSaves, created){
+		console.log(JSON.stringify(tagSaves, null, 4))
+		console.log(JSON.stringify(created, null, 4))
+		
+		res.json(tagSaves)
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+	
+})
 
 
 router.post('/groupList', middleware.requireAuthentication, function(req, res){
