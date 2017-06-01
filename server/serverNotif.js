@@ -113,6 +113,7 @@ router.post('/groupList', middleware.requireAuthentication, function(req, res){
 
 })
 
+
 router.get('/userGetGroups', middleware.requireAuthentication, function(req, res){
 	var curUserId = req.user.id
 	db.user.findOne({
@@ -303,7 +304,7 @@ router.post('/setFeedSetting', middleware.requireAuthentication, function(req, r
 			value:'friend',
 			userId:curUserId,
 		}).then(function(feedSetting){
-			console.log(JSON.stringify(feedSetting, null, 4))
+			// console.log(JSON.stringify(feedSetting, null, 4))
 		}).catch(function(e) {
 			console.log(e)
 			res.render('error', {
@@ -318,7 +319,7 @@ router.post('/setFeedSetting', middleware.requireAuthentication, function(req, r
 				id:settingId
 			}
 		}).then(function(feedSetting){
-			console.log(JSON.stringify(feedSetting, null, 4))
+			// console.log(JSON.stringify(feedSetting, null, 4))
 		}).catch(function(e) {
 			console.log(e)
 			res.render('error', {
@@ -335,30 +336,31 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	var curUser = req.user
 
 	var curUserId = req.user.id
-	console.log('curUserId'+ curUserId)
 	var loadNumber = req.body.loadNumber
 	var viewOption = req.body.viewOption
 	var byMe = req.body.byMe
 	var byOther = req.body.byOther
 	var viewOnly = req.body.viewOnly
 	var postId = req.body.postId
-	console.log('offset: '+ loadNumber)
-	console.log('viewOnly: '+ viewOnly)
+	// console.log('offset: '+ loadNumber)
+	// console.log('viewOnly: '+ viewOnly)
 
-	console.log('byMe:'+ byMe)
-	console.log('byOther:'+ byOther)
-	console.log('viewOnly:'+ viewOnly)
+	// console.log('byMe:'+ byMe)
+	// console.log('byOther:'+ byOther)
+	// console.log('viewOnly:'+ viewOnly)
+
+	//set Post by me
 	if(byMe==='true' && byOther !== 'true'){
-		console.log('by me ')
+		// console.log('by me ')
 			userIdPara = curUserId
 	}else if(byOther==='true' && byMe !== 'true'){
-		console.log('by other ')
+		// console.log('by other ')
 		userIdPara = {
 			$ne:curUserId
 		}
 
 	}else{
-		console.log('not by me nor other')
+		// console.log('not by me nor other')
 		userIdPara = {
 			$gt:0
 		}
@@ -403,9 +405,9 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 		if(viewOption!== 'false'){
 			feedSetting.value = viewOption
 		}
-		console.log(feedSetting.value)
+		// console.log(feedSetting.value)
 		if(postId !== 'false'){
-			console.log('postId: '+postId)
+			// console.log('postId: '+postId)
 			// db.mainPost.findOne({
 			// 	include:[{
 			// 		model:db.user
@@ -429,9 +431,9 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				var posts = userFeeds.map(function(userFeed){
 					return userFeed.mainPost
 				})
-				posts.uder
-				console.log('posts:' + JSON.stringify(posts, null, 4))
-				res.json({posts:posts})
+				
+				// console.log('posts:' + JSON.stringify(posts, null, 4))
+				// res.json({posts:posts})
 			}).catch(function(e) {
 				console.log(e)
 				res.render('error', {
@@ -466,7 +468,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				var posts = userFeeds.map(function(userFeed){
 					return userFeed.mainPost
 				})
-				console.log('posts:' + JSON.stringify(posts, null, 4))
+				// console.log('posts:' + JSON.stringify(posts, null, 4))
 				res.json({posts:posts})
 			}).catch(function(e) {
 				console.log(e)
@@ -498,7 +500,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				var posts = userFeeds.map(function(userFeed){
 					return userFeed.mainPost
 				})
-				console.log('posts:' + JSON.stringify(posts, null, 4))
+				// console.log('posts:' + JSON.stringify(posts, null, 4))
 				res.json({posts:posts})
 			}).catch(function(e) {
 				console.log(e)
@@ -643,7 +645,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				var posts = userFeeds.map(function(userFeed){
 					return userFeed.mainPost
 				})
-				console.log('posts:' + JSON.stringify(posts, null, 4))
+				// console.log('posts:' + JSON.stringify(posts, null, 4))
 				res.json({posts:posts})
 			}).catch(function(e) {
 				console.log(e)
@@ -818,7 +820,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				var posts = userFeeds.map(function(userFeed){
 					return userFeed.mainPost
 				})
-				console.log('posts:' + JSON.stringify(posts, null, 4))
+				// console.log('posts:' + JSON.stringify(posts, null, 4))
 				res.json({posts:posts})
 			}).catch(function(e) {
 				console.log(e)
@@ -1009,7 +1011,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				var posts = userFeeds.map(function(userFeed){
 					return userFeed.mainPost
 				})
-				console.log('posts:' + JSON.stringify(posts, null, 4))
+				// console.log('posts:' + JSON.stringify(posts, null, 4))
 				res.json({posts:posts})
 			}).catch(function(e) {
 				console.log(e)
@@ -1217,7 +1219,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					}
 				}]
 			}).then(function(groups){
-				console.log('friend Group:'+JSON.stringify(groups, null, 4))
+				// console.log('friend Group:'+JSON.stringify(groups, null, 4))
 				var colleagueUserIds = []
 				var coworkerUserIds = []
 				var coworkerofColleagueGroupIds = []
@@ -1254,12 +1256,12 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						coworkerofColleagueUserIds.push(userGroup.userId):""
 					})
 					
-					console.log('colleagueUserIds: '+JSON.stringify(colleagueUserIds, null, 4))
-					console.log('coworkerUserIds: '+JSON.stringify(coworkerUserIds, null, 4))
+					// console.log('colleagueUserIds: '+JSON.stringify(colleagueUserIds, null, 4))
+					// console.log('coworkerUserIds: '+JSON.stringify(coworkerUserIds, null, 4))
 				
 				
 
-					console.log('coworkerofColleagueUserIds: '+JSON.stringify(coworkerofColleagueUserIds, null, 4))
+					// console.log('coworkerofColleagueUserIds: '+JSON.stringify(coworkerofColleagueUserIds, null, 4))
 					db.mainPost.findAll({
 					include:[{
 						model:db.user
@@ -1484,7 +1486,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 		}), user]
 
 	}).spread(function(post, user){
-		console.log('post:'+JSON.stringify(post, null, 4))
+		// console.log('post:'+JSON.stringify(post, null, 4))
 		var stringPostToValue = post.postToValue
 		if(post.postToValue != 'ALL'){
 			var arrayPostToValue = JSON.parse(stringPostToValue)
@@ -1496,7 +1498,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 		var include = post.include
 		if(postTo === 'Private'){
 			var bulkData = []
-			console.log('typeof'+ typeof include)
+			// console.log('typeof'+ typeof include)
 			var userFeed = new UserFeed(post.id, curUserId, 'None', curUserId, curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
 			bulkData.push(userFeed)
 
@@ -1511,7 +1513,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 
 			}
 
-			console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+			// console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
 				db.userFeed.bulkCreate(bulkData).then(function(created){
 					//check notification type and push in array pushUserId. Do not send notification for 'NONE'
 					var pushUserId = bulkData.map(function(data){
@@ -1522,7 +1524,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 						}
 
 					})
-					console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+					// console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
 					showNotification(pushUserId, post)
 				}).catch(function(e) {
 					console.log(e)
@@ -1547,7 +1549,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					bulkData.push(userFeed)
 					
 				})
-				console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+				// console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
 
 				db.userFeed.bulkCreate(bulkData).then(function(created){
 					//check notification type and push in array pushUserId. Do not send notification for 'NONE'
@@ -1559,7 +1561,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 						}
 
 					})
-					console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+					// console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
 					showNotification(pushUserId, post)
 				}).catch(function(e) {
 					console.log(e)
@@ -1593,7 +1595,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 							bulkData.push(userFeed)
 						}
 					})
-					console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+					// console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
 					return db.userFeed.bulkCreate(bulkData)
 				}).then(function(created){
 					var pushUserId = bulkData.map(function(data){
@@ -1604,7 +1606,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 						}
 
 					})
-					console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+					// console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
 					showNotification(pushUserId, post)
 				}).catch(function(e) {
 					console.log(e)
@@ -1650,7 +1652,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					}
 				}]
 			}).then(function(groups){
-				console.log('friend Group:'+JSON.stringify(groups, null, 4))
+				// console.log('friend Group:'+JSON.stringify(groups, null, 4))
 
 				var userFeed = new UserFeed(post.id, 
 				curUserId, 'None', curUserId, 
@@ -1671,7 +1673,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					})
 				}
 				// console.log('coworkerIds: '+JSON.stringify(coworkerIds, null, 4))
-				console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+				// console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
 				return db.userFeed.bulkCreate(bulkData)
 			}).then(function(created){
 				//check notification type and push in array pushUserId. Do not send notification for 'NONE'
@@ -1683,7 +1685,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					}
 
 				})
-				console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+				// console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
 				showNotification(pushUserId, post)
 			}).catch(function(e) {
 				console.log(e)
@@ -1724,7 +1726,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					}
 				}]
 			}).then(function(groups){
-				console.log('friend Group:'+JSON.stringify(groups, null, 4))
+				// console.log('friend Group:'+JSON.stringify(groups, null, 4))
 				
 				var userFeed = new UserFeed(post.id, 
 				curUserId, 'None', curUserId, 
@@ -1749,7 +1751,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				})
 				// console.log('colleagueIds: '+JSON.stringify(colleagueIds, null, 4))
 				// console.log('coworkerIds: '+JSON.stringify(coworkerIds, null, 4))
-				console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+				// console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
 				return db.userFeed.bulkCreate(bulkData)
 			}).then(function(created){
 				//check notification type and push in array pushUserId. Do not send notification for 'NONE'
@@ -1803,7 +1805,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					}
 				}]
 			}).then(function(groups){
-				console.log('friend Group:'+JSON.stringify(groups, null, 4))
+				// console.log('friend Group:'+JSON.stringify(groups, null, 4))
 				// var coworkerIds = []
 				var colleagueGroupIds = []
 				var userFeed = new UserFeed(post.id, 
@@ -1816,7 +1818,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				groups.forEach(function(group, i){
 					group.users[0].userGroups.status === 'Colleague'?
 					colleagueGroupIds.push(group.id):""
-					console.log('colleagueGroupIds: '+JSON.stringify(colleagueGroupIds, null, 4))
+					// console.log('colleagueGroupIds: '+JSON.stringify(colleagueGroupIds, null, 4))
 
 					if (group.users[0].userGroups.status === 'Coworker'){
 						colleagueIds.push(group.groupBLUserId)
@@ -1862,8 +1864,8 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					
 				})
 				
-				console.log('colleagueIds: '+JSON.stringify(colleagueIds, null, 4))
-				console.log('Coworker of Colleague bulkData: '+JSON.stringify(bulkData, null, 4))
+				// console.log('colleagueIds: '+JSON.stringify(colleagueIds, null, 4))
+				// console.log('Coworker of Colleague bulkData: '+JSON.stringify(bulkData, null, 4))
 				return db.userFeed.bulkCreate(bulkData)
 
 			}).then(function(created){
@@ -1875,7 +1877,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					}
 
 				})
-				console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+				// console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
 				showNotification(pushUserId, post)
 			}).catch(function(e) {
 				console.log(e)
