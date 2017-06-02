@@ -26,6 +26,56 @@ append scripts
 	script(src="public/js/date.js")
 	script.
 		$(function(){
+			var formTH = document.createElement('form')
+				var divTHContainer = document.createElement('div')
+				divTHContainer.className = 'typeahead__container'
+					var divTHField = document.createElement('div')
+					divTHField.className = 'typeahead__field'
+						spanTH = document.createElement('span')
+						spanTH.className = 'typeahead__query'
+			
+							var input = document.createElement('input')
+							
+							//- input.placeholder = 'Search Person'
+							input.className ='js-typeahead'
+							//- input.id = 'friendSearch'
+							input.type = 'search'
+							input.name = 'q'
+							//- input.setAttribute('href','#');
+							//- input.setAttribute('data-toggle','popover');
+							//- input.setAttribute('data-trigger','hover');
+							//- input.setAttribute('data-placement','auto');
+							//- input.style.fontWeight = 'bold'
+							//- input.setAttribute('title', 'Selected User');
+							
+							//popover selected users when hovering over the input search
+							//- document.addEventListener('mousemove', function(){
+							//- 	input.setAttribute('data-content', JSON.stringify(userSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
+							//- 	$('[data-toggle="popover"]').popover({html:true})
+								
+							//- })
+							spanTH.appendChild(input)
+						divTHField.appendChild(spanTH)
+					divTHContainer.appendChild(divTHField)
+				formTH.appendChild(divTHContainer)
+			$('#container').append(formTH)
+			$.typeahead({
+			    input: '.js-typeahead',
+			    minLength:2,
+			    maxItem: 20,
+			    order: "desc",
+			    source: {
+			        
+			            // Ajax Request
+			            data: [ "AfghanisTan", "Albania", "Algeria", "Andorra",  "Israel", "Italy", "Jamaica", "Japan", "Jordan"]
+			        
+			    },
+			    callback: {
+			        onInit: function (node) {
+			            console.log('Typeahead Initiated on ' + node.selector);
+			        }
+			    }
+			});
 			//- var JSONdata = !{JSONdata}
 			//- var vapidPub = JSONdata.vapidPub
 			//- console.log('vapidPub:'+ vapidPub)

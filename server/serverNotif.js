@@ -106,8 +106,17 @@ router.post('/groupList', middleware.requireAuthentication, function(req, res){
 
 		}]
 	}).then(function(groupList){
-		console.log(JSON.stringify(groupList, null, 4))
-		res.json({groupList:groupList})
+		
+
+		var groups = groupList.map(function(group){
+			return group.name
+		})
+		var department = groupList.map(function(group){
+			return group.groupBLUser.department.name
+		})
+		var groups
+		console.log(JSON.stringify(groups, null, 4))
+		res.json({groups,department})
 	})
 
 

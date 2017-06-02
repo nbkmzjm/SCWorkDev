@@ -34,7 +34,8 @@
     "umzug": "^1.11.0",
     "aws-sdk":"2.48.0",
     "dotenv":"4.0.0",
-    "jquery.iframetracker":"1.1.0"
+    "jquery.iframetracker":"1.1.0",
+    "jquery-typeahead":"2.8.0"
 
   }
 }
