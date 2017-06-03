@@ -290,11 +290,13 @@
 
 .popUpContainer{
 	position: absolute;
+	max-width: 300px;
+	
 	z-index: 1;
 	color: black;
 	box-shadow: 10px 10px 15px #888888;
 	background-color: white;
-	overflow-y: auto;
+	/*overflow-y: auto;*/
 	border-radius: 5px;
 	padding-left: 5px;
 

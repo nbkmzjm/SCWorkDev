@@ -44,17 +44,24 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 	var user = req.user
 	db.tagSave.findAll({
-		attributes:[db.Sequelize.literal('DISTINCT `tagName`'),'tagName'],
+		include:[{
+			model:db.mainPost,
+			attributes:['postToValue', 'postTo']
+		}],
+		attributes:['tagName','mainPostId', 'type'
+			// db.Sequelize.fn('MAX', db.Sequelize.col('createdAt'))
+		],
+		group:'tagName'
+		,
+		
 		where:{
 			userId:user.id
 		}
 	}).then(function(tagSaves){
 		console.log(JSON.stringify(tagSaves, null, 4))
-		var tagNames = tagSaves.map(function(tagSave){
-			return tagSave.tagName
-		})
-		console.log(JSON.stringify(tagNames, null, 4))
-		res.json(tagNames)
+		
+		console.log(JSON.stringify(tagSaves, null, 4))
+		res.json(tagSaves)
 	}).catch(function(e) {
 		console.log(e)
 		res.render('error', {
@@ -108,15 +115,9 @@ router.post('/groupList', middleware.requireAuthentication, function(req, res){
 	}).then(function(groupList){
 		
 
-		var groups = groupList.map(function(group){
-			return group.name
-		})
-		var department = groupList.map(function(group){
-			return group.groupBLUser.department.name
-		})
-		var groups
-		console.log(JSON.stringify(groups, null, 4))
-		res.json({groups,department})
+		
+		console.log(JSON.stringify(groupList, null, 4))
+		res.json(groupList)
 	})
 
 
