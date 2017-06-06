@@ -290,7 +290,7 @@
 
 .popUpContainer{
 	position: absolute;
-	max-width: 300px;
+	max-width: 500px;
 	
 	z-index: 1;
 	color: black;

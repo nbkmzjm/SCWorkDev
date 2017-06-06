@@ -1,3 +1,5 @@
+
+
 function myMCEini(selector){
 	// tinymce.init({
 	//     selector: selector,
@@ -123,6 +125,8 @@ function getPostDB(option){
 	var byOther = option.byOther||false
 	var viewOnly = option.viewOnly||false
 	var postId = option.postId||false
+	var tagName = option.tagName||false
+	var tagType = option.tagType||false
 	console.log('byMe:'+ byMe)
 	console.log('byOther:'+ byOther)
 	// console.log('feedNumber:'+loadNumber)
@@ -132,7 +136,9 @@ function getPostDB(option){
 		viewOnly:viewOnly,
 		byMe:byMe,
 		byOther:byOther,
-		postId:postId
+		postId:postId,
+		tagName: tagName,
+		tagType:tagType
 	}).done(function(Rdata){
 		
 		Rdata.posts.forEach(function(post, i){
@@ -407,9 +413,17 @@ function getPostDB(option){
 									saveToContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
 									saveToContainer.className = 'popUpContainer'
 									saveToContainer.id = 'saveToContainer'
+										var resultContainer = document.createElement('var')
+										resultContainer.id = 'result-container'
+										resultContainer.className = "result-container"
+										saveToContainer.appendChild(resultContainer)
+
+										var addTag = document.createElement('div')
+										addTag.id = 'addTag'
+										saveToContainer.appendChild(addTag)
+
 										var divTHContainer = document.createElement('div')
 										divTHContainer.className = 'typeahead__container'
-											divTHContainer.style.maxWidth = '300px'
 											var divTHField = document.createElement('div')
 											divTHField.className = 'typeahead__field'
 												spanTH = document.createElement('span')
@@ -473,16 +487,18 @@ function getPostDB(option){
 									divTitle.appendChild(saveToContainer)
 									$.typeahead({
 									    input: '.js-typeahead-searchTagSave',
-									    minLength:0, maxItem: 20, offset: true, order: "acs",
+									    minLength:0, maxItem: 20, offset: false, order: "acs",
 									    template:"{{tagName}} <small style='color:#999;'>{{type}}</small>",
-									    // searchOnFocus: true,
+									    searchOnFocus: true,
 									    source: {
-									    	New:[
-								            		{tagName:'New Tag',type:'personal'},
-								            		{tagName:'New Tag',type:'department'}
-								            	],
+									    	// newTag:{
+									    	// 	display:['tagName','type'],
+									    	// 	data:[
+									    	// 		{tagName:'New Tag',type:'personal'},
+								      //       		{tagName:'New Tag',type:'department'}
+								      //       	]
+									    	// },
 								            tagSave:{
-								            	
 								            	display:['tagName','type'],
 									           	ajax: {
 									            	type:'POST',
@@ -494,25 +510,59 @@ function getPostDB(option){
 									    callback: {
 									        
 									        onClickAfter: function (node, a, item, event) {
+									        	event.preventDefault();
+									        	console.log(event.target)
 									 			console.log(node)
 									            console.log(a)
 									            console.log(item)
 									            console.log(event)
 
-									 			if(item.tagName === "New Tag"){
-									 				alert($('#searchTagSave').val())
-									 			}else{
-									 			
-										            event.preventDefault();
-										            var clickedTag = item.tagName
-													$.post('/notif/postTagSave',{
+										            
+									            var clickedTag = item.tagName
+												$.post('/notif/postTagSave',{
+													mainPostId:post.id,
+													type:'Personal',
+													tagName:clickedTag
+												}).done(function(){
+													$('#result-container').text('');
+												})
+									 
+									        },
+									        onResult: function (node, query, result, resultCount) {
+									            if (query === "") return;
+									            $('#addTag').html("")
+
+									            var arrTagType = ['Personal', 'Department']
+									            arrTagType.forEach(function(type){
+									            	var addBtn = document.createElement('button')
+									 				addBtn.innerHTML = 'Add '+ type +' Tag'
+									 				addBtn.onclick = function(){
+									 					$.post('/notif/postTagSave',{
 														mainPostId:post.id,
-														type:'personal',
-														tagName:clickedTag
-													}).done(function(){
-														$('#result-container').text('');
-													})
-												}
+														type:type,
+														tagName:query
+														}).done(function(){
+															// $('#result-container').text('');
+														})
+									 					
+
+									 				}
+									 				document.getElementById('addTag').appendChild(addBtn)
+
+									            })
+									 			
+
+									 			
+
+									            var text = "";
+									            if (result.length > 0 && result.length < resultCount) {
+									                text = "Showing <strong>" + result.length + "</strong> of <strong>" + resultCount + '</strong> elements matching "' + query + '"';
+									            } else if (result.length > 0) {
+									                text = 'Showing <strong>' + result.length + '</strong> elements matching "' + query + '"';
+									            } else {
+									                text = 'No results matching "' + query + '"';
+									            }
+									            $('#result-container').html(text);
 									 
 									        }
 									    }
