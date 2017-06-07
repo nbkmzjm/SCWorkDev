@@ -36,9 +36,13 @@ function tagManagerTabClick(){
 
 	$.typeahead({
 	    input: '.js-typeahead-tagPost',
-	    minLength:0, maxItem: 30, offset: false, order: "acs",
-	    template:"{{tagName}} <small style='color:#999;'>{{type}}</small>",
+	    minLength:0, maxItem: 50, offset: false, order: "acs",
+	    template:"{{tagName}}",
 	    searchOnFocus: true,
+	    group:{
+	    	key:'type'
+
+	    },
 	    source: {
             tagSave:{
             	display:['tagName','type'],
@@ -63,10 +67,16 @@ function tagManagerTabClick(){
 	 
 	        },
 	        onClickAfter: function (node, a, item, event) {
-	 
+	 			
 	            event.preventDefault();
-
+	            $('#divPostContainer').remove()
+	            var divPostContainer = document.createElement('div')
+					divPostContainer.id = 'divPostContainer'
+					divPostContainer.style ='text-align: center;'
+					$('#TagManager').append(divPostContainer)
+				console.log(divPostContainer)
 	            getPostDB({tagName:item.tagName, tagType:item.type})
+
 	 
 	        },
 	        onResult: function (node, query, result, resultCount) {

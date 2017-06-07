@@ -13,6 +13,9 @@ module.exports = function(sequelize, DataTypes) {
         tagName:{
             type: DataTypes.STRING
         },
+        category:{
+            type: DataTypes.STRING
+        },
         type:{
             type: DataTypes.STRING
         },

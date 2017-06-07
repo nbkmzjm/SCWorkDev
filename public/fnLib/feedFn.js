@@ -531,24 +531,49 @@ function getPostDB(option){
 									        onResult: function (node, query, result, resultCount) {
 									            if (query === "") return;
 									            $('#addTag').html("")
-
+									            console.log(query.length)
+									            console.log($('#addTagBtn'))
+									            if(query.length<2&&$('#addTagBtn').length>0){
+									            	$('#addTagBtn').remove()
+									            }
 									            var arrTagType = ['Personal', 'Department']
+
+									            var addTagDiv = document.getElementById('addTag')
 									            arrTagType.forEach(function(type){
-									            	var addBtn = document.createElement('button')
-									 				addBtn.innerHTML = 'Add '+ type +' Tag'
-									 				addBtn.onclick = function(){
-									 					$.post('/notif/postTagSave',{
-														mainPostId:post.id,
-														type:type,
-														tagName:query
-														}).done(function(){
-															// $('#result-container').text('');
-														})
-									 					
-
-									 				}
-									 				document.getElementById('addTag').appendChild(addBtn)
-
+									            	
+										            	var addTagBtn = document.createElement('button')
+										 				addTagBtn.innerHTML = 'Add '+ type +' Tag'
+										 				addTagBtn.id = 'addTagBtn'
+										 				addTagBtn.onclick = function(){
+										 					$('#result-container').text('Adding Tag: '+ query);
+										 					event.preventDefault()
+										 					$('#addTagCategory').length>0?$('#addTagCategory').remove():''
+										 					$('#addTagCategoryBtn').length>0?$('#addTagCategoryBtn').remove():''
+										 					var addTagCategory = document.createElement('input')
+										 					addTagCategory.className = 'form-control'
+										 					addTagCategory.id = 'addTagCategory'
+										 					addTagCategory.placeholder = 'Type '+ type+' Category'
+										 					addTagDiv.appendChild(addTagCategory)
+										 					
+										 					var addTagCategoryBtn = document.createElement('button')
+										 					addTagCategoryBtn.innerHTML = 'ADD'
+										 					addTagCategoryBtn.id = 'addTagCategoryBtn'
+										 					// addTagCategoryBtn.style.float = 'right'
+										 					addTagDiv.appendChild(addTagCategoryBtn)
+										 					addTagCategoryBtn.onclick = function(){
+										 						console.log('adding'+ addTagCategory.value)
+										 							$.post('/notif/postTagSave',{
+																	mainPostId:post.id,
+																	category:addTagCategory.value,
+																	type:type,
+																	tagName:query
+																	}).done(function(){
+																		
+																		$('#saveToContainer').remove()
+																	})
+										 					}
+										 				}
+										 				addTagDiv.appendChild(addTagBtn)
 									            })
 									 			
 
@@ -612,9 +637,15 @@ function getPostDB(option){
 								if(event.target.id !== 'postOpt'){
 									$('#postOptContainer').remove()
 								}
-								if(event.target.innerHTML !== 'Save'&&event.target.type!=='search'){
+								if(event.target.innerHTML !== 'Save'&&
+									event.target.type!=='search'
+									&&event.target.id !== 'addTagBtn'
+									&&event.target.id!=='addTagCategory'
+									&&event.target.id!=='addTagCategoryBtn'
+									){
 									$('#saveToContainer').remove()
 								}
+								
 							}
 
 							//Blank like Emoj for user input

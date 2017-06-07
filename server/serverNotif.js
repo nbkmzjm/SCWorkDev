@@ -72,7 +72,7 @@ router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 
 router.post('/postTagSave', middleware.requireAuthentication, function(req, res){
 	var user = req.user
-	var body = _.pick(req.body, 'mainPostId','type', 'tagName')
+	var body = _.pick(req.body, 'mainPostId','type', 'tagName', 'category')
 	body.userId = user.id
 	console.log(JSON.stringify(body, null, 4))
 
@@ -81,6 +81,7 @@ router.post('/postTagSave', middleware.requireAuthentication, function(req, res)
 			mainPostId:body.mainPostId,
 			type:body.type,
 			tagName:body.tagName,
+			category:body.category,
 			userId:body.userId
 		}
 	}).spread(function(tagSaves, created){
