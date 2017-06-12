@@ -48,10 +48,10 @@ router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 			model:db.mainPost,
 			attributes:['postToValue', 'postTo']
 		}],
-		attributes:['tagName','mainPostId', 'type'
+		attributes:['tagName','mainPostId', 'type', 'category'
 			// db.Sequelize.fn('MAX', db.Sequelize.col('createdAt'))
 		],
-		group:[['tagName'],['type']]
+		group:[['tagName'],['category'],['type']]
 		,
 		
 		where:{

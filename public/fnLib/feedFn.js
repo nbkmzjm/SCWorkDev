@@ -489,17 +489,23 @@ function getPostDB(option){
 									    input: '.js-typeahead-searchTagSave',
 									    minLength:0, maxItem: 20, offset: false, order: "acs",
 									    template:"{{tagName}} <small style='color:#999;'>{{type}}</small>",
+									    correlativeTemplate: true, //search text to match any word, anywhere inside the template
 									    searchOnFocus: true,
+									    groupTemplate: "<table><tr><td>{{category}}</td></tr></table>",
+									    group:{
+									    	key:'category'
+
+									    },
 									    source: {
 									    	// newTag:{
-									    	// 	display:['tagName','type'],
+									    	// 	display:['tagName','type'],f
 									    	// 	data:[
 									    	// 		{tagName:'New Tag',type:'personal'},
 								      //       		{tagName:'New Tag',type:'department'}
 								      //       	]
 									    	// },
 								            tagSave:{
-								            	display:['tagName','type'],
+								            	display:['tagName','type', 'category'],
 									           	ajax: {
 									            	type:'POST',
 									                url: '/notif/getTagSave'
