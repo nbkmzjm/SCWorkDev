@@ -487,15 +487,22 @@ function getPostDB(option){
 									divTitle.appendChild(saveToContainer)
 									$.typeahead({
 									    input: '.js-typeahead-searchTagSave',
-									    minLength:0, maxItem: 20, offset: false, order: "acs",
+									    minLength:1, maxItem: 20, offset: false, order: "acs",
 									    template:"{{tagName}} <small style='color:#999;'>{{type}}</small>",
-									    correlativeTemplate: true, //search text to match any word, anywhere inside the template
+									    // correlativeTemplate: true, //search text to match any word, anywhere inside the template
 									    searchOnFocus: true,
-									    groupTemplate: "<table><tr><td>{{category}}</td></tr></table>",
+									    display:['tagName','type', 'category'],
 									    group:{
-									    	key:'category'
+									    	key:'type'
+									    	// ,
+								    	 // 	template: function(item){
+								    	 // 		return item.category
+								    	 		
+								    	 // 	}
 
 									    },
+									    // groupTemplate: "<table><tr><td>{{group}}</td></tr></table>",
+									    
 									    source: {
 									    	// newTag:{
 									    	// 	display:['tagName','type'],f
@@ -505,7 +512,7 @@ function getPostDB(option){
 								      //       	]
 									    	// },
 								            tagSave:{
-								            	display:['tagName','type', 'category'],
+								            	
 									           	ajax: {
 									            	type:'POST',
 									                url: '/notif/getTagSave'
@@ -524,11 +531,12 @@ function getPostDB(option){
 									            console.log(event)
 
 										            
-									            var clickedTag = item.tagName
+
 												$.post('/notif/postTagSave',{
 													mainPostId:post.id,
 													type:'Personal',
-													tagName:clickedTag
+													tagName:item.tagName,
+													category:item.category
 												}).done(function(){
 													$('#result-container').text('');
 												})

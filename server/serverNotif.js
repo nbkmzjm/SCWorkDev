@@ -51,7 +51,7 @@ router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 		attributes:['tagName','mainPostId', 'type', 'category'
 			// db.Sequelize.fn('MAX', db.Sequelize.col('createdAt'))
 		],
-		group:[['tagName'],['category'],['type']]
+		group:[['tagName'],['category']]
 		,
 		
 		where:{
@@ -74,7 +74,7 @@ router.post('/postTagSave', middleware.requireAuthentication, function(req, res)
 	var user = req.user
 	var body = _.pick(req.body, 'mainPostId','type', 'tagName', 'category')
 	body.userId = user.id
-	console.log(JSON.stringify(body, null, 4))
+	console.log('postBody'+ JSON.stringify(body, null, 4))
 
 	db.tagSave.findOrCreate({
 		where:{
