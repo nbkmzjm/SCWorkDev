@@ -487,30 +487,32 @@ function getPostDB(option){
 									divTitle.appendChild(saveToContainer)
 									$.typeahead({
 									    input: '.js-typeahead-searchTagSave',
-									    minLength:1, maxItem: 20, offset: false, order: "acs",
-									    template:"{{tagName}} <small style='color:#999;'>{{type}}</small>",
+									    minLength:0, maxItem: 20, offset: false, 
+									    order: "acs",
+									    template:"{{tagName}} ({{category}}) <small style='color:#999;'>{{type}}</small>",
 									    // correlativeTemplate: true, //search text to match any word, anywhere inside the template
 									    searchOnFocus: true,
-									    display:['tagName','type', 'category'],
+									    display:['category','tagName','type'],
 									    group:{
-									    	key:'type'
+									    	key:'category'
 									    	// ,
-								    	 // 	template: function(item){
-								    	 // 		return item.category
+									    	// template:"<table><tr><td>{{category}}</td></tr></table>"
+								    	 	// template: function(item){
+								    	 	// 	return item.category
 								    	 		
-								    	 // 	}
+								    	 	// }
 
 									    },
-									    // groupTemplate: "<table><tr><td>{{group}}</td></tr></table>",
+									    groupTemplate: "<table><tr><td>{{category}}</td></tr></table>",
 									    
 									    source: {
-									    	// newTag:{
-									    	// 	display:['tagName','type'],f
-									    	// 	data:[
-									    	// 		{tagName:'New Tag',type:'personal'},
-								      //       		{tagName:'New Tag',type:'department'}
-								      //       	]
-									    	// },
+									    	newTag:{
+									    		display:['tagName','type'],
+									    		data:[
+									    			{tagName:'New Tag',type:'personal'},
+								            		{tagName:'New Tag',type:'department'}
+								            	]
+									    	},
 								            tagSave:{
 								            	
 									           	ajax: {
