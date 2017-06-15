@@ -503,16 +503,16 @@ function getPostDB(option){
 								    	 	// }
 
 									    },
-									    groupTemplate: "<table><tr><td>{{category}}</td></tr></table>",
+									    // groupTemplate: "<table><tr><td>{{category}}</td></tr></table>",
 									    
 									    source: {
-									    	newTag:{
-									    		display:['tagName','type'],
-									    		data:[
-									    			{tagName:'New Tag',type:'personal'},
-								            		{tagName:'New Tag',type:'department'}
-								            	]
-									    	},
+									    	// newTag:{
+									    	// 	display:['tagName','type'],
+									    	// 	data:[
+									    	// 		{tagName:'New Tag',type:'personal'},
+								      //       		{tagName:'New Tag',type:'department'}
+								      //       	]
+									    	// },
 								            tagSave:{
 								            	
 									           	ajax: {

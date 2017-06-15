@@ -37,16 +37,24 @@ function tagManagerTabClick(){
 	$.typeahead({
 	    input: '.js-typeahead-tagPost',
 	    minLength:0, maxItem: 50, offset: false, order: "acs",
-	    template:"{{tagName}}",
+	   
+	    template:"{{tagName}} ({{category}}) <small style='color:#999;'>{{type}}</small>",
+	    // correlativeTemplate: true, //search text to match any word, anywhere inside the template
 	    searchOnFocus: true,
+	    display:['category','tagName','type'],
 	    group:{
-	    	key:'type'
+	    	key:'category'
+	    	// ,
+	    	// template:"<table><tr><td>{{category}}</td></tr></table>"
+    	 	// template: function(item){
+    	 	// 	return item.category
+    	 		
+    	 	// }
 
 	    },
 	    source: {
             tagSave:{
-            	display:['tagName','type'],
-	           	ajax: {
+            	ajax: {
 	           		type:'POST',
 	                url: '/notif/getTagSave'
 	            }
@@ -76,6 +84,7 @@ function tagManagerTabClick(){
 					$('#TagManager').append(divPostContainer)
 				console.log(divPostContainer)
 	            getPostDB({tagName:item.tagName, tagType:item.type})
+	            $('#result-container').text('');
 
 	 
 	        },
