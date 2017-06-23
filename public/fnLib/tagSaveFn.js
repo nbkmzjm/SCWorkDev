@@ -3,6 +3,8 @@ function tagManagerTabClick(){
 	//TAG Filter
 
 	var divTagFilter = document.createElement('div')
+	divTagFilter.id = 'divTagFilter'
+	
 		var divTHContainer = document.createElement('div')
 		divTHContainer.className = 'typeahead__container'
 			divTHContainer.style.maxWidth = '500px'
@@ -13,8 +15,9 @@ function tagManagerTabClick(){
 	
 					var input = document.createElement('input')
 					
-					input.className ='js-typeahead-tagPost'
-					
+					input.className ='js-typeahead-tagPost form-control'
+					input.id = 'tagPost'
+					input.placeholder = 'Search Tag'
 					//- input.setAttribute('href','#');
 					//- input.setAttribute('data-toggle','popover');
 					//- input.setAttribute('data-trigger','hover');
@@ -32,7 +35,7 @@ function tagManagerTabClick(){
 				divTHField.appendChild(spanTH)
 			divTHContainer.appendChild(divTHField)
 		divTagFilter.appendChild(divTHContainer)
-	$('#TagManager').append(divTHContainer)
+	$('#TagManager').append(divTagFilter)
 
 	$.typeahead({
 	    input: '.js-typeahead-tagPost',
@@ -52,6 +55,11 @@ function tagManagerTabClick(){
     	 	// }
 
 	    },
+	    dropdownFilter:[{
+	    	key:'type',
+	    	template: '<strong>{{type}}</strong>',
+			all: 'ALL'
+	    }],
 	    source: {
             tagSave:{
             	ajax: {
@@ -84,7 +92,7 @@ function tagManagerTabClick(){
 					$('#TagManager').append(divPostContainer)
 				console.log(divPostContainer)
 	            getPostDB({tagName:item.tagName, tagType:item.type})
-	            $('#result-container').text('');
+	            $('#tagPost').blur();
 
 	 
 	        },

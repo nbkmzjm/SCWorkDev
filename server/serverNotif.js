@@ -43,20 +43,33 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 })
 router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 	var user = req.user
-	db.tagSave.findAll({
-		include:[{
-			model:db.mainPost,
-			attributes:['postToValue', 'postTo']
-		}],
-		attributes:['tagName','mainPostId', 'type', 'category'
-			// db.Sequelize.fn('MAX', db.Sequelize.col('createdAt'))
-		],
-		group:[['tagName'],['category'],['type']]
-		,
-		
+	console.log('user'+JSON.stringify(user, null, 4))
+	db.department.findOne({
 		where:{
-			userId:user.id
+			id:user.departmentId
 		}
+	}).then(function(department){
+		console.log('department'+JSON.stringify(department, null, 4))
+		return db.tagSave.findAll({
+			include:[{
+				model:db.mainPost,
+				attributes:['postToValue', 'postTo']
+			}],
+			attributes:['tagName','mainPostId', 'type', 'category'
+				// db.Sequelize.fn('MAX', db.Sequelize.col('createdAt'))
+			],
+			group:[['tagName'],['category'],['type']]
+			,
+			
+			where:{
+				$or:[{
+					type:department.name
+				},{
+					type:'Personal',
+					userId:user.id
+				}]
+			}
+		})
 	}).then(function(tagSaves){
 		console.log('tagSaves'+JSON.stringify(tagSaves, null, 4))
 		
@@ -67,6 +80,7 @@ router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 			error: e.toString()
 		})
 	});
+
 	
 })
 
@@ -74,7 +88,7 @@ router.post('/postTagSave', middleware.requireAuthentication, function(req, res)
 	var user = req.user
 	var body = _.pick(req.body, 'mainPostId','type', 'tagName', 'category')
 	body.userId = user.id
-	body.departmentId = user.departmentId
+	// body.departmentId = user.departmentId
 	console.log('postBody'+ JSON.stringify(body, null, 4))
 
 	db.tagSave.findOrCreate({
@@ -84,7 +98,6 @@ router.post('/postTagSave', middleware.requireAuthentication, function(req, res)
 			tagName:body.tagName,
 			category:body.category,
 			userId:body.userId,
-			departmentId:body.departmentId
 		}
 	}).spread(function(tagSaves, created){
 		console.log(JSON.stringify(tagSaves, null, 4))

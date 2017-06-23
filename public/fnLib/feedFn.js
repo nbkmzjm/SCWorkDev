@@ -140,6 +140,7 @@ function getPostDB(option){
 		tagName: tagName,
 		tagType:tagType
 	}).done(function(Rdata){
+
 		
 		Rdata.posts.forEach(function(post, i){
 			console.log(post)
@@ -552,7 +553,10 @@ function getPostDB(option){
 									            if(query.length<2&&$('#addTagBtn').length>0){
 									            	$('#addTagBtn').remove()
 									            }
-									            var arrTagType = ['Personal', 'Department']
+
+									            var department = post.user.department.name
+									            alert(department)
+									            var arrTagType = ['Personal', department]
 
 									            var addTagDiv = document.getElementById('addTag')
 									            arrTagType.forEach(function(type){
