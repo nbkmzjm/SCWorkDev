@@ -413,7 +413,8 @@ function getPostDB(option){
 									
 									var saveToContainer = document.createElement('div')
 									saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
-									saveToContainer.style.left = postOptCoords.left - divTitleCoords.left - 100 + 'px'
+									saveToContainer.style.left = postOptCoords.left - divTitleCoords.left - 150 + 'px'
+									saveToContainer.style.width = '300px'
 									saveToContainer.className = 'popUpContainer'
 									saveToContainer.id = 'saveToContainer'
 										var resultContainer = document.createElement('var')
@@ -429,6 +430,7 @@ function getPostDB(option){
 										divTHContainer.className = 'typeahead__container'
 											var divTHField = document.createElement('div')
 											divTHField.className = 'typeahead__field'
+
 												spanTH = document.createElement('span')
 												spanTH.className = 'typeahead__query'
 									
@@ -564,8 +566,9 @@ function getPostDB(option){
 								}else if(option==='Unsave'){
 									var saveToContainer = document.createElement('div')
 									saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
-									saveToContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
+									saveToContainer.style.left = postOptCoords.left - divTitleCoords.left-150 + 'px'
 									saveToContainer.className = 'popUpContainer'
+									saveToContainer.style.width = '300px'
 									saveToContainer.id = 'saveToContainer'
 										var resultContainer = document.createElement('var')
 										resultContainer.id = 'result-container'

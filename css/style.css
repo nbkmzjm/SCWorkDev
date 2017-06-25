@@ -293,9 +293,7 @@
 	padding: 0 10px 0 10px;
 }
 
-.popUpContainer{
-	position: absolute;
-	max-width: 500px;
+.popUpContainer{     position: absolute;     max-width: 350px;
 	
 	z-index: 1;
 	color: black;
