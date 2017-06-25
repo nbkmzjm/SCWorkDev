@@ -84,24 +84,105 @@ router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 	
 })
 
+router.post('/getTagToUnsave', middleware.requireAuthentication, function(req, res){
+	var user = req.user
+	
+	var postId = req.body.postId
+	console.log('postId'+JSON.stringify(postId, null, 4))
+	
+	db.tagSave.findAll({
+				
+		where:{
+			mainPostId:postId
+		}
+	}).then(function(tagSaves){
+		console.log('tagSaves'+JSON.stringify(tagSaves, null, 4))
+		
+		res.json(tagSaves)
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+
+	
+})
+
+router.post('/unsaveTag', middleware.requireAuthentication, function(req, res){
+	var user = req.user
+	var body = _.pick(req.body, 'mainPostId','type', 'tagName', 'category')
+	body.userId = user.id
+	
+	var postId = req.body.postId
+	console.log('postId'+JSON.stringify(postId, null, 4))
+	
+	db.tagSave.destroy({
+		where:{
+			mainPostId:body.mainPostId,
+			type:body.type,
+			tagName:body.tagName,
+			category:body.category,
+			userId:body.userId
+			
+		}
+	}).then(function(deleted){
+		console.log('deleted'+JSON.stringify(deleted, null, 4))
+		
+		res.json(deleted)
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+
+	
+})
+
 router.post('/postTagSave', middleware.requireAuthentication, function(req, res){
 	var user = req.user
 	var body = _.pick(req.body, 'mainPostId','type', 'tagName', 'category')
 	body.userId = user.id
 	// body.departmentId = user.departmentId
 	console.log('postBody'+ JSON.stringify(body, null, 4))
-
-	db.tagSave.findOrCreate({
+	db.department.findOne({
 		where:{
-			mainPostId:body.mainPostId,
-			type:body.type,
-			tagName:body.tagName,
-			category:body.category,
-			userId:body.userId,
+			id:user.departmentId
 		}
-	}).spread(function(tagSaves, created){
+	}).then(function(department){
+
+		if(body.type === 'Department'){
+			var type = department.name
+		}else{
+			var type = body.type
+		}
+
+		return [db.tagSave.findOrCreate({
+			where:{
+				mainPostId:body.mainPostId,
+				type:type,
+				tagName:body.tagName,
+				category:body.category
+				// userId:body.userId
+			}
+		}),type]
+	}).spread(function(tagSaves, type){
+		console.log(type)
+		return [db.tagSave.update({
+			userId:user.id
+		},{
+			where:{
+				mainPostId:body.mainPostId,
+				type:type,
+				tagName:body.tagName,
+				category:body.category
+			}
+		}),tagSaves[0]]
+
+	}).spread(function(updated, tagSaves){
 		console.log(JSON.stringify(tagSaves, null, 4))
-		console.log(JSON.stringify(created, null, 4))
+		
 		
 		res.json(tagSaves)
 	}).catch(function(e) {
@@ -361,6 +442,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	var curUser = req.user
 	var tagName = req.body.tagName
 	var tagType = req.body.tagType
+	var tagCategory = req.body.tagCategory
 	var curUserId = req.user.id
 	var loadNumber = req.body.loadNumber
 	var viewOption = req.body.viewOption
@@ -423,12 +505,25 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	// console.log('lodingNumber: '+ loadNumber)
 	if(tagName!== 'false'){
 		console.log('tagname procless:'+tagName+tagType)
+		if(tagType !== 'Personal'){
+			var wherepara1 = {
+
+				tagName:tagName,
+				type:tagType,
+				category:tagCategory
+			
+			}
+		}else{
+			var wherepara1 = {
+				tagName:tagName,
+				type:tagType,
+				category:tagCategory,
+				userId:curUser.id
+			}
+		}
 		db.tagSave.findAll({
 			attributes:['mainPostId'],
-			where:{
-				tagName:tagName,
-				type:tagType
-			},
+			where:wherepara1,
 			include:[{
 				model:db.mainPost,
 				// where:wherePara,

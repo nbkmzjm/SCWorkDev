@@ -91,7 +91,7 @@ function tagManagerTabClick(){
 					divPostContainer.style ='text-align: center;'
 					$('#TagManager').append(divPostContainer)
 				console.log(divPostContainer)
-	            getPostDB({tagName:item.tagName, tagType:item.type})
+	            getPostDB({tagName:item.tagName, tagType:item.type,tagCategory:item.category})
 	            $('#tagPost').blur();
 
 	 

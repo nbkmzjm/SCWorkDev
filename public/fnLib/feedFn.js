@@ -126,6 +126,7 @@ function getPostDB(option){
 	var viewOnly = option.viewOnly||false
 	var postId = option.postId||false
 	var tagName = option.tagName||false
+	var tagCategory = option.tagCategory||false
 	var tagType = option.tagType||false
 	console.log('byMe:'+ byMe)
 	console.log('byOther:'+ byOther)
@@ -138,7 +139,8 @@ function getPostDB(option){
 		byOther:byOther,
 		postId:postId,
 		tagName: tagName,
-		tagType:tagType
+		tagType:tagType,
+		tagCategory:tagCategory
 	}).done(function(Rdata){
 
 		
@@ -411,7 +413,7 @@ function getPostDB(option){
 									
 									var saveToContainer = document.createElement('div')
 									saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
-									saveToContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
+									saveToContainer.style.left = postOptCoords.left - divTitleCoords.left - 100 + 'px'
 									saveToContainer.className = 'popUpContainer'
 									saveToContainer.id = 'saveToContainer'
 										var resultContainer = document.createElement('var')
@@ -435,57 +437,16 @@ function getPostDB(option){
 													input.className ='js-typeahead-searchTagSave'
 													input.type = 'search'
 													input.id = 'searchTagSave'
-													input.placeholder = 'Search Tag Name'
+													input.placeholder = 'Search Tag to Save'
 													
 													spanTH.appendChild(input)
 												divTHField.appendChild(spanTH)
 											divTHContainer.appendChild(divTHField)
 										saveToContainer.appendChild(divTHContainer)
-
-
-										// var saveToContainerUl = document.createElement('ul')
-										// 	saveToContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
-										// 	$.post('/notif/getTagSave').done(function(tagNames){
-										// 		console.log(tagNames)
-										// 		tagNames.forEach(function(option){
-										// 			var saveToContainerLi = document.createElement('li')
-										// 				var a = document.createElement('a')
-										// 				a.href='#'
-										// 				a.innerHTML = option.tagName
-										// 				a.onclick = function(){
-										// 					event.preventDefault()
-										// 					var clickedTag = event.target.innerHTML
-										// 					$.post('/notif/postTagSave',{
-										// 						mainPostId:post.id,
-										// 						type:'personal',
-										// 						tagName:clickedTag
-										// 					}).done(function(){
-
-										// 					})
-										// 				}
-										// 				saveToContainerLi.appendChild(a)
-										// 			saveToContainerUl.appendChild(saveToContainerLi)
-										// 		})
-										// 	})
-											
-
-										// 	var newOpt = document.createElement('input')
-										// 	newOpt.className = 'form-control'
-										// 	newOpt.placeholder = 'New Tag'
-										// 	newOpt.id = 'newTagSave'
-										// 	newOpt.onchange = function(){
-										// 		console.log(`${post.id},${newOpt.value}`)
-										// 		$.post('/notif/postTagSave',{
-										// 			mainPostId:post.id,
-										// 			type:'personal',
-										// 			tagName:newOpt.value
-										// 		}).done(function(){
-
-										// 		})
-										// 	}
-										// 	saveToContainer.appendChild(newOpt)
-										// saveToContainer.appendChild(saveToContainerUl)
+										
 									divTitle.appendChild(saveToContainer)
+
+
 									$.typeahead({
 									    input: '.js-typeahead-searchTagSave',
 									    minLength:0, maxItem: 20, offset: false, 
@@ -496,15 +457,7 @@ function getPostDB(option){
 									    display:['category','tagName','type'],
 									    group:{
 									    	key:'category'
-									    	// ,
-									    	// template:"<table><tr><td>{{category}}</td></tr></table>"
-								    	 	// template: function(item){
-								    	 	// 	return item.category
-								    	 		
-								    	 	// }
-
 									    },
-									    // groupTemplate: "<table><tr><td>{{category}}</td></tr></table>",
 									    
 									    source: {
 									    	// newTag:{
@@ -537,7 +490,7 @@ function getPostDB(option){
 
 												$.post('/notif/postTagSave',{
 													mainPostId:post.id,
-													type:'Personal',
+													type:item.type,
 													tagName:item.tagName,
 													category:item.category
 												}).done(function(){
@@ -554,9 +507,8 @@ function getPostDB(option){
 									            	$('#addTagBtn').remove()
 									            }
 
-									            var department = post.user.department.name
-									            alert(department)
-									            var arrTagType = ['Personal', department]
+									            
+									            var arrTagType = ['Personal', 'Department']
 
 									            var addTagDiv = document.getElementById('addTag')
 									            arrTagType.forEach(function(type){
@@ -584,7 +536,7 @@ function getPostDB(option){
 										 						console.log('adding'+ addTagCategory.value)
 										 							$.post('/notif/postTagSave',{
 																	mainPostId:post.id,
-																	category:addTagCategory.value,
+																	category:addTagCategory.value.toUpperCase(),
 																	type:type,
 																	tagName:query
 																	}).done(function(){
@@ -595,9 +547,113 @@ function getPostDB(option){
 										 				}
 										 				addTagDiv.appendChild(addTagBtn)
 									            })
-									 			
 
-									 			
+									            var text = "";
+									            if (result.length > 0 && result.length < resultCount) {
+									                text = "Showing <strong>" + result.length + "</strong> of <strong>" + resultCount + '</strong> elements matching "' + query + '"';
+									            } else if (result.length > 0) {
+									                text = 'Showing <strong>' + result.length + '</strong> tags matching "' + query + '"';
+									            } else {
+									                text = 'No results matching "' + query + '"';
+									            }
+									            $('#result-container').html(text);
+									 
+									        }
+									    }
+									});
+								}else if(option==='Unsave'){
+									var saveToContainer = document.createElement('div')
+									saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
+									saveToContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
+									saveToContainer.className = 'popUpContainer'
+									saveToContainer.id = 'saveToContainer'
+										var resultContainer = document.createElement('var')
+										resultContainer.id = 'result-container'
+										resultContainer.className = "result-container"
+										saveToContainer.appendChild(resultContainer)
+
+										var addTag = document.createElement('div')
+										addTag.id = 'addTag'
+										saveToContainer.appendChild(addTag)
+
+										var divTHContainer = document.createElement('div')
+										divTHContainer.className = 'typeahead__container'
+											var divTHField = document.createElement('div')
+											divTHField.className = 'typeahead__field'
+												spanTH = document.createElement('span')
+												spanTH.className = 'typeahead__query'
+									
+													var input = document.createElement('input')
+													
+													input.className ='js-typeahead-searchTagSave'
+													input.type = 'search'
+													input.id = 'searchTagSave'
+													input.placeholder = 'Search and click tag to unsave'
+													
+													spanTH.appendChild(input)
+												divTHField.appendChild(spanTH)
+											divTHContainer.appendChild(divTHField)
+										saveToContainer.appendChild(divTHContainer)
+										
+									divTitle.appendChild(saveToContainer)
+
+									
+									$.typeahead({
+									    input: '.js-typeahead-searchTagSave',
+									    minLength:0, maxItem: 20, offset: false, 
+									    order: "acs",
+									    template:"{{tagName}} ({{category}}) <small style='color:#999;'>{{type}}</small>",
+									    // correlativeTemplate: true, //search text to match any word, anywhere inside the template
+									    searchOnFocus: true,
+									    display:['category','tagName','type'],
+									    group:{
+									    	key:'category'
+									    },
+									    
+									    source: {
+									    	// newTag:{
+									    	// 	display:['tagName','type'],
+									    	// 	data:[
+									    	// 		{tagName:'New Tag',type:'personal'},
+								      //       		{tagName:'New Tag',type:'department'}
+								      //       	]
+									    	// },
+								            tagSave:{
+								            	
+									           	ajax: {
+									            	type:'POST',
+									                url: '/notif/getTagToUnsave',
+									                data:{
+									                	postId:post.id
+									                }
+									                
+									            }
+									        }
+									    },
+									    callback: {
+									        
+									        onClickAfter: function (node, a, item, event) {
+									        	event.preventDefault();
+									        	console.log(event.target)
+									 			console.log(node)
+									            console.log(a)
+									            console.log(item)
+									            console.log(event)
+
+										            
+
+												$.post('/notif/unsaveTag',{
+													mainPostId:post.id,
+													type:item.type,
+													tagName:item.tagName,
+													category:item.category
+												}).done(function(){
+													$('#result-container').text('');
+												})
+									 
+									        },
+									        onResult: function (node, query, result, resultCount) {
+									            
 
 									            var text = "";
 									            if (result.length > 0 && result.length < resultCount) {
@@ -605,7 +661,7 @@ function getPostDB(option){
 									            } else if (result.length > 0) {
 									                text = 'Showing <strong>' + result.length + '</strong> elements matching "' + query + '"';
 									            } else {
-									                text = 'No results matching "' + query + '"';
+									                text = 'This post has not been saved';
 									            }
 									            $('#result-container').html(text);
 									 
@@ -630,7 +686,7 @@ function getPostDB(option){
 									var postOptContainerUl = document.createElement('ul')
 										postOptContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
 										
-										var optList = ['Hide', 'Share', 'Email', 'Save']
+										var optList = ['Hide', 'Share', 'Email', 'Save', 'Unsave']
 										optList.forEach(function(option){
 											var postOptContainerLi = document.createElement('li')
 												var a = document.createElement('a')
@@ -652,18 +708,23 @@ function getPostDB(option){
 							}
 							divTitle.appendChild(postOpt)
 
+							//click event control diapprearing of the popup menu
 							window.onclick = function(){
 								console.log(event.target)
-								if(event.target.id !== 'postOpt'){
-									$('#postOptContainer').remove()
-								}
-								if(event.target.innerHTML !== 'Save'&&
-									event.target.type!=='search'
-									&&event.target.id !== 'addTagBtn'
-									&&event.target.id!=='addTagCategory'
-									&&event.target.id!=='addTagCategoryBtn'
-									){
+								if(event.target.id == 'postOpt'){
+									
+								} else if(event.target.innerHTML == 'Save'
+									||event.target.type=='search'
+									||event.target.id == 'addTagBtn'
+									||event.target.id=='addTagCategory'
+									||event.target.id=='addTagCategoryBtn'
+								){
+
+								} else if(event.target.innerHTML == 'Unsave'){
+
+								}else{
 									$('#saveToContainer').remove()
+									$('#postOptContainer').remove()
 								}
 								
 							}
