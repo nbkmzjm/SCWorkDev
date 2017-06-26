@@ -22,9 +22,6 @@ module.exports = function(sequelize, DataTypes) {
         notifText:{
             type: DataTypes.STRING
         },
-        tagSave:{
-            type: DataTypes.STRING
-        }, 
         relationship:{
             type: DataTypes.STRING,
             defaultValue: ' '

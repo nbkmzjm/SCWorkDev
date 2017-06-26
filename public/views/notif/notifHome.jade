@@ -77,6 +77,7 @@ append scripts
 			var JSONdata = !{JSONdata};
 			var curUser = JSONdata.curUser
 			var postId = JSONdata.postId
+			var command = JSONdata.command
 
 			var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
 		    var is_explorer = navigator.userAgent.indexOf('MSIE') > -1;
@@ -858,6 +859,7 @@ append scripts
 
 									divSelect.appendChild(select)
 								divInputGroupFilter.appendChild(divSelect)
+
 								
 
 								//DIV include, exclude person and/or departments with in post and its actions
@@ -985,7 +987,26 @@ append scripts
 									})
 								divSelectFilter.appendChild(selectFilter)
 							divInputGroupFilter.appendChild(divSelectFilter)
+
+							divShareBtn = document.createElement('div')
+								var shareBtn = document.createElement('button')
+								shareBtn.className = 'col-sm-1 btn btn-primary'
+								shareBtn.innerHTML = 'Share'
+								shareBtn.id = 'shareBtn'
+								shareBtn.style.display = 'none'
+								divShareBtn.appendChild(shareBtn)
+
+							divInputGroupFilter.appendChild(divShareBtn)
+
+
+
 							$('#Feed').append(divInputGroupFilter)
+							
+							//diplay share button after clicking share 
+							if(command === 'share'){
+								console.log($('#shareBtn'))
+								$('#shareBtn').css('display', 'block')
+							}
 
 
 							//- var formTH = document.createElement('form')
@@ -1174,7 +1195,9 @@ append scripts
 				 
 				})
 				if(postId !== undefined){
+
 					getPostDB({postId:postId})
+					
 				}else{
 					getPostDB()
 				}

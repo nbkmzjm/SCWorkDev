@@ -20,8 +20,9 @@ var middleware = require('../middleware.js')(db);
 router.get('/', middleware.requireAuthentication, function(req, res) {
 	var curUser = req.user;
 	var postId = req.query.postId
+	var command = req.query.command
 	var curUserTitle = req.user.title;
-
+	console.log(command)
 	db.user.findOne({
 		where:curUser.id,
 		include:[{
@@ -32,7 +33,8 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 			JSONdata: JSON.stringify({
 				notif: 'notif',
 				postId:postId,
-				curUser:curUser
+				curUser:curUser,
+				command:command
 				
 			})
 		})
@@ -41,6 +43,35 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 	
 
 })
+
+router.post('/hidePost', middleware.requireAuthentication, function(req, res){
+	var user = req.user
+	
+	var postId = req.body.mainPostId
+	console.log('postId'+JSON.stringify(postId, null, 4))
+	
+	db.userFeed.update({
+		status:'hidden'
+	},{
+		where:{
+			mainPostId:postId,
+			receivedUserId:user.id
+			
+		}
+	}).then(function(userFeed){
+		console.log('userFeed hidden'+JSON.stringify(userFeed, null, 4))
+		
+		res.json(userFeed)
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+
+	
+})
+
 router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 	var user = req.user
 	console.log('user'+JSON.stringify(user, null, 4))
@@ -108,6 +139,7 @@ router.post('/getTagToUnsave', middleware.requireAuthentication, function(req, r
 
 	
 })
+
 
 router.post('/unsaveTag', middleware.requireAuthentication, function(req, res){
 	var user = req.user
@@ -589,8 +621,8 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						return userFeed.mainPost
 					})
 					
-					// console.log('posts:' + JSON.stringify(posts, null, 4))
-					// res.json({posts:posts})
+					console.log('postsXC:' + JSON.stringify(posts, null, 4))
+					res.json({posts:posts})
 				}).catch(function(e) {
 					console.log(e)
 					res.render('error', {

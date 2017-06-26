@@ -406,9 +406,8 @@ function getPostDB(option){
 							postOpt.id = 'postOpt'
 							postOpt.className = 'glyphicon glyphicon-collapse-down'
 							postOpt.onclick = function(){
-
+							var thisPostDiv = this.parentNode.parentNode
 							function postOptClick(option){
-								console.log(option)
 								if(option === "Save"){
 									
 									var saveToContainer = document.createElement('div')
@@ -564,6 +563,7 @@ function getPostDB(option){
 									    }
 									});
 								}else if(option==='Unsave'){
+
 									var saveToContainer = document.createElement('div')
 									saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
 									saveToContainer.style.left = postOptCoords.left - divTitleCoords.left-150 + 'px'
@@ -671,6 +671,15 @@ function getPostDB(option){
 									        }
 									    }
 									});
+								}else if(option==='Hide'){
+
+									$.post('/notif/hidePost',{
+										mainPostId:post.id
+									}).done(function(hidden){
+										thisPostDiv.remove()
+									})
+								}else if(option==='Share'){
+									document.location = ("/notif?postId="+ post.id + "&command=share")
 								}
 							}
 								console.log(event.clientY)
