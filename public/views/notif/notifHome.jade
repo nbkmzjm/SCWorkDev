@@ -995,6 +995,19 @@ append scripts
 								shareBtn.id = 'shareBtn'
 								shareBtn.style.display = 'none'
 								divShareBtn.appendChild(shareBtn)
+								shareBtn.addEventListener('click',function(){
+
+									console.log(select.value)
+									console.log(selectFilter.value)
+									console.log(userIdSelected)
+									console.log($('#selectCoworker').val())
+									$.post('/notif/sharePostContain',{
+										mainPostId:postId
+									}).done(function(mainPost){
+										postDBGroupSelect(mainPost.postText)
+									})
+
+								})
 
 							divInputGroupFilter.appendChild(divShareBtn)
 
@@ -1009,7 +1022,7 @@ append scripts
 							}
 
 
-							//- var formTH = document.createElement('form')
+							//- JQUERY typeahead example
 							var divTHContainer = document.createElement('div')
 							divTHContainer.className = 'typeahead__container'
 								divTHContainer.style.maxWidth = '400px'
@@ -1042,7 +1055,7 @@ append scripts
 									divTHField.appendChild(spanTH)
 								divTHContainer.appendChild(divTHField)
 							//- formTH.appendChild(divTHContainer)
-							$('#Feed').append(divTHContainer)
+							//- $('#Feed').append(divTHContainer)
 							$.typeahead({
 							    input: '.js-typeahead-friendSearch',
 							    minLength:1,

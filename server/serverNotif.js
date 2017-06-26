@@ -44,6 +44,30 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 
 })
 
+router.post('/sharePostContain', middleware.requireAuthentication, function(req, res){
+	var user = req.user
+	
+	var mainPostId = req.body.mainPostId
+	
+	db.mainPost.findOne({
+		where:{
+			id:mainPostId
+		}
+	}).then(function(mainPost){
+		console.log('mainPostContain'+JSON.stringify(mainPost, null, 4))
+		
+		res.json(mainPost)
+	}).catch(function(e) {
+		console.log(e)
+		res.render('error', {
+			error: e.toString()
+		})
+	});
+
+	
+})
+
+
 router.post('/hidePost', middleware.requireAuthentication, function(req, res){
 	var user = req.user
 	
