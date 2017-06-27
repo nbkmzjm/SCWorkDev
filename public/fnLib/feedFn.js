@@ -68,8 +68,19 @@ function myMCEini(selector){
 	// });
 }
 
-function postDB(postTo, postToValue, postText, filter, userArray, storageLink){
+function postDB(postTo, postToValue, postText, filter, userArray, shareOriginalUserId){
+	if(option===undefined){
+		var option = {}
+	}
 
+	var postTo = option.postTo||undefined
+	var postToValue = option.postToValue||undefined
+	var postText = option.postText||undefined
+	var filter = option.filter||undefined
+	var userArray = option.userArray||undefined
+	var shareOriginalUserId = option.shareOriginalUserId||undefined
+
+	console.log('postText'+postText)
 	var userArrayString = JSON.stringify(userArray,4, null)
 	if(postToValue !== "ALL"){
 	var postToValue = JSON.stringify(postToValue,4, null)
@@ -78,7 +89,7 @@ function postDB(postTo, postToValue, postText, filter, userArray, storageLink){
 	$.post('/notif/post',{
 		postTo:postTo,
 		postToValue:postToValue,
-		storageLink:storageLink,
+		shareOriginalUserId:shareOriginalUserId,
 		postText:postText,
 		filter:filter,
 		userArray:userArrayString

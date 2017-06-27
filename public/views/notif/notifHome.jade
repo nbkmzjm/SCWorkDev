@@ -393,11 +393,18 @@ append scripts
 				document.getElementById("post").focus()
 				
 
-				function postDBGroupSelect(inputValue){
+				function postDBGroupSelect(inputValue, shareOriginalUserId){
 					console.log(inputValue)
 					console.log(select.value)
 					if(select.value === 'Private'){
-						postDB(select.value, 'Private', inputValue, selectFilter.value, userIdSelected)
+						postDB({
+							postTo:select.value,
+							postToValue: 'Private',
+							postText: inputValue,
+							shareOriginalUserId:shareOriginalUserId
+							//- filter: selectFilter.value,
+							//- userArr: userIdSelected
+						})
 					
 					}else if(select.value === "WorkGroup" && selectWorkGroup.value !== ''){
 						if(curUser.title === 'WorkGroup'){
@@ -405,34 +412,66 @@ append scripts
 						}else{
 							var selectWorkGroupVal = $('#selectWorkGroup').val()
 						}
-						postDB('WorkGroup', selectWorkGroupVal,
-						inputValue, selectFilter.value,userIdSelected)
+						postDB({
+							postTo:select.value,
+							postToValue: selectWorkGroupVal,
+							postText:inputValue,
+							shareOriginalUserId:shareOriginalUserId
+							 
+						})
 						//- location.reload()
 					}else if(select.value === 'Coworker'){
 
 						if($('#selectCoworker').val().length === $('#selectCoworker').get(0).childElementCount){
-							postDB(select.value, 'ALL', 
-							inputValue, selectFilter.value, userIdSelected)
+							postDB({
+								postTo:select.value,
+								postToValue: 'ALL',
+								postText:inputValue,
+								shareOriginalUserId:shareOriginalUserId
+							})
 						}else{
-							postDB(select.value, $('#selectCoworker').val().map(Number), 
-							inputValue, selectFilter.value, userIdSelected)
+							postDB({
+								postTo:select.value,
+								postToValue: $('#selectCoworker').val().map(Number),
+								postText:inputValue,
+								shareOriginalUserId:shareOriginalUserId
+							})
 						}
 					
 					}else if(select.value === 'Colleague'){
 						if($('#selectColleague').val().length === $('#selectColleague').get(0).childElementCount){
-							postDB(select.value, 'ALL', 
-							inputValue, selectFilter.value, userIdSelected)
+							postDB({
+								postTo:select.value,
+								postToValue: 'ALL',
+								postText:inputValue,
+								shareOriginalUserId:shareOriginalUserId
+							})
+							
 						}else{
-							postDB(select.value, $('#selectColleague').val().map(Number), 
-							inputValue, selectFilter.value, userIdSelected)
+							postDB({
+								postTo:select.value,
+								postToValue: $('#selectColleague').val().map(Number),
+								postText:inputValue,
+								shareOriginalUserId:shareOriginalUserId
+							})
+							
 						}
 					}else if(select.value === 'Coworker of Colleague'){
 						if($('#selectCoofColleague').val().length === $('#selectCoofColleague').get(0).childElementCount){
-							postDB(select.value, 'ALL', 
-							inputValue, selectFilter.value, userIdSelected)
+							postDB({
+								postTo:select.value,
+								postToValue: 'ALL',
+								postText:inputValue,
+								shareOriginalUserId:shareOriginalUserId
+							})
 						}else{
-							postDB(select.value, $('#selectCoofColleague').val().map(Number), 
-							inputValue, selectFilter.value, userIdSelected)
+							postDB({
+								postTo:select.value,
+								postToValue: $('#selectCoofColleague').val().map(Number),
+								postText:inputValue,
+								shareOriginalUserId:shareOriginalUserId
+							})
+							
 						}
 
 					}
@@ -996,7 +1035,7 @@ append scripts
 								shareBtn.style.display = 'none'
 								divShareBtn.appendChild(shareBtn)
 								shareBtn.addEventListener('click',function(){
-
+									console.log(curUser)
 									console.log(select.value)
 									console.log(selectFilter.value)
 									console.log(userIdSelected)
@@ -1004,7 +1043,8 @@ append scripts
 									$.post('/notif/sharePostContain',{
 										mainPostId:postId
 									}).done(function(mainPost){
-										postDBGroupSelect(mainPost.postText)
+										var shareText = '<p> Shared by '+curUser.name + ' ('+ curUser.title + ', ' +curUser.department.name+')</p><hr>'
+										postDBGroupSelect(shareText + mainPost.postText, mainPost.userId)
 									})
 
 								})

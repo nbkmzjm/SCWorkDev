@@ -1670,7 +1670,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	var postToValue = req.body.postToValue
 	var filter = req.body.filter
 	var userArray = req.body.userArray
-	var storageLink = req.body.storageLink
+	var shareOriginalUserId = req.body.shareOriginalUserId
 	var userIncString = ""
 	var userExcString =""
 
@@ -1681,7 +1681,12 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	}
 	
 	console.log('userArray:'+JSON.stringify(userArray, null, 4))
-	console.log('storageLink:'+JSON.stringify(storageLink, null, 4))
+	// console.log('storageLink:'+JSON.stringify(storageLink, null, 4))
+	if(shareOriginalUserId!== undefined){
+		var postUser = shareOriginalUserId
+	}else{
+		var postUser = curUserId
+	}
 	db.user.findOne({
 		where:{
 			id:curUserId
@@ -1692,7 +1697,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			postText:postText,
 			postTo:postTo,
 			postToValue:postToValue,
-			storageLink:storageLink,
+			// storageLink:storageLink,
 			userId:curUserId,
 			include:userIncString,
 			exclude:userExcString,
