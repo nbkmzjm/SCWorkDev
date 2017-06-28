@@ -1681,29 +1681,29 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 	}
 	
 	console.log('userArray:'+JSON.stringify(userArray, null, 4))
-	// console.log('storageLink:'+JSON.stringify(storageLink, null, 4))
+	console.log('shareOriginalUserId:'+JSON.stringify(shareOriginalUserId, null, 4))
 	if(shareOriginalUserId!== undefined){
-		var postUser = shareOriginalUserId
+		var postUserId = shareOriginalUserId
 	}else{
-		var postUser = curUserId
+		var postUserId = curUserId
 	}
 	db.user.findOne({
 		where:{
-			id:curUserId
+			id:postUserId
 		}
 
-	}).then(function(user){
+	}).then(function(postUser){
 		return [db.mainPost.create({
 			postText:postText,
 			postTo:postTo,
 			postToValue:postToValue,
 			// storageLink:storageLink,
-			userId:curUserId,
+			userId:postUser.id,
 			include:userIncString,
 			exclude:userExcString,
-		}), user]
+		}), postUser]
 
-	}).spread(function(post, user){
+	}).spread(function(post, postUser){
 		// console.log('post:'+JSON.stringify(post, null, 4))
 		var stringPostToValue = post.postToValue
 		if(post.postToValue != 'ALL'){
@@ -1873,14 +1873,14 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				// console.log('friend Group:'+JSON.stringify(groups, null, 4))
 
 				var userFeed = new UserFeed(post.id, 
-				curUserId, 'None', curUserId, 
-				curUser.fullName + ' posted to CO-WORKER: '+ post.postText)
+				postUser.id, 'None', postUser.id, 
+				postUser.fullName + ' posted to CO-WORKER: '+ post.postText)
 				bulkData.push(userFeed)
 				groups.forEach(function(group, i){
 						// coworkerIds.push(group.groupBLUserId)
 						var userFeed = new UserFeed(post.id, 
-							group.groupBLUserId, 'new', curUserId, 
-							curUser.fullName + ' posted to CO-WORKER: '+ post.postText)
+							group.groupBLUserId, 'new', postUser.id, 
+							postUser.fullName + ' posted to CO-WORKER: '+ post.postText)
 					bulkData.push(userFeed)
 				})
 				if (filter ==="Include"){
@@ -2108,7 +2108,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 
 		res.json({
 			post:post,
-			user:user
+			user:postUser
 			
 		})
 

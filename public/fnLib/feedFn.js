@@ -68,7 +68,7 @@ function myMCEini(selector){
 	// });
 }
 
-function postDB(postTo, postToValue, postText, filter, userArray, shareOriginalUserId){
+function postDB(option){
 	if(option===undefined){
 		var option = {}
 	}
