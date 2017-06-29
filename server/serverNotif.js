@@ -1717,7 +1717,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 		if(postTo === 'Private'){
 			var bulkData = []
 			// console.log('typeof'+ typeof include)
-			var userFeed = new UserFeed(post.id, curUserId, 'None', curUserId, curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
+			var userFeed = new UserFeed(post.id, postUser.id, 'None', postUser.id, postUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
 			bulkData.push(userFeed)
 
 			if (filter ==="Include"){
@@ -1756,14 +1756,14 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 			var workGroupIds = []
 			if(!arrayPostToValue.some(isNaN)){
 
-				var userFeed = new UserFeed(post.id, curUserId, 'None',
-						curUserId, curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
+				var userFeed = new UserFeed(post.id, postUser.id, 'None',
+						postUser.id, postUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
 				bulkData.push(userFeed)
 
 				arrayPostToValue.forEach(function(id){
 					
 					var userFeed = new UserFeed(post.id, id, 'new',
-					curUserId, curUser.fullName + ' posted to members' +  ': ' + post.postText)
+					postUser.id, postUser.fullName + ' posted ' + post.postText)
 					bulkData.push(userFeed)
 					
 				})
@@ -1802,14 +1802,14 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					
 					//add id of owner of post for notification
 					workGroupIds.push(curUserId)
-					var userFeed = new UserFeed(post.id, curUserId, 'None', curUserId, 
-					curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
+					var userFeed = new UserFeed(post.id, postUser.id, 'None', postUser.id, 
+					postUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
 					bulkData.push(userFeed)
 					userGroups.forEach(function(userGroup, i){
 						if (workGroupIds.indexOf(userGroup.userId)===-1){
 							workGroupIds.push(userGroup.userId)
-							var userFeed = new UserFeed(post.id, userGroup.userId, 'new', curUserId, 
-							curUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
+							var userFeed = new UserFeed(post.id, userGroup.userId, 'new', postUser.id, 
+							postUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
 							bulkData.push(userFeed)
 						}
 					})
@@ -1874,13 +1874,13 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 
 				var userFeed = new UserFeed(post.id, 
 				postUser.id, 'None', postUser.id, 
-				postUser.fullName + ' posted to CO-WORKER: '+ post.postText)
+				postUser.fullName + ' posted '+ post.postText)
 				bulkData.push(userFeed)
 				groups.forEach(function(group, i){
 						// coworkerIds.push(group.groupBLUserId)
 						var userFeed = new UserFeed(post.id, 
 							group.groupBLUserId, 'new', postUser.id, 
-							postUser.fullName + ' posted to CO-WORKER: '+ post.postText)
+							postUser.fullName + ' posted '+ post.postText)
 					bulkData.push(userFeed)
 				})
 				if (filter ==="Include"){
@@ -1947,22 +1947,22 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				// console.log('friend Group:'+JSON.stringify(groups, null, 4))
 				
 				var userFeed = new UserFeed(post.id, 
-				curUserId, 'None', curUserId, 
-				curUser.fullName + ' posted to COLLEAGUE: '+ post.postText)
+				postUser.id, 'None', postUser.id, 
+				postUser.fullName + ' posted '+ post.postText)
 				bulkData.push(userFeed)
 
 				groups.forEach(function(group, i){
 					if (group.users[0].userGroups.status === 'Coworker'){
 						// colleagueIds.push(group.groupBLUserId)
 						var userFeed = new UserFeed(post.id, 
-							group.groupBLUserId, 'new', curUserId, 
-							curUser.fullName + ' posted to COLLEAGUE: '+ post.postText)
+							group.groupBLUserId, 'new', postUser.id, 
+							postUser.fullName + ' posted '+ post.postText)
 					
 					}else if (group.users[0].userGroups.status === 'Colleague'){
 						// colleagueIds.push(group.groupBLUserId)
 						var userFeed = new UserFeed(post.id, 
-							group.groupBLUserId, 'new', curUserId, 
-							curUser.fullName + ' posted to COLLEAGUE: '+ post.postText)
+							group.groupBLUserId, 'new', postUser.id, 
+							postUser.fullName + ' posted '+ post.postText)
 					}
 					bulkData.push(userFeed)
 				
@@ -2028,7 +2028,7 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 				var colleagueGroupIds = []
 				var userFeed = new UserFeed(post.id, 
 				curUserId, 'None', curUserId, 
-				curUser.fullName + ' posted to COWORKER OF COLLEAGUE:'+ post.postText)
+				curUser.fullName + ' posted '+ post.postText)
 				bulkData.push(userFeed)
 
 				
@@ -2041,14 +2041,14 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					if (group.users[0].userGroups.status === 'Coworker'){
 						colleagueIds.push(group.groupBLUserId)
 						var userFeed = new UserFeed(post.id, 
-							group.groupBLUserId, 'new', curUserId, 
-							curUser.fullName + ' posted to COWORKER OF COLLEAGUE: '+ post.postText)
+							group.groupBLUserId, 'new', postUser.id, 
+							postUser.fullName + ' posted '+ post.postText)
 					
 					}else if (group.users[0].userGroups.status === 'Colleague'){
 						colleagueIds.push(group.groupBLUserId)
 						var userFeed = new UserFeed(post.id, 
-							group.groupBLUserId, 'new', curUserId, 
-							curUser.fullName + ' posted to COWORKER OF COLLEAGUE: '+ post.postText)
+							group.groupBLUserId, 'new', postUser.id, 
+							postUser.fullName + ' posted '+ post.postText)
 					}
 					bulkData.push(userFeed)
 				})
@@ -2074,8 +2074,8 @@ router.post('/post', middleware.requireAuthentication, function(req, res) {
 					if(coworkerofColleagueUserIds.indexOf(userGroup.userId)===-1){
 						if(colleagueIds.indexOf(userGroup.userId)=== -1){
 							coworkerofColleagueUserIds.push(userGroup.userId)
-							var userFeed = new UserFeed(post.id, userGroup.userId, 'new', curUserId, 
-							curUser.fullName + ' posted to COWORKER OF COLLEAGUE: '+ post.postText)
+							var userFeed = new UserFeed(post.id, userGroup.userId, 'new', postUser.id, 
+							postUser.fullName + ' posted to COWORKER OF COLLEAGUE: '+ post.postText)
 							bulkData.push(userFeed)
 						}
 					}

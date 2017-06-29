@@ -1,71 +1,71 @@
 
 
 function myMCEini(selector){
-	// tinymce.init({
-	//     selector: selector,
-	//     //- statusbar: false,
- //        setup: function (editor) {
- //            editor.on('change', function () {
- //                editor.save();
- //                var editorContent = editor.getContent()
- //                if(editorContent != ''){
- //                	console.log('not black')
- //                	$("#btnPost").prop("disabled",false)
- //                }else{
- //                	$("#btnPost").prop("disabled",true)
- //                }
+	tinymce.init({
+	    selector: selector,
+	    //- statusbar: false,
+        setup: function (editor) {
+            editor.on('change', function () {
+                editor.save();
+                var editorContent = editor.getContent()
+                if(editorContent != ''){
+                	console.log('not black')
+                	$("#btnPost").prop("disabled",false)
+                }else{
+                	$("#btnPost").prop("disabled",true)
+                }
 
- //            });
+            });
             
- //        },
-	//     theme: "modern",
+        },
+	    theme: "modern",
 	   
-	//     //- paste_as_text: false,
-	//     paste_data_images: true,
-	//     paste_enable_default_filters: false,
-	//     //- plugins:[
-	//     //- 	'paste'
-	//     //- ]
-	//     plugins: [
-	//       "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-	//       "searchreplace wordcount visualblocks visualchars code fullscreen",
-	//       "insertdatetime media nonbreaking save table contextmenu directionality",
-	//       "emoticons template textcolor paste colorpicker textpattern"
-	//     ],
-	//     theme_advanced_buttons3_add : "emotions",
-	//     table_default_styles: {
-	// 	    fontWeight: 'bold',
-	// 	    borderTop: '1px solid black'
-	// 	},
-	//     toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-	//     toolbar2: "print preview media | forecolor backcolor emoticons",
-	//      theme_advanced_buttons3_add : "tablecontrols",
- //        table_styles : "Header 1=header1;Header 2=header2;Header 3=header3",
+	    //- paste_as_text: false,
+	    paste_data_images: true,
+	    paste_enable_default_filters: false,
+	    //- plugins:[
+	    //- 	'paste'
+	    //- ]
+	    plugins: [
+	      "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+	      "searchreplace wordcount visualblocks visualchars code fullscreen",
+	      "insertdatetime media nonbreaking save table contextmenu directionality",
+	      "emoticons template textcolor paste colorpicker textpattern"
+	    ],
+	    theme_advanced_buttons3_add : "emotions",
+	    table_default_styles: {
+		    fontWeight: 'bold',
+		    borderTop: '1px solid black'
+		},
+	    toolbar1: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+	    toolbar2: "print preview media | forecolor backcolor emoticons",
+	     theme_advanced_buttons3_add : "tablecontrols",
+        table_styles : "Header 1=header1;Header 2=header2;Header 3=header3",
         
        
-	//     file_picker_callback: function(callback, value, meta) {
-	// 		if (meta.filetype == 'image') {
-	// 			$('#upload').trigger('click');
-	// 			$('#upload').on('change', function() {
-	// 			    var file = this.files[0];
-	// 			    var reader = new FileReader();
-	// 			    reader.onload = function(e) {
-	// 				    callback(e.target.result, {
-	// 				       alt: ''
-	// 				    });
-	// 			 	};
-	// 			  	reader.readAsDataURL(file);
-	// 			});
-	// 		}
-	//     },
-	//     templates: [{
-	//         title: 'Test template 1',
-	//         content: 'Test 1'
-	//     }, {
-	//         title: 'Test template 2',
-	//         content: 'Test 2'
-	//     }]
-	// });
+	    file_picker_callback: function(callback, value, meta) {
+			if (meta.filetype == 'image') {
+				$('#upload').trigger('click');
+				$('#upload').on('change', function() {
+				    var file = this.files[0];
+				    var reader = new FileReader();
+				    reader.onload = function(e) {
+					    callback(e.target.result, {
+					       alt: ''
+					    });
+				 	};
+				  	reader.readAsDataURL(file);
+				});
+			}
+	    },
+	    templates: [{
+	        title: 'Test template 1',
+	        content: 'Test 1'
+	    }, {
+	        title: 'Test template 2',
+	        content: 'Test 2'
+	    }]
+	});
 }
 
 function postDB(option){
