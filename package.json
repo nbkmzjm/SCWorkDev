@@ -36,7 +36,8 @@
     "dotenv":"4.0.0",
     "jquery.iframetracker":"1.1.0",
     "jquery-typeahead":"2.8.0",
-    "nodemailer":"4.0.1"
+    "nodemailer":"4.0.1",
+    "sendgrid":"5.1.1"
 
   }
 }
