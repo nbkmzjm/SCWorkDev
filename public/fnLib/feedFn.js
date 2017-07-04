@@ -420,10 +420,11 @@ function getPostDB(option){
 							var thisPostDiv = this.parentNode.parentNode
 							function postOptClick(option){
 								if(option === "Save"){
-									
+									console.log(postOptCoords)
+									console.log(divTitleCoords)
 									var saveToContainer = document.createElement('div')
 									saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
-									saveToContainer.style.left = postOptCoords.left - divTitleCoords.left - 150 + 'px'
+									saveToContainer.style.left = divTitleCoords.left + 'px'
 									saveToContainer.style.width = '300px'
 									saveToContainer.className = 'popUpContainer'
 									saveToContainer.id = 'saveToContainer'

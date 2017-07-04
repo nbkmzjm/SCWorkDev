@@ -17,7 +17,7 @@ var debug = require('debug')('http')
 const webpush = require('web-push')
 const nodemailer = require('nodemailer')
 // const sendgrid = require('sendgrid')(process.env.SENDGRID_API_KEY).Email()
-// const xoauth2 = require('xoauth2')
+const xoauth2 = require('xoauth2')
 var moment = require('moment');
 var now = moment();
 var bodyParser = require('body-parser');
@@ -30,42 +30,45 @@ localStorage = new LocalStorage('./scratch')
 var Umzug = require('umzug')
 var S3Bucket = process.env.S3Bucket
 
-// var transporter = nodemailer.createTransport({
-// 	service: 'gmail',
-	
-// 	auth:{
-// 		// xoauth2: xoauth2.createXOAuth2Generator({
-// 			user:'tkngo85@gmail.com',
-// 			pass:'QWopzxnm1'
-// 			// clientid:'1011460411043-3us31bnkv78qc8iut2f12p6ajjv0ihgh.apps.googleusercontent.com',
-// 			// clientSecret:'yAIh0YVQlC9qeBMIcNjIOhuJ',
-// 			// refreshToken:''
-// 		// })
-// 	}
-// })
+var transporter = nodemailer.createTransport({
+	host: 'smtp.gmail.com',
+	port: 587,
+	secure: false,
+	auth:{
+		type:'OAuth2',
+		user:'tkngo85@gmail.com',
+		// pass:'QWopzxnm1',
+		clientId:'1011460411043-3us31bnkv78qc8iut2f12p6ajjv0ihgh.apps.googleusercontent.com',
+		clientSecret:'yAIh0YVQlC9qeBMIcNjIOhuJ',
+		refreshToken:'1/Sk20Oo-914ucdBb8Wx3q6YvPBynlZVv20aUwGHQxaNs',
+		accessToken: 'ya29.Glt5BJG-KjNcXRF5C4qEflVQ1GaJTnkhcFA74BqDT-SltcffXXCfia6tKzPei1FcpFhE_l87yrUNr0vosfUshytZwGFxXkWfLWzfWr_GevLQCZpSSZbRdqLBJ6Km'
+		
+		
+	}
+})
 
-var helper = require('sendgrid').mail;
-var fromEmail = new helper.Email('ngokhanhthien@yahoo.com');
-var toEmail = new helper.Email('thien.ngo@bannerhealth.com');
-var subject = 'Sending with SendGrid is Fun';
-var content = new helper.Content('text/plain', 'and easy to do anywhere, even with Node.js');
-var mail = new helper.Mail(fromEmail, subject, toEmail, content);
+// var helper = require('sendgrid').mail;
+// var fromEmail = new helper.Email('ngokhanhthien@yahoo.com');
+// var toEmail = new helper.Email('thien.ngo@bannerhealth.com');
+// var subject = 'Sending with SendGrid is Fun';
+// var content = new helper.Content('text/plain', 'and easy to do anywhere, even with Node.js');
+// var mail = new helper.Mail(fromEmail, subject, toEmail, content);
 
-var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
-var request = sg.emptyRequest({
-  method: 'POST',
-  path: '/v3/mail/send',
-  body: mail.toJSON()
-});
+// var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
+// var request = sg.emptyRequest({
+//   method: 'POST',
+//   path: '/v3/mail/send',
+//   body: mail.toJSON()
+// });
 
-sg.API(request, function (error, response) {
-  if (error) {
-    console.log('Error response received');
-  }
-  console.log(response.statusCode);
-  console.log(response.body);
-  console.log(response.headers);
-});
+// sg.API(request, function (error, response) {
+//   if (error) {
+//     console.log('Error response received');
+//   }
+//   console.log(response.statusCode);
+//   console.log(response.body);
+//   console.log(response.headers);
+// });
 
 
 // sendgrid.send({
@@ -80,12 +83,12 @@ sg.API(request, function (error, response) {
 // 	console.log("Messages was sent:" + info)
 // 	}
 // })
-// var HelperOptions = {
-// 	from: "tkngo85@gmail.com",
-// 	to:"thien.ngo@bannerhealth.com",
-// 	subject: "Test nodemailer",
-// 	text: "hi"
-// }
+var HelperOptions = {
+	from: "tkngo85@gmail.com",
+	to:"thien.ngo@bannerhealth.com",
+	subject: "Test nodemailer",
+	text: "hi"
+}
 
 // transporter.sendMail(HelperOptions, function(error, info){
 // 	if(error){
