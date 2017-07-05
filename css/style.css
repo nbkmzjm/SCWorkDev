@@ -281,7 +281,8 @@
 	position: relative;
 	display: inline-block;
 	vertical-align:middle;
-	max-width: 550px;
+	max-width: 300px;
+	/*max-height: 300px;*/
 	margin: 3px;
 	text-align: left;
 

@@ -164,6 +164,30 @@ function getPostDB(option){
 			div.classList.add('postPanel')
 				var divBody = document.createElement('div')
 				divBody.className = 'panel-body'
+				divBody.addEventListener('mouseover', function(){
+					
+					$("#"+event.target.id).find('p').each(function(){
+						var pIframe = this
+						console.log(pIframe)
+						if(pIframe.firstChild.nodeName === 'IFRAME'){
+							
+							pIframe.setAttribute('style','display:block')
+						}
+					})
+					
+				})
+
+				divBody.addEventListener('mouseout', function(){
+					$("#"+event.relatedTarget.id).find('p').each(function(){
+						var pIframe = this
+						console.log(pIframe)
+						if(pIframe.firstChild.nodeName === 'IFRAME'){
+							
+							pIframe.setAttribute('style','display:none')
+						}
+					})
+
+				})
 
 				divBody.innerHTML = post.postText
 				divBody.id = 'divBody'+ i
@@ -424,7 +448,7 @@ function getPostDB(option){
 									console.log(divTitleCoords)
 									var saveToContainer = document.createElement('div')
 									saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
-									saveToContainer.style.left = divTitleCoords.left + 'px'
+									saveToContainer.style.left = ((divTitleCoords.right - divTitleCoords.left)/4)+'px'
 									saveToContainer.style.width = '300px'
 									saveToContainer.className = 'popUpContainer'
 									saveToContainer.id = 'saveToContainer'
@@ -578,7 +602,7 @@ function getPostDB(option){
 
 									var saveToContainer = document.createElement('div')
 									saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
-									saveToContainer.style.left = postOptCoords.left - divTitleCoords.left-150 + 'px'
+									saveToContainer.style.left = ((divTitleCoords.right - divTitleCoords.left)/4)+'px'
 									saveToContainer.className = 'popUpContainer'
 									saveToContainer.style.width = '300px'
 									saveToContainer.id = 'saveToContainer'
@@ -892,10 +916,11 @@ function getPostDB(option){
 			
 			$("#divBody"+i).find('p').each(function(){
 				var pIframe = this
-				
+				console.log(pIframe)
 				if(pIframe.firstChild.nodeName === 'IFRAME'){
 					pIframe.className = 'embed-responsive embed-responsive-4by3'
 					pIframe.setAttribute('style','clear:both')
+					pIframe.setAttribute('style','display:none')
 
 					var jqIframe = $(this).first()
 					
