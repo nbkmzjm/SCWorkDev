@@ -164,11 +164,12 @@ function getPostDB(option){
 			div.classList.add('postPanel')
 				var divBody = document.createElement('div')
 				divBody.className = 'panel-body'
+				divBody.innerHTML = post.postText
+				divBody.id = 'divBody'+ i
 				divBody.addEventListener('mouseover', function(){
 					
 					$("#"+event.target.id).find('p').each(function(){
 						var pIframe = this
-						console.log(pIframe)
 						if(pIframe.firstChild.nodeName === 'IFRAME'){
 							
 							pIframe.setAttribute('style','display:block')
@@ -180,7 +181,6 @@ function getPostDB(option){
 				divBody.addEventListener('mouseout', function(){
 					$("#"+event.relatedTarget.id).find('p').each(function(){
 						var pIframe = this
-						console.log(pIframe)
 						if(pIframe.firstChild.nodeName === 'IFRAME'){
 							
 							pIframe.setAttribute('style','display:none')
@@ -189,8 +189,7 @@ function getPostDB(option){
 
 				})
 
-				divBody.innerHTML = post.postText
-				divBody.id = 'divBody'+ i
+				
 
 					
 					
@@ -892,7 +891,7 @@ function getPostDB(option){
 			
 			$("#divBody"+i).find('img').each(function(){
 				var jqImg = $(this)
-				jqImg.attr("style","max-width:132px;max-height:132px")
+				jqImg.attr("style","max-width:128px;max-height:128px")
 				jqImg.attr('class','imageThumb')
 				textInPost()===false?jqImg.addClass('floating-image'):""
 				jqImg.click(function(){
@@ -920,7 +919,7 @@ function getPostDB(option){
 				if(pIframe.firstChild.nodeName === 'IFRAME'){
 					pIframe.className = 'embed-responsive embed-responsive-4by3'
 					pIframe.setAttribute('style','clear:both')
-					pIframe.setAttribute('style','display:none')
+					// pIframe.setAttribute('style','display:block')
 
 					var jqIframe = $(this).first()
 					
