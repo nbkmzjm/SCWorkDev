@@ -132,6 +132,7 @@ function getPostDB(option){
 
 	var loadNumber = option.loadNumber||undefined
 	var viewOption = option.viewOption||false
+	var postSize = option.postSize||'Medium'
 	var byMe = option.byMe||false
 	var byOther = option.byOther||false
 	var viewOnly = option.viewOnly||false
@@ -162,10 +163,16 @@ function getPostDB(option){
 			
 			div.className = 'panel panel-success'
 			div.classList.add('postPanel')
+			postSize==='Small'?div.style.maxWidth = '300px':""
+			postSize==='Medium'?div.style.maxWidth = '410px':""
+			postSize==='Large'?div.style.maxWidth = '600px':""
 				var divBody = document.createElement('div')
 				divBody.className = 'panel-body'
 				divBody.innerHTML = post.postText
 				divBody.id = 'divBody'+ i
+
+
+
 				divBody.addEventListener('mouseover', function(){
 					
 					$("#"+event.target.id).find('p').each(function(){
@@ -893,6 +900,7 @@ function getPostDB(option){
 				var jqImg = $(this)
 				jqImg.attr("style","max-width:128px;max-height:128px")
 				jqImg.attr('class','imageThumb')
+				jqImg.hide()
 				textInPost()===false?jqImg.addClass('floating-image'):""
 				jqImg.click(function(){
 					// $('.aModal').length>1?$('.aModal').remove():""

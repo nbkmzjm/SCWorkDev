@@ -517,7 +517,7 @@ append scripts
 
 								// DIV contain selections for VIEW FILTER
 								var divSelectViewFilter = document.createElement('div')
-								divSelectViewFilter.className = 'col-sm-3'
+								divSelectViewFilter.className = 'col-sm-2'
 
 									//List option from the Array 
 									var selectViewFilter = document.createElement('select')
@@ -678,6 +678,57 @@ append scripts
 									divByOther.appendChild(byOther)
 								divViewFilter.appendChild(divByOther)
 
+								// DIV contain label for Post Size
+								var postSizeLable = document.createElement('label')
+								postSizeLable.className = 'col-sm-1'
+								postSizeLable.innerHTML = 'Post Size:'
+								divViewFilter.appendChild(postSizeLable)
+
+								// DIV contain selections for Post Size
+								var divPostSize = document.createElement('div')
+								divPostSize.className = 'col-sm-2'
+
+									//List option from the Array 
+									var postSizeOpt = document.createElement('select')
+									postSizeOpt.className = 'form-control'
+									postSizeOpt.name = 'postSize'
+									postSizeOpt.id = 'postSize'
+										var optionList = ['Medium','Small','Large']
+											//- var optionDB = document.createElement('option')
+											//- optionDB.value = setting.value
+											//- optionDB.innerHTML = setting.value
+											//- postSizeOpt.appendChild(optionDB)
+
+										optionList.forEach(function(item, i){
+											//- if(item !== setting.value){
+												var option = document.createElement('option')
+												option.value = item
+												option.innerHTML = item
+												postSizeOpt.appendChild(option)
+											//- }
+
+										})
+									postSizeOpt.addEventListener('change', function(){
+										console.log(postSizeOpt.value)
+										$('#divPostContainer').html('')
+										//- $('#viewOnly').attr('checked', false)
+										
+
+										getPostDB({postSize:postSizeOpt.value})
+
+										
+										//- $.post('/notif/setFeedSetting',{
+										//- 	settingId:setting.id,
+										//- 	settingValue:postSizeOpt.value,
+										//- 	action:'update'
+										//- }).done(function(Rdata){
+
+										//- })
+									})
+									
+									divPostSize.appendChild(postSizeOpt)
+								divViewFilter.appendChild(divPostSize)
+
 							$('#Feed').append(divViewFilter)
 
 						//Post Filter	
@@ -686,6 +737,7 @@ append scripts
 							//DIV contain POST FILTER options
 							var divInputGroupFilter = document.createElement('div')
 							divInputGroupFilter.className = 'col-sm-12'
+							divInputGroupFilter.style.marginBottom = '20px'
 
 								//
 								var label = document.createElement('label')
@@ -1053,7 +1105,18 @@ append scripts
 
 
 
+							
+
 							$('#Feed').append(divInputGroupFilter)
+
+							var lineHR = document.createElement('HR')
+							lineHR.style.clear = 'both'
+							lineHR.style.height = '10px'
+							lineHR.style.border = '2px'
+							lineHR.style.backgroundColor = 'grey'
+							//- lineHR.setAttribute('style','box-shadow:0 10px 10px -10px grey inset;')
+							
+							$('#Feed').append(lineHR)
 							
 							//diplay share button after clicking share 
 							if(command === 'share'){
@@ -1189,8 +1252,11 @@ append scripts
 
 					var divPostContainer = document.createElement('div')
 					divPostContainer.id = 'divPostContainer'
+
+					
 					$('#Feed').append(divPostContainer)
 
+					
 				})
 						
 					
