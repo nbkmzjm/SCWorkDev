@@ -140,8 +140,10 @@ function getPostDB(option){
 	var tagName = option.tagName||false
 	var tagCategory = option.tagCategory||false
 	var tagType = option.tagType||false
+	var docOnly = option.docOnly||false
 	console.log('byMe:'+ byMe)
 	console.log('byOther:'+ byOther)
+	
 	// console.log('feedNumber:'+loadNumber)
 	$.post('/notif/getFeed',{
 		loadNumber:loadNumber,
@@ -172,29 +174,30 @@ function getPostDB(option){
 				divBody.id = 'divBody'+ i
 
 
+				// if(docOnly === true){
+				// 	divBody.addEventListener('mouseover', function(){
+						
+				// 		$("#"+event.target.id).find('p').each(function(){
+				// 			var pIframe = this
+				// 			if(pIframe.firstChild.nodeName === 'IFRAME'){
+								
+				// 				pIframe.setAttribute('style','display:block')
+				// 			}
+				// 		})
+						
+				// 	})
 
-				divBody.addEventListener('mouseover', function(){
-					
-					$("#"+event.target.id).find('p').each(function(){
-						var pIframe = this
-						if(pIframe.firstChild.nodeName === 'IFRAME'){
-							
-							pIframe.setAttribute('style','display:block')
-						}
-					})
-					
-				})
+				// 	divBody.addEventListener('mouseout', function(){
+				// 		$("#"+event.relatedTarget.id).find('p').each(function(){
+				// 			var pIframe = this
+				// 			if(pIframe.firstChild.nodeName === 'IFRAME'){
+								
+				// 				pIframe.setAttribute('style','display:none')
+				// 			}
+				// 		})
 
-				divBody.addEventListener('mouseout', function(){
-					$("#"+event.relatedTarget.id).find('p').each(function(){
-						var pIframe = this
-						if(pIframe.firstChild.nodeName === 'IFRAME'){
-							
-							pIframe.setAttribute('style','display:none')
-						}
-					})
-
-				})
+				// 	})
+				// }
 
 				
 
@@ -213,9 +216,12 @@ function getPostDB(option){
 						
 						var divTitle = document.createElement('div')
 						divTitle.className = 'panel-heading'
+						if(docOnly === true){
+							divTitle.setAttribute('style','display:none')
+						}
 
 						divTitle.classList.add('postPanel')
-
+						divTitle.id = 'divTitle'
 
 							//Posted users with date and time
 							var pUser = document.createElement('span')
@@ -900,7 +906,11 @@ function getPostDB(option){
 				var jqImg = $(this)
 				jqImg.attr("style","max-width:128px;max-height:128px")
 				jqImg.attr('class','imageThumb')
-				jqImg.hide()
+				
+				if(docOnly === true){
+					jqImg.hide()
+					
+				}
 				textInPost()===false?jqImg.addClass('floating-image'):""
 				jqImg.click(function(){
 					// $('.aModal').length>1?$('.aModal').remove():""
@@ -927,8 +937,10 @@ function getPostDB(option){
 				if(pIframe.firstChild.nodeName === 'IFRAME'){
 					pIframe.className = 'embed-responsive embed-responsive-4by3'
 					pIframe.setAttribute('style','clear:both')
-					// pIframe.setAttribute('style','display:block')
-
+					// if(docOnly === true){
+					// 	pIframe.setAttribute('style','display:block'):""
+					// docOnly === false?pIframe.setAttribute('style','display:none'):""
+					// }
 					var jqIframe = $(this).first()
 					
 					jQuery(document).ready(function($){

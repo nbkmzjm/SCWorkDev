@@ -731,6 +731,48 @@ append scripts
 
 							$('#Feed').append(divViewFilter)
 
+							var divViewFilter2 = document.createElement('div')
+							divViewFilter2.style.marginTop  = "20px"
+							divViewFilter2.style.clear = 'both'
+							divViewFilter2.className = 'form-group col-sm-12'
+								// DIV contain label for BY OTHER
+								var labelDocOnly = document.createElement('label')
+								labelDocOnly.className = 'col-sm-1'
+								labelDocOnly.innerHTML = 'Document Only:'
+								divViewFilter2.appendChild(labelDocOnly)
+
+								//DIV contain checkbox for BY OTHER and its action
+								var divDocOnly = document.createElement('div')
+								divDocOnly.className = 'col-sm-1'
+									
+									var docOnly = document.createElement('input')
+									docOnly.type = 'checkbox'
+									docOnly.className = 'form-control'
+									docOnly.id = 'docOnly'
+									docOnly.value = 'false'
+									docOnly.addEventListener('click', function(){
+
+										//- if(this.checked === true){
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												docOnly:$('#docOnly').is(':checked'),
+											})
+											$('#divPostContainer').html('')
+										//- }else{
+											//- getPostDB({
+											//- 	getPostDB({
+											//- 	viewOption:selectViewFilter.value,
+											//- 	docOnly:$('#docOnly').is(':checked'),
+											//- })
+											//- $('#divPostContainer').html('')
+										//- }
+									})
+									divDocOnly.appendChild(docOnly)
+								divViewFilter2.appendChild(divDocOnly)
+
+
+							$('#Feed').append(divViewFilter2)
+
 						//Post Filter	
 						} else if(setting.settingDescriptionId === 2){
 
