@@ -732,46 +732,142 @@ append scripts
 							$('#Feed').append(divViewFilter)
 
 							var divViewFilter2 = document.createElement('div')
-							divViewFilter2.style.marginTop  = "20px"
 							divViewFilter2.style.clear = 'both'
 							divViewFilter2.className = 'form-group col-sm-12'
-								// DIV contain label for BY OTHER
-								var labelDocOnly = document.createElement('label')
-								labelDocOnly.className = 'col-sm-1'
-								labelDocOnly.innerHTML = 'Document Only:'
-								divViewFilter2.appendChild(labelDocOnly)
+								//- // DIV contain label for BY OTHER
+								//- var labelDocOnly = document.createElement('label')
+								//- labelDocOnly.className = 'col-sm-1'
+								//- labelDocOnly.innerHTML = 'Document Only:'
+								//- divViewFilter2.appendChild(labelDocOnly)
 
-								//DIV contain checkbox for BY OTHER and its action
-								var divDocOnly = document.createElement('div')
-								divDocOnly.className = 'col-sm-1'
+								//- //DIV contain checkbox for BY OTHER and its action
+								//- var divDocOnly = document.createElement('div')
+								//- divDocOnly.className = 'col-sm-1'
 									
-									var docOnly = document.createElement('input')
-									docOnly.type = 'checkbox'
-									docOnly.className = 'form-control'
-									docOnly.id = 'docOnly'
-									docOnly.value = 'false'
-									docOnly.addEventListener('click', function(){
+								//- 	var docOnly = document.createElement('input')
+								//- 	docOnly.type = 'checkbox'
+								//- 	docOnly.className = 'form-control'
+								//- 	docOnly.id = 'docOnly'
+								//- 	docOnly.value = 'false'
+								//- 	docOnly.addEventListener('click', function(){
 
-										//- if(this.checked === true){
-											getPostDB({
-												viewOption:selectViewFilter.value,
-												docOnly:$('#docOnly').is(':checked'),
-											})
-											$('#divPostContainer').html('')
-										//- }else{
-											//- getPostDB({
-											//- 	getPostDB({
-											//- 	viewOption:selectViewFilter.value,
-											//- 	docOnly:$('#docOnly').is(':checked'),
-											//- })
-											//- $('#divPostContainer').html('')
-										//- }
+								//- 		//- if(this.checked === true){
+								//- 			getPostDB({
+								//- 				viewOption:selectViewFilter.value,
+								//- 				docOnly:$('#docOnly').is(':checked'),
+								//- 			})
+								//- 			$('#divPostContainer').html('')
+								//- 		//- }else{
+								//- 			//- getPostDB({
+								//- 			//- 	getPostDB({
+								//- 			//- 	viewOption:selectViewFilter.value,
+								//- 			//- 	docOnly:$('#docOnly').is(':checked'),
+								//- 			//- })
+								//- 			//- $('#divPostContainer').html('')
+								//- 		//- }
+								//- 	})
+								//- 	divDocOnly.appendChild(docOnly)
+								//- divViewFilter2.appendChild(divDocOnly)
+
+								// DIV contain label for BY OTHER
+								var labelViewContent = document.createElement('label')
+								labelViewContent.className = 'col-sm-1'
+								labelViewContent.innerHTML = 'Hide Content:'
+								divViewFilter2.appendChild(labelViewContent)
+
+								divViewContent = document.createElement('div')
+								//- divViewContent.className = 'col-sm-3'
+								divViewContent.id = 'divSelectCoworker'
+									viewContentOpt = document.createElement('select')
+									//- viewContentOpt.className = 'form-control'
+									//- viewContentOpt.classList.add('col-sm-4')
+
+									//- select.className = ''
+									//- select.name = 'postTo'
+									viewContentOpt.id = 'viewContentOpt'
+									viewContentOpt.multiple = 'multiple'
+									viewContentOpt.name = 'multiselect[]'
+									contentOptArr = ['Downloads', 'Images', 'Previews', 'Videos']
+									contentOptArr.forEach(function(item){
+											console.log('item:'+ item)
+											var option = document.createElement('option')
+											option.value = item
+											option.innerHTML = item
+											viewContentOpt.appendChild(option)
 									})
-									divDocOnly.appendChild(docOnly)
-								divViewFilter2.appendChild(divDocOnly)
+									divViewContent.appendChild(viewContentOpt)
+								divViewFilter2.appendChild(divViewContent)
 
+								
 
 							$('#Feed').append(divViewFilter2)
+							
+							
+							$('#viewContentOpt').multiselect({
+								onChange: function(element, checked, select){
+									var checkedArr = $('#viewContentOpt').val()
+									var hideDownload = hideImage = hideVideo = hidePreview = false
+									
+									checkedArr.forEach(function(item){
+										if(item === 'Downloads'){
+											hideDownload = true
+										}else if (item === 'Images'){
+											hideImage = true
+										}else if (item === 'Videos'){
+											hideVideo = true
+										}else if (item === 'Previews'){
+											hidePreview = true
+										}
+									})
+									console.log('hideDownload:'+hideDownload)
+									console.log('hideImage:'+hideImage)
+
+									getPostDB({
+										viewOption:selectViewFilter.value,
+										hideVideo:hideVideo,
+										hideDownload:hideDownload,
+										hideImage:hideImage,
+										hidePreview:hidePreview
+									})
+
+									//- if(checked !== true ){
+									//- 	if(element.val()=== 'Videos'){
+									//- 		getPostDB({
+									//- 			viewOption:selectViewFilter.value,
+									//- 			hideVideo:checked,
+									//- 		})
+									//- 	}else if (element.val()=== 'Downloads'){
+									//- 		getPostDB({
+									//- 			viewOption:selectViewFilter.value,
+									//- 			hideDownload:checked,
+									//- 		})
+									//- 	}else if (element.val()=== 'Images'){
+									//- 		getPostDB({
+									//- 			viewOption:selectViewFilter.value,
+									//- 			hideImage:checked,
+									//- 		})
+									//- 	}else if (element.val()=== 'Previews'){
+									//- 		getPostDB({
+									//- 			viewOption:selectViewFilter.value,
+									//- 			hidePreview:checked,
+									//- 		})
+									//- 	}
+										
+									//- }else if(checked === true && element.val()=== 'Documents'){
+									//- 	getPostDB({
+									//- 		viewOption:selectViewFilter.value,
+									//- 		hideDoc:checked,
+									//- 	})
+
+
+									//- }
+								}
+							});
+							
+							//- $('#viewContentOpt').multiselect('selectAll', false);
+							//- $('#viewContentOpt').multiselect('updateButtonText');
+
+
 
 						//Post Filter	
 						} else if(setting.settingDescriptionId === 2){

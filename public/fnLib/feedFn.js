@@ -140,7 +140,10 @@ function getPostDB(option){
 	var tagName = option.tagName||false
 	var tagCategory = option.tagCategory||false
 	var tagType = option.tagType||false
-	var docOnly = option.docOnly||false
+	var hideDownload = option.hideDownload||false
+	var hideImage = option.hideImage||false
+	var hideVideo = option.hideVideo||false
+	var hidePreview = option.hidePreview||false
 	console.log('byMe:'+ byMe)
 	console.log('byOther:'+ byOther)
 	
@@ -216,9 +219,9 @@ function getPostDB(option){
 						
 						var divTitle = document.createElement('div')
 						divTitle.className = 'panel-heading'
-						if(docOnly === true){
-							divTitle.setAttribute('style','display:none')
-						}
+						// if(hideImage === true){
+						// 	divTitle.setAttribute('style','display:none')
+						// }
 
 						divTitle.classList.add('postPanel')
 						divTitle.id = 'divTitle'
@@ -906,10 +909,8 @@ function getPostDB(option){
 				var jqImg = $(this)
 				jqImg.attr("style","max-width:128px;max-height:128px")
 				jqImg.attr('class','imageThumb')
-				
-				if(docOnly === true){
+				if(hideImage === true){
 					jqImg.hide()
-					
 				}
 				textInPost()===false?jqImg.addClass('floating-image'):""
 				jqImg.click(function(){
@@ -937,10 +938,9 @@ function getPostDB(option){
 				if(pIframe.firstChild.nodeName === 'IFRAME'){
 					pIframe.className = 'embed-responsive embed-responsive-4by3'
 					pIframe.setAttribute('style','clear:both')
-					// if(docOnly === true){
-					// 	pIframe.setAttribute('style','display:block'):""
-					// docOnly === false?pIframe.setAttribute('style','display:none'):""
-					// }
+					if(hidePreview === true){
+						pIframe.setAttribute('style','display:none')
+					}
 					var jqIframe = $(this).first()
 					
 					jQuery(document).ready(function($){
