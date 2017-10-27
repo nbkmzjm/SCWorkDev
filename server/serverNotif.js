@@ -506,21 +506,25 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	var byOther = req.body.byOther
 	var viewOnly = req.body.viewOnly
 	var postId = req.body.postId
+	var sDate = new Date(req.body.sDate)
+	var eDate = new Date(req.body.eDate)
 	// console.log('offset: '+ loadNumber)
 	// console.log('viewOnly: '+ viewOnly)
 
 	// console.log('byMe:'+ byMe)
 	// console.log('byOther:'+ byOther)
 	// console.log('viewOnly:'+ viewOnly)
+	
 
 	//set Post by me
 	if(byMe==='true' && byOther !== 'true'){
-		// console.log('by me ')
+		console.log('by me ')
 			userIdPara = curUserId
 	}else if(byOther==='true' && byMe !== 'true'){
-		// console.log('by other ')
+		console.log('by other ')
 		userIdPara = {
 			$ne:curUserId
+
 		}
 
 	}else{
@@ -608,6 +612,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 			console.log('posts:' + JSON.stringify(posts, null, 4))
 		})
 	}else{
+		//Retrieving default feedSetting
 		db.feedSetting.findOne({
 			where:{
 				userId:curUserId,
@@ -648,7 +653,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 					console.log('postsXC:' + JSON.stringify(posts, null, 4))
 					res.json({posts:posts})
 				}).catch(function(e) {
-					console.log(e)
+					console.log(e)	
 					res.render('error', {
 					error: e.toString()
 					})
@@ -814,11 +819,16 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				// 	})
 				// });
 			}else if(feedSetting.value==='Coworker'){
+				
 
 				if(viewOnly!=='true'){
 					
-					
+					console.log('sDate'+ sDate + eDate)
 					var filter = getFeedsPara({
+						//if db field is fulldate, use New Date to feed into sequelize date filtering
+						createdAt:{
+							$between:[sDate,eDate]
+						},
 						$or:[{
 								postTo:{
 									$in:['Private', 'Coworker']
@@ -839,10 +849,10 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 								userId:userIdPara
 
 							}
-						]
-						// exclude:{
-						// 	$notLike:'%'+curUserId+'%'
-						// }
+						],
+						exclude:{
+							$notLike:'%'+curUserId+'%'
+						}
 					})
 				}else{
 					var filter = getFeedsPara({
@@ -997,6 +1007,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				// });
 			}else if(feedSetting.value==='Colleague'){
 				if(viewOnly!=='true'){
+					console.log(userIdPara)
 					var filter = getFeedsPara({
 						$or:[{
 								postTo:{

@@ -73,26 +73,30 @@ append scripts
 
 
 		
-			
+			//get JSON data
 			var JSONdata = !{JSONdata};
+			//get Current User data
 			var curUser = JSONdata.curUser
+			//retrieve certain post when postId is not Null
 			var postId = JSONdata.postId
+			//menu option send command when it is clicked
 			var command = JSONdata.command
 
 			var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
 		    var is_explorer = navigator.userAgent.indexOf('MSIE') > -1;
 		    var is_firefox = navigator.userAgent.indexOf('Firefox') > -1;
 		    var is_safari = navigator.userAgent.indexOf("Safari") > -1;
-			//- alert(navigator.userAgent)
+			
 			if(is_safari && !is_chrome){
 				//this is Safari. myMCE is not loaded
 			}else{
+				// convert textarea to myMCE format
 				myMCEini('textarea')
 			}
 
 			  
 		
-			
+			//function for update notification badges
 			function push_update_notification(msg){
 				if(navigator.serviceWorker.controller){
 
@@ -120,7 +124,7 @@ append scripts
 			}
 				//ok
 
-				
+			//function to covert URI to Blob
 			function dataURItoBlob(dataURI) {
 			    var binary = atob(dataURI.split(',')[1]);
 			    var array = [];
@@ -130,7 +134,10 @@ append scripts
 			    return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
 		    }
 
+		    //exe home feed function
 			feedHome()
+
+			//home feed function
 			function feedHome(){
 				
 				push_update_notification()
@@ -142,7 +149,7 @@ append scripts
 				divInputGroup.style.margin = "10px 0 10px 0"
 				//- divInputGroup.className = 'form-group'
 				
-					//Main text editor. This textarea will back attached with tinyMCE if is not in mobile
+					//Main text editor. This textarea will back attached with tinyMCE if is not in safari mobile
 
 					var inputPost = document.createElement('textarea')
 					inputPost.id = 'post'
@@ -161,6 +168,7 @@ append scripts
 						fileUpload.id = 'upload'
 						fileUpload.name = 'Upload'
 						fileUpload.multiple = true
+						//disabled post button when there no file attached
 						fileUpload.addEventListener('change',function(){
 							if(this.files.length>0){
 								btnPost.disabled = false
@@ -170,124 +178,7 @@ append scripts
 						})
 
 						
-						//send file to s3 upload after selected
-						function fileUploadProcess(textEditorValue){
-							var files = document.getElementById('upload').files
-							console.log(files)
-							if(files.length==0){
-								postDBGroupSelect(inputPost.value)
-								return false
-							}
-							var fileArray = $.map(files, function(file, index) {
-							    return [file];
-							});
-							var i=0
-							var returnURLs =''
-							function uploadReturnURL(arrayFile){
-								//- var decodedImage = dataURItoBlob(inputValueImage)
-								console.log('type:')
-								console.log(arrayFile[i].type)
-								var fileNameNoSpace = arrayFile[i].name.replace(/ /g,"_")
-								var fileType = arrayFile[i].type
-								var orgFileName = arrayFile[i].name
-								var fileExtension = orgFileName.substring(orgFileName.lastIndexOf('.'))
-								
-								var fileName
-								var video = ['.m4v', '.mov', '.mp4', '.MKV', '.AVI', '.VOB', '.MPG', '.TiVo', '.FLV']
-								if(fileType.indexOf('image')!== -1){
-									fileName = moment().format("MMDDHHmmssSSSS")+ 'image.jpeg'
-								}else if(fileType.indexOf('pdf')!== -1){
-									fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
-								}else if(fileType.indexOf('msword')!== -1 || fileType.indexOf('wordprocessingml')!== -1){
-									fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
-								}else if(fileType.indexOf('ms-excel')!== -1 || fileType.indexOf('spreadsheetml')!== -1){
-									fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
-								}else if(fileType.indexOf('ms-powerpoint')!== -1 || fileType.indexOf('presentationml')!== -1){
-									fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
-								}else if(video.indexOf(fileExtension)!==-1){
-									fileName = moment().format("MMDDHHmmssSSSS")+ 'video.mp4'
-								}else{
-									fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
-								}
-								console.log(fileName)
-
-								$.post('/sign-s3', {
-									fileName:fileName,
-									//- fileName:arrayFile[i].name,
-									fileType:arrayFile[i].type
-								}).then(function(returnData){
-									console.log(returnData.signedRequest)
-									console.log('file:')
-									console.log(arrayFile[i])
-									const xhr = new XMLHttpRequest();
-									var signFileType = arrayFile[i].type
-									var signFileName = arrayFile[i].name
-									xhr.open('PUT', returnData.url);
-									xhr.upload.addEventListener("progress", function(evt){
-								      if (evt.lengthComputable) {
-								        console.log("add upload event-listener" + evt.loaded + "/" + evt.total);
-								        percentCompleted = Math.round(evt.loaded/evt.total*100) + '%'
-								        
-								        divProgress.style.display = 'block'
-								        divProgressBar.innerHTML = percentCompleted
-								        divProgressBar.style.width = percentCompleted
-								        btnPost.disabled = true
-								        console.log(percentCompleted)
-								      }
-								    }, false);
-								    xhr.onloadend = function(){
-								    	divProgress.style.display = 'none'
-								    	btnPost.disabled = false
-								    }
-
-
-									xhr.onreadystatechange = function(){
-									console.log('readyState:' + xhr.readyState)
-									console.log('status:' + xhr.status)
-										if(xhr.readyState === 4){
-										  	if(xhr.status === 200){
-											    console.log('uploaded file')
-											    var url = returnData.url
-											    var htmlbreak = (i == arrayFile.length - 1)?'</a>':'</a><br><br><br>'
-											    console.log(htmlbreak)
-											    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
-											    if(signFileType.indexOf('msword')!==-1||signFileType.indexOf('wordprocessingml')!==-1||
-											    	signFileType.indexOf('ms-excel')!==-1||signFileType.indexOf('spreadsheetml')!==-1||
-											    	signFileType.indexOf('ms-powerpoint')!==-1||signFileType.indexOf('presentationml')!==-1){
-											    	returnURLs = returnURLs + '<p><iframe src="https://view.officeapps.live.com/op/embed.aspx?src='+returnData.url+'"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+'</a><br><br><br>'
-											    }else if(signFileType.indexOf('pdf')!==-1){
-											   		returnURLs = returnURLs + '<p><iframe src="https://docs.google.com/gview?url='+returnData.url+'&embedded=true"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+htmlbreak
-											   		
-											   	}else if(signFileType.indexOf('video')!==-1){
-											   		returnURLs = returnURLs +'<p><video controls><source src="'+returnData.url+'"> </video></p>'
-											    }else if(signFileType.indexOf('image')!==-1){
-											    	returnURLs = returnURLs + '<p><img src="'+returnData.url+'"/></p>'
-											    }else{
-											    	returnURLs = returnURLs + '<p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+'</a></p><br><br>'
-											    }
-											    
-											    console.log("returnURLs:"+returnURLs)
-											    i++
-											    if(i< arrayFile.length){
-											    	uploadReturnURL(arrayFile)
-											    }else{
-											    	//- alert('all done ready for DB save')
-											    	console.log("returnURLsFinal:"+returnURLs)
-											    	postDBGroupSelect(textEditorValue+returnURLs)
-											    }
-										  	}else{
-										    	alert('Could not upload files.');
-										  	}
-										}
-									};
-									xhr.send(arrayFile[i]);
-								})
-
-
-							}
-							uploadReturnURL(fileArray)							
-
-						}
+					
 						divInputBtn.appendChild(fileUpload)
 
 
@@ -350,9 +241,126 @@ append scripts
 									xhr.send(decodedImage);
 									//- return returnData.url
 								})
-								
+							}
+							//function send file to s3 upload after selected
+							function fileUploadProcess(textEditorValue){
+								var files = document.getElementById('upload').files
+								console.log(files)
+								if(files.length==0){
+									postDBGroupSelect(inputPost.value)
+									return false
+								}
+								var fileArray = $.map(files, function(file, index) {
+								    return [file];
+								});
+								var i=0
+								var returnURLs =''
+								function uploadReturnURL(arrayFile){
+									//- var decodedImage = dataURItoBlob(inputValueImage)
+									console.log('type:')
+									console.log(arrayFile[i].type)
+									var fileNameNoSpace = arrayFile[i].name.replace(/ /g,"_")
+									var fileType = arrayFile[i].type
+									var orgFileName = arrayFile[i].name
+									var fileExtension = orgFileName.substring(orgFileName.lastIndexOf('.'))
+									
+									var fileName
+									var video = ['.m4v', '.mov', '.mp4', '.MKV', '.AVI', '.VOB', '.MPG', '.TiVo', '.FLV']
+									if(fileType.indexOf('image')!== -1){
+										fileName = moment().format("MMDDHHmmssSSSS")+ 'image.jpeg'
+									}else if(fileType.indexOf('pdf')!== -1){
+										fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
+									}else if(fileType.indexOf('msword')!== -1 || fileType.indexOf('wordprocessingml')!== -1){
+										fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
+									}else if(fileType.indexOf('ms-excel')!== -1 || fileType.indexOf('spreadsheetml')!== -1){
+										fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
+									}else if(fileType.indexOf('ms-powerpoint')!== -1 || fileType.indexOf('presentationml')!== -1){
+										fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
+									}else if(video.indexOf(fileExtension)!==-1){
+										fileName = moment().format("MMDDHHmmssSSSS")+ 'video.mp4'
+									}else{
+										fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
+									}
+									console.log(fileName)
 
-						    }
+									$.post('/sign-s3', {
+										fileName:fileName,
+										//- fileName:arrayFile[i].name,
+										fileType:arrayFile[i].type
+									}).then(function(returnData){
+										console.log(returnData.signedRequest)
+										console.log('file:')
+										console.log(arrayFile[i])
+										const xhr = new XMLHttpRequest();
+										var signFileType = arrayFile[i].type
+										var signFileName = arrayFile[i].name
+										xhr.open('PUT', returnData.url);
+										xhr.upload.addEventListener("progress", function(evt){
+									      if (evt.lengthComputable) {
+									        console.log("add upload event-listener" + evt.loaded + "/" + evt.total);
+									        percentCompleted = Math.round(evt.loaded/evt.total*100) + '%'
+									        
+									        divProgress.style.display = 'block'
+									        divProgressBar.innerHTML = percentCompleted
+									        divProgressBar.style.width = percentCompleted
+									        btnPost.disabled = true
+									        console.log(percentCompleted)
+									      }
+									    }, false);
+									    xhr.onloadend = function(){
+									    	divProgress.style.display = 'none'
+									    	btnPost.disabled = false
+									    }
+
+
+										xhr.onreadystatechange = function(){
+										console.log('readyState:' + xhr.readyState)
+										console.log('status:' + xhr.status)
+											if(xhr.readyState === 4){
+											  	if(xhr.status === 200){
+												    console.log('uploaded file')
+												    var url = returnData.url
+												    var htmlbreak = (i == arrayFile.length - 1)?'</a>':'</a><br><br><br>'
+												    console.log(htmlbreak)
+												    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
+												    if(signFileType.indexOf('msword')!==-1||signFileType.indexOf('wordprocessingml')!==-1||
+												    	signFileType.indexOf('ms-excel')!==-1||signFileType.indexOf('spreadsheetml')!==-1||
+												    	signFileType.indexOf('ms-powerpoint')!==-1||signFileType.indexOf('presentationml')!==-1){
+												    	returnURLs = returnURLs + '<p><iframe src="https://view.officeapps.live.com/op/embed.aspx?src='+returnData.url+'"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+'</a><br><br><br>'
+												    }else if(signFileType.indexOf('pdf')!==-1){
+												   		returnURLs = returnURLs + '<p><iframe src="https://docs.google.com/gview?url='+returnData.url+'&embedded=true"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+htmlbreak
+												   		
+												   	}else if(signFileType.indexOf('video')!==-1){
+												   		returnURLs = returnURLs +'<p><video controls><source src="'+returnData.url+'"> </video></p>'
+												    }else if(signFileType.indexOf('image')!==-1){
+												    	returnURLs = returnURLs + '<p><img src="'+returnData.url+'"/></p>'
+												    }else{
+												    	returnURLs = returnURLs + '<p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+'</a></p><br><br>'
+												    }
+												    
+												    console.log("returnURLs:"+returnURLs)
+												    i++
+												    if(i< arrayFile.length){
+												    	uploadReturnURL(arrayFile)
+												    }else{
+												    	//- alert('all done ready for DB save')
+												    	console.log("returnURLsFinal:"+returnURLs)
+												    	postDBGroupSelect(textEditorValue+returnURLs)
+												    }
+											  	}else{
+											    	alert('Could not upload files.');
+											  	}
+											}
+										};
+										xhr.send(arrayFile[i]);
+									})
+
+
+								}
+								uploadReturnURL(fileArray)							
+
+							}
+						
 						}) 
 						divInputBtn.appendChild(btnPost)
 					divInputGroup.appendChild(divInputBtn)
@@ -776,7 +784,7 @@ append scripts
 								divViewFilter2.appendChild(labelViewContent)
 
 								divViewContent = document.createElement('div')
-								//- divViewContent.className = 'col-sm-3'
+								divViewContent.className = 'col-sm-2'
 								divViewContent.id = 'divSelectCoworker'
 									viewContentOpt = document.createElement('select')
 									//- viewContentOpt.className = 'form-control'
@@ -798,7 +806,80 @@ append scripts
 									divViewContent.appendChild(viewContentOpt)
 								divViewFilter2.appendChild(divViewContent)
 
+
+								var labelDateRange = document.createElement('label')
+								labelDateRange.className = 'col-sm-1'
+								labelDateRange.innerHTML = 'Search Date Range:'
+								divViewFilter2.appendChild(labelDateRange)
 								
+								divDateRange = document.createElement('div')
+								divDateRange.className = 'col-sm-2'
+								divDateRange.id = 'divDateRange'
+									var dateCalenderStart = document.createElement('input');
+									dateCalenderStart.id = 'calendarStart';
+									
+
+									//- dateCalenderStart.setAttribute('readonly', true)
+									// dateCalender.type = 'hidden'
+									dateCalenderStart.placeholder = 'Start Date'
+									dateCalenderStart.style.textAlign = 'center'
+									dateCalenderStart.style.fontWeight = 'bold'
+									dateCalenderStart.style.width = '125px'
+									dateCalenderStart.style.fontSize = '100%'
+									//- dateCalenderStart.style.border = '2px transparent'
+									dateCalenderStart.addEventListener('mouseover', function(){
+										$("#calendarStart").datepicker({
+											// beforeShow: function(){
+											// 	// alert('blco')
+											// 	$("#calendar").blur()
+											// },
+											onSelect: function(){
+												//- $.getJSON('/ajaxUser').done(mainSC);
+												
+											}
+											
+										});
+									})
+									divDateRange.appendChild(dateCalenderStart)
+								//- divViewFilter2.appendChild(divDateRange)
+
+									var dateCalenderEnd = document.createElement('input');
+									dateCalenderEnd.id = 'calendarEnd';
+
+									//- dateCalenderStart.setAttribute('readonly', true)
+									// dateCalender.type = 'hidden'
+									dateCalenderEnd.placeholder = 'End Date'
+									dateCalenderEnd.style.textAlign = 'center'
+									dateCalenderEnd.style.fontWeight = 'bold'
+									dateCalenderEnd.style.width = '125px'
+									dateCalenderEnd.style.fontSize = '100%'
+									//- dateCalenderEnd.style.border = '2px transparent'
+									dateCalenderEnd.addEventListener('mouseover', function(){
+										$("#calendarEnd").datepicker({
+											
+											onSelect: function(){
+												
+												console.log(dateCalenderStart.value)
+												if (dateCalenderStart.value === ""){
+													alert('Please select Start Date')
+													this.value = ''
+												}else{
+													
+													getPostDB({
+														viewOption:selectViewFilter.value,
+														sDate:dateCalenderStart.value,
+														eDate:dateCalenderEnd.value
+														
+													})
+													$('#divPostContainer').html('')
+														
+												}
+											}
+											
+										});
+									})
+									divDateRange.appendChild(dateCalenderEnd)
+								divViewFilter2.appendChild(divDateRange)
 
 							$('#Feed').append(divViewFilter2)
 							

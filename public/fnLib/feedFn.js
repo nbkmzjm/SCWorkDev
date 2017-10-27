@@ -144,7 +144,9 @@ function getPostDB(option){
 	var hideImage = option.hideImage||false
 	var hideVideo = option.hideVideo||false
 	var hidePreview = option.hidePreview||false
-	console.log('byMe:'+ byMe)
+	var sDate = option.sDate||new Date('1-1-2000')
+	var eDate = option.eDate||new Date()
+	console.log('xxxViewOption:'+ viewOption)
 	console.log('byOther:'+ byOther)
 	
 	// console.log('feedNumber:'+loadNumber)
@@ -157,7 +159,9 @@ function getPostDB(option){
 		postId:postId,
 		tagName: tagName,
 		tagType:tagType,
-		tagCategory:tagCategory
+		tagCategory:tagCategory,
+		sDate:sDate,
+		eDate:eDate
 	}).done(function(Rdata){
 
 		
