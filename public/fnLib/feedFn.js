@@ -85,7 +85,7 @@ function postDB(option){
 	if(postToValue !== "ALL"){
 	var postToValue = JSON.stringify(postToValue,4, null)
 	}
-	console.log('aaaaaaaaaaaa')
+	
 	$.post('/notif/post',{
 		postTo:postTo,
 		postToValue:postToValue,
@@ -95,7 +95,7 @@ function postDB(option){
 		userArray:userArrayString
 	}).done(function(Rdata){
 		//****undo to work with notification
-		// location.reload()
+		location.reload()
 		console.log(Rdata)
 	})
 					
@@ -148,838 +148,904 @@ function getPostDB(option){
 	var eDate = option.eDate||new Date()
 	console.log('xxxViewOption:'+ viewOption)
 	console.log('byOther:'+ byOther)
+
 	
-	// console.log('feedNumber:'+loadNumber)
-	$.post('/notif/getFeed',{
-		loadNumber:loadNumber,
-		viewOption:viewOption,
-		viewOnly:viewOnly,
-		byMe:byMe,
-		byOther:byOther,
-		postId:postId,
-		tagName: tagName,
-		tagType:tagType,
-		tagCategory:tagCategory,
-		sDate:sDate,
-		eDate:eDate
-	}).done(function(Rdata){
+	
+	
+	getFeed(
+		loadNumber, viewOption, viewOnly, byMe, 
+		byOther, postId, tagName, 
+		tagType, tagCategory, sDate, eDate
+		)
+
+
+	//Active scrolling: loading main post as users scrolling
+	var loadNumber = 4
+	
+	
+	window.onscroll = function(event){
+		
+		
+		
+		
+		
+		var wrap = document.getElementById('divPostContainer')
+		var containHeight = wrap.offsetHeight //height of loaded contain
+		var yOffset = window.pageYOffset  //how much scrolled to the top
+		var windowHt = window.innerHeight // height of visible contain
+		var y = yOffset + windowHt
+		console.log('-----------------')
+	
 
 		
-		Rdata.posts.forEach(function(post, i){
-			console.log(post)
+		console.log('containHeight:'+ containHeight)
+		console.log('yOffset:'+ yOffset)
+		console.log('y:'+ y)
 
-			var div = document.createElement('div')
+		
+		
+	
+		console.log('loadNumber:'+loadNumber)
+
+		if(y >= containHeight ){
 			
-			div.className = 'panel panel-success'
-			div.classList.add('postPanel')
-			postSize==='Small'?div.style.maxWidth = '300px':""
-			postSize==='Medium'?div.style.maxWidth = '410px':""
-			postSize==='Large'?div.style.maxWidth = '600px':""
-				var divBody = document.createElement('div')
-				divBody.className = 'panel-body'
-				divBody.innerHTML = post.postText
-				divBody.id = 'divBody'+ i
+			
+			
+			
+			
+			getFeed(loadNumber, viewOption, viewOnly, byMe, 
+				byOther, postId, tagName, 
+				tagType, tagCategory, sDate, eDate
+				)
+			loadNumber = loadNumber + 4
+			// getPostDB({loadNumber:loadNumber})
+			
+			
+		
+		}
+	 
+	}
 
+	function getFeed(
+		loadNumber, viewOption, viewOnly, byMe, 
+		byOther, postId, tagName, 
+		tagType, tagCategory, sDate, eDate
+		){
+		
+		// console.log('feedNumber:'+loadNumber)
+		// console.log('eDate:'+ eDate)
+		// console.log('viewOption'+ viewOption)
+		$.post('/notif/getFeed',{
+			loadNumber:loadNumber,
+			viewOption:viewOption,
+			viewOnly:viewOnly,
+			byMe:byMe,
+			byOther:byOther,
+			postId:postId,
+			tagName: tagName,
+			tagType:tagType,
+			tagCategory:tagCategory,
+			sDate:sDate,
+			eDate:eDate
+		}).done(function(Rdata){
 
-				// if(docOnly === true){
-				// 	divBody.addEventListener('mouseover', function(){
-						
-				// 		$("#"+event.target.id).find('p').each(function(){
-				// 			var pIframe = this
-				// 			if(pIframe.firstChild.nodeName === 'IFRAME'){
-								
-				// 				pIframe.setAttribute('style','display:block')
-				// 			}
-				// 		})
-						
-				// 	})
+			
+			Rdata.posts.forEach(function(post, i){
+				// console.log(post)
 
-				// 	divBody.addEventListener('mouseout', function(){
-				// 		$("#"+event.relatedTarget.id).find('p').each(function(){
-				// 			var pIframe = this
-				// 			if(pIframe.firstChild.nodeName === 'IFRAME'){
-								
-				// 				pIframe.setAttribute('style','display:none')
-				// 			}
-				// 		})
-
-				// 	})
-				// }
-
+				var div = document.createElement('div')
 				
+				div.className = 'panel panel-success'
+				div.classList.add('postPanel')
+				postSize==='Small'?div.style.maxWidth = '300px':""
+				postSize==='Medium'?div.style.maxWidth = '410px':""
+				postSize==='Large'?div.style.maxWidth = '600px':""
+					var divBody = document.createElement('div')
+					divBody.className = 'panel-body'
+					divBody.innerHTML = post.postText
+					divBody.id = 'divBody'+ i
+
+
+					// if(docOnly === true){
+					// 	divBody.addEventListener('mouseover', function(){
+							
+					// 		$("#"+event.target.id).find('p').each(function(){
+					// 			var pIframe = this
+					// 			if(pIframe.firstChild.nodeName === 'IFRAME'){
+									
+					// 				pIframe.setAttribute('style','display:block')
+					// 			}
+					// 		})
+							
+					// 	})
+
+					// 	divBody.addEventListener('mouseout', function(){
+					// 		$("#"+event.relatedTarget.id).find('p').each(function(){
+					// 			var pIframe = this
+					// 			if(pIframe.firstChild.nodeName === 'IFRAME'){
+									
+					// 				pIframe.setAttribute('style','display:none')
+					// 			}
+					// 		})
+
+					// 	})
+					// }
 
 					
+
+						
+						
+
+					div.appendChild(divBody)
+
+					getComment()
+					function getComment(){
 					
-
-				div.appendChild(divBody)
-
-				getComment()
-				function getComment(){
-				
-					$.post('/notif/getCommentCount',{
-						mainPostId:post.id
-					}).done(function(Rdata){
-						var emojCount = Rdata.emojCount
-						
-						var divTitle = document.createElement('div')
-						divTitle.className = 'panel-heading'
-						// if(hideImage === true){
-						// 	divTitle.setAttribute('style','display:none')
-						// }
-
-						divTitle.classList.add('postPanel')
-						divTitle.id = 'divTitle'
-
-							//Posted users with date and time
-							var pUser = document.createElement('span')
-							pUser.innerHTML =  post.user.fullName + ' ('+
-							post.user.title + ', ' + post.user.department.name + 
-
-							") posted " + moment(post.createdAt).calendar() + '  '
-							divTitle.appendChild(pUser)
-
+						$.post('/notif/getCommentCount',{
+							mainPostId:post.id
+						}).done(function(Rdata){
+							var emojCount = Rdata.emojCount
 							
-							
-							//Count of Emoj per category 
-							for(emoj in emojCount){
-								var spanPostEmoj = document.createElement('span')
-								spanPostEmoj.style.color = glyphiconColor(emoj)
-								spanPostEmoj.className= emoj
-								spanPostEmoj.innerHTML = emojCount[emoj] + '&nbsp'
-								spanPostEmoj.style.float = 'right'
-								spanPostEmoj.style.background = 'white'
-								spanPostEmoj.style.fontSize = '18px'
-								spanPostEmoj.addEventListener('click', function(){
-									console.log(click)
+							var divTitle = document.createElement('div')
+							divTitle.className = 'panel-heading'
+							// if(hideImage === true){
+							// 	divTitle.setAttribute('style','display:none')
+							// }
 
-								})
-								divTitle.appendChild(spanPostEmoj)
-							}
-								
+							divTitle.classList.add('postPanel')
+							divTitle.id = 'divTitle'
 
+								//Posted users with date and time
+								var pUser = document.createElement('span')
+								pUser.innerHTML =  post.user.fullName + ' ('+
+								post.user.title + ', ' + post.user.department.name + 
 
-							//Comment Button
-							var comment = document.createElement('button')
-							comment.setAttribute('data-toggle', 'collapse')
-							comment.setAttribute('data-target', '#comment'+post.id)
-							comment.className = 'btn btn-info'
-							// comment.innerHTML = 'Comments'
-							comment.style.float = 'center'
-								var spanBtnText = document.createElement('span')
-									// spanBtnText.style.color = '#FF8C5A'
-									
-									spanBtnText.innerHTML = 'Load Comments'
-								comment.appendChild(spanBtnText)
-								var spanBagdes = document.createElement('span')
-									spanBagdes.style.color = '#FF8C5A'
-									spanBagdes.className = "badge"
-									spanBagdes.style.float = 'left'
-									Rdata.commentCount > 0?spanBagdes.innerHTML = Rdata.commentCount:''
-								comment.appendChild(spanBagdes)
-							comment.style.color = 'black'
-							// comment.addEventListener('click', function(){
-							// 	spanBtnText.innerHTML == 'Comments'?spanBtnText.innerHTML = 'Collapse':spanBtnText.innerHTML= 'Comments'
-							// })
+								") posted " + moment(post.createdAt).calendar() + '  '
+								divTitle.appendChild(pUser)
 
-							comment.addEventListener('mouseenter', function(){
-								console.log('before')
 								
 								
-								spanBtnText.innerHTML= 'Comments'
-								$.post('/notif/getComment',{
-									mainPostId:post.id
-								}).done(function(Rdata1){
-									console.log(Rdata1)
-									$('#comment'+ post.id).length>0?$('#comment'+ post.id).remove():""
-									
-									var divCommentContainer = document.createElement('div')
-									divCommentContainer.className='collapse'
-									divCommentContainer.setAttribute('style','margin-top:10px')
-									divCommentContainer.id = 'comment'+post.id		
+								//Count of Emoj per category 
+								for(emoj in emojCount){
+									var spanPostEmoj = document.createElement('span')
+									spanPostEmoj.style.color = glyphiconColor(emoj)
+									spanPostEmoj.className= emoj
+									spanPostEmoj.innerHTML = emojCount[emoj] + '&nbsp'
+									spanPostEmoj.style.float = 'right'
+									spanPostEmoj.style.background = 'white'
+									spanPostEmoj.style.fontSize = '18px'
+									spanPostEmoj.addEventListener('click', function(){
 										
-									
-										
-									Rdata1.comments.forEach(function(comment){
-										var divComment = document.createElement('div')
-										
-												if(comment.commentEmoj !== ''){
-													var pUser = document.createElement('p')
-													pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName + ' ('+
-													post.user.title + ', ' + post.user.department.name + 
 
-													") "+ ' </b>' 
-													+ moment(comment.createdAt).calendar()
-													pUser.style.fontSize = '10px'
-													pUser.style.color = '#B0AAC4'
-														var spanEmoj = document.createElement('span')
-														spanEmoj.className = comment.commentEmoj
-														spanEmoj.style.color = glyphiconColor(comment.commentEmoj)
-														spanEmoj.id = 'spanEmoj'
-														spanEmoj.style.float = 'left'
-														spanEmoj.style.fontSize = '15px'
-														pUser.appendChild(spanEmoj)
-													divComment.appendChild(pUser)
-
-												}else{
-													// spanEmoj.className='glyphicon glyphicon-thumbs-up'
-													// spanEmoj.style.color = 'gray'
-													var pUser = document.createElement('p')
-													pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName 
-													+ ' ('+ post.user.title + ', ' + post.user.department.name + 
-													") "+ ' </b>' 
-													+ moment(comment.createdAt).calendar()
-													pUser.style.color = '#B0AAC4'
-													pUser.style.fontSize = '10px'
-
-														var spanEmoj = document.createElement('span')
-														
-														spanEmoj.className = 'glyphicon glyphicon-comment'
-														spanEmoj.style.color = '#72D0C2'
-														spanEmoj.style.float = 'left'
-														spanEmoj.style.fontSize = '15px'
-														pUser.appendChild(spanEmoj)
-													divComment.appendChild(pUser)
-													var pComment = document.createElement('p')
-													pComment.innerHTML = '&nbsp&nbsp-&nbsp'+comment.comment
-													divComment.appendChild(pComment)
-												}
-												
-												
-												// spanEmoj.addEventListener('click', function(){
-												// 	spanEmoj.parentNode.removeChild(spanEmoj)
-
-
-
-												// 	// $('#spanEmoj').remove();
-												// 	// var spanRemove = document.createElement('span')
-												// 	// spanRemove.className = 'glyphicon glyphicon-remove-sign'
-												// 	// spanRemove. id = 'spanRemove'
-												// 	// spanRemove.style.float = 'right'
-												// 	// spanRemove.style.fontSize = '20px'
-												// 	// spanRemove.addEventListener('click', function(){
-												// 	// 	console.log('click')
-												// 	// 	$('#spanEmojDock').remove();
-												// 	// 	$('#spanRemove').remove();
-												// 	// 	pUser.appendChild(spanEmoj)
-												// 		// $('#spanEmoj').html('')
-												// 	// })
-												// 	// pUser.appendChild(spanRemove)
-												// 	function glyphiconGen (name, color) {
-												// 		this.name = name
-												// 		this.color = color
-												// 	}
-												// 	var divEmojDock = document.createElement('div')
-												// 		var glyphiconList = [
-												// 			new glyphiconGen('glyphicon glyphicon-thumbs-up','blue'),
-												// 			new glyphiconGen('glyphicon glyphicon-thumbs-down','purple'),
-												// 			new glyphiconGen('glyphicon glyphicon-heart','red'),
-												// 			new glyphiconGen('glyphicon glyphicon-star','yellow'),
-												// 			new glyphiconGen('glyphicon glyphicon-remove-sign','gray') ]
-												// 		glyphiconList.forEach(function(item){
-												// 			var spanEmojDock = document.createElement('span')
-												// 			spanEmojDock.className = item.name
-												// 			spanEmojDock.style.color = item.color
-												// 			// spanEmojDock.style.float = 'left'
-												// 			spanEmojDock.style.fontSize = '20px'
-												// 			spanEmojDock.addEventListener('click', function () {
-												// 				console.log(spanEmojDock.className)
-												// 				$.post('/notif/replyEmoj',{
-												// 					commentId:comment.id,
-												// 					commentEmoj:spanEmojDock.className
-												// 				}).done(function(Rdata){
-												// 					console.log(Rdata)
-																	
-												// 				})
-												// 			})
-												// 			divEmojDock.appendChild(spanEmojDock)
-
-
-												// 			var spanSpace = document.createElement('span')
-												// 			// spanSpace.style.float = 'left'
-												// 			spanSpace.innerHTML = '&nbsp&nbsp&nbsp'
-												// 			divEmojDock.appendChild(spanSpace)
-												// 			})
-												// 	divComment.appendChild(divEmojDock)
-												// }) 
-												
-											
-
-											
-										
-										divCommentContainer.appendChild(divComment)
 									})
-
-									if($('#commentPost'+ post.id).length<1){
-										var divCommentPost = document.createElement('div')
-										divCommentPost.className = 'input-group'
-
-										divCommentPost.id = 'commentPost'+post.id
-											var replyPost = document.createElement('textarea')
-											replyPost.id = 'post'
-											replyPost.className = 'form-control'
-											replyPost.placeholder = 'Post comment'
-											divCommentPost.appendChild(replyPost)
-
-
-											var span = document.createElement('span')
-											span.className = 'input-group-btn'
-												var btn = document.createElement('button')
-												btn.className = 'btn btn-primary'
-												btn.innerHTML = 'POST'
-												btn.addEventListener('click', function(){
-													console.log(replyPost.value)
-													console.log(post.id)
-													$.post('/notif/replyPost',{
-														mainPostId:post.id,
-														comment:replyPost.value
-													}).done(function(Rdata){
-														if(!!Rdata){
-															getComment()
-															divTitle.parentNode.removeChild(divTitle)
-															// var divComment = document.createElement('div')
-															// divComment.innerHTML = Rdata.comment.comment
-															
-															// divCommentContainer.insertBefore(divComment, divCommentPost)
-														}
-														
-													})
-												}) 
-												span.appendChild(btn)
-											divCommentPost.appendChild(span)
-										divCommentContainer.appendChild(divCommentPost)
-									}
-									divTitle.appendChild(divCommentContainer)
-								})
-							})
-
-							divTitle.appendChild(comment)
-
-
-						
-							var postOpt = document.createElement('span')
-							postOpt.id = 'postOpt'
-							postOpt.className = 'glyphicon glyphicon-collapse-down'
-							postOpt.onclick = function(){
-							var thisPostDiv = this.parentNode.parentNode
-							function postOptClick(option){
-								if(option === "Save"){
-									console.log(postOptCoords)
-									console.log(divTitleCoords)
-									var saveToContainer = document.createElement('div')
-									saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
-									saveToContainer.style.left = ((divTitleCoords.right - divTitleCoords.left)/4)+'px'
-									saveToContainer.style.width = '300px'
-									saveToContainer.className = 'popUpContainer'
-									saveToContainer.id = 'saveToContainer'
-										var resultContainer = document.createElement('var')
-										resultContainer.id = 'result-container'
-										resultContainer.className = "result-container"
-										saveToContainer.appendChild(resultContainer)
-
-										var addTag = document.createElement('div')
-										addTag.id = 'addTag'
-										saveToContainer.appendChild(addTag)
-
-										var divTHContainer = document.createElement('div')
-										divTHContainer.className = 'typeahead__container'
-											var divTHField = document.createElement('div')
-											divTHField.className = 'typeahead__field'
-
-												spanTH = document.createElement('span')
-												spanTH.className = 'typeahead__query'
-									
-													var input = document.createElement('input')
-													
-													input.className ='js-typeahead-searchTagSave'
-													input.type = 'search'
-													input.id = 'searchTagSave'
-													input.placeholder = 'Search Tag to Save'
-													
-													spanTH.appendChild(input)
-												divTHField.appendChild(spanTH)
-											divTHContainer.appendChild(divTHField)
-										saveToContainer.appendChild(divTHContainer)
-										
-									divTitle.appendChild(saveToContainer)
-
-
-									$.typeahead({
-									    input: '.js-typeahead-searchTagSave',
-									    minLength:0, maxItem: 20, offset: false, 
-									    order: "acs",
-									    template:"{{tagName}} ({{category}}) <small style='color:#999;'>{{type}}</small>",
-									    // correlativeTemplate: true, //search text to match any word, anywhere inside the template
-									    searchOnFocus: true,
-									    display:['category','tagName','type'],
-									    group:{
-									    	key:'category'
-									    },
-									    
-									    source: {
-									    	// newTag:{
-									    	// 	display:['tagName','type'],
-									    	// 	data:[
-									    	// 		{tagName:'New Tag',type:'personal'},
-								      //       		{tagName:'New Tag',type:'department'}
-								      //       	]
-									    	// },
-								            tagSave:{
-								            	
-									           	ajax: {
-									            	type:'POST',
-									                url: '/notif/getTagSave'
-									                
-									            }
-									        }
-									    },
-									    callback: {
-									        
-									        onClickAfter: function (node, a, item, event) {
-									        	event.preventDefault();
-									        	console.log(event.target)
-									 			console.log(node)
-									            console.log(a)
-									            console.log(item)
-									            console.log(event)
-
-										            
-
-												$.post('/notif/postTagSave',{
-													mainPostId:post.id,
-													type:item.type,
-													tagName:item.tagName,
-													category:item.category
-												}).done(function(){
-													$('#result-container').text('');
-												})
-									 
-									        },
-									        onResult: function (node, query, result, resultCount) {
-									            if (query === "") return;
-									            $('#addTag').html("")
-									            console.log(query.length)
-									            console.log($('#addTagBtn'))
-									            if(query.length<2&&$('#addTagBtn').length>0){
-									            	$('#addTagBtn').remove()
-									            }
-
-									            
-									            var arrTagType = ['Personal', 'Department']
-
-									            var addTagDiv = document.getElementById('addTag')
-									            arrTagType.forEach(function(type){
-									            	
-										            	var addTagBtn = document.createElement('button')
-										 				addTagBtn.innerHTML = 'Add '+ type +' Tag'
-										 				addTagBtn.id = 'addTagBtn'
-										 				addTagBtn.onclick = function(){
-										 					$('#result-container').text('Adding Tag: '+ query);
-										 					event.preventDefault()
-										 					$('#addTagCategory').length>0?$('#addTagCategory').remove():''
-										 					$('#addTagCategoryBtn').length>0?$('#addTagCategoryBtn').remove():''
-										 					var addTagCategory = document.createElement('input')
-										 					addTagCategory.className = 'form-control'
-										 					addTagCategory.id = 'addTagCategory'
-										 					addTagCategory.placeholder = 'Type '+ type+' Category'
-										 					addTagDiv.appendChild(addTagCategory)
-										 					
-										 					var addTagCategoryBtn = document.createElement('button')
-										 					addTagCategoryBtn.innerHTML = 'ADD'
-										 					addTagCategoryBtn.id = 'addTagCategoryBtn'
-										 					// addTagCategoryBtn.style.float = 'right'
-										 					addTagDiv.appendChild(addTagCategoryBtn)
-										 					addTagCategoryBtn.onclick = function(){
-										 						console.log('adding'+ addTagCategory.value)
-										 							$.post('/notif/postTagSave',{
-																	mainPostId:post.id,
-																	category:addTagCategory.value.toUpperCase(),
-																	type:type,
-																	tagName:query
-																	}).done(function(){
-																		
-																		$('#saveToContainer').remove()
-																	})
-										 					}
-										 				}
-										 				addTagDiv.appendChild(addTagBtn)
-									            })
-
-									            var text = "";
-									            if (result.length > 0 && result.length < resultCount) {
-									                text = "Showing <strong>" + result.length + "</strong> of <strong>" + resultCount + '</strong> elements matching "' + query + '"';
-									            } else if (result.length > 0) {
-									                text = 'Showing <strong>' + result.length + '</strong> tags matching "' + query + '"';
-									            } else {
-									                text = 'No results matching "' + query + '"';
-									            }
-									            $('#result-container').html(text);
-									 
-									        }
-									    }
-									});
-								}else if(option==='Unsave'){
-
-									var saveToContainer = document.createElement('div')
-									saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
-									saveToContainer.style.left = ((divTitleCoords.right - divTitleCoords.left)/4)+'px'
-									saveToContainer.className = 'popUpContainer'
-									saveToContainer.style.width = '300px'
-									saveToContainer.id = 'saveToContainer'
-										var resultContainer = document.createElement('var')
-										resultContainer.id = 'result-container'
-										resultContainer.className = "result-container"
-										saveToContainer.appendChild(resultContainer)
-
-										var addTag = document.createElement('div')
-										addTag.id = 'addTag'
-										saveToContainer.appendChild(addTag)
-
-										var divTHContainer = document.createElement('div')
-										divTHContainer.className = 'typeahead__container'
-											var divTHField = document.createElement('div')
-											divTHField.className = 'typeahead__field'
-												spanTH = document.createElement('span')
-												spanTH.className = 'typeahead__query'
-									
-													var input = document.createElement('input')
-													
-													input.className ='js-typeahead-searchTagSave'
-													input.type = 'search'
-													input.id = 'searchTagSave'
-													input.placeholder = 'Search and click tag to unsave'
-													
-													spanTH.appendChild(input)
-												divTHField.appendChild(spanTH)
-											divTHContainer.appendChild(divTHField)
-										saveToContainer.appendChild(divTHContainer)
-										
-									divTitle.appendChild(saveToContainer)
-
-									
-									$.typeahead({
-									    input: '.js-typeahead-searchTagSave',
-									    minLength:0, maxItem: 20, offset: false, 
-									    order: "acs",
-									    template:"{{tagName}} ({{category}}) <small style='color:#999;'>{{type}}</small>",
-									    // correlativeTemplate: true, //search text to match any word, anywhere inside the template
-									    searchOnFocus: true,
-									    display:['category','tagName','type'],
-									    group:{
-									    	key:'category'
-									    },
-									    
-									    source: {
-									    	// newTag:{
-									    	// 	display:['tagName','type'],
-									    	// 	data:[
-									    	// 		{tagName:'New Tag',type:'personal'},
-								      //       		{tagName:'New Tag',type:'department'}
-								      //       	]
-									    	// },
-								            tagSave:{
-								            	
-									           	ajax: {
-									            	type:'POST',
-									                url: '/notif/getTagToUnsave',
-									                data:{
-									                	postId:post.id
-									                }
-									                
-									            }
-									        }
-									    },
-									    callback: {
-									        
-									        onClickAfter: function (node, a, item, event) {
-									        	event.preventDefault();
-									        	console.log(event.target)
-									 			console.log(node)
-									            console.log(a)
-									            console.log(item)
-									            console.log(event)
-
-										            
-
-												$.post('/notif/unsaveTag',{
-													mainPostId:post.id,
-													type:item.type,
-													tagName:item.tagName,
-													category:item.category
-												}).done(function(){
-													$('#result-container').text('');
-												})
-									 
-									        },
-									        onResult: function (node, query, result, resultCount) {
-									            
-
-									            var text = "";
-									            if (result.length > 0 && result.length < resultCount) {
-									                text = "Showing <strong>" + result.length + "</strong> of <strong>" + resultCount + '</strong> elements matching "' + query + '"';
-									            } else if (result.length > 0) {
-									                text = 'Showing <strong>' + result.length + '</strong> elements matching "' + query + '"';
-									            } else {
-									                text = 'This post has not been saved';
-									            }
-									            $('#result-container').html(text);
-									 
-									        }
-									    }
-									});
-								}else if(option==='Hide'){
-
-									$.post('/notif/hidePost',{
-										mainPostId:post.id
-									}).done(function(hidden){
-										thisPostDiv.remove()
-									})
-								}else if(option==='Share'){
-									document.location = ("/notif?postId="+ post.id + "&command=share")
+									divTitle.appendChild(spanPostEmoj)
 								}
-							}
-								console.log(event.clientY)
-								
-								var divTitleCoords = divTitle.getBoundingClientRect()
-								var postOptCoords = this.getBoundingClientRect()
-
-								console.log(postOptCoords)
-								console.log(divTitleCoords)
-								$('#postOptContainer').length>0?$('#postOptContainer').remove():''
-								var postOptContainer = document.createElement('div')
-								postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
-								postOptContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
-								postOptContainer.className = 'popUpContainer'
-								postOptContainer.id = 'postOptContainer'
-									var postOptContainerUl = document.createElement('ul')
-										postOptContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
-										
-										var optList = ['Hide', 'Share', 'Email', 'Save', 'Unsave']
-										optList.forEach(function(option){
-											var postOptContainerLi = document.createElement('li')
-												var a = document.createElement('a')
-												a.href='#'
-												a.innerHTML = option
-												a.onclick = function(){
-													event.preventDefault()
-													postOptClick(this.innerHTML)
-												}
-												postOptContainerLi.appendChild(a)
-											postOptContainerUl.appendChild(postOptContainerLi)
-										})
-									postOptContainer.appendChild(postOptContainerUl)
-								divTitle.appendChild(postOptContainer)
-								
-
-										
-
-							}
-							divTitle.appendChild(postOpt)
-
-							//click event control diapprearing of the popup menu
-							window.onclick = function(){
-								console.log(event.target)
-								if(event.target.id == 'postOpt'){
 									
-								} else if(event.target.innerHTML == 'Save'
-									||event.target.type=='search'
-									||event.target.id == 'addTagBtn'
-									||event.target.id=='addTagCategory'
-									||event.target.id=='addTagCategoryBtn'
-								){
-
-								} else if(event.target.innerHTML == 'Unsave'){
-
-								}else{
-									$('#saveToContainer').remove()
-									$('#postOptContainer').remove()
-								}
-								
-							}
-
-							//Blank like Emoj for user input
-							var spanEmoj = document.createElement('span')
-							
-							spanEmoj.style.fontSize = '25px'
-							
-							if(!!Rdata.selfEmoj){
-								spanEmoj.className = Rdata.selfEmoj.commentEmoj
-								spanEmoj.style.color = glyphiconColor(Rdata.selfEmoj.commentEmoj)
-							}else{
-								spanEmoj.className = 'glyphicon glyphicon-thumbs-up'
-								spanEmoj.style.color = 'white'
-							}
-							
-							
-							spanEmoj.addEventListener('click', function(){
-								
-								$('#divEmojDock').length>0?$('#divEmojDock').remove():''
 
 
-
-								// $('#spanEmoj').remove();
-								// var spanRemove = document.createElement('span')
-								// spanRemove.className = 'glyphicon glyphicon-remove-sign'
-								// spanRemove. id = 'spanRemove'
-								// spanRemove.style.float = 'right'
-								// spanRemove.style.fontSize = '20px'
-								// spanRemove.addEventListener('click', function(){
-								// 	console.log('click')
-								// 	$('#spanEmojDock').remove();
-								// 	$('#spanRemove').remove();
-								// 	pUser.appendChild(spanEmoj)
-									// $('#spanEmoj').html('')
+								//Comment Button
+								var comment = document.createElement('button')
+								comment.setAttribute('data-toggle', 'collapse')
+								comment.setAttribute('data-target', '#comment'+post.id)
+								comment.className = 'btn btn-info'
+								// comment.innerHTML = 'Comments'
+								comment.style.float = 'center'
+									var spanBtnText = document.createElement('span')
+										// spanBtnText.style.color = '#FF8C5A'
+										
+										spanBtnText.innerHTML = 'Load Comments'
+									comment.appendChild(spanBtnText)
+									var spanBagdes = document.createElement('span')
+										spanBagdes.style.color = '#FF8C5A'
+										spanBagdes.className = "badge"
+										spanBagdes.style.float = 'left'
+										Rdata.commentCount > 0?spanBagdes.innerHTML = Rdata.commentCount:''
+									comment.appendChild(spanBagdes)
+								comment.style.color = 'black'
+								// comment.addEventListener('click', function(){
+								// 	spanBtnText.innerHTML == 'Comments'?spanBtnText.innerHTML = 'Collapse':spanBtnText.innerHTML= 'Comments'
 								// })
-								// pUser.appendChild(spanRemove)
-								function glyphiconGen (name, color) {
-									this.name = name
-									this.color = color
-								}
-								var divEmojDock = document.createElement('div')
-									var glyphiconList = [
-										new glyphiconGen('glyphicon glyphicon-thumbs-up','blue'),
-										new glyphiconGen('glyphicon glyphicon-thumbs-down','purple'),
-										new glyphiconGen('glyphicon glyphicon-heart','red'),
-										new glyphiconGen('glyphicon glyphicon-star','yellow'),
-										new glyphiconGen('glyphicon glyphicon-remove-sign','gray') ]
-									glyphiconList.forEach(function(item){
-										var spanEmojDock = document.createElement('span')
-										spanEmojDock.className = item.name
-										spanEmojDock.style.color = item.color
-										divEmojDock.id = 'divEmojDock'
-										// spanEmojDock.style.float = 'left'
-										spanEmojDock.style.fontSize = '20px'
-										spanEmojDock.addEventListener('click', function () {
-											console.log(spanEmojDock.className)
-											$.post('/notif/addPostEmoj',{
-												mainPostId:post.id,
-												commentEmoj:spanEmojDock.className
-											}).done(function(Rdata){
-												console.log(Rdata)
-												divTitle.parentNode.removeChild(divTitle)
-												getComment()
-											})
+
+								comment.addEventListener('mouseenter', function(){
+									// console.log('before')
+									
+									
+									spanBtnText.innerHTML= 'Comments'
+									$.post('/notif/getComment',{
+										mainPostId:post.id
+									}).done(function(Rdata1){
+										// console.log(Rdata1)
+										$('#comment'+ post.id).length>0?$('#comment'+ post.id).remove():""
+										
+										var divCommentContainer = document.createElement('div')
+										divCommentContainer.className='collapse'
+										divCommentContainer.setAttribute('style','margin-top:10px')
+										divCommentContainer.id = 'comment'+post.id		
+											
+										
+											
+										Rdata1.comments.forEach(function(comment){
+											var divComment = document.createElement('div')
+											
+													if(comment.commentEmoj !== ''){
+														var pUser = document.createElement('p')
+														pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName + ' ('+
+														post.user.title + ', ' + post.user.department.name + 
+
+														") "+ ' </b>' 
+														+ moment(comment.createdAt).calendar()
+														pUser.style.fontSize = '10px'
+														pUser.style.color = '#B0AAC4'
+															var spanEmoj = document.createElement('span')
+															spanEmoj.className = comment.commentEmoj
+															spanEmoj.style.color = glyphiconColor(comment.commentEmoj)
+															spanEmoj.id = 'spanEmoj'
+															spanEmoj.style.float = 'left'
+															spanEmoj.style.fontSize = '15px'
+															pUser.appendChild(spanEmoj)
+														divComment.appendChild(pUser)
+
+													}else{
+														// spanEmoj.className='glyphicon glyphicon-thumbs-up'
+														// spanEmoj.style.color = 'gray'
+														var pUser = document.createElement('p')
+														pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName 
+														+ ' ('+ post.user.title + ', ' + post.user.department.name + 
+														") "+ ' </b>' 
+														+ moment(comment.createdAt).calendar()
+														pUser.style.color = '#B0AAC4'
+														pUser.style.fontSize = '10px'
+
+															var spanEmoj = document.createElement('span')
+															
+															spanEmoj.className = 'glyphicon glyphicon-comment'
+															spanEmoj.style.color = '#72D0C2'
+															spanEmoj.style.float = 'left'
+															spanEmoj.style.fontSize = '15px'
+															pUser.appendChild(spanEmoj)
+														divComment.appendChild(pUser)
+														var pComment = document.createElement('p')
+														pComment.innerHTML = '&nbsp&nbsp-&nbsp'+comment.comment
+														divComment.appendChild(pComment)
+													}
+													
+													
+													// spanEmoj.addEventListener('click', function(){
+													// 	spanEmoj.parentNode.removeChild(spanEmoj)
+
+
+
+													// 	// $('#spanEmoj').remove();
+													// 	// var spanRemove = document.createElement('span')
+													// 	// spanRemove.className = 'glyphicon glyphicon-remove-sign'
+													// 	// spanRemove. id = 'spanRemove'
+													// 	// spanRemove.style.float = 'right'
+													// 	// spanRemove.style.fontSize = '20px'
+													// 	// spanRemove.addEventListener('click', function(){
+													// 	// 	console.log('click')
+													// 	// 	$('#spanEmojDock').remove();
+													// 	// 	$('#spanRemove').remove();
+													// 	// 	pUser.appendChild(spanEmoj)
+													// 		// $('#spanEmoj').html('')
+													// 	// })
+													// 	// pUser.appendChild(spanRemove)
+													// 	function glyphiconGen (name, color) {
+													// 		this.name = name
+													// 		this.color = color
+													// 	}
+													// 	var divEmojDock = document.createElement('div')
+													// 		var glyphiconList = [
+													// 			new glyphiconGen('glyphicon glyphicon-thumbs-up','blue'),
+													// 			new glyphiconGen('glyphicon glyphicon-thumbs-down','purple'),
+													// 			new glyphiconGen('glyphicon glyphicon-heart','red'),
+													// 			new glyphiconGen('glyphicon glyphicon-star','yellow'),
+													// 			new glyphiconGen('glyphicon glyphicon-remove-sign','gray') ]
+													// 		glyphiconList.forEach(function(item){
+													// 			var spanEmojDock = document.createElement('span')
+													// 			spanEmojDock.className = item.name
+													// 			spanEmojDock.style.color = item.color
+													// 			// spanEmojDock.style.float = 'left'
+													// 			spanEmojDock.style.fontSize = '20px'
+													// 			spanEmojDock.addEventListener('click', function () {
+													// 				console.log(spanEmojDock.className)
+													// 				$.post('/notif/replyEmoj',{
+													// 					commentId:comment.id,
+													// 					commentEmoj:spanEmojDock.className
+													// 				}).done(function(Rdata){
+													// 					console.log(Rdata)
+																		
+													// 				})
+													// 			})
+													// 			divEmojDock.appendChild(spanEmojDock)
+
+
+													// 			var spanSpace = document.createElement('span')
+													// 			// spanSpace.style.float = 'left'
+													// 			spanSpace.innerHTML = '&nbsp&nbsp&nbsp'
+													// 			divEmojDock.appendChild(spanSpace)
+													// 			})
+													// 	divComment.appendChild(divEmojDock)
+													// }) 
+													
+												
+
+												
+											
+											divCommentContainer.appendChild(divComment)
 										})
-										divEmojDock.appendChild(spanEmojDock)
+
+										if($('#commentPost'+ post.id).length<1){
+											var divCommentPost = document.createElement('div')
+											divCommentPost.className = 'input-group'
+
+											divCommentPost.id = 'commentPost'+post.id
+												var replyPost = document.createElement('textarea')
+												replyPost.id = 'post'
+												replyPost.className = 'form-control'
+												replyPost.placeholder = 'Post comment'
+												divCommentPost.appendChild(replyPost)
 
 
-										var spanSpace = document.createElement('span')
-										// spanSpace.style.float = 'left'
-										spanSpace.innerHTML = '&nbsp&nbsp&nbsp'
-										divEmojDock.appendChild(spanSpace)
+												var span = document.createElement('span')
+												span.className = 'input-group-btn'
+													var btn = document.createElement('button')
+													btn.className = 'btn btn-primary'
+													btn.innerHTML = 'POST'
+													btn.addEventListener('click', function(){
+														// console.log(replyPost.value)
+														// console.log(post.id)
+														$.post('/notif/replyPost',{
+															mainPostId:post.id,
+															comment:replyPost.value
+														}).done(function(Rdata){
+															if(!!Rdata){
+																getComment()
+																divTitle.parentNode.removeChild(divTitle)
+																// var divComment = document.createElement('div')
+																// divComment.innerHTML = Rdata.comment.comment
+																
+																// divCommentContainer.insertBefore(divComment, divCommentPost)
+															}
+															
+														})
+													}) 
+													span.appendChild(btn)
+												divCommentPost.appendChild(span)
+											divCommentContainer.appendChild(divCommentPost)
+										}
+										divTitle.appendChild(divCommentContainer)
 									})
-								divTitle.appendChild(divEmojDock)
-							}) 
-							divTitle.appendChild(spanEmoj)
+								})
+
+								divTitle.appendChild(comment)
 
 
-							// //Horizontal line before comments
-							// var divhr = document.createElement('HR')
-							// divTitle.appendChild(divhr)
 							
-						div.appendChild(divTitle)
+								var postOpt = document.createElement('span')
+								postOpt.id = 'postOpt'
+								postOpt.className = 'glyphicon glyphicon-collapse-down'
+								postOpt.onclick = function(){
+								var thisPostDiv = this.parentNode.parentNode
+								function postOptClick(option){
+									if(option === "Save"){
+										// console.log(postOptCoords)
+										// console.log(divTitleCoords)
+										var saveToContainer = document.createElement('div')
+										saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
+										saveToContainer.style.left = ((divTitleCoords.right - divTitleCoords.left)/4)+'px'
+										saveToContainer.style.width = '300px'
+										saveToContainer.className = 'popUpContainer'
+										saveToContainer.id = 'saveToContainer'
+											var resultContainer = document.createElement('var')
+											resultContainer.id = 'result-container'
+											resultContainer.className = "result-container"
+											saveToContainer.appendChild(resultContainer)
+
+											var addTag = document.createElement('div')
+											addTag.id = 'addTag'
+											saveToContainer.appendChild(addTag)
+
+											var divTHContainer = document.createElement('div')
+											divTHContainer.className = 'typeahead__container'
+												var divTHField = document.createElement('div')
+												divTHField.className = 'typeahead__field'
+
+													spanTH = document.createElement('span')
+													spanTH.className = 'typeahead__query'
+										
+														var input = document.createElement('input')
+														
+														input.className ='js-typeahead-searchTagSave'
+														input.type = 'search'
+														input.id = 'searchTagSave'
+														input.placeholder = 'Search Tag to Save'
+														
+														spanTH.appendChild(input)
+													divTHField.appendChild(spanTH)
+												divTHContainer.appendChild(divTHField)
+											saveToContainer.appendChild(divTHContainer)
+											
+										divTitle.appendChild(saveToContainer)
+
+
+										$.typeahead({
+										    input: '.js-typeahead-searchTagSave',
+										    minLength:0, maxItem: 20, offset: false, 
+										    order: "acs",
+										    template:"{{tagName}} ({{category}}) <small style='color:#999;'>{{type}}</small>",
+										    // correlativeTemplate: true, //search text to match any word, anywhere inside the template
+										    searchOnFocus: true,
+										    display:['category','tagName','type'],
+										    group:{
+										    	key:'category'
+										    },
+										    
+										    source: {
+										    	// newTag:{
+										    	// 	display:['tagName','type'],
+										    	// 	data:[
+										    	// 		{tagName:'New Tag',type:'personal'},
+									      //       		{tagName:'New Tag',type:'department'}
+									      //       	]
+										    	// },
+									            tagSave:{
+									            	
+										           	ajax: {
+										            	type:'POST',
+										                url: '/notif/getTagSave'
+										                
+										            }
+										        }
+										    },
+										    callback: {
+										        
+										        onClickAfter: function (node, a, item, event) {
+										    //     	event.preventDefault();
+										    //     	console.log(event.target)
+										 			// console.log(node)
+										    //         console.log(a)
+										    //         console.log(item)
+										    //         console.log(event)
+
+											            
+
+													$.post('/notif/postTagSave',{
+														mainPostId:post.id,
+														type:item.type,
+														tagName:item.tagName,
+														category:item.category
+													}).done(function(){
+														$('#result-container').text('');
+													})
+										 
+										        },
+										        onResult: function (node, query, result, resultCount) {
+										            if (query === "") return;
+										            $('#addTag').html("")
+										            // console.log(query.length)
+										            // console.log($('#addTagBtn'))
+										            if(query.length<2&&$('#addTagBtn').length>0){
+										            	$('#addTagBtn').remove()
+										            }
+
+										            
+										            var arrTagType = ['Personal', 'Department']
+
+										            var addTagDiv = document.getElementById('addTag')
+										            arrTagType.forEach(function(type){
+										            	
+											            	var addTagBtn = document.createElement('button')
+											 				addTagBtn.innerHTML = 'Add '+ type +' Tag'
+											 				addTagBtn.id = 'addTagBtn'
+											 				addTagBtn.onclick = function(){
+											 					$('#result-container').text('Adding Tag: '+ query);
+											 					event.preventDefault()
+											 					$('#addTagCategory').length>0?$('#addTagCategory').remove():''
+											 					$('#addTagCategoryBtn').length>0?$('#addTagCategoryBtn').remove():''
+											 					var addTagCategory = document.createElement('input')
+											 					addTagCategory.className = 'form-control'
+											 					addTagCategory.id = 'addTagCategory'
+											 					addTagCategory.placeholder = 'Type '+ type+' Category'
+											 					addTagDiv.appendChild(addTagCategory)
+											 					
+											 					var addTagCategoryBtn = document.createElement('button')
+											 					addTagCategoryBtn.innerHTML = 'ADD'
+											 					addTagCategoryBtn.id = 'addTagCategoryBtn'
+											 					// addTagCategoryBtn.style.float = 'right'
+											 					addTagDiv.appendChild(addTagCategoryBtn)
+											 					addTagCategoryBtn.onclick = function(){
+											 						// console.log('adding'+ addTagCategory.value)
+											 							$.post('/notif/postTagSave',{
+																		mainPostId:post.id,
+																		category:addTagCategory.value.toUpperCase(),
+																		type:type,
+																		tagName:query
+																		}).done(function(){
+																			
+																			$('#saveToContainer').remove()
+																		})
+											 					}
+											 				}
+											 				addTagDiv.appendChild(addTagBtn)
+										            })
+
+										            var text = "";
+										            if (result.length > 0 && result.length < resultCount) {
+										                text = "Showing <strong>" + result.length + "</strong> of <strong>" + resultCount + '</strong> elements matching "' + query + '"';
+										            } else if (result.length > 0) {
+										                text = 'Showing <strong>' + result.length + '</strong> tags matching "' + query + '"';
+										            } else {
+										                text = 'No results matching "' + query + '"';
+										            }
+										            $('#result-container').html(text);
+										 
+										        }
+										    }
+										});
+									}else if(option==='Unsave'){
+
+										var saveToContainer = document.createElement('div')
+										saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
+										saveToContainer.style.left = ((divTitleCoords.right - divTitleCoords.left)/4)+'px'
+										saveToContainer.className = 'popUpContainer'
+										saveToContainer.style.width = '300px'
+										saveToContainer.id = 'saveToContainer'
+											var resultContainer = document.createElement('var')
+											resultContainer.id = 'result-container'
+											resultContainer.className = "result-container"
+											saveToContainer.appendChild(resultContainer)
+
+											var addTag = document.createElement('div')
+											addTag.id = 'addTag'
+											saveToContainer.appendChild(addTag)
+
+											var divTHContainer = document.createElement('div')
+											divTHContainer.className = 'typeahead__container'
+												var divTHField = document.createElement('div')
+												divTHField.className = 'typeahead__field'
+													spanTH = document.createElement('span')
+													spanTH.className = 'typeahead__query'
+										
+														var input = document.createElement('input')
+														
+														input.className ='js-typeahead-searchTagSave'
+														input.type = 'search'
+														input.id = 'searchTagSave'
+														input.placeholder = 'Search and click tag to unsave'
+														
+														spanTH.appendChild(input)
+													divTHField.appendChild(spanTH)
+												divTHContainer.appendChild(divTHField)
+											saveToContainer.appendChild(divTHContainer)
+											
+										divTitle.appendChild(saveToContainer)
+
+										
+										$.typeahead({
+										    input: '.js-typeahead-searchTagSave',
+										    minLength:0, maxItem: 20, offset: false, 
+										    order: "acs",
+										    template:"{{tagName}} ({{category}}) <small style='color:#999;'>{{type}}</small>",
+										    // correlativeTemplate: true, //search text to match any word, anywhere inside the template
+										    searchOnFocus: true,
+										    display:['category','tagName','type'],
+										    group:{
+										    	key:'category'
+										    },
+										    
+										    source: {
+										    	// newTag:{
+										    	// 	display:['tagName','type'],
+										    	// 	data:[
+										    	// 		{tagName:'New Tag',type:'personal'},
+									      //       		{tagName:'New Tag',type:'department'}
+									      //       	]
+										    	// },
+									            tagSave:{
+									            	
+										           	ajax: {
+										            	type:'POST',
+										                url: '/notif/getTagToUnsave',
+										                data:{
+										                	postId:post.id
+										                }
+										                
+										            }
+										        }
+										    },
+										    callback: {
+										        
+										        onClickAfter: function (node, a, item, event) {
+										        	event.preventDefault();
+										    //     	console.log(event.target)
+										 			// console.log(node)
+										    //         console.log(a)
+										    //         console.log(item)
+										    //         console.log(event)
+
+											            
+
+													$.post('/notif/unsaveTag',{
+														mainPostId:post.id,
+														type:item.type,
+														tagName:item.tagName,
+														category:item.category
+													}).done(function(){
+														$('#result-container').text('');
+													})
+										 
+										        },
+										        onResult: function (node, query, result, resultCount) {
+										            
+
+										            var text = "";
+										            if (result.length > 0 && result.length < resultCount) {
+										                text = "Showing <strong>" + result.length + "</strong> of <strong>" + resultCount + '</strong> elements matching "' + query + '"';
+										            } else if (result.length > 0) {
+										                text = 'Showing <strong>' + result.length + '</strong> elements matching "' + query + '"';
+										            } else {
+										                text = 'This post has not been saved';
+										            }
+										            $('#result-container').html(text);
+										 
+										        }
+										    }
+										});
+									}else if(option==='Hide'){
+
+										$.post('/notif/hidePost',{
+											mainPostId:post.id
+										}).done(function(hidden){
+											thisPostDiv.remove()
+										})
+									}else if(option==='Share'){
+										document.location = ("/notif?postId="+ post.id + "&command=share")
+									}
+								}
+									// console.log(event.clientY)
+									
+									var divTitleCoords = divTitle.getBoundingClientRect()
+									var postOptCoords = this.getBoundingClientRect()
+
+									// console.log(postOptCoords)
+									// console.log(divTitleCoords)
+									$('#postOptContainer').length>0?$('#postOptContainer').remove():''
+									var postOptContainer = document.createElement('div')
+									postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
+									postOptContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
+									postOptContainer.className = 'popUpContainer'
+									postOptContainer.id = 'postOptContainer'
+										var postOptContainerUl = document.createElement('ul')
+											postOptContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
+											
+											var optList = ['Hide', 'Share', 'Email', 'Save', 'Unsave']
+											optList.forEach(function(option){
+												var postOptContainerLi = document.createElement('li')
+													var a = document.createElement('a')
+													a.href='#'
+													a.innerHTML = option
+													a.onclick = function(){
+														event.preventDefault()
+														postOptClick(this.innerHTML)
+													}
+													postOptContainerLi.appendChild(a)
+												postOptContainerUl.appendChild(postOptContainerLi)
+											})
+										postOptContainer.appendChild(postOptContainerUl)
+									divTitle.appendChild(postOptContainer)
+									
+
+											
+
+								}
+								divTitle.appendChild(postOpt)
+
+								//click event control diapprearing of the popup menu
+								window.onclick = function(){
+									// console.log(event.target)
+									if(event.target.id == 'postOpt'){
+										
+									} else if(event.target.innerHTML == 'Save'
+										||event.target.type=='search'
+										||event.target.id == 'addTagBtn'
+										||event.target.id=='addTagCategory'
+										||event.target.id=='addTagCategoryBtn'
+									){
+
+									} else if(event.target.innerHTML == 'Unsave'){
+
+									}else{
+										$('#saveToContainer').remove()
+										$('#postOptContainer').remove()
+									}
+									
+								}
+
+								//Blank like Emoj for user input
+								var spanEmoj = document.createElement('span')
+								
+								spanEmoj.style.fontSize = '25px'
+								
+								if(!!Rdata.selfEmoj){
+									spanEmoj.className = Rdata.selfEmoj.commentEmoj
+									spanEmoj.style.color = glyphiconColor(Rdata.selfEmoj.commentEmoj)
+								}else{
+									spanEmoj.className = 'glyphicon glyphicon-thumbs-up'
+									spanEmoj.style.color = 'white'
+								}
+								
+								
+								spanEmoj.addEventListener('click', function(){
+									
+									$('#divEmojDock').length>0?$('#divEmojDock').remove():''
+
+
+
+									// $('#spanEmoj').remove();
+									// var spanRemove = document.createElement('span')
+									// spanRemove.className = 'glyphicon glyphicon-remove-sign'
+									// spanRemove. id = 'spanRemove'
+									// spanRemove.style.float = 'right'
+									// spanRemove.style.fontSize = '20px'
+									// spanRemove.addEventListener('click', function(){
+									// 	console.log('click')
+									// 	$('#spanEmojDock').remove();
+									// 	$('#spanRemove').remove();
+									// 	pUser.appendChild(spanEmoj)
+										// $('#spanEmoj').html('')
+									// })
+									// pUser.appendChild(spanRemove)
+									function glyphiconGen (name, color) {
+										this.name = name
+										this.color = color
+									}
+									var divEmojDock = document.createElement('div')
+										var glyphiconList = [
+											new glyphiconGen('glyphicon glyphicon-thumbs-up','blue'),
+											new glyphiconGen('glyphicon glyphicon-thumbs-down','purple'),
+											new glyphiconGen('glyphicon glyphicon-heart','red'),
+											new glyphiconGen('glyphicon glyphicon-star','yellow'),
+											new glyphiconGen('glyphicon glyphicon-remove-sign','gray') ]
+										glyphiconList.forEach(function(item){
+											var spanEmojDock = document.createElement('span')
+											spanEmojDock.className = item.name
+											spanEmojDock.style.color = item.color
+											divEmojDock.id = 'divEmojDock'
+											// spanEmojDock.style.float = 'left'
+											spanEmojDock.style.fontSize = '20px'
+											spanEmojDock.addEventListener('click', function () {
+												// console.log(spanEmojDock.className)
+												$.post('/notif/addPostEmoj',{
+													mainPostId:post.id,
+													commentEmoj:spanEmojDock.className
+												}).done(function(Rdata){
+													// console.log(Rdata)
+													divTitle.parentNode.removeChild(divTitle)
+													getComment()
+												})
+											})
+											divEmojDock.appendChild(spanEmojDock)
+
+
+											var spanSpace = document.createElement('span')
+											// spanSpace.style.float = 'left'
+											spanSpace.innerHTML = '&nbsp&nbsp&nbsp'
+											divEmojDock.appendChild(spanSpace)
+										})
+									divTitle.appendChild(divEmojDock)
+								}) 
+								divTitle.appendChild(spanEmoj)
+
+
+								// //Horizontal line before comments
+								// var divhr = document.createElement('HR')
+								// divTitle.appendChild(divhr)
+								
+							div.appendChild(divTitle)
+						})
+					}	
+
+				divPostContainer.appendChild(div)
+
+				// var imgTags = [].slice.call(divBody.getElementsByTagName('img'))
+				// 		imgTags.forEach(function(imgTag, u){
+				// 			if(imgTag !== undefined){
+				// 				imgTag.setAttribute("style","width:128px;height:128px;")
+				// 				imgTag.className = 'imageThumb' 
+				// 				textInPost()===false?imgTag.classList.add('floating-image'):""
+								
+				// 				// imgTag.id = 'image'+ i + u
+				// 				imgTag.addEventListener('click', function(){
+				// 					console.log(this)
+				// 					document.getElementById('myModal').style.display = 'block'
+				// 					document.getElementById('imgModal').src = this.src
+				// 				})
+				// 			}
+				// 		})
+				var textInPost = function(){
+					var result = false;
+					var pTags = [].slice.call(document.getElementById('divBody'+i).getElementsByTagName('p'))
+					pTags.forEach(function(pTag, u){
+						// alert(pTag.firstChild.nodeName)
+						if(pTag.firstChild.nodeName!=='IMG'&&pTag.firstChild.nodeName!=='IFRAME'){
+							result =  true
+						}
 					})
-				}	
-
-			divPostContainer.appendChild(div)
-
-			// var imgTags = [].slice.call(divBody.getElementsByTagName('img'))
-			// 		imgTags.forEach(function(imgTag, u){
-			// 			if(imgTag !== undefined){
-			// 				imgTag.setAttribute("style","width:128px;height:128px;")
-			// 				imgTag.className = 'imageThumb' 
-			// 				textInPost()===false?imgTag.classList.add('floating-image'):""
-							
-			// 				// imgTag.id = 'image'+ i + u
-			// 				imgTag.addEventListener('click', function(){
-			// 					console.log(this)
-			// 					document.getElementById('myModal').style.display = 'block'
-			// 					document.getElementById('imgModal').src = this.src
-			// 				})
-			// 			}
-			// 		})
-			var textInPost = function(){
-				var result = false;
-				var pTags = [].slice.call(document.getElementById('divBody'+i).getElementsByTagName('p'))
-				pTags.forEach(function(pTag, u){
-					// alert(pTag.firstChild.nodeName)
-					if(pTag.firstChild.nodeName!=='IMG'&&pTag.firstChild.nodeName!=='IFRAME'){
-						result =  true
-					}
-				})
-				return result
-			}
-			
-			$("#divBody"+i).find('img').each(function(){
-				var jqImg = $(this)
-				jqImg.attr("style","max-width:128px;max-height:128px")
-				jqImg.attr('class','imageThumb')
-				if(hideImage === true){
-					jqImg.hide()
-				}
-				textInPost()===false?jqImg.addClass('floating-image'):""
-				jqImg.click(function(){
-					// $('.aModal').length>1?$('.aModal').remove():""
-					var myModal = document.getElementById('myModal')
-					myModal.style.display = 'block'
-						var aModal = document.createElement('a')
-						// aModal.style.color = 'white'
-						aModal.href = this.src
-						aModal.className = 'aModal'
-						// a.download = true
-						aModal.innerHTML = 'Full Size'
-					myModal.insertBefore(aModal, myModal.firstChild)
-					// myModal.innerHTML = '<a href="'+this.scr+'" download>full Screen</a>'
-					document.getElementById('iframeModal').style.display = 'none'
-					document.getElementById('imgModal').style.display = 'block'
-					document.getElementById('imgModal').setAttribute('style','max-width:100%;max-height:100%;')
-					document.getElementById('imgModal').src = this.src
-				})
-			})
-			
-			$("#divBody"+i).find('p').each(function(){
-				var pIframe = this
-				console.log(pIframe)
-				if(pIframe.firstChild.nodeName === 'IFRAME'){
-					pIframe.className = 'embed-responsive embed-responsive-4by3'
-					pIframe.setAttribute('style','clear:both')
-					if(hidePreview === true){
-						pIframe.setAttribute('style','display:none')
-					}
-					var jqIframe = $(this).first()
-					
-					jQuery(document).ready(function($){
-						jqIframe.iframeTracker({
-							blurCallback: function(){
-								console.log('x')
-								document.getElementById('myModal').style.display = 'block'
-								// $('.aModal').length>1?$('.aModal').remove():""
-								// var aModal = document.createElement('a')
-								// 	aModal.href = pIframe.firstChild.src
-								// 	aModal.className = 'aModal'
-								// 	aModal.innerHTML = 'Full View'
-								// myModal.insertBefore(aModal, myModal.firstChild)
-								document.getElementById('imgModal').style.display = 'none'
-								document.getElementById('iframeModal').style.display = 'block'
-								document.getElementById('iframeModal').setAttribute('style','width:100%;height:100%;')
-								document.getElementById('iframeModal').src = pIframe.firstChild.src
-							}
-						});
-					});
-				}else if(pIframe.firstChild.nodeName === 'VIDEO'){
-					console.log('VIDEO')
-					pIframe.className = 'embed-responsive embed-responsive-4by3'
+					return result
 				}
 				
-		       
+				$("#divBody"+i).find('img').each(function(){
+					var jqImg = $(this)
+					jqImg.attr("style","max-width:128px;max-height:128px")
+					jqImg.attr('class','imageThumb')
+					if(hideImage === true){
+						jqImg.hide()
+					}
+					textInPost()===false?jqImg.addClass('floating-image'):""
+					jqImg.click(function(){
+						// $('.aModal').length>1?$('.aModal').remove():""
+						var myModal = document.getElementById('myModal')
+						myModal.style.display = 'block'
+							var aModal = document.createElement('a')
+							// aModal.style.color = 'white'
+							aModal.href = this.src
+							aModal.className = 'aModal'
+							// a.download = true
+							aModal.innerHTML = 'Full Size'
+						myModal.insertBefore(aModal, myModal.firstChild)
+						// myModal.innerHTML = '<a href="'+this.scr+'" download>full Screen</a>'
+						document.getElementById('iframeModal').style.display = 'none'
+						document.getElementById('imgModal').style.display = 'block'
+						document.getElementById('imgModal').setAttribute('style','max-width:100%;max-height:100%;')
+						document.getElementById('imgModal').src = this.src
+					})
+				})
+				
+				$("#divBody"+i).find('p').each(function(){
+					var pIframe = this
+					// console.log(pIframe)
+					if(pIframe.firstChild.nodeName === 'IFRAME'){
+						pIframe.className = 'embed-responsive embed-responsive-4by3'
+						pIframe.setAttribute('style','clear:both')
+						if(hidePreview === true){
+							pIframe.setAttribute('style','display:none')
+						}
+						var jqIframe = $(this).first()
+						
+						jQuery(document).ready(function($){
+							jqIframe.iframeTracker({
+								blurCallback: function(){
+									
+									document.getElementById('myModal').style.display = 'block'
+									// $('.aModal').length>1?$('.aModal').remove():""
+									// var aModal = document.createElement('a')
+									// 	aModal.href = pIframe.firstChild.src
+									// 	aModal.className = 'aModal'
+									// 	aModal.innerHTML = 'Full View'
+									// myModal.insertBefore(aModal, myModal.firstChild)
+									document.getElementById('imgModal').style.display = 'none'
+									document.getElementById('iframeModal').style.display = 'block'
+									document.getElementById('iframeModal').setAttribute('style','width:100%;height:100%;')
+									document.getElementById('iframeModal').src = pIframe.firstChild.src
+								}
+							});
+						});
+					}else if(pIframe.firstChild.nodeName === 'VIDEO'){
+						
+						pIframe.className = 'embed-responsive embed-responsive-4by3'
+					}
+					
+			       
+				})
+
+				
+
 			})
 
-			
-
+		
+		
 		})
-
-	
-	
-	})
+	}
 	return true
 }
 
@@ -999,7 +1065,7 @@ function BHUserList (typeaheadId) {
 			   // sync(groupList.get('ADD NEW GROUP'));
 			 }else {
 			 	console.log('BHResult')
-			 	console.log(result)
+			 	// console.log(result)
 			    groupList.search(q, sync);
 			 }
 		}

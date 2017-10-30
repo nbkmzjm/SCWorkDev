@@ -558,7 +558,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 			order:[
 				[db.mainPost, 'createdAt', 'DESC']
 			],
-			limit: 12,
+			limit: 4,
 			offset: loadNumber
 		}
 	}
