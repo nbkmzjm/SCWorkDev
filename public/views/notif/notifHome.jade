@@ -176,13 +176,8 @@ append scripts
 								btnPost.disabled = true
 							}
 						})
-
-						
 					
 						divInputBtn.appendChild(fileUpload)
-
-
-
 
 
 						//DIV contain POST button and its action
@@ -365,6 +360,8 @@ append scripts
 						divInputBtn.appendChild(btnPost)
 					divInputGroup.appendChild(divInputBtn)
 
+
+
 					//DIV contain progress-bar
 					var divProgress = document.createElement('div')
 					divProgress.style.display = 'none'
@@ -398,7 +395,10 @@ append scripts
 
 					//- divInputGroup.appendChild(divInputGroupBtn)
 				$('#Feed').append(divInputGroup)
+
 				document.getElementById("post").focus()
+
+
 				
 
 				function postDBGroupSelect(inputValue, shareOriginalUserId){
@@ -485,7 +485,6 @@ append scripts
 					}
 				}
 
-				
 
 				$('#tagPost').bind('typeahead:selected', function(obj, group, name){
 					$('#tagPost').typeahead('val', '')
@@ -499,12 +498,10 @@ append scripts
 				})
 				
 
-				//- document.getElementById('upload').style.display = 'block'
-
+				var divFilterGroup = document.createElement('div')
+				$('#Feed').append(divFilterGroup)
 				
-				//- var select;
-				//- var selectFilter
-				//View and Post Filter
+				//getting default settings for View and Post Filter
 				$.post('/notif/getFeedSetting').done(function(Rdata){
 
 					Rdata.settings.forEach(function(setting){
@@ -686,133 +683,16 @@ append scripts
 									divByOther.appendChild(byOther)
 								divViewFilter.appendChild(divByOther)
 
-								// DIV contain label for Post Size
-								var postSizeLable = document.createElement('label')
-								postSizeLable.className = 'col-sm-1'
-								postSizeLable.innerHTML = 'Post Size:'
-								divViewFilter.appendChild(postSizeLable)
+								
 
-								// DIV contain selections for Post Size
-								var divPostSize = document.createElement('div')
-								divPostSize.className = 'col-sm-2'
-
-									//List option from the Array 
-									var postSizeOpt = document.createElement('select')
-									postSizeOpt.className = 'form-control'
-									postSizeOpt.name = 'postSize'
-									postSizeOpt.id = 'postSize'
-										var optionList = ['Medium','Small','Large']
-											//- var optionDB = document.createElement('option')
-											//- optionDB.value = setting.value
-											//- optionDB.innerHTML = setting.value
-											//- postSizeOpt.appendChild(optionDB)
-
-										optionList.forEach(function(item, i){
-											//- if(item !== setting.value){
-												var option = document.createElement('option')
-												option.value = item
-												option.innerHTML = item
-												postSizeOpt.appendChild(option)
-											//- }
-
-										})
-									postSizeOpt.addEventListener('change', function(){
-										console.log(postSizeOpt.value)
-										$('#divPostContainer').html('')
-										//- $('#viewOnly').attr('checked', false)
-										
-
-										getPostDB({postSize:postSizeOpt.value})
-
-										
-										//- $.post('/notif/setFeedSetting',{
-										//- 	settingId:setting.id,
-										//- 	settingValue:postSizeOpt.value,
-										//- 	action:'update'
-										//- }).done(function(Rdata){
-
-										//- })
-									})
-									
-									divPostSize.appendChild(postSizeOpt)
-								divViewFilter.appendChild(divPostSize)
-
-							$('#Feed').append(divViewFilter)
-
-							var divViewFilter2 = document.createElement('div')
-							divViewFilter2.style.clear = 'both'
-							divViewFilter2.className = 'form-group col-sm-12'
-								//- // DIV contain label for BY OTHER
-								//- var labelDocOnly = document.createElement('label')
-								//- labelDocOnly.className = 'col-sm-1'
-								//- labelDocOnly.innerHTML = 'Document Only:'
-								//- divViewFilter2.appendChild(labelDocOnly)
-
-								//- //DIV contain checkbox for BY OTHER and its action
-								//- var divDocOnly = document.createElement('div')
-								//- divDocOnly.className = 'col-sm-1'
-									
-								//- 	var docOnly = document.createElement('input')
-								//- 	docOnly.type = 'checkbox'
-								//- 	docOnly.className = 'form-control'
-								//- 	docOnly.id = 'docOnly'
-								//- 	docOnly.value = 'false'
-								//- 	docOnly.addEventListener('click', function(){
-
-								//- 		//- if(this.checked === true){
-								//- 			getPostDB({
-								//- 				viewOption:selectViewFilter.value,
-								//- 				docOnly:$('#docOnly').is(':checked'),
-								//- 			})
-								//- 			$('#divPostContainer').html('')
-								//- 		//- }else{
-								//- 			//- getPostDB({
-								//- 			//- 	getPostDB({
-								//- 			//- 	viewOption:selectViewFilter.value,
-								//- 			//- 	docOnly:$('#docOnly').is(':checked'),
-								//- 			//- })
-								//- 			//- $('#divPostContainer').html('')
-								//- 		//- }
-								//- 	})
-								//- 	divDocOnly.appendChild(docOnly)
-								//- divViewFilter2.appendChild(divDocOnly)
-
-								// DIV contain label for BY OTHER
-								var labelViewContent = document.createElement('label')
-								labelViewContent.className = 'col-sm-1'
-								labelViewContent.innerHTML = 'Hide Content:'
-								divViewFilter2.appendChild(labelViewContent)
-
-								divViewContent = document.createElement('div')
-								divViewContent.className = 'col-sm-2'
-								divViewContent.id = 'divSelectCoworker'
-									viewContentOpt = document.createElement('select')
-									//- viewContentOpt.className = 'form-control'
-									//- viewContentOpt.classList.add('col-sm-4')
-
-									//- select.className = ''
-									//- select.name = 'postTo'
-									viewContentOpt.id = 'viewContentOpt'
-									viewContentOpt.multiple = 'multiple'
-									viewContentOpt.name = 'multiselect[]'
-									contentOptArr = ['Downloads', 'Images', 'Previews', 'Videos']
-									contentOptArr.forEach(function(item){
-											console.log('item:'+ item)
-											var option = document.createElement('option')
-											option.value = item
-											option.innerHTML = item
-											viewContentOpt.appendChild(option)
-									})
-									divViewContent.appendChild(viewContentOpt)
-								divViewFilter2.appendChild(divViewContent)
 
 
 								var labelDateRange = document.createElement('label')
 								labelDateRange.className = 'col-sm-1'
 								labelDateRange.innerHTML = 'Search Date Range:'
-								divViewFilter2.appendChild(labelDateRange)
+								divViewFilter.appendChild(labelDateRange)
 								
-								divDateRange = document.createElement('div')
+								var divDateRange = document.createElement('div')
 								divDateRange.className = 'col-sm-2'
 								divDateRange.id = 'divDateRange'
 									var dateCalenderStart = document.createElement('input');
@@ -879,9 +759,204 @@ append scripts
 										});
 									})
 									divDateRange.appendChild(dateCalenderEnd)
-								divViewFilter2.appendChild(divDateRange)
+								divViewFilter.appendChild(divDateRange)
 
-							$('#Feed').append(divViewFilter2)
+								
+
+							divFilterGroup.appendChild(divViewFilter)
+
+							var divViewFilter2 = document.createElement('div')
+							divViewFilter2.style.clear = 'both'
+							divViewFilter2.className = 'form-group col-sm-12'
+								//- // DIV contain label for BY OTHER
+								//- var labelDocOnly = document.createElement('label')
+								//- labelDocOnly.className = 'col-sm-1'
+								//- labelDocOnly.innerHTML = 'Document Only:'
+								//- divViewFilter2.appendChild(labelDocOnly)
+
+								//- //DIV contain checkbox for BY OTHER and its action
+								//- var divDocOnly = document.createElement('div')
+								//- divDocOnly.className = 'col-sm-1'
+									
+								//- 	var docOnly = document.createElement('input')
+								//- 	docOnly.type = 'checkbox'
+								//- 	docOnly.className = 'form-control'
+								//- 	docOnly.id = 'docOnly'
+								//- 	docOnly.value = 'false'
+								//- 	docOnly.addEventListener('click', function(){
+
+								//- 		//- if(this.checked === true){
+								//- 			getPostDB({
+								//- 				viewOption:selectViewFilter.value,
+								//- 				docOnly:$('#docOnly').is(':checked'),
+								//- 			})
+								//- 			$('#divPostContainer').html('')
+								//- 		//- }else{
+								//- 			//- getPostDB({
+								//- 			//- 	getPostDB({
+								//- 			//- 	viewOption:selectViewFilter.value,
+								//- 			//- 	docOnly:$('#docOnly').is(':checked'),
+								//- 			//- })
+								//- 			//- $('#divPostContainer').html('')
+								//- 		//- }
+								//- 	})
+								//- 	divDocOnly.appendChild(docOnly)
+								//- divViewFilter2.appendChild(divDocOnly)
+
+								// DIV contain label for VIEW FILTER
+								var labelViewFormat = document.createElement('label')
+								labelViewFormat.className = 'col-sm-1'
+								labelViewFormat.innerHTML = 'View Format '
+								divViewFilter2.appendChild(labelViewFormat)
+
+
+								// DIV contain selections for VIEW FILTER
+								var divViewFormat = document.createElement('div')
+								divViewFormat.className = 'col-sm-2'
+
+									//List option from the Array 
+									var selectViewFormat = document.createElement('select')
+									selectViewFormat.className = 'form-control'
+									selectViewFormat.id = 'selectViewFormat'
+										var optionList = ['List', 'Panel']
+										optionList.forEach(function(item){
+											var optionDB = document.createElement('option')
+											optionDB.value = item
+											optionDB.innerHTML = item
+											selectViewFormat.appendChild(optionDB)
+										})
+
+										
+									selectViewFormat.addEventListener('change', function(){
+										console.log(selectViewFilter.value)
+										$('#divPostContainer').html('')
+										//- $('#viewOnly').attr('checked', false)
+										
+
+										getPostDB({
+											viewOption:selectViewFilter.value,
+											viewFormat:selectViewFormat.value
+										})
+
+										
+									})
+									
+									divViewFormat.appendChild(selectViewFormat)
+								divViewFilter2.appendChild(divViewFormat)
+
+								// DIV contain label for Post Size
+								var postSizeLable = document.createElement('label')
+								postSizeLable.className = 'col-sm-1'
+								postSizeLable.innerHTML = 'Post Size:'
+								divViewFilter2.appendChild(postSizeLable)
+
+								// DIV contain selections for Post Size
+								var divPostSize = document.createElement('div')
+								divPostSize.className = 'col-sm-2'
+
+									//List option from the Array 
+									var postSizeOpt = document.createElement('select')
+									postSizeOpt.className = 'form-control'
+									postSizeOpt.name = 'postSize'
+									postSizeOpt.id = 'postSize'
+										var optionList = ['Medium','Small','Large']
+											//- var optionDB = document.createElement('option')
+											//- optionDB.value = setting.value
+											//- optionDB.innerHTML = setting.value
+											//- postSizeOpt.appendChild(optionDB)
+
+										optionList.forEach(function(item, i){
+											//- if(item !== setting.value){
+												var option = document.createElement('option')
+												option.value = item
+												option.innerHTML = item
+												postSizeOpt.appendChild(option)
+											//- }
+
+										})
+									postSizeOpt.addEventListener('change', function(){
+										console.log(postSizeOpt.value)
+										$('#divPostContainer').html('')
+										//- $('#viewOnly').attr('checked', false)
+										
+
+										getPostDB({postSize:postSizeOpt.value})
+
+										
+										//- $.post('/notif/setFeedSetting',{
+										//- 	settingId:setting.id,
+										//- 	settingValue:postSizeOpt.value,
+										//- 	action:'update'
+										//- }).done(function(Rdata){
+
+										//- })
+									})
+									
+									divPostSize.appendChild(postSizeOpt)
+								divViewFilter2.appendChild(divPostSize)
+
+
+								// DIV contain label for Hide Content
+								var labelViewContent = document.createElement('label')
+								labelViewContent.className = 'col-sm-1'
+								labelViewContent.innerHTML = 'Hide Content:'
+								divViewFilter2.appendChild(labelViewContent)
+
+								divViewContent = document.createElement('div')
+								divViewContent.className = 'col-sm-2'
+									viewContentOpt = document.createElement('select')
+									//- viewContentOpt.className = 'form-control'
+									//- viewContentOpt.classList.add('col-sm-4')
+
+									//- select.className = ''
+									//- select.name = 'postTo'
+									viewContentOpt.id = 'viewContentOpt'
+									viewContentOpt.multiple = 'multiple'
+									viewContentOpt.name = 'multiselect[]'
+									contentOptArr = ['Downloads', 'Images', 'Previews', 'Videos']
+									contentOptArr.forEach(function(item){
+											console.log('item:'+ item)
+											var option = document.createElement('option')
+											option.value = item
+											option.innerHTML = item
+											viewContentOpt.appendChild(option)
+									})
+									divViewContent.appendChild(viewContentOpt)
+								divViewFilter2.appendChild(divViewContent)
+
+
+								var labelContentFilter = document.createElement('label')
+								labelContentFilter.className = 'col-sm-1'
+								labelContentFilter.innerHTML = 'Content Filter:'
+								divViewFilter2.appendChild(labelContentFilter)
+
+								divContentFilter = document.createElement('div')
+								divContentFilter.className = 'col-sm-2'
+									contentFilterOpt = document.createElement('select')
+									//- viewContentOpt.className = 'form-control'
+									//- viewContentOpt.classList.add('col-sm-4')
+
+									//- select.className = ''
+									//- select.name = 'postTo'
+									contentFilterOpt.id = 'contentFilterOpt'
+									contentFilterOpt.multiple = 'multiple'
+									contentFilterOpt.name = 'multiselect[]'
+									contentFilterOptArr = ['Documents', 'Images', 'Videos']
+									contentFilterOptArr.forEach(function(item){
+											console.log('item:'+ item)
+											var option = document.createElement('option')
+											option.value = item
+											option.innerHTML = item
+											contentFilterOpt.appendChild(option)
+									})
+									divContentFilter.appendChild(contentFilterOpt)
+								divViewFilter2.appendChild(divContentFilter)
+
+
+
+								
+
+							divFilterGroup.appendChild(divViewFilter2)
 							
 							
 							$('#viewContentOpt').multiselect({
@@ -945,6 +1020,9 @@ append scripts
 								}
 							});
 							
+							$('#contentFilterOpt').multiselect({
+
+							})
 							//- $('#viewContentOpt').multiselect('selectAll', false);
 							//- $('#viewContentOpt').multiselect('updateButtonText');
 
@@ -1319,14 +1397,13 @@ append scripts
 									})
 
 								})
-
 							divInputGroupFilter.appendChild(divShareBtn)
 
 
 
 							
 
-							$('#Feed').append(divInputGroupFilter)
+							divFilterGroup.append(divInputGroupFilter)
 
 							var lineHR = document.createElement('HR')
 							lineHR.style.clear = 'both'
@@ -1335,7 +1412,7 @@ append scripts
 							lineHR.style.backgroundColor = 'grey'
 							//- lineHR.setAttribute('style','box-shadow:0 10px 10px -10px grey inset;')
 							
-							$('#Feed').append(lineHR)
+							divFilterGroup.append(lineHR)
 							
 							//diplay share button after clicking share 
 							if(command === 'share'){
@@ -1466,78 +1543,43 @@ append scripts
 							    }
 							});
 						}
-					})
-
-
-					var divPostContainer = document.createElement('div')
-					divPostContainer.id = 'divPostContainer'
-
-					
-					$('#Feed').append(divPostContainer)
-
-					
-				})
 						
+
+					})
+				})
+
+
+
+				//Initialize divPostContainer
+				var divPostContainer = document.createElement('div')
+				divPostContainer.id = 'divPostContainer'
 					
-				//Expandable Post Textarea
+				$('#Feed').append(divPostContainer)
+
+					
+
+				//Initiate Expandable Post Textarea
 				$('#post').autogrow({vertical: true, horizontal: false});
 				
+
+
 				//Reload Feed Contain when clicking on FeedTAB
 				$('#feedTab').on('click', function(){
 					window.location.href = '/notif'
 				})
-				//- scrollLoad()
-				//- function scrollLoad(){
+				
 
-				//- 	var loadNumber = 12
-				//- 	var windowHt = window.innerHeight
-					
-				//- 	var loadPoint = 0
-				//- 	var scrollPointLoad = 0 
-				//- 	//Active scrolling: loading main post as users scrolling
-				//- 	window.addEventListener('scroll', function(event){
-						
-				//- 		scrollPointLoad++
-				//- 		scrollPointLoad>=12?scrollPointLoad=0:''
-				//- 		//- scrollPoint6==6?console.log('XXX'):''
-				//- 		//- console.log(scrollPoint6)
-				//- 		var posScrollY = window.scrollY
-				//- 		//- console.log(Math.ceil(posScrollY/100)*100)
-						
-				//- 		loadPoint = document.getElementById('divPostContainer').lastChild.getBoundingClientRect().top
-						
-						
-				//- 		//- console.log('windowHt:'+Math.ceil(windowHt/100)*100)
-				//- 		//- console.log('posScrollY:'+posScrollY)
-				//- 		//- console.log('scrollPointLoad:')
-				//- 		//- console.log(scrollPointLoad)
-						
-				//- 		//- console.log('loadPoint:')
-				//- 		//- console.log(loadPoint)
-				//- 		//- console.log('windowHt:')
-				//- 		//- console.log(windowHt)
-				//- 		//- console.log('loadNumber:'+loadNumber)
 
-				//- 		if(loadPoint<windowHt && (scrollPointLoad==6 ||scrollPointLoad==9 )){
-							
-							
-				//- 			console.log('loading...'+ loadNumber)
-							
-				//- 			getPostDB({loadNumber:loadNumber})
-				//- 			loadNumber += 12
-						
-				//- 		}
-					 
-				//- 	})
-				//- }
+				//View post from click notification and postId exist
 				if(postId !== undefined){
-
 					getPostDB({postId:postId})
-					
 				}else{
-					getPostDB()
+					getPostDB({
+						viewFormat:'List'
+					})
 				}
 			}
+
 
 			//Profile tab contain
 			$('#ProfileTab').on('click', function(){

@@ -92,6 +92,10 @@
 
 }
 
+#tblFeed td{
+	text-align: left;
+}
+
 #main{
 	/*table-layout: auto;*/
 	position: relative;
