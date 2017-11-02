@@ -134,6 +134,9 @@ append scripts
 			    return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
 		    }
 
+		    
+
+			
 		    //exe home feed function
 			feedHome()
 
@@ -203,9 +206,21 @@ append scripts
 							function signS3dataURI (inputPostValue){
 					 			var inputValueImage = inputPostValue.substring(inputPostValue.indexOf('src="data')+5, inputPostValue.indexOf('"',inputPostValue.indexOf('src="data')+20))
 
+					 			var imageNameOri = prompt("Enter image name in order of pasting: ", "");
+					 			var imageNameNoSpace = imageNameOri.replace(/ /g,"_")
+					 			var imageName
+					 			var parts = imageNameNoSpace.split(".");
+							    if (imageNameOri === ""){
+							    	imageName = 'image' + moment().format("DDHHmmssSSSS")+'.jpeg'
+							    }else if (parts[1]===undefined){
+							        imageName = imageNameOri + moment().format("DDHHmmssSSSS")+'.jpeg';
+							    }else{
+							        imageName = parts.slice(0,-1).join('')+ parts.slice(-1) + moment().format("DDHHmmssSSSS")+'.jpeg'
+							    }
+					 			
 								var decodedImage = dataURItoBlob(inputValueImage)
 								$.post('/sign-s3', {
-									fileName:'image'+moment().format("DDHHmmssSSSS")+'.jpeg',
+									fileName:imageName,
 									fileType:decodedImage.type
 								}).then(function(returnData){
 									console.log(returnData)
@@ -224,7 +239,7 @@ append scripts
 										    	signS3dataURI(inputPostValuewithURL)
 										    }else{
 										    	//- alert('all done ready for DB save')
-										    	console.log("inputPostValuewithURLFinal:"+inputPostValuewithURL)
+										    	alert("inputPostValuewithURLFinal:"+inputPostValuewithURL)
 										    	fileUploadProcess(inputPostValuewithURL)
 										    	//- postDBGroupSelect(inputPostValuewithURL)
 										    }
@@ -234,7 +249,7 @@ append scripts
 									}
 									};
 									xhr.send(decodedImage);
-									//- return returnData.url
+									return returnData.url
 								})
 							}
 							//function send file to s3 upload after selected
@@ -242,7 +257,7 @@ append scripts
 								var files = document.getElementById('upload').files
 								console.log(files)
 								if(files.length==0){
-									postDBGroupSelect(inputPost.value)
+									postDBGroupSelect(textEditorValue)
 									return false
 								}
 								var fileArray = $.map(files, function(file, index) {
@@ -254,29 +269,25 @@ append scripts
 									//- var decodedImage = dataURItoBlob(inputValueImage)
 									console.log('type:')
 									console.log(arrayFile[i].type)
-									var fileNameNoSpace = arrayFile[i].name.replace(/ /g,"_")
+									var fileName
+									
 									var fileType = arrayFile[i].type
 									var orgFileName = arrayFile[i].name
 									var fileExtension = orgFileName.substring(orgFileName.lastIndexOf('.'))
-									
-									var fileName
 									var video = ['.m4v', '.mov', '.mp4', '.MKV', '.AVI', '.VOB', '.MPG', '.TiVo', '.FLV']
-									if(fileType.indexOf('image')!== -1){
-										fileName = moment().format("MMDDHHmmssSSSS")+ 'image.jpeg'
-									}else if(fileType.indexOf('pdf')!== -1){
-										fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
-									}else if(fileType.indexOf('msword')!== -1 || fileType.indexOf('wordprocessingml')!== -1){
-										fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
-									}else if(fileType.indexOf('ms-excel')!== -1 || fileType.indexOf('spreadsheetml')!== -1){
-										fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
-									}else if(fileType.indexOf('ms-powerpoint')!== -1 || fileType.indexOf('presentationml')!== -1){
-										fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
-									}else if(video.indexOf(fileExtension)!==-1){
-										fileName = moment().format("MMDDHHmmssSSSS")+ 'video.mp4'
-									}else{
-										fileName = moment().format("MMDDHHmmssSSSS")+ fileNameNoSpace
-									}
-									console.log(fileName)
+									var fileNameNoSpace = orgFileName.replace(/ /g,"_")
+									var parts = fileNameNoSpace.split(".");
+								    if (parts[1]===undefined){
+								        fileName = fileNameNoSpace;
+								    }else if (fileType.indexOf('image')!== -1){
+								    	fileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") +".jpeg"
+								    }else if(video.indexOf(fileExtension)!==-1){
+								    	fileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") +".mp4"
+								    }else{
+								        fileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") + "." 
+								        + parts.slice(-1)
+								    }
+								    
 
 									$.post('/sign-s3', {
 										fileName:fileName,
