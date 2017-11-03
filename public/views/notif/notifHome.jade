@@ -213,7 +213,7 @@ append scripts
 							    if (imageNameOri === ""){
 							    	imageName = 'image' + moment().format("DDHHmmssSSSS")+'.jpeg'
 							    }else if (parts[1]===undefined){
-							        imageName = imageNameOri + moment().format("DDHHmmssSSSS")+'.jpeg';
+							        imageName = imageNameNoSpace + moment().format("DDHHmmssSSSS")+'.jpeg';
 							    }else{
 							        imageName = parts.slice(0,-1).join('')+ parts.slice(-1) + moment().format("DDHHmmssSSSS")+'.jpeg'
 							    }
@@ -232,14 +232,13 @@ append scripts
 									if(xhr.readyState === 4){
 									  	if(xhr.status === 200){
 										    console.log('uploaded file')
-										    var inputPostValuewithURL = inputPostValue.replace(inputValueImage,returnData.url)
+										    var inputPostValuewithURL = inputPostValue.replace(inputValueImage,returnData.url) + '<a href="'+returnData.url+'" download>'+imageName+'</a><br>'
 										    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
-										    console.log("inputPostValuewithURL:"+inputPostValuewithURL)
+										    alert("inputPostValuewithURL:"+inputPostValuewithURL)
 										    if(inputPostValuewithURL.indexOf('src="data')!==-1){
 										    	signS3dataURI(inputPostValuewithURL)
 										    }else{
 										    	//- alert('all done ready for DB save')
-										    	alert("inputPostValuewithURLFinal:"+inputPostValuewithURL)
 										    	fileUploadProcess(inputPostValuewithURL)
 										    	//- postDBGroupSelect(inputPostValuewithURL)
 										    }
@@ -253,11 +252,12 @@ append scripts
 								})
 							}
 							//function send file to s3 upload after selected
-							function fileUploadProcess(textEditorValue){
+							function fileUploadProcess(inputPostValuewithURL){
 								var files = document.getElementById('upload').files
 								console.log(files)
 								if(files.length==0){
-									postDBGroupSelect(textEditorValue)
+									
+									postDBGroupSelect(inputPostValuewithURL)
 									return false
 								}
 								var fileArray = $.map(files, function(file, index) {
@@ -332,16 +332,16 @@ append scripts
 												    if(signFileType.indexOf('msword')!==-1||signFileType.indexOf('wordprocessingml')!==-1||
 												    	signFileType.indexOf('ms-excel')!==-1||signFileType.indexOf('spreadsheetml')!==-1||
 												    	signFileType.indexOf('ms-powerpoint')!==-1||signFileType.indexOf('presentationml')!==-1){
-												    	returnURLs = returnURLs + '<p><iframe src="https://view.officeapps.live.com/op/embed.aspx?src='+returnData.url+'"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+'</a><br><br><br>'
+												    	returnURLs = returnURLs + '<p><iframe src="https://view.officeapps.live.com/op/embed.aspx?src='+returnData.url+'"></iframe></p><a href="'+returnData.url+'" >'+signFileName+'</a><br><br><br>'
 												    }else if(signFileType.indexOf('pdf')!==-1){
-												   		returnURLs = returnURLs + '<p><iframe src="https://docs.google.com/gview?url='+returnData.url+'&embedded=true"></iframe></p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+htmlbreak
+												   		returnURLs = returnURLs + '<p><iframe src="https://docs.google.com/gview?url='+returnData.url+'&embedded=true"></iframe></p><a href="'+returnData.url+'" >'+signFileName+htmlbreak
 												   		
 												   	}else if(signFileType.indexOf('video')!==-1){
 												   		returnURLs = returnURLs +'<p><video controls><source src="'+returnData.url+'"> </video></p>'
 												    }else if(signFileType.indexOf('image')!==-1){
-												    	returnURLs = returnURLs + '<p><img src="'+returnData.url+'"/></p>'
+												    	returnURLs = returnURLs + '<p><img src="'+returnData.url+'"/></p><a href="'+returnData.url+'" >'+signFileName+htmlbreak
 												    }else{
-												    	returnURLs = returnURLs + '<p><a href="'+returnData.url+'" download>DOWNLOAD: '+signFileName+'</a></p><br><br>'
+												    	returnURLs = returnURLs + '<p><a href="'+returnData.url+'" >'+signFileName+'</a></p><br><br>'
 												    }
 												    
 												    console.log("returnURLs:"+returnURLs)
@@ -351,7 +351,7 @@ append scripts
 												    }else{
 												    	//- alert('all done ready for DB save')
 												    	console.log("returnURLsFinal:"+returnURLs)
-												    	postDBGroupSelect(textEditorValue+returnURLs)
+												    	postDBGroupSelect(inputPostValuewithURL+returnURLs)
 												    }
 											  	}else{
 											    	alert('Could not upload files.');

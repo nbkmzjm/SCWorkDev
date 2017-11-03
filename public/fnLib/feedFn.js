@@ -175,6 +175,28 @@ function getPostDB(option){
 		}
 	}
 
+	if (viewFormat === "List"){
+		var tableFeed = document.createElement('table')
+			tableFeed.className = 'table table-sm'
+			tableFeed.id = 'tblFeed'
+				var theadFeed = document.createElement('thead')
+					var trHeadFeed = document.createElement('tr')
+						var headerFeed = ['File Name', 'Posted', 'Date', 'Size']
+						headerFeed.forEach(function (item) {
+							var th = document.createElement('th')
+							th.setAttribute('scope', 'col')
+							th.innerHTML = item
+							trHeadFeed.appendChild(th)
+						})
+						
+					theadFeed.appendChild(trHeadFeed)
+				tableFeed.appendChild(theadFeed)
+
+		divPostContainer.appendChild(tableFeed)	
+
+
+	}
+
 	function getFeed(){
 		
 		// console.log('feedNumber:'+loadNumber)
@@ -1016,21 +1038,7 @@ function getPostDB(option){
 		}else if (viewFormat === 'List'){
 			
 				
-			var tableFeed = document.createElement('table')
-			tableFeed.className = 'table table-sm'
-			tableFeed.id = 'tblFeed'
-				var theadFeed = document.createElement('thead')
-					var trHeadFeed = document.createElement('tr')
-						var headerFeed = ['File Name', 'Posted', 'Date', 'Size']
-						headerFeed.forEach(function (item) {
-							var th = document.createElement('th')
-							th.setAttribute('scope', 'col')
-							th.innerHTML = item
-							trHeadFeed.appendChild(th)
-						})
-						
-					theadFeed.appendChild(trHeadFeed)
-				tableFeed.appendChild(theadFeed)
+			
 			
 
 
@@ -1049,23 +1057,45 @@ function getPostDB(option){
 						eDate:eDate
 					}).done(function(Rdata){
 						Rdata.posts.forEach(function(post, i){
-							var trBodyFeed = document.createElement('tr')
-								var tdName = document.createElement('td')
-								tdName.innerHTML = post.postText
-								trBodyFeed.appendChild(tdName)
 
-								var tdPostedBy = document.createElement('td')
-								tdPostedBy.innerHTML = post.user.fullName
-								trBodyFeed.appendChild(tdPostedBy)
+							var tempDiv = document.createElement('div')
+							tempDiv.id = 'tempDiv'
+							tempDiv.innerHTML = post.postText
+							divPostContainer.appendChild(tempDiv)
 							
-							tbodyFeed.appendChild(trBodyFeed)
+							$("#tempDiv").find('a').each(function(){
+								console.log(this)
+								this.addEventListener('click', function(){
+									event.preventDefault()
+								})
+								var trBodyFeed = document.createElement('tr')
+									var tdName = document.createElement('td')
+									// tdName.id = "tdName"+ i
+									tdName.appendChild(this)
+									trBodyFeed.appendChild(tdName)
+
+									var tdPostedBy = document.createElement('td')
+									tdPostedBy.innerHTML = post.user.fullName
+									trBodyFeed.appendChild(tdPostedBy)
+
+									var tdPostDate = document.createElement('td')
+									tdPostDate.innerHTML = moment(post.createdAt).format("MMM Do, YYYY")
+									trBodyFeed.appendChild(tdPostDate)
+								
+								tbodyFeed.appendChild(trBodyFeed)
+
+								
+							})
+
+							$("#tempDiv").remove()
 							
 						})
+
+						tableFeed.appendChild(tbodyFeed)
 					})
-				tableFeed.appendChild(tbodyFeed)		
-			divPostContainer.appendChild(tableFeed)	
 				
-			
+				
+
 
 		}
 	}
