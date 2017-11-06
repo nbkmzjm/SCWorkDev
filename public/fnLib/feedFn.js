@@ -218,9 +218,24 @@ function getPostDB(option){
 
 			}).done(function(Rdata){
 
+				var textInPost = function(){
+					var result = false;
+					var pTags = [].slice.call(document.getElementById('divBody'+i).getElementsByTagName('p'))
+					pTags.forEach(function(pTag, u){
+						console.log(pTag)
+						if(pTag.firstChild.nodeName!=='IMG'&&pTag.firstChild.nodeName!=='IFRAME'){
+							result =  true
+						}
+					})
+					return result
+				}
 				
 				Rdata.posts.forEach(function(post, i){
 					// console.log(post)
+					var tempDivPostPanel = document.createElement('div')
+						tempDivPostPanel.id = 'tempDivPostPanel'
+						tempDivPostPanel.innerHTML = post.postText
+						divPostContainer.appendChild(tempDivPostPanel)
 
 					var divPostPanel = document.createElement('div')
 					
@@ -229,10 +244,152 @@ function getPostDB(option){
 					postSize==='Small'?divPostPanel.style.maxWidth = '300px':""
 					postSize==='Medium'?divPostPanel.style.maxWidth = '410px':""
 					postSize==='Large'?divPostPanel.style.maxWidth = '600px':""
-						var divBody = document.createElement('div')
+
+					var divBody = document.createElement('div')
 						divBody.className = 'panel-body'
-						divBody.innerHTML = post.postText
 						divBody.id = 'divBody'+ i
+					divPostPanel.appendChild(divBody)
+
+					$("#tempDivPostPanel").find('p').each(function(){
+						
+						var p = this
+						console.log(p.firstChild)
+						if(p.firstChild.nodeName === 'IMG' ){
+
+						
+
+							var img = p.firstChild
+							img.setAttribute("style","max-width:120px;max-height:120px")
+							img.setAttribute('class','imageThumb')
+							img.classList.add('floating-image')
+							img.addEventListener('click', function(){
+								var myModal = document.getElementById('myModal')
+								myModal.style.display = 'block'
+									var aModal = document.createElement('a')
+									// aModal.style.color = 'white'
+									aModal.href = this.src
+									aModal.className = 'aModal'
+									// a.download = true
+									aModal.innerHTML = 'Full Size'
+								myModal.insertBefore(aModal, myModal.firstChild)
+								document.getElementById('iframeModal').style.display = 'none'
+								document.getElementById('imgModal').style.display = 'block'
+								document.getElementById('imgModal').setAttribute('style','max-width:100%;max-height:100%;')
+								document.getElementById('imgModal').src = this.src
+							})
+
+							
+							divBody.appendChild(img)
+						}else if(p.firstChild.nodeName === 'IFRAME'){
+
+							var pIframe = p.firstChild
+							pIframe.className = 'embed-responsive embed-responsive-4by3'
+							pIframe.setAttribute('style','clear:both')
+							if(hidePreview === true){
+								pIframe.setAttribute('style','display:none')
+							}
+							var jqIframe = $(this).first()
+							
+							jQuery(document).ready(function($){
+								jqIframe.iframeTracker({
+									blurCallback: function(){
+										
+										document.getElementById('myModal').style.display = 'block'
+										// $('.aModal').length>1?$('.aModal').remove():""
+										// var aModal = document.createElement('a')
+										// 	aModal.href = pIframe.firstChild.src
+										// 	aModal.className = 'aModal'
+										// 	aModal.innerHTML = 'Full View'
+										// myModal.insertBefore(aModal, myModal.firstChild)
+										document.getElementById('imgModal').style.display = 'none'
+										document.getElementById('iframeModal').style.display = 'block'
+										document.getElementById('iframeModal').setAttribute('style','width:100%;height:100%;')
+										document.getElementById('iframeModal').src = pIframe.firstChild.src
+									}
+								});
+							});
+
+						}else if (p.firstChild.nodeName === 'VIDEO'){
+							p.firstChild.className = 'embed-responsive embed-responsive-4by3'
+						}
+						tempDivPostPanel.remove()
+					})
+
+
+
+					// $("#divBody"+i).find('p').each(function(){
+					// 	var pIframe = this
+					// 	// console.log(pIframe)
+					// 	if(pIframe.firstChild.nodeName === 'IFRAME'){
+					// 		pIframe.className = 'embed-responsive embed-responsive-4by3'
+					// 		pIframe.setAttribute('style','clear:both')
+					// 		if(hidePreview === true){
+					// 			pIframe.setAttribute('style','display:none')
+					// 		}
+					// 		var jqIframe = $(this).first()
+							
+					// 		jQuery(document).ready(function($){
+					// 			jqIframe.iframeTracker({
+					// 				blurCallback: function(){
+										
+					// 					document.getElementById('myModal').style.display = 'block'
+					// 					// $('.aModal').length>1?$('.aModal').remove():""
+					// 					// var aModal = document.createElement('a')
+					// 					// 	aModal.href = pIframe.firstChild.src
+					// 					// 	aModal.className = 'aModal'
+					// 					// 	aModal.innerHTML = 'Full View'
+					// 					// myModal.insertBefore(aModal, myModal.firstChild)
+					// 					document.getElementById('imgModal').style.display = 'none'
+					// 					document.getElementById('iframeModal').style.display = 'block'
+					// 					document.getElementById('iframeModal').setAttribute('style','width:100%;height:100%;')
+					// 					document.getElementById('iframeModal').src = pIframe.firstChild.src
+					// 				}
+					// 			});
+					// 		});
+					// 	}else if(pIframe.firstChild.nodeName === 'VIDEO'){
+							
+					// 		pIframe.className = 'embed-responsive embed-responsive-4by3'
+					// 	}
+						
+				       
+					// })
+
+
+
+					
+					
+					// $("#divBody"+i).find('img').each(function(){
+					// 	var jqImg = $(this)
+					// 	jqImg.attr("style","max-width:120px;max-height:120px")
+					// 	jqImg.parent().attr('class','imageThumb')
+					// 	if(hideImage === true){
+					// 		jqImg.hide()
+					// 	}
+					// 	textInPost()===false?jqImg.parent().addClass('floating-image'):""
+					// 	jqImg.click(function(){
+					// 		// $('.aModal').length>1?$('.aModal').remove():""
+					// 		var myModal = document.getElementById('myModal')
+					// 		myModal.style.display = 'block'
+					// 			var aModal = document.createElement('a')
+					// 			// aModal.style.color = 'white'
+					// 			aModal.href = this.src
+					// 			aModal.className = 'aModal'
+					// 			// a.download = true
+					// 			aModal.innerHTML = 'Full Size'
+					// 		myModal.insertBefore(aModal, myModal.firstChild)
+					// 		// myModal.innerHTML = '<a href="'+this.scr+'" download>full Screen</a>'
+					// 		document.getElementById('iframeModal').style.display = 'none'
+					// 		document.getElementById('imgModal').style.display = 'block'
+					// 		document.getElementById('imgModal').setAttribute('style','max-width:100%;max-height:100%;')
+					// 		document.getElementById('imgModal').src = this.src
+					// 	})
+					// })
+						
+
+
+
+
+
 
 
 						// if(docOnly === true){
@@ -954,81 +1111,12 @@ function getPostDB(option){
 					// 				})
 					// 			}
 					// 		})
-					var textInPost = function(){
-						var result = false;
-						var pTags = [].slice.call(document.getElementById('divBody'+i).getElementsByTagName('p'))
-						pTags.forEach(function(pTag, u){
-							// alert(pTag.firstChild.nodeName)
-							if(pTag.firstChild.nodeName!=='IMG'&&pTag.firstChild.nodeName!=='IFRAME'){
-								result =  true
-							}
-						})
-						return result
-					}
+
 					
-					$("#divBody"+i).find('img').each(function(){
-						var jqImg = $(this)
-						jqImg.attr("style","max-width:128px;max-height:128px")
-						jqImg.attr('class','imageThumb')
-						if(hideImage === true){
-							jqImg.hide()
-						}
-						textInPost()===false?jqImg.addClass('floating-image'):""
-						jqImg.click(function(){
-							// $('.aModal').length>1?$('.aModal').remove():""
-							var myModal = document.getElementById('myModal')
-							myModal.style.display = 'block'
-								var aModal = document.createElement('a')
-								// aModal.style.color = 'white'
-								aModal.href = this.src
-								aModal.className = 'aModal'
-								// a.download = true
-								aModal.innerHTML = 'Full Size'
-							myModal.insertBefore(aModal, myModal.firstChild)
-							// myModal.innerHTML = '<a href="'+this.scr+'" download>full Screen</a>'
-							document.getElementById('iframeModal').style.display = 'none'
-							document.getElementById('imgModal').style.display = 'block'
-							document.getElementById('imgModal').setAttribute('style','max-width:100%;max-height:100%;')
-							document.getElementById('imgModal').src = this.src
-						})
-					})
+
 					
-					$("#divBody"+i).find('p').each(function(){
-						var pIframe = this
-						// console.log(pIframe)
-						if(pIframe.firstChild.nodeName === 'IFRAME'){
-							pIframe.className = 'embed-responsive embed-responsive-4by3'
-							pIframe.setAttribute('style','clear:both')
-							if(hidePreview === true){
-								pIframe.setAttribute('style','display:none')
-							}
-							var jqIframe = $(this).first()
-							
-							jQuery(document).ready(function($){
-								jqIframe.iframeTracker({
-									blurCallback: function(){
-										
-										document.getElementById('myModal').style.display = 'block'
-										// $('.aModal').length>1?$('.aModal').remove():""
-										// var aModal = document.createElement('a')
-										// 	aModal.href = pIframe.firstChild.src
-										// 	aModal.className = 'aModal'
-										// 	aModal.innerHTML = 'Full View'
-										// myModal.insertBefore(aModal, myModal.firstChild)
-										document.getElementById('imgModal').style.display = 'none'
-										document.getElementById('iframeModal').style.display = 'block'
-										document.getElementById('iframeModal').setAttribute('style','width:100%;height:100%;')
-										document.getElementById('iframeModal').src = pIframe.firstChild.src
-									}
-								});
-							});
-						}else if(pIframe.firstChild.nodeName === 'VIDEO'){
-							
-							pIframe.className = 'embed-responsive embed-responsive-4by3'
-						}
-						
-				       
-					})
+					
+					
 
 					
 

@@ -354,7 +354,7 @@
     cursor: pointer;
     /*max-width: 512px;*/
     transition: 0.3s;
-    border: 2px solid #73AD21; 
+    border: 1px solid #73AD21; 
 }
 .close {
     position: absolute;
