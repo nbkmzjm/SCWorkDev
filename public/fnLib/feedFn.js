@@ -282,13 +282,13 @@ function getPostDB(option){
 							divBody.appendChild(img)
 						}else if(p.firstChild.nodeName === 'IFRAME'){
 
-							var pIframe = p.firstChild
+							var pIframe = p
 							pIframe.className = 'embed-responsive embed-responsive-4by3'
 							pIframe.setAttribute('style','clear:both')
 							if(hidePreview === true){
 								pIframe.setAttribute('style','display:none')
 							}
-							var jqIframe = $(this).first()
+							var jqIframe = $(pIframe).first()
 							
 							jQuery(document).ready(function($){
 								jqIframe.iframeTracker({
@@ -308,9 +308,11 @@ function getPostDB(option){
 									}
 								});
 							});
+							divBody.appendChild(pIframe)
 
 						}else if (p.firstChild.nodeName === 'VIDEO'){
 							p.firstChild.className = 'embed-responsive embed-responsive-4by3'
+							divBody.appendChild(p.firstChild)
 						}
 						tempDivPostPanel.remove()
 					})
