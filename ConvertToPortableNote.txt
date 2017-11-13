@@ -1,0 +1,4 @@
+Copy and paste NPM LINK and MODULE ICONS back to the root folder
+DO NOT DELETE NODE 7.0 (14,440KB)
+SQLITE ONLY SUPPORT BY NODE 7.0 AND OLDER
+COPY NODE 7.0 TO 2 LOCATION: ....scworkdev\node_modules\npm\bin AND C:\Program Files\nodejs\node_modules\npm\bin\node-gyp-bin
