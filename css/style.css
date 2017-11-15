@@ -266,6 +266,16 @@
     z-index: 0;
 }
 
+#divPreview{
+	position: absolute;
+	box-shadow: 10px 10px 5px #888888;
+    left: 300px;
+    width: 60%;
+   /* background: #7ECCD5;
+    border: 3px solid #FFFFFF;*/
+    z-index: 0;
+}
+
 #divPostContainer{
 	text-align: center; 
 	margin-top:10px;
@@ -376,7 +386,7 @@
 
 
 
-#divTagFilter{
+#divTagSelect{
 	position: relative;
 	max-width:500px;
 	margin:auto;

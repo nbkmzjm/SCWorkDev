@@ -579,12 +579,18 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				userId:curUser.id
 			}
 		}
+		console.log('xxxxxxxxxx')
+		console.log(sDate+ eDate)
 		db.tagSave.findAll({
 			attributes:['mainPostId'],
 			where:wherepara1,
 			include:[{
 				model:db.mainPost,
-				// where:wherePara,
+				where:{
+					createdAt:{
+							$between:[sDate,eDate]
+						}
+				},
 				include:[{
 					model:db.user,
 					attributes:['name', 'lastname','departmentId', 'title'],

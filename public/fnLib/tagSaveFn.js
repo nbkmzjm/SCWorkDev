@@ -1,11 +1,99 @@
 function tagManagerTabClick(){
 	$('#TagManager').html('')
+
+	var divTagSelect = document.createElement('div')
+	divTagSelect.id = 'divTagSelect'
+		var divTHContainer = document.createElement('div')
+		divTHContainer.className = 'typeahead__container'
+			divTHContainer.style.maxWidth = '500px'
+			var divTHField = document.createElement('div')
+			divTHField.className = 'typeahead__field'
+				spanTH = document.createElement('span')
+				spanTH.className = 'typeahead__query'
+	
+					var input = document.createElement('input')
+					
+					input.className ='js-typeahead-tagPost form-control'
+					input.id = 'tagPost'
+					input.placeholder = 'Search Tag'
+					//- input.setAttribute('href','#');
+					//- input.setAttribute('data-toggle','popover');
+					//- input.setAttribute('data-trigger','hover');
+					//- input.setAttribute('data-placement','auto');
+					//- input.style.fontWeight = 'bold'
+					//- input.setAttribute('title', 'Selected User');
+					
+					//popover selected users when hovering over the input search
+					//- document.addEventListener('mousemove', function(){
+					//- 	input.setAttribute('data-content', JSON.stringify(userSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
+					//- 	$('[data-toggle="popover"]').popover({html:true})
+						
+					//- })
+					spanTH.appendChild(input)
+				divTHField.appendChild(spanTH)
+			divTHContainer.appendChild(divTHField)
+		divTagSelect.appendChild(divTHContainer)
+
+	$('#TagManager').append(divTagSelect)
+
+
 	//TAG Filter
 	var divTagFilter = document.createElement('div')
-	
-	
+	divTagFilter.style.marginTop = '20px'
 	divTagFilter.style.clear = 'both'
 	divTagFilter.className = 'form-group col-sm-12'
+		var labelDateRange = document.createElement('label')
+		labelDateRange.className = 'col-sm-1'
+		labelDateRange.innerHTML = 'Search Date:'
+		divTagFilter.appendChild(labelDateRange)
+		
+		var divDateRange = document.createElement('div')
+		divDateRange.className = 'col-sm-2'
+		divDateRange.id = 'divDateRange'
+			var dateCalenderStart = document.createElement('input');
+			dateCalenderStart.id = 'tagCalendarStart';
+			
+
+			//- dateCalenderStart.setAttribute('readonly', true)
+			// dateCalender.type = 'hidden'
+			dateCalenderStart.placeholder = 'Start Date'
+			dateCalenderStart.style.textAlign = 'center'
+			dateCalenderStart.style.fontWeight = 'bold'
+			dateCalenderStart.style.width = '125px'
+			dateCalenderStart.style.fontSize = '100%'
+			//- dateCalenderStart.style.border = '2px transparent'
+			dateCalenderStart.addEventListener('mouseover', function(){
+				$("#tagCalendarStart").datepicker({
+					
+				});
+			})
+			divDateRange.appendChild(dateCalenderStart)
+		//- divViewFilter2.appendChild(divDateRange)
+
+			var dateCalenderEnd = document.createElement('input');
+			dateCalenderEnd.id = 'tagCalendarEnd';
+
+			//- dateCalenderStart.setAttribute('readonly', true)
+			// dateCalender.type = 'hidden'
+			dateCalenderEnd.placeholder = 'End Date'
+			dateCalenderEnd.style.textAlign = 'center'
+			dateCalenderEnd.style.fontWeight = 'bold'
+			dateCalenderEnd.style.width = '125px'
+			dateCalenderEnd.style.fontSize = '100%'
+			//- dateCalenderEnd.style.border = '2px transparent'
+			dateCalenderEnd.addEventListener('mouseover', function(){
+				$("#tagCalendarEnd").datepicker({
+					
+					onSelect: function(){
+						
+					}
+					
+				});
+			})
+			divDateRange.appendChild(dateCalenderEnd)
+		divTagFilter.appendChild(divDateRange)
+
+
 
 		// DIV contain label for VIEW FILTER
 		var labelViewFormat = document.createElement('label')
@@ -27,7 +115,20 @@ function tagManagerTabClick(){
 					optionDB.value = item
 					optionDB.innerHTML = item
 					selectViewFormat.appendChild(optionDB)
+
 				})
+			selectViewFormat.addEventListener('change', function(){
+
+				if(this.value === "List"){
+					divPostSize.style.display = 'None'
+					postSizeLable.style.display = 'None'
+
+
+				}else{
+					postSizeLable.style.display = 'Block'
+					divPostSize.style.display = 'Block'
+				}
+			})
 
 			
 			divViewFormat.appendChild(selectViewFormat)
@@ -59,41 +160,8 @@ function tagManagerTabClick(){
 			divPostSize.appendChild(postSizeOpt)
 		divTagFilter.appendChild(divPostSize)
 	$('#TagManager').append(divTagFilter)
+	
 
-	var divTagFilter = document.createElement('div')
-	divTagFilter.id = 'divTagFilter'
-	
-		var divTHContainer = document.createElement('div')
-		divTHContainer.className = 'typeahead__container'
-			divTHContainer.style.maxWidth = '500px'
-			var divTHField = document.createElement('div')
-			divTHField.className = 'typeahead__field'
-				spanTH = document.createElement('span')
-				spanTH.className = 'typeahead__query'
-	
-					var input = document.createElement('input')
-					
-					input.className ='js-typeahead-tagPost form-control'
-					input.id = 'tagPost'
-					input.placeholder = 'Search Tag'
-					//- input.setAttribute('href','#');
-					//- input.setAttribute('data-toggle','popover');
-					//- input.setAttribute('data-trigger','hover');
-					//- input.setAttribute('data-placement','auto');
-					//- input.style.fontWeight = 'bold'
-					//- input.setAttribute('title', 'Selected User');
-					
-					//popover selected users when hovering over the input search
-					//- document.addEventListener('mousemove', function(){
-					//- 	input.setAttribute('data-content', JSON.stringify(userSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
-					//- 	$('[data-toggle="popover"]').popover({html:true})
-						
-					//- })
-					spanTH.appendChild(input)
-				divTHField.appendChild(spanTH)
-			divTHContainer.appendChild(divTHField)
-		divTagFilter.appendChild(divTHContainer)
-	$('#TagManager').append(divTagFilter)
 
 	$.typeahead({
 	    input: '.js-typeahead-tagPost',
@@ -143,18 +211,21 @@ function tagManagerTabClick(){
 	        onClickAfter: function (node, a, item, event) {
 	 			
 	            event.preventDefault();
+
 	            $('#divPostContainer').remove()
 	            var divPostContainer = document.createElement('div')
 					divPostContainer.id = 'divPostContainer'
 					divPostContainer.style ='text-align: center;'
 					$('#TagManager').append(divPostContainer)
-				console.log(divPostContainer)
+		
 	            getPostDB({
 	            	tagName:item.tagName, 
 	            	tagType:item.type,
 	            	tagCategory:item.category,
 	            	postSize:postSizeOpt.value,
-	            	viewFormat:selectViewFormat.value
+	            	viewFormat:selectViewFormat.value,
+	            	sDate:dateCalenderStart.value,
+	            	eDate:dateCalenderEnd.value
 	            })
 	            $('#tagPost').blur();
 

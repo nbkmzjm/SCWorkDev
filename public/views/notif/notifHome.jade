@@ -696,7 +696,7 @@ append scripts
 
 								var labelDateRange = document.createElement('label')
 								labelDateRange.className = 'col-sm-1'
-								labelDateRange.innerHTML = 'Search Date Range:'
+								labelDateRange.innerHTML = 'Search Date:'
 								divViewFilter.appendChild(labelDateRange)
 								
 								var divDateRange = document.createElement('div')
@@ -1615,7 +1615,7 @@ append scripts
 					getPostDB({postId:postId})
 				}else{
 					getPostDB({
-						//- viewFormat:'List'
+						viewFormat:'List'
 					})
 				}
 			}

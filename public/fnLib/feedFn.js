@@ -1144,6 +1144,24 @@ function getPostDB(option){
 
 			})
 		}else if (viewFormat === 'List'){
+				var divPreview = document.createElement('div')
+				divPreview.id = 'divPreview'
+
+				//gradually appear
+				divPreview.style.opacity= 0;
+				var a = 0 
+				var myInv = setInterval(function(){
+						a = a + 0.1
+						divPreview.style.opacity= a;
+						a>1?clearInterval(myInv):""
+					
+				}, 50)
+
+				divPreview.style.top = '200px'
+					var imgPreview = document.createElement('img')
+					
+					divPreview.appendChild(imgPreview)
+				$('#Feed').append(divPreview)
 
 				var tbodyFeed = document.createElement('tbody')
 					$.post('/notif/getFeed',{
@@ -1171,6 +1189,9 @@ function getPostDB(option){
 								console.log(this)
 								this.addEventListener('click', function(){
 									event.preventDefault()
+									console.log(this)
+									imgPreview.src = this.href
+
 								})
 								var trBodyFeed = document.createElement('tr')
 									var tdName = document.createElement('td')
