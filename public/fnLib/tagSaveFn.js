@@ -1,6 +1,64 @@
 function tagManagerTabClick(){
 	$('#TagManager').html('')
 	//TAG Filter
+	var divTagFilter = document.createElement('div')
+	
+	
+	divTagFilter.style.clear = 'both'
+	divTagFilter.className = 'form-group col-sm-12'
+
+		// DIV contain label for VIEW FILTER
+		var labelViewFormat = document.createElement('label')
+		labelViewFormat.className = 'col-sm-1'
+		labelViewFormat.innerHTML = 'View Format '
+		divTagFilter.appendChild(labelViewFormat)
+
+
+		// DIV contain selections for VIEW FILTER
+		var divViewFormat = document.createElement('div')
+		divViewFormat.className = 'col-sm-2'
+
+			//List option from the Array 
+			var selectViewFormat = document.createElement('select')
+			selectViewFormat.className = 'form-control'
+				var optionList = ['Panel', 'List']
+				optionList.forEach(function(item){
+					var optionDB = document.createElement('option')
+					optionDB.value = item
+					optionDB.innerHTML = item
+					selectViewFormat.appendChild(optionDB)
+				})
+
+			
+			divViewFormat.appendChild(selectViewFormat)
+		divTagFilter.appendChild(divViewFormat)
+
+		// DIV contain label for Post Size
+		var postSizeLable = document.createElement('label')
+		postSizeLable.className = 'col-sm-1'
+		postSizeLable.innerHTML = 'Post Size:'
+		divTagFilter.appendChild(postSizeLable)
+
+		// DIV contain selections for Post Size
+		var divPostSize = document.createElement('div')
+		divPostSize.className = 'col-sm-2'
+
+			//List option from the Array 
+			var postSizeOpt = document.createElement('select')
+			postSizeOpt.className = 'form-control'
+			postSizeOpt.name = 'postSize'
+				var optionListSize = ['Medium','Small','Large']
+
+				optionListSize.forEach(function(item, i){
+					var optionSize = document.createElement('option')
+					optionSize.value = item
+					optionSize.innerHTML = item
+					postSizeOpt.appendChild(optionSize)
+				})
+			
+			divPostSize.appendChild(postSizeOpt)
+		divTagFilter.appendChild(divPostSize)
+	$('#TagManager').append(divTagFilter)
 
 	var divTagFilter = document.createElement('div')
 	divTagFilter.id = 'divTagFilter'
@@ -91,7 +149,13 @@ function tagManagerTabClick(){
 					divPostContainer.style ='text-align: center;'
 					$('#TagManager').append(divPostContainer)
 				console.log(divPostContainer)
-	            getPostDB({tagName:item.tagName, tagType:item.type,tagCategory:item.category})
+	            getPostDB({
+	            	tagName:item.tagName, 
+	            	tagType:item.type,
+	            	tagCategory:item.category,
+	            	postSize:postSizeOpt.value,
+	            	viewFormat:selectViewFormat.value
+	            })
 	            $('#tagPost').blur();
 
 	 
@@ -133,10 +197,10 @@ function tagManagerTabClick(){
 
 
 
-		var divTagView = document.createElement('div')
+	// 	var divTagView = document.createElement('div')
 
-		divTagFilter.appendChild(divTagView)
+	// 	divTagFilter.appendChild(divTagView)
 
-	$('#TagManager').append(divTagFilter)
+	// $('#divPostContainer').append(divTagFilter)
 
 }

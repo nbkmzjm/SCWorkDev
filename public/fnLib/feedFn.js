@@ -152,30 +152,20 @@ function getPostDB(option){
 
 	
 	
+	
+
 	//Initial feeds
-	getFeed()
+		getFeed()
 
 
 	//Active scrolling: loading main post as users scrolling
-	var loadNumber = 4
-	
-	//determind when scroll to the bottom
-	window.onscroll = function(event){
-		var wrap = document.getElementById('divPostContainer')
-		var containHeight = wrap.offsetHeight //height of loaded contain
-		var yOffset = window.pageYOffset  //how much scrolled to the top
-		var windowHt = window.innerHeight // height of visible contain
-		var y = yOffset + windowHt
-		console.log('loadNumber:'+loadNumber)
+	var loadNumber
 
-		if(y >= containHeight ){
-			//load more feeds when at bottom of the page
-			getFeed()
-			loadNumber = loadNumber + 4
-		}
-	}
 
-	if (viewFormat === "List"){
+	if(viewFormat === "Panel"){
+		loadNumber = 4
+	}else if (viewFormat === "List"){
+		loadNumber = 12
 		var tableFeed = document.createElement('table')
 			tableFeed.className = 'table table-sm'
 			tableFeed.id = 'tblFeed'
@@ -193,18 +183,44 @@ function getPostDB(option){
 				tableFeed.appendChild(theadFeed)
 
 		divPostContainer.appendChild(tableFeed)	
+		
+	}
 
+	
 
+	//determind when scroll to the bottom
+	window.onscroll = function(event){
+		console.log('xxx:'+ viewFormat)
+		var wrap = document.getElementById('divPostContainer')
+		var containHeight = wrap.offsetHeight //height of loaded contain
+		var yOffset = window.pageYOffset  //how much scrolled to the top
+		var windowHt = window.innerHeight // height of visible contain
+		var y = yOffset + windowHt
+		if( viewFormat === 'Panel'){
+			if(y >= containHeight ){
+				//load more feeds when at bottom of the page
+				getFeed()
+				loadNumber = loadNumber + 4
+			}
+		}else if(viewFormat === 'List'){
+			if(y >= containHeight){
+				//load more feeds when at bottom of the page
+				getFeed()
+				loadNumber = loadNumber + 12
+			}
+		}
+		
 	}
 
 	function getFeed(){
 		
-		// console.log('feedNumber:'+loadNumber)
+		console.log('loadNumber:'+loadNumber)
 		// console.log('eDate:'+ eDate)
 		// console.log('viewOption'+ viewOption)
 		if (viewFormat === 'Panel'){
 			$.post('/notif/getFeed',{
 				loadNumber:loadNumber,
+				limit:4,
 				viewOption:viewOption,
 				viewOnly:viewOnly,
 				byMe:byMe,
@@ -311,8 +327,8 @@ function getPostDB(option){
 							divBody.appendChild(pIframe)
 
 						}else if (p.firstChild.nodeName === 'VIDEO'){
-							p.firstChild.className = 'embed-responsive embed-responsive-4by3'
-							divBody.appendChild(p.firstChild)
+							p.className = 'embed-responsive embed-responsive-4by3'
+							divBody.appendChild(p)
 						}
 						tempDivPostPanel.remove()
 					})
@@ -951,6 +967,8 @@ function getPostDB(option){
 											})
 										}else if(option==='Share'){
 											document.location = ("/notif?postId="+ post.id + "&command=share")
+										}else if(option==='Download'){
+											console.log('downloading')
 										}
 									}
 										// console.log(event.clientY)
@@ -969,7 +987,7 @@ function getPostDB(option){
 											var postOptContainerUl = document.createElement('ul')
 												postOptContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
 												
-												var optList = ['Hide', 'Share', 'Email', 'Save', 'Unsave']
+												var optList = ['Hide', 'Share', 'Email', 'Save', 'Unsave', 'Download']
 												optList.forEach(function(option){
 													var postOptContainerLi = document.createElement('li')
 														var a = document.createElement('a')
@@ -1126,15 +1144,11 @@ function getPostDB(option){
 
 			})
 		}else if (viewFormat === 'List'){
-			
-				
-			
-			
-
 
 				var tbodyFeed = document.createElement('tbody')
 					$.post('/notif/getFeed',{
 						loadNumber:loadNumber,
+						limit:12,
 						viewOption:viewOption,
 						viewOnly:viewOnly,
 						byMe:byMe,

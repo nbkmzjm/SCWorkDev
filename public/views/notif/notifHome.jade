@@ -561,7 +561,23 @@ append scripts
 										$('#viewOnly').attr('checked', false)
 										
 
-										getPostDB({viewOption:selectViewFilter.value})
+										getPostDB({
+											viewOption:selectViewFilter.value,
+											viewOnly:$('#viewOnly').is(':checked'),
+											byMe:$('#byMe').is(':checked'),
+											byOther:$('#byOther').is(':checked'),
+											sDate:$('#calendarStart').val(),
+											eDate:$('#calendarEnd').val(),
+											postSize:$('#postSize').val(),
+											viewFormat:$('#viewFormat').val()
+										})
+										//- getPostDB({
+										//- 	viewOption:selectViewFilter.value,
+										//- 	viewOnly:$('#viewOnly').is(':checked'),
+										//- 	byMe:$('#byMe').is(':checked'),
+										//- 	byOther:$('#byOther').is(':checked')
+
+										//- })
 
 										
 										$.post('/notif/setFeedSetting',{
@@ -593,24 +609,19 @@ append scripts
 									viewOnly.id = 'viewOnly'
 									viewOnly.value = 'false'
 									viewOnly.addEventListener('click', function(){
-										if(this.checked === true){
+											$('#divPostContainer').html('')
 											getPostDB({
 												viewOption:selectViewFilter.value,
-												viewOnly:true,
+												viewOnly:$('#viewOnly').is(':checked'),
 												byMe:$('#byMe').is(':checked'),
-												byOther:$('#byOther').is(':checked')
-
+												byOther:$('#byOther').is(':checked'),
+												sDate:$('#calendarStart').val(),
+												eDate:$('#calendarEnd').val(),
+												postSize:$('#postSize').val(),
+												viewFormat:$('#viewFormat').val()
 											})
-											$('#divPostContainer').html('')
-										}else{
-											getPostDB({
-												viewOption:selectViewFilter.value,
-												viewOnly:false,
-												byMe:$('#byMe').is(':checked'),
-												byOther:$('#byOther').is(':checked')
-											})
-											$('#divPostContainer').html('')
-										}
+											
+									
 									})
 									divViewOnly.appendChild(viewOnly)
 								divViewFilter.appendChild(divViewOnly)
@@ -632,24 +643,17 @@ append scripts
 									byMe.id = 'byMe'
 									byMe.value = 'false'
 									byMe.addEventListener('click', function(){
-
-										if(this.checked === true){
-											getPostDB({
-												viewOption:selectViewFilter.value,
-												viewOnly:$('#viewOnly').is(':checked'),
-												byMe:true,
-												byOther:$('#byOther').is(':checked')
-											})
-											$('#divPostContainer').html('')
-										}else{
-											getPostDB({
-												viewOption:selectViewFilter.value,
-												viewOnly:$('#viewOnly').is(':checked'),
-												byMe:false,
-												byOther:$('#byOther').is(':checked')
-											})
-											$('#divPostContainer').html('')
-										}
+										$('#divPostContainer').html('')
+										getPostDB({
+											viewOption:selectViewFilter.value,
+											viewOnly:$('#viewOnly').is(':checked'),
+											byMe:$('#byMe').is(':checked'),
+											byOther:$('#byOther').is(':checked'),
+											sDate:$('#calendarStart').val(),
+											eDate:$('#calendarEnd').val(),
+											postSize:$('#postSize').val(),
+											viewFormat:$('#viewFormat').val()
+										})
 									})
 									divByMe.appendChild(byMe)
 								divViewFilter.appendChild(divByMe)
@@ -671,25 +675,17 @@ append scripts
 									byOther.id = 'byOther'
 									byOther.value = 'false'
 									byOther.addEventListener('click', function(){
-
-										if(this.checked === true){
-											getPostDB({
-												viewOption:selectViewFilter.value,
-												viewOnly:$('#viewOnly').is(':checked'),
-												byMe:$('#byMe').is(':checked'),
-												byOther:true
-												//- loadNumber:12
-											})
-											$('#divPostContainer').html('')
-										}else{
-											getPostDB({
-												viewOption:selectViewFilter.value,
-												viewOnly:$('#viewOnly').is(':checked'),
-												byMe:$('#byMe').is(':checked'),
-												byOther:false
-											})
-											$('#divPostContainer').html('')
-										}
+										$('#divPostContainer').html('')
+										getPostDB({
+											viewOption:selectViewFilter.value,
+											viewOnly:$('#viewOnly').is(':checked'),
+											byMe:$('#byMe').is(':checked'),
+											byOther:$('#byOther').is(':checked'),
+											sDate:$('#calendarStart').val(),
+											eDate:$('#calendarEnd').val(),
+											postSize:$('#postSize').val(),
+											viewFormat:$('#viewFormat').val()
+										})
 									})
 									divByOther.appendChild(byOther)
 								divViewFilter.appendChild(divByOther)
@@ -724,8 +720,20 @@ append scripts
 											// 	// alert('blco')
 											// 	$("#calendar").blur()
 											// },
+
 											onSelect: function(){
-												//- $.getJSON('/ajaxUser').done(mainSC);
+												$('#divPostContainer').html('')
+												getPostDB({
+													viewOption:selectViewFilter.value,
+													viewOnly:$('#viewOnly').is(':checked'),
+													byMe:$('#byMe').is(':checked'),
+													byOther:$('#byOther').is(':checked'),
+													sDate:$('#calendarStart').val(),
+													eDate:$('#calendarEnd').val(),
+													postSize:$('#postSize').val(),
+													viewFormat:$('#viewFormat').val()
+												})
+												
 												
 											}
 											
@@ -751,20 +759,24 @@ append scripts
 											onSelect: function(){
 												
 												console.log(dateCalenderStart.value)
-												if (dateCalenderStart.value === ""){
-													alert('Please select Start Date')
-													this.value = ''
-												}else{
+												//- if (dateCalenderStart.value === ""){
+												//- 	alert('Please select Start Date')
+												//- 	this.value = ''
+												//- }else{
 													
+													$('#divPostContainer').html('')
 													getPostDB({
 														viewOption:selectViewFilter.value,
-														sDate:dateCalenderStart.value,
-														eDate:dateCalenderEnd.value
-														
+														viewOnly:$('#viewOnly').is(':checked'),
+														byMe:$('#byMe').is(':checked'),
+														byOther:$('#byOther').is(':checked'),
+														sDate:$('#calendarStart').val(),
+														eDate:$('#calendarEnd').val(),
+														postSize:$('#postSize').val(),
+														viewFormat:$('#viewFormat').val()
 													})
-													$('#divPostContainer').html('')
 														
-												}
+												//- }
 											}
 											
 										});
@@ -828,8 +840,8 @@ append scripts
 									//List option from the Array 
 									var selectViewFormat = document.createElement('select')
 									selectViewFormat.className = 'form-control'
-									selectViewFormat.id = 'selectViewFormat'
-										var optionList = ['List', 'Panel']
+									selectViewFormat.id = 'viewFormat'
+										var optionList = ['Panel', 'List']
 										optionList.forEach(function(item){
 											var optionDB = document.createElement('option')
 											optionDB.value = item
@@ -846,7 +858,13 @@ append scripts
 
 										getPostDB({
 											viewOption:selectViewFilter.value,
-											viewFormat:selectViewFormat.value
+											viewOnly:$('#viewOnly').is(':checked'),
+											byMe:$('#byMe').is(':checked'),
+											byOther:$('#byOther').is(':checked'),
+											sDate:$('#calendarStart').val(),
+											eDate:$('#calendarEnd').val(),
+											postSize:$('#postSize').val(),
+											viewFormat:$('#viewFormat').val()
 										})
 
 										
@@ -1411,10 +1429,21 @@ append scripts
 							divInputGroupFilter.appendChild(divShareBtn)
 
 
+							divTagBtn = document.createElement('div')
+								var tagBtn = document.createElement('button')
+								tagBtn.className = 'col-sm-2 btn btn-primary'
+								tagBtn.innerHTML = 'Tag Manager'
+								tagBtn.id = 'shareBtn'
+								//- tagBtn.style.display = 'none'
+								divTagBtn.appendChild(tagBtn)
+								tagBtn.addEventListener('click',function(){
+									tagManagerTabClick()
+								})
+							divInputGroupFilter.appendChild(divTagBtn)
 
-							
 
 							divFilterGroup.append(divInputGroupFilter)
+								
 
 							var lineHR = document.createElement('HR')
 							lineHR.style.clear = 'both'
