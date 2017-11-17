@@ -267,12 +267,13 @@
 }
 
 #divPreview{
-	position: absolute;
+	border-radius: 10px;
+	position: fixed;
 	box-shadow: 10px 10px 5px #888888;
-    left: 300px;
-    width: 60%;
-   /* background: #7ECCD5;
-    border: 3px solid #FFFFFF;*/
+    left: 200px;
+    max-width: 75%;
+    background: #CCFAFF;
+    border: 5px solid #009AAC;
     z-index: 0;
 }
 

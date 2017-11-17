@@ -171,7 +171,7 @@ function getPostDB(option){
 			tableFeed.id = 'tblFeed'
 				var theadFeed = document.createElement('thead')
 					var trHeadFeed = document.createElement('tr')
-						var headerFeed = ['File Name', 'Posted', 'Date', 'Size']
+						var headerFeed = ['File Name', 'Option','Posted', 'Date', 'Size']
 						headerFeed.forEach(function (item) {
 							var th = document.createElement('th')
 							th.setAttribute('scope', 'col')
@@ -693,284 +693,7 @@ function getPostDB(option){
 									postOpt.className = 'glyphicon glyphicon-collapse-down'
 									postOpt.onclick = function(){
 									var thisPostDiv = this.parentNode.parentNode
-									function postOptClick(option){
-										if(option === "Save"){
-											// console.log(postOptCoords)
-											// console.log(divTitleCoords)
-											var saveToContainer = document.createElement('div')
-											saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
-											saveToContainer.style.left = ((divTitleCoords.right - divTitleCoords.left)/4)+'px'
-											saveToContainer.style.width = '300px'
-											saveToContainer.className = 'popUpContainer'
-											saveToContainer.id = 'saveToContainer'
-												var resultContainer = document.createElement('var')
-												resultContainer.id = 'result-container'
-												resultContainer.className = "result-container"
-												saveToContainer.appendChild(resultContainer)
-
-												var addTag = document.createElement('div')
-												addTag.id = 'addTag'
-												saveToContainer.appendChild(addTag)
-
-												var divTHContainer = document.createElement('div')
-												divTHContainer.className = 'typeahead__container'
-													var divTHField = document.createElement('div')
-													divTHField.className = 'typeahead__field'
-
-														spanTH = document.createElement('span')
-														spanTH.className = 'typeahead__query'
-											
-															var input = document.createElement('input')
-															
-															input.className ='js-typeahead-searchTagSave'
-															input.type = 'search'
-															input.id = 'searchTagSave'
-															input.placeholder = 'Search Tag to Save'
-															
-															spanTH.appendChild(input)
-														divTHField.appendChild(spanTH)
-													divTHContainer.appendChild(divTHField)
-												saveToContainer.appendChild(divTHContainer)
-												
-											divTitle.appendChild(saveToContainer)
-
-
-											$.typeahead({
-											    input: '.js-typeahead-searchTagSave',
-											    minLength:0, maxItem: 20, offset: false, 
-											    order: "acs",
-											    template:"{{tagName}} ({{category}}) <small style='color:#999;'>{{type}}</small>",
-											    // correlativeTemplate: true, //search text to match any word, anywhere inside the template
-											    searchOnFocus: true,
-											    display:['category','tagName','type'],
-											    group:{
-											    	key:'category'
-											    },
-											    
-											    source: {
-											    	// newTag:{
-											    	// 	display:['tagName','type'],
-											    	// 	data:[
-											    	// 		{tagName:'New Tag',type:'personal'},
-										      //       		{tagName:'New Tag',type:'department'}
-										      //       	]
-											    	// },
-										            tagSave:{
-										            	
-											           	ajax: {
-											            	type:'POST',
-											                url: '/notif/getTagSave'
-											                
-											            }
-											        }
-											    },
-											    callback: {
-											        
-											        onClickAfter: function (node, a, item, event) {
-											    //     	event.preventDefault();
-											    //     	console.log(event.target)
-											 			// console.log(node)
-											    //         console.log(a)
-											    //         console.log(item)
-											    //         console.log(event)
-
-												            
-
-														$.post('/notif/postTagSave',{
-															mainPostId:post.id,
-															type:item.type,
-															tagName:item.tagName,
-															category:item.category
-														}).done(function(){
-															$('#result-container').text('');
-														})
-											 
-											        },
-											        onResult: function (node, query, result, resultCount) {
-											            if (query === "") return;
-											            $('#addTag').html("")
-											            // console.log(query.length)
-											            // console.log($('#addTagBtn'))
-											            if(query.length<2&&$('#addTagBtn').length>0){
-											            	$('#addTagBtn').remove()
-											            }
-
-											            
-											            var arrTagType = ['Personal', 'Department']
-
-											            var addTagDiv = document.getElementById('addTag')
-											            arrTagType.forEach(function(type){
-											            	
-												            	var addTagBtn = document.createElement('button')
-												 				addTagBtn.innerHTML = 'Add '+ type +' Tag'
-												 				addTagBtn.id = 'addTagBtn'
-												 				addTagBtn.onclick = function(){
-												 					$('#result-container').text('Adding Tag: '+ query);
-												 					event.preventDefault()
-												 					$('#addTagCategory').length>0?$('#addTagCategory').remove():''
-												 					$('#addTagCategoryBtn').length>0?$('#addTagCategoryBtn').remove():''
-												 					var addTagCategory = document.createElement('input')
-												 					addTagCategory.className = 'form-control'
-												 					addTagCategory.id = 'addTagCategory'
-												 					addTagCategory.placeholder = 'Type '+ type+' Category'
-												 					addTagDiv.appendChild(addTagCategory)
-												 					
-												 					var addTagCategoryBtn = document.createElement('button')
-												 					addTagCategoryBtn.innerHTML = 'ADD'
-												 					addTagCategoryBtn.id = 'addTagCategoryBtn'
-												 					// addTagCategoryBtn.style.float = 'right'
-												 					addTagDiv.appendChild(addTagCategoryBtn)
-												 					addTagCategoryBtn.onclick = function(){
-												 						// console.log('adding'+ addTagCategory.value)
-												 							$.post('/notif/postTagSave',{
-																			mainPostId:post.id,
-																			category:addTagCategory.value.toUpperCase(),
-																			type:type,
-																			tagName:query
-																			}).done(function(){
-																				
-																				$('#saveToContainer').remove()
-																			})
-												 					}
-												 				}
-												 				addTagDiv.appendChild(addTagBtn)
-											            })
-
-											            var text = "";
-											            if (result.length > 0 && result.length < resultCount) {
-											                text = "Showing <strong>" + result.length + "</strong> of <strong>" + resultCount + '</strong> elements matching "' + query + '"';
-											            } else if (result.length > 0) {
-											                text = 'Showing <strong>' + result.length + '</strong> tags matching "' + query + '"';
-											            } else {
-											                text = 'No results matching "' + query + '"';
-											            }
-											            $('#result-container').html(text);
-											 
-											        }
-											    }
-											});
-										}else if(option==='Unsave'){
-
-											var saveToContainer = document.createElement('div')
-											saveToContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
-											saveToContainer.style.left = ((divTitleCoords.right - divTitleCoords.left)/4)+'px'
-											saveToContainer.className = 'popUpContainer'
-											saveToContainer.style.width = '300px'
-											saveToContainer.id = 'saveToContainer'
-												var resultContainer = document.createElement('var')
-												resultContainer.id = 'result-container'
-												resultContainer.className = "result-container"
-												saveToContainer.appendChild(resultContainer)
-
-												var addTag = document.createElement('div')
-												addTag.id = 'addTag'
-												saveToContainer.appendChild(addTag)
-
-												var divTHContainer = document.createElement('div')
-												divTHContainer.className = 'typeahead__container'
-													var divTHField = document.createElement('div')
-													divTHField.className = 'typeahead__field'
-														spanTH = document.createElement('span')
-														spanTH.className = 'typeahead__query'
-											
-															var input = document.createElement('input')
-															
-															input.className ='js-typeahead-searchTagSave'
-															input.type = 'search'
-															input.id = 'searchTagSave'
-															input.placeholder = 'Search and click tag to unsave'
-															
-															spanTH.appendChild(input)
-														divTHField.appendChild(spanTH)
-													divTHContainer.appendChild(divTHField)
-												saveToContainer.appendChild(divTHContainer)
-												
-											divTitle.appendChild(saveToContainer)
-
-											
-											$.typeahead({
-											    input: '.js-typeahead-searchTagSave',
-											    minLength:0, maxItem: 20, offset: false, 
-											    order: "acs",
-											    template:"{{tagName}} ({{category}}) <small style='color:#999;'>{{type}}</small>",
-											    // correlativeTemplate: true, //search text to match any word, anywhere inside the template
-											    searchOnFocus: true,
-											    display:['category','tagName','type'],
-											    group:{
-											    	key:'category'
-											    },
-											    
-											    source: {
-											    	// newTag:{
-											    	// 	display:['tagName','type'],
-											    	// 	data:[
-											    	// 		{tagName:'New Tag',type:'personal'},
-										      //       		{tagName:'New Tag',type:'department'}
-										      //       	]
-											    	// },
-										            tagSave:{
-										            	
-											           	ajax: {
-											            	type:'POST',
-											                url: '/notif/getTagToUnsave',
-											                data:{
-											                	postId:post.id
-											                }
-											                
-											            }
-											        }
-											    },
-											    callback: {
-											        
-											        onClickAfter: function (node, a, item, event) {
-											        	event.preventDefault();
-											    //     	console.log(event.target)
-											 			// console.log(node)
-											    //         console.log(a)
-											    //         console.log(item)
-											    //         console.log(event)
-
-												            
-
-														$.post('/notif/unsaveTag',{
-															mainPostId:post.id,
-															type:item.type,
-															tagName:item.tagName,
-															category:item.category
-														}).done(function(){
-															$('#result-container').text('');
-														})
-											 
-											        },
-											        onResult: function (node, query, result, resultCount) {
-											            
-
-											            var text = "";
-											            if (result.length > 0 && result.length < resultCount) {
-											                text = "Showing <strong>" + result.length + "</strong> of <strong>" + resultCount + '</strong> elements matching "' + query + '"';
-											            } else if (result.length > 0) {
-											                text = 'Showing <strong>' + result.length + '</strong> elements matching "' + query + '"';
-											            } else {
-											                text = 'This post has not been saved';
-											            }
-											            $('#result-container').html(text);
-											 
-											        }
-											    }
-											});
-										}else if(option==='Hide'){
-
-											$.post('/notif/hidePost',{
-												mainPostId:post.id
-											}).done(function(hidden){
-												thisPostDiv.remove()
-											})
-										}else if(option==='Share'){
-											document.location = ("/notif?postId="+ post.id + "&command=share")
-										}else if(option==='Download'){
-											console.log('downloading')
-										}
-									}
+										
 										// console.log(event.clientY)
 										
 										var divTitleCoords = divTitle.getBoundingClientRect()
@@ -995,7 +718,7 @@ function getPostDB(option){
 														a.innerHTML = option
 														a.onclick = function(){
 															event.preventDefault()
-															postOptClick(this.innerHTML)
+															postOptClick(this.innerHTML, postOptCoords, divTitleCoords, divTitle, post.id)
 														}
 														postOptContainerLi.appendChild(a)
 													postOptContainerUl.appendChild(postOptContainerLi)
@@ -1009,26 +732,7 @@ function getPostDB(option){
 									}
 									divTitle.appendChild(postOpt)
 
-									//click event control diapprearing of the popup menu
-									window.onclick = function(){
-										// console.log(event.target)
-										if(event.target.id == 'postOpt'){
-											
-										} else if(event.target.innerHTML == 'Save'
-											||event.target.type=='search'
-											||event.target.id == 'addTagBtn'
-											||event.target.id=='addTagCategory'
-											||event.target.id=='addTagCategoryBtn'
-										){
-
-										} else if(event.target.innerHTML == 'Unsave'){
-
-										}else{
-											$('#saveToContainer').remove()
-											$('#postOptContainer').remove()
-										}
-										
-									}
+									
 
 									//Blank like Emoj for user input
 									var spanEmoj = document.createElement('span')
@@ -1144,24 +848,7 @@ function getPostDB(option){
 
 			})
 		}else if (viewFormat === 'List'){
-				var divPreview = document.createElement('div')
-				divPreview.id = 'divPreview'
-
-				//gradually appear
-				divPreview.style.opacity= 0;
-				var a = 0 
-				var myInv = setInterval(function(){
-						a = a + 0.1
-						divPreview.style.opacity= a;
-						a>1?clearInterval(myInv):""
-					
-				}, 50)
-
-				divPreview.style.top = '200px'
-					var imgPreview = document.createElement('img')
-					
-					divPreview.appendChild(imgPreview)
-				$('#Feed').append(divPreview)
+				
 
 				var tbodyFeed = document.createElement('tbody')
 					$.post('/notif/getFeed',{
@@ -1186,21 +873,105 @@ function getPostDB(option){
 							divPostContainer.appendChild(tempDiv)
 							
 							$("#tempDiv").find('a').each(function(){
-								console.log(this)
+								
 								this.addEventListener('click', function(){
 									event.preventDefault()
 									console.log(this)
-									imgPreview.src = this.href
+									$('#divPreview').remove()
+									var divPreview = document.createElement('div')
+									divPreview.id = 'divPreview'
+
+									//gradually appear
+									divPreview.style.opacity= 0;
+									var a = 0 
+									var myInv = setInterval(function(){
+											a = a + 0.1
+											divPreview.style.opacity= a;
+											a>1?clearInterval(myInv):""
+										
+									}, 50)
+									divPreview.style.top = '150px'
+										var imgPreview = document.createElement('iframe')
+										imgPreview.setAttribute("style","max-width:100%;max-height:100%")
+										imgPreview.src = this.href
+										divPreview.appendChild(imgPreview)
+
+										var xclose = document.createElement('span')
+										xclose.style.position = 'absolute'
+										xclose.style.right = '-30px'
+										xclose.style.fontSize = "25px"
+										xclose.style.color = '#078282'
+										xclose.className = "glyphicon glyphicon-remove"
+										xclose.addEventListener('click', function(){
+											divPreview.remove()
+										})
+										divPreview.appendChild(xclose)
+									$('#Feed').append(divPreview)
 
 								})
+
+								this.addEventListener('mouseenter', function () {
+
+								})
+								
 								var trBodyFeed = document.createElement('tr')
 									var tdName = document.createElement('td')
 									// tdName.id = "tdName"+ i
 									tdName.appendChild(this)
 									trBodyFeed.appendChild(tdName)
 
+									var tdOptMenu = document.createElement('td')
+										//Post option menue
+										var postOpt = document.createElement('span')
+										postOpt.id = 'postOpt'
+										postOpt.className = 'glyphicon glyphicon-collapse-down'
+										postOpt.onclick = function(){
+										var thisPostDiv = this.parentNode.parentNode
+											
+											// console.log(event.clientY)
+											
+											var divTitleCoords = divPostContainer.getBoundingClientRect()
+											var postOptCoords = this.getBoundingClientRect()
+
+											// console.log(postOptCoords)
+											// console.log(divTitleCoords)
+											$('#postOptContainer').length>0?$('#postOptContainer').remove():''
+											var postOptContainer = document.createElement('div')
+											postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top+ 600 +'px'
+											postOptContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
+											postOptContainer.className = 'popUpContainer'
+											postOptContainer.id = 'postOptContainer'
+												var postOptContainerUl = document.createElement('ul')
+													postOptContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
+													
+													var optList = ['Hide', 'Share', 'Email', 'Save', 'Unsave', 'Download']
+													optList.forEach(function(option){
+														var postOptContainerLi = document.createElement('li')
+															var a = document.createElement('a')
+															a.href='#'
+															a.innerHTML = option
+															a.onclick = function(){
+																event.preventDefault()
+																postOptClick(this.innerHTML, postOptCoords.bottom - divTitleCoords.top+ 600 +'px',
+																 postOptCoords.left - divTitleCoords.left + 'px', tdPostedBy, post.id)
+															}
+															postOptContainerLi.appendChild(a)
+														postOptContainerUl.appendChild(postOptContainerLi)
+													})
+												postOptContainer.appendChild(postOptContainerUl)
+											tdPostedBy.appendChild(postOptContainer)
+											
+
+													
+
+										}
+										tdOptMenu.appendChild(postOpt)
+
+									trBodyFeed.appendChild(tdOptMenu)
+
 									var tdPostedBy = document.createElement('td')
 									tdPostedBy.innerHTML = post.user.fullName
+										
 									trBodyFeed.appendChild(tdPostedBy)
 
 									var tdPostDate = document.createElement('td')
@@ -1225,6 +996,306 @@ function getPostDB(option){
 		}
 	}
 	return true
+}
+
+function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
+	if(option === "Save"){
+		// console.log(postOptCoords)
+		// console.log(divTitleCoords)
+		var saveToContainer = document.createElement('div')
+		saveToContainer.style.top = verticalPos
+		saveToContainer.style.left = horizontalPos
+		saveToContainer.style.width = '300px'
+		saveToContainer.className = 'popUpContainer'
+		saveToContainer.id = 'saveToContainer'
+			var resultContainer = document.createElement('var')
+			resultContainer.id = 'result-container'
+			resultContainer.className = "result-container"
+			saveToContainer.appendChild(resultContainer)
+
+			var addTag = document.createElement('div')
+			addTag.id = 'addTag'
+			saveToContainer.appendChild(addTag)
+
+			var divTHContainer = document.createElement('div')
+			divTHContainer.className = 'typeahead__container'
+				var divTHField = document.createElement('div')
+				divTHField.className = 'typeahead__field'
+
+					spanTH = document.createElement('span')
+					spanTH.className = 'typeahead__query'
+		
+						var input = document.createElement('input')
+						
+						input.className ='js-typeahead-searchTagSave'
+						input.type = 'search'
+						input.id = 'searchTagSave'
+						input.placeholder = 'Search Tag to Save'
+						
+						spanTH.appendChild(input)
+					divTHField.appendChild(spanTH)
+				divTHContainer.appendChild(divTHField)
+			saveToContainer.appendChild(divTHContainer)
+			
+		parentDiv.appendChild(saveToContainer)
+
+
+		$.typeahead({
+		    input: '.js-typeahead-searchTagSave',
+		    minLength:0, maxItem: 20, offset: false, 
+		    order: "acs",
+		    template:"{{tagName}} ({{category}}) <small style='color:#999;'>{{type}}</small>",
+		    // correlativeTemplate: true, //search text to match any word, anywhere inside the template
+		    searchOnFocus: true,
+		    display:['category','tagName','type'],
+		    group:{
+		    	key:'category'
+		    },
+		    
+		    source: {
+		    	// newTag:{
+		    	// 	display:['tagName','type'],
+		    	// 	data:[
+		    	// 		{tagName:'New Tag',type:'personal'},
+	      //       		{tagName:'New Tag',type:'department'}
+	      //       	]
+		    	// },
+	            tagSave:{
+	            	
+		           	ajax: {
+		            	type:'POST',
+		                url: '/notif/getTagSave'
+		                
+		            }
+		        }
+		    },
+		    callback: {
+		        
+		        onClickAfter: function (node, a, item, event) {
+		    //     	event.preventDefault();
+		    //     	console.log(event.target)
+		 			// console.log(node)
+		    //         console.log(a)
+		    //         console.log(item)
+		    //         console.log(event)
+
+			            
+
+					$.post('/notif/postTagSave',{
+						mainPostId:postId,
+						type:item.type,
+						tagName:item.tagName,
+						category:item.category
+					}).done(function(){
+						$('#result-container').text('');
+					})
+		 
+		        },
+		        onResult: function (node, query, result, resultCount) {
+		            if (query === "") return;
+		            $('#addTag').html("")
+		            // console.log(query.length)
+		            // console.log($('#addTagBtn'))
+		            if(query.length<2&&$('#addTagBtn').length>0){
+		            	$('#addTagBtn').remove()
+		            }
+
+		            
+		            var arrTagType = ['Personal', 'Department']
+
+		            var addTagDiv = document.getElementById('addTag')
+		            arrTagType.forEach(function(type){
+		            	
+			            	var addTagBtn = document.createElement('button')
+			 				addTagBtn.innerHTML = 'Add '+ type +' Tag'
+			 				addTagBtn.id = 'addTagBtn'
+			 				addTagBtn.onclick = function(){
+			 					$('#result-container').text('Adding Tag: '+ query);
+			 					event.preventDefault()
+			 					$('#addTagCategory').length>0?$('#addTagCategory').remove():''
+			 					$('#addTagCategoryBtn').length>0?$('#addTagCategoryBtn').remove():''
+			 					var addTagCategory = document.createElement('input')
+			 					addTagCategory.className = 'form-control'
+			 					addTagCategory.id = 'addTagCategory'
+			 					addTagCategory.placeholder = 'Type '+ type+' Category'
+			 					addTagDiv.appendChild(addTagCategory)
+			 					
+			 					var addTagCategoryBtn = document.createElement('button')
+			 					addTagCategoryBtn.innerHTML = 'ADD'
+			 					addTagCategoryBtn.id = 'addTagCategoryBtn'
+			 					// addTagCategoryBtn.style.float = 'right'
+			 					addTagDiv.appendChild(addTagCategoryBtn)
+			 					addTagCategoryBtn.onclick = function(){
+			 						// console.log('adding'+ addTagCategory.value)
+			 							$.post('/notif/postTagSave',{
+										mainPostId:postId,
+										category:addTagCategory.value.toUpperCase(),
+										type:type,
+										tagName:query
+										}).done(function(){
+											
+											$('#saveToContainer').remove()
+										})
+			 					}
+			 				}
+			 				addTagDiv.appendChild(addTagBtn)
+		            })
+
+		            var text = "";
+		            if (result.length > 0 && result.length < resultCount) {
+		                text = "Showing <strong>" + result.length + "</strong> of <strong>" + resultCount + '</strong> elements matching "' + query + '"';
+		            } else if (result.length > 0) {
+		                text = 'Showing <strong>' + result.length + '</strong> tags matching "' + query + '"';
+		            } else {
+		                text = 'No results matching "' + query + '"';
+		            }
+		            $('#result-container').html(text);
+		 
+		        }
+		    }
+		});
+	}else if(option==='Unsave'){
+
+		var saveToContainer = document.createElement('div')
+		saveToContainer.style.top = verticalPos
+		saveToContainer.style.left = horizontalPos
+		saveToContainer.className = 'popUpContainer'
+		saveToContainer.style.width = '300px'
+		saveToContainer.id = 'saveToContainer'
+			var resultContainer = document.createElement('var')
+			resultContainer.id = 'result-container'
+			resultContainer.className = "result-container"
+			saveToContainer.appendChild(resultContainer)
+
+			var addTag = document.createElement('div')
+			addTag.id = 'addTag'
+			saveToContainer.appendChild(addTag)
+
+			var divTHContainer = document.createElement('div')
+			divTHContainer.className = 'typeahead__container'
+				var divTHField = document.createElement('div')
+				divTHField.className = 'typeahead__field'
+					spanTH = document.createElement('span')
+					spanTH.className = 'typeahead__query'
+		
+						var input = document.createElement('input')
+						
+						input.className ='js-typeahead-searchTagSave'
+						input.type = 'search'
+						input.id = 'searchTagSave'
+						input.placeholder = 'Search and click tag to unsave'
+						
+						spanTH.appendChild(input)
+					divTHField.appendChild(spanTH)
+				divTHContainer.appendChild(divTHField)
+			saveToContainer.appendChild(divTHContainer)
+			
+		parentDiv.appendChild(saveToContainer)
+
+		
+		$.typeahead({
+		    input: '.js-typeahead-searchTagSave',
+		    minLength:0, maxItem: 20, offset: false, 
+		    order: "acs",
+		    template:"{{tagName}} ({{category}}) <small style='color:#999;'>{{type}}</small>",
+		    // correlativeTemplate: true, //search text to match any word, anywhere inside the template
+		    searchOnFocus: true,
+		    display:['category','tagName','type'],
+		    group:{
+		    	key:'category'
+		    },
+		    
+		    source: {
+		    	// newTag:{
+		    	// 	display:['tagName','type'],
+		    	// 	data:[
+		    	// 		{tagName:'New Tag',type:'personal'},
+	      //       		{tagName:'New Tag',type:'department'}
+	      //       	]
+		    	// },
+	            tagSave:{
+	            	
+		           	ajax: {
+		            	type:'POST',
+		                url: '/notif/getTagToUnsave',
+		                data:{
+		                	postId:postId
+		                }
+		                
+		            }
+		        }
+		    },
+		    callback: {
+		        
+		        onClickAfter: function (node, a, item, event) {
+		        	event.preventDefault();
+		    //     	console.log(event.target)
+		 			// console.log(node)
+		    //         console.log(a)
+		    //         console.log(item)
+		    //         console.log(event)
+
+			            
+
+					$.post('/notif/unsaveTag',{
+						mainPostId:postId,
+						type:item.type,
+						tagName:item.tagName,
+						category:item.category
+					}).done(function(){
+						$('#result-container').text('');
+					})
+		 
+		        },
+		        onResult: function (node, query, result, resultCount) {
+		            
+
+		            var text = "";
+		            if (result.length > 0 && result.length < resultCount) {
+		                text = "Showing <strong>" + result.length + "</strong> of <strong>" + resultCount + '</strong> elements matching "' + query + '"';
+		            } else if (result.length > 0) {
+		                text = 'Showing <strong>' + result.length + '</strong> elements matching "' + query + '"';
+		            } else {
+		                text = 'This post has not been saved';
+		            }
+		            $('#result-container').html(text);
+		 
+		        }
+		    }
+		});
+	}else if(option==='Hide'){
+
+		$.post('/notif/hidePost',{
+			mainPostId:postId
+		}).done(function(hidden){
+			thisPostDiv.remove()
+		})
+	}else if(option==='Share'){
+		document.location = ("/notif?postId="+ postId + "&command=share")
+	}else if(option==='Download'){
+		console.log('downloading')
+	}
+
+	//click event control diapprearing of the popup menu
+	window.onclick = function(){
+		console.log(event.target.id)
+		if(event.target.id == 'postOpt'){
+			
+		} else if(event.target.innerHTML == 'Save'
+			||event.target.type=='search'
+			||event.target.id == 'addTagBtn'
+			||event.target.id=='addTagCategory'
+			||event.target.id=='addTagCategoryBtn'
+		){
+
+		} else if(event.target.innerHTML == 'Unsave'){
+
+		}else{
+			$('#saveToContainer').remove()
+			$('#postOptContainer').remove()
+		}
+		
+	}
 }
 
 function BHUserList (typeaheadId) {
