@@ -171,7 +171,7 @@ function getPostDB(option){
 			tableFeed.id = 'tblFeed'
 				var theadFeed = document.createElement('thead')
 					var trHeadFeed = document.createElement('tr')
-						var headerFeed = ['File Name', 'Option','Posted', 'Date', 'Size']
+						var headerFeed = ['', 'Option','Posted', 'Date', 'Size']
 						headerFeed.forEach(function (item) {
 							var th = document.createElement('th')
 							th.setAttribute('scope', 'col')
@@ -277,7 +277,7 @@ function getPostDB(option){
 							var img = p.firstChild
 							img.setAttribute("style","max-width:120px;max-height:120px")
 							img.setAttribute('class','imageThumb')
-							img.classList.add('floating-image')
+							// img.classList.add('floating-image')
 							img.addEventListener('click', function(){
 								var myModal = document.getElementById('myModal')
 								myModal.style.display = 'block'
@@ -328,6 +328,8 @@ function getPostDB(option){
 
 						}else if (p.firstChild.nodeName === 'VIDEO'){
 							p.className = 'embed-responsive embed-responsive-4by3'
+							divBody.appendChild(p)
+						}else{
 							divBody.appendChild(p)
 						}
 						tempDivPostPanel.remove()
@@ -844,78 +846,76 @@ function getPostDB(option){
 							
 							$("#tempDiv").each(function(){
 								
-								console.log(this)
 								var tdNameItem 
 								$(this).find('a').each(function(){
-									console.log(this.parentNode.firstChild)
 									var ahref = this.parentNode.firstChild
-									// if (this.firstChild.nodeName === 'A'){
-
-										// var p = this.firstChild
-										// if(p.firstChild.nodeName === 'IMG'){
-
-										// 	var src = p.firstChild.src
-										// 	tdNameItem = p.nextSibling
-										// 	console.log(tdn)
-
-										// }
-
-									// }
-									this.addEventListener('click', function(){
-										event.preventDefault()
-										console.log(this)
-										$('#divPreview').remove()
-										var divPreview = document.createElement('div')
-										divPreview.id = 'divPreview'
-
-										//gradually appear
-										divPreview.style.opacity= 0;
-										var a = 0 
-										var myInv = setInterval(function(){
-												a = a + 0.1
-												divPreview.style.opacity= a;
-												a>1?clearInterval(myInv):""
-											
-										}, 50)
-										divPreview.style.top = '150px'
-											if(ahref.nodeName === 'IMG'){
-												var imgPreview = document.createElement('img')
-												imgPreview.setAttribute("style","max-width:100%;max-height:100%")
-												imgPreview.src = ahref.src
-												divPreview.appendChild(imgPreview)
-											}else if (ahref.nodeName === 'IFRAME'){
-												var imgPreview = document.createElement('iframe')
-												imgPreview.setAttribute("style","width:100%;height:100%")
-												imgPreview.src = ahref.src
-												divPreview.appendChild(imgPreview)
-											}
-											
-											
-
-											var xclose = document.createElement('span')
-											xclose.style.position = 'absolute'
-											xclose.style.right = '-30px'
-											xclose.style.fontSize = "25px"
-											xclose.style.color = '#078282'
-											xclose.className = "glyphicon glyphicon-remove"
-											xclose.addEventListener('click', function(){
-												divPreview.remove()
-											})
-											divPreview.appendChild(xclose)
-										$('#Feed').append(divPreview)
-
-									})
-
-									this.addEventListener('mouseenter', function () {
-
-									})
-									
-							
-
 									
 									var trBodyFeed = document.createElement('tr')
 										var tdPostId = document.createElement('td')
-										tdPostId.innerHTML = post.id
+											var span = document.createElement('span')
+											span.className = "glyphicon glyphicon-eye-open"
+											span.style.fontSize = "20px"
+											span.addEventListener('click', function(){
+												// $('#divPreview').remove()
+												var divPreview = document.createElement('div')
+												divPreview.id = 'divPreview'
+
+												//gradually appear
+												divPreview.style.opacity= 0;
+												if(ahref.nodeName === 'IMG'){
+														var imgPreview = document.createElement('img')
+														imgPreview.setAttribute("style","max-width:100%;max-height:100%")
+														imgPreview.src = ahref.src
+														divPreview.appendChild(imgPreview)
+													}else if (ahref.nodeName === 'IFRAME'){
+														divPreview.setAttribute("style","width:75%;height:75%")
+														var iframPreview = document.createElement('iframe')
+														iframPreview.setAttribute("style","width:100%;height:100%")
+														iframPreview.src = ahref.src
+
+														divPreview.appendChild(iframPreview)
+													}
+												
+												divPreview.style.top = '150px'
+													
+												var a = 0 
+												var myInv = setInterval(function(){
+														a = a + 0.1
+														divPreview.style.opacity= a;
+														a>1?clearInterval(myInv):""
+													
+												}, 50)
+
+													var xclose = document.createElement('span')
+													xclose.style.position = 'absolute'
+													xclose.style.right = '-13px'
+													xclose.style.top = '-25px'
+													xclose.style.fontSize = "25px"
+													xclose.style.color = '#078282'
+													xclose.className = "glyphicon glyphicon-remove"
+													xclose.addEventListener('click', function(){
+														divPreview.remove()
+													})
+													divPreview.appendChild(xclose)
+												$('#TagManager').append(divPreview)
+												$('#Feed').append(divPreview)
+												
+
+
+											})
+											tdPostId.appendChild(span)
+
+
+											var spaninfo = document.createElement('span')
+											spaninfo.className = "glyphicon glyphicon-info-sign"
+											spaninfo.style.fontSize = "20px"
+											spaninfo.style.paddingLeft = '5px'
+
+											spaninfo.addEventListener('click', function(){
+												document.location = ("/notif?postId="+ post.id)
+											})
+											tdPostId.appendChild(spaninfo)
+										
 										trBodyFeed.appendChild(tdPostId)
 
 										var tdName = document.createElement('td')

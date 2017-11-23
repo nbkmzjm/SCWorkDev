@@ -246,7 +246,7 @@ append scripts
 
 										    var inputPostValueSlice4 = inputPostValue.slice(0,-4)
 										    console.log(inputPostValueSlice4)
-										    var inputPostValuewithURL = inputPostValueSlice4.replace(inputValueImage,returnData.url) + '<a href="'+returnData.url+'" download>'+imageName+'</a><br>'
+										    var inputPostValuewithURL = inputPostValue.replace(inputValueImage+'" />',returnData.url+ '" /><a href="'+returnData.url+'" download>'+imageName+'</a>,</br>')
 										    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
 										    console.log("inputPostValuewithURL:"+inputPostValuewithURL)
 										    if(inputPostValuewithURL.indexOf('src="data')!==-1){
@@ -1631,7 +1631,7 @@ append scripts
 					getPostDB({postId:postId})
 				}else{
 					getPostDB({
-						//- viewFormat:'List'
+						viewFormat:'List'
 					})
 				}
 			}
