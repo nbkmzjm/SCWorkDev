@@ -856,7 +856,8 @@ function getPostDB(option){
 											span.className = "glyphicon glyphicon-eye-open"
 											span.style.fontSize = "20px"
 											span.addEventListener('click', function(){
-												// $('#divPreview').remove()
+												console.log(this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.id)
+												$('#divPreview').remove()
 												var divPreview = document.createElement('div')
 												divPreview.id = 'divPreview'
 
@@ -897,8 +898,13 @@ function getPostDB(option){
 														divPreview.remove()
 													})
 													divPreview.appendChild(xclose)
-												$('#TagManager').append(divPreview)
-												$('#Feed').append(divPreview)
+												
+												if(this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.id === 'Feed'){
+													$('#Feed').append(divPreview)
+												}else{
+													$('#TagManager').append(divPreview)	
+												}
+												
 												
 
 

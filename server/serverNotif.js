@@ -4,7 +4,7 @@ var db = require('../db.js');
 var moment = require('moment');
 var _ = require('underscore');
 const webpush = require('web-push')
-
+var fs = require('fs')
 var middleware = require('../middleware.js')(db);
 
 // const vapidKeys = webpush.generateVAPIDKeys();
@@ -15,6 +15,134 @@ var middleware = require('../middleware.js')(db);
 //   vapidKeys.privateKey
 // );
 // console.log('vapidKeys.publicKeyNOTI' + vapidKeys.publicKey)
+var google = require('googleapis');
+var googleAuth = require('google-auth-library');
+router.post('/oauth2Client', function(req, res){
+	var command = req.body.command
+	var authCode = req.body.authCode
+	
+	var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+	var token_dir = './gmailAPIToken.json'
+	console.log(token_dir)
+
+	fs.readFile('client_secret.json', function processClientSecrets(err, content) {
+		if (err) {
+			console.log('Error loading client secret file: ' + err);
+			return;
+		}
+		var credentials = JSON.parse(content)
+		var clientSecret = credentials.installed.client_secret;
+		var clientId = credentials.installed.client_id;
+		var redirectUrl = credentials.installed.redirect_uris[0];
+
+		console.log(clientSecret)
+
+		var auth = new googleAuth()
+		var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl)
+
+		console.log(oauth2Client)
+		var authUrl = oauth2Client.generateAuthUrl({
+			access_type: 'offline',
+			scope: SCOPES
+		});
+
+		if(command === 'getTokenLink'){
+			res.json({
+				authUrl:authUrl
+			})
+		}else{
+			oauth2Client.getToken(authCode, function(erorr, token) {
+				if (erorr) {
+					console.log('Error while trying to retrieve access token', erorr);
+					res.json({
+						error:"Error while trying to retrieve access token. Please try again"
+					})
+				}
+				oauth2Client.credentials = token;
+
+				// fs.mkdirSync(token_dir)
+				fs.writeFile(token_dir, JSON.stringify(token))
+				// storeToken(token);
+				// callback(oauth2Client);
+				console.log('xxxxx')
+				console.log(token)
+				res.json({
+					oauth2Client:oauth2Client
+				})
+			});
+			
+		}
+		
+	});
+
+	
+})
+
+
+function getOauth2Client(callback) {
+		var result
+		var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+		var token_path = './gmailAPIToken.json'
+
+		fs.readFile('client_secret.json', function processClientSecrets(err, content) {
+			if (err) {
+				console.log('Error loading client secret file: ' + err);
+			}
+			var credentials = JSON.parse(content)
+			var clientSecret = credentials.installed.client_secret;
+			var clientId = credentials.installed.client_id;
+			var redirectUrl = credentials.installed.redirect_uris[0];
+
+
+			var auth = new googleAuth()
+			var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl)
+
+			fs.readFile(token_path, function(err, token) {
+				if (err) {
+					console.log('Please go to setting to request new TOKEN')
+					callback('error')
+				} else {
+
+					oauth2Client.credentials = JSON.parse(token);
+					
+					callback(oauth2Client)
+				}
+			});
+		})
+
+}
+
+
+
+
+router.post('/getGmailLabels', function(req, res){
+	getOauth2Client(getMailLabels)
+	function getMailLabels(auth){
+		var gmail = google.gmail('v1');
+		gmail.users.labels.list({
+			auth: auth,
+			userId: 'me',
+		}, function(err, response) {
+			if (err) {
+				console.log('The API returned an error: ' + err);
+				return;
+			}
+			var labels = response.labels;
+			if (labels.length == 0) {
+				console.log('No labels found.');
+			} else {
+				console.log('Labels:');
+				for (var i = 0; i < labels.length; i++) {
+					var label = labels[i];
+					console.log('- %s', label.name);
+
+				}
+			}
+		});
+		res.json('lablelist')
+	}
+	
+})
 
 
 router.get('/', middleware.requireAuthentication, function(req, res) {
