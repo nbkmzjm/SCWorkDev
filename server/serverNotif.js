@@ -6,6 +6,7 @@ var _ = require('underscore');
 const webpush = require('web-push')
 var fs = require('fs')
 var middleware = require('../middleware.js')(db);
+const base64url = require('base64url')
 
 // const vapidKeys = webpush.generateVAPIDKeys();
 // webpush.setGCMAPIKey("AIzaSyAVHtFMejQX7To7UwVqi4MWzWIfBP1qWAc");
@@ -40,7 +41,6 @@ router.post('/oauth2Client', function(req, res){
 		var auth = new googleAuth()
 		var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl)
 
-		console.log(oauth2Client)
 		var authUrl = oauth2Client.generateAuthUrl({
 			access_type: 'offline',
 			scope: SCOPES
@@ -80,7 +80,6 @@ router.post('/oauth2Client', function(req, res){
 
 
 function getOauth2Client(callback) {
-		var result
 		var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 		var token_path = './gmailAPIToken.json'
 
@@ -115,31 +114,121 @@ function getOauth2Client(callback) {
 
 
 
-router.post('/getGmailLabels', function(req, res){
-	getOauth2Client(getMailLabels)
-	function getMailLabels(auth){
+
+router.post('/getEmailList', function(req, res){
+	
+	var nextPageToken = req.body.nextPageToken||false
+
+	if (nextPageToken == false){
+		getOauth2Client(getInitialList)
+		function getInitialList(auth){
+			var gmail = google.gmail('v1');
+			gmail.users.messages.list({
+				auth: auth,
+				userId: 'me',
+				maxResults:'20'
+			}, function(err, response) {
+				var messageList = response.messages
+				res.json({
+					messages:messageList,
+					nextPageToken:response.nextPageToken
+				})
+
+			})
+		}
+
+	}else{
+		getOauth2Client(getMessages)
+		function getMessages(auth){
+			var gmail = google.gmail('v1');
+			gmail.users.messages.list({
+				auth: auth,
+				userId: 'me',
+				// q:'is:unread',
+				maxResults:'20',
+				pageToken: nextPageToken
+			}, function(err, response) {
+				if (err) {
+					console.log('The API returned an error: ' + err);
+					return;
+				}
+				var messages = response.messages;
+				console.log(JSON.stringify(messages,null,4))
+				if (messages.length == 0) {
+					console.log('No labels found.');
+				} else {
+					console.log('Messages:');
+					res.json(messages)
+				}
+				
+			});
+		
+		}
+	}
+
+	
+})
+
+router.post('/getEmailMessage', function(req, res){
+	var messageId = req.body.id
+	getOauth2Client(getMailMessage)
+	function getMailMessage(auth){
+
+
 		var gmail = google.gmail('v1');
-		gmail.users.labels.list({
+		var getMessage = gmail.users.messages.get({
 			auth: auth,
 			userId: 'me',
+			id:messageId
+		}, function(err, message){
+			
+			res.json(message)
+		})
+	}
+})
+
+
+
+router.post('/getGmailAttachment', function(req, res){
+	getOauth2Client(getMessages)
+	function getMessages(auth){
+		var gmail = google.gmail('v1');
+		gmail.users.messages.list({
+			auth: auth,
+			userId: 'me',
+			// q:'is:unread',
+			maxResults:'10'
 		}, function(err, response) {
 			if (err) {
 				console.log('The API returned an error: ' + err);
 				return;
 			}
-			var labels = response.labels;
-			if (labels.length == 0) {
+			var messages = response.messages;
+			console.log(JSON.stringify(messages,null,4))
+			if (messages.length == 0) {
 				console.log('No labels found.');
 			} else {
-				console.log('Labels:');
-				for (var i = 0; i < labels.length; i++) {
-					var label = labels[i];
-					console.log('- %s', label.name);
-
+				console.log('Messages:');
+				var messageLists = []
+				for (var i = 0; i < messages.length; i++) {
+					var message = messages[i];
+					console.log('- %s', message.payload);
+					var getMessage = gmail.users.messages.get({
+						auth: auth,
+						userId: 'me',
+						id:message.id
+					}, function(err, res){
+						// messageLists.push(message.payload)
+						console.log(JSON.stringify(res,null,4))
+					})
+					
 				}
+				res.json(messages)
+				
 			}
+			
 		});
-		res.json('lablelist')
+		
 	}
 	
 })

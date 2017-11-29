@@ -29,6 +29,8 @@ block content
 					a(data-toggle="tab"  href="#Profile") Profile
 				li(id='TagManagerTab')
 					a(data-toggle="tab"  href="#TagManager") Tag Manager
+				li(id='AdminMailTab')
+					a(data-toggle="tab"  href="#AdminMail") Admin Mail
 				li(	id='SettingTab')
 					a(data-toggle="tab"  href="#Setting") Setting
 
@@ -39,11 +41,13 @@ block content
 				div(id="Profile" class="tab-pane")
 				div(id="Relationships" class="tab-pane")
 				div(id="Setting" class="tab-pane")
+				div(id="AdminMail" class="tab-pane")
 				div(id="TagManager" class="tab-pane")
 
 append scripts 
 	script(src="public/fnLib/feedFn.js")
 	script(src="public/fnLib/tagSaveFn.js")
+	script(src="public/fnLib/gmailAPI.js")
 	script(src="node_modules/jquery.iframetracker/jquery.iframetracker.js")
 
 	script.
@@ -1911,13 +1915,13 @@ append scripts
 
 			$('#TagManagerTab').on('click', tagManagerTabClick)
 
+			$('#AdminMailTab').on('click', gmailAPI)
+
+
+
 			//Setting TAB contain
 			$('#SettingTab').on('click', function(){
-				$.post('/notif/getGmailLabels',{
-
-				}).done(function(Rdata){
-					console.log(Rdata)
-				})
+				
 				$('#Setting').html('')
 				var divSettingContainer = document.createElement('div')
 					var labelAuthUrl = document.createElement('label')
