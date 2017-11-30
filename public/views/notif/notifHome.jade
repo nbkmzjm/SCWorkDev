@@ -230,7 +230,8 @@ append scripts
 									console.log(returnData)
 									const xhr = new XMLHttpRequest();
 									xhr.open('PUT', returnData.url);
-									console.log('decodedImage:'+ decodedImage)
+									console.log('decodedImage:')
+									console.log(decodedImage)
 									xhr.onreadystatechange = function(){
 
 										var tempDiv = document.createElement('div')
@@ -285,6 +286,7 @@ append scripts
 								});
 								var i=0
 								var returnURLs =''
+
 								function uploadReturnURL(arrayFile){
 									//- var decodedImage = dataURItoBlob(inputValueImage)
 									console.log('type:')
@@ -340,8 +342,6 @@ append scripts
 
 
 										xhr.onreadystatechange = function(){
-										console.log('readyState:' + xhr.readyState)
-										console.log('status:' + xhr.status)
 											if(xhr.readyState === 4){
 											  	if(xhr.status === 200){
 												    console.log('uploaded file')
@@ -383,7 +383,7 @@ append scripts
 
 
 								}
-								uploadReturnURL(fileArray)							
+								//- uploadReturnURL(fileArray)							
 
 							}
 						

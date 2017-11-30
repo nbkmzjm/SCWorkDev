@@ -78,6 +78,89 @@ router.post('/oauth2Client', function(req, res){
 	
 })
 
+router.post('/scanEmailAttach', function(req, res){
+	var attachUrl = req.body.attachUrl
+	var emailList = req.body.emailList
+	console.log(JSON.stringify(emailList, null, 4))
+	
+	db.user.findAll({
+		where:{
+			email: {
+				$in:emailList
+			}
+		}
+	}).then(function(users){
+
+		console.log(JSON.stringify(users, null, 4))
+		db.mainPost.create({
+			postText:attachUrl,
+			postTo:"Private",
+			postToValue:'Private',
+			userId:users[0].id
+		}).then(function(post){
+
+		})
+	})
+	res.json(attachUrl)
+
+
+
+	// db.mainPost.create({
+	// 		postText:postText,
+	// 		postTo:"Private",
+	// 		postToValue:'Private',
+	// 		userId:postUser.id,
+	// 		include:userIncString,
+	// 		exclude:userExcString,
+	// }).then(function(post){
+	// 	// console.log('post:'+JSON.stringify(post, null, 4))
+	// 	var stringPostToValue = post.postToValue
+	// 	if(post.postToValue != 'ALL'){
+	// 		var arrayPostToValue = JSON.parse(stringPostToValue)
+	// 	}
+		
+		
+	// 	// console.log(JSON.stringify(user, null, 4))
+	// 	var postTo = post.postTo
+	// 	var include = post.include
+	// 	if(postTo === 'Private'){
+	// 		var bulkData = []
+	// 		// console.log('typeof'+ typeof include)
+	// 		var userFeed = new UserFeed(post.id, postUser.id, 'None', postUser.id, postUser.fullName + ' posted to ' + postTo +  ': ' + post.postText)
+	// 		bulkData.push(userFeed)
+
+	// 		if (filter ==="Include"){
+	// 			userIncArray.forEach(function(id){
+	// 				if(id!==curUserId){
+	// 					var userFeed = new UserFeed(post.id, id, 'new',
+	// 					curUserId, curUser.fullName + ' posted to you' +  ': ' + post.postText)
+	// 					bulkData.push(userFeed)
+	// 				}
+	// 			})
+
+	// 		}
+
+	// 		// console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+	// 			db.userFeed.bulkCreate(bulkData).then(function(created){
+	// 				//check notification type and push in array pushUserId. Do not send notification for 'NONE'
+	// 				var pushUserId = bulkData.map(function(data){
+	// 					if(data.notification !== "None"){
+	// 						return data.receivedUserId
+	// 					}else{
+	// 						return 0
+	// 					}
+
+	// 				})
+	// 				// console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+	// 				showNotification(pushUserId, post)
+	// 			}).catch(function(e) {
+	// 				console.log(e)
+	// 				res.render('error', {
+	// 					error: e.toString()
+	// 				})
+	// 			});
+})
+
 
 function getOauth2Client(callback) {
 		var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
@@ -181,7 +264,10 @@ router.post('/getEmailMessage', function(req, res){
 			userId: 'me',
 			id:messageId
 		}, function(err, message){
-			
+			if (err) {
+				console.log('The API returned an error: ' + err);
+				return;
+			}
 			res.json(message)
 		})
 	}
@@ -189,43 +275,26 @@ router.post('/getEmailMessage', function(req, res){
 
 
 
-router.post('/getGmailAttachment', function(req, res){
+router.post('/getEmailAttachment', function(req, res){
+	var messageId = req.body.messageId
+	var attachId  = req.body.attachId
+	console.log(attachId)
+	console.log(messageId)
 	getOauth2Client(getMessages)
 	function getMessages(auth){
 		var gmail = google.gmail('v1');
-		gmail.users.messages.list({
+		gmail.users.messages.attachments.get({
 			auth: auth,
 			userId: 'me',
-			// q:'is:unread',
-			maxResults:'10'
-		}, function(err, response) {
+			id:attachId,
+			messageId:messageId
+		}, function(err, attachment) {
 			if (err) {
 				console.log('The API returned an error: ' + err);
 				return;
 			}
-			var messages = response.messages;
-			console.log(JSON.stringify(messages,null,4))
-			if (messages.length == 0) {
-				console.log('No labels found.');
-			} else {
-				console.log('Messages:');
-				var messageLists = []
-				for (var i = 0; i < messages.length; i++) {
-					var message = messages[i];
-					console.log('- %s', message.payload);
-					var getMessage = gmail.users.messages.get({
-						auth: auth,
-						userId: 'me',
-						id:message.id
-					}, function(err, res){
-						// messageLists.push(message.payload)
-						console.log(JSON.stringify(res,null,4))
-					})
-					
-				}
-				res.json(messages)
-				
-			}
+
+			res.json(attachment)
 			
 		});
 		

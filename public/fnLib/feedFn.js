@@ -855,7 +855,7 @@ function getPostDB(option){
 											var span = document.createElement('span')
 											span.className = "glyphicon glyphicon-eye-open"
 											span.style.fontSize = "20px"
-											span.addEventListener('click', function(){
+											span.addEventListener('mouseenter', function(){
 												console.log(this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.id)
 												$('#divPreview').remove()
 												var divPreview = document.createElement('div')
