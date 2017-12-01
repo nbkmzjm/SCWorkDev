@@ -92,18 +92,39 @@ router.post('/scanEmailAttach', function(req, res){
 	}).then(function(users){
 
 		console.log(JSON.stringify(users, null, 4))
-		db.mainPost.create({
+		users.forEach(function(user){
+			console.log(user.id)
+			console.log(+'-'+attachUrl)
+			db.mainPost.create({
 			postText:attachUrl,
 			postTo:"Private",
 			postToValue:'Private',
-			userId:users[0].id
-		}).then(function(post){
+			userId:user.id,
+			include:'',
+			exclude:''
+			}).then(function(post){
+				var userFeed = new UserFeed(post.id, user.id, 'New', user.id,
+				 'New attachment arrived from an Email Server', 'active')
 
+				db.userFeed.create(userFeed).then(function(created){
+					// console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+					// showNotification(user.id, post)
+
+				})
+			})
 		})
+		
 	})
 	res.json(attachUrl)
 
-
+function UserFeed(mainPostId, receivedUserId, notification, userId, notifText, type){
+	this.mainPostId = mainPostId
+	this.receivedUserId = receivedUserId
+	this.status = type||'active',
+	this.notification = notification|| 'new'
+	this.userId = userId,
+	this.notifText = notifText
+}
 
 	// db.mainPost.create({
 	// 		postText:postText,

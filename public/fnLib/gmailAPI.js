@@ -76,7 +76,7 @@ function gmailAPI(){
 
 						headers.forEach(function(header){
 								
-							if (header.name === "CC"){
+							if (header.name === "CC"||header.name === "Cc"){
 								mailCC = header.value
 							}
 							if (header.name === "To"){
@@ -97,7 +97,7 @@ function gmailAPI(){
 								if(part.filename && part.filename.length > 0){
 									var attachId = part.body.attachmentId
 									var mimeType = part.mimeType
-									console.log(part)
+									console.log(part.filename)
 									console.log(message.id)
 									$.post('/notif/getEmailAttachment',{
 										attachId:attachId,
@@ -117,7 +117,7 @@ function gmailAPI(){
 										emailArr = emailArr.filter( function( item, index, inputArray ) {
 									           return inputArray.indexOf(item) == index;
 									    });
-										console.log(emailArr)
+										console.log(decodedAttachment)
 										mailAttachmentConversion(decodedAttachment, emailArr)
 									})
 
@@ -138,37 +138,72 @@ function gmailAPI(){
 
 function mailAttachmentConversion(decodedAttachment, emailList){
 
-	$.post('/notif/scanEmailAttach', {
-		emailList:emailList,
-		attachUrl:decodedAttachment.fileName
-	}).then(function(){
+	// $.post('/notif/scanEmailAttach', {
+	// 	emailList:emailList,
+	// 	attachUrl:decodedAttachment.fileName
+	// }).then(function(){
 
-	})
-	// $.post('/sign-s3', {
-	// 	fileName:decodedAttachment.fileName,
-	// 	fileType:decodedAttachment.type
-	// }).then(function(returnData){
-	// 	console.log(returnData)
-
-
-		// const xhr = new XMLHttpRequest();
-		// xhr.open('PUT', returnData.url);
-		// console.log('decodedAttachment:')
-		// console.log(decodedAttachment)
-		// xhr.onreadystatechange = function(){
-
-		// if(xhr.readyState === 4){
-		//   	if(xhr.status === 200){
-		// 	    console.log('uploaded file')
-
-			   
-		//   	}else{
-		//     	alert('Could not upload file.');
-		//   	}
-		// }
-		// };
-		// xhr.send(decodedAttachment);
 	// })
+	$.post('/sign-s3', {
+		fileName:decodedAttachment.fileName,
+		fileType:decodedAttachment.type
+	}).then(function(returnData){
+		console.log(returnData)
+
+
+		const xhr = new XMLHttpRequest();
+		xhr.open('PUT', returnData.url);
+		console.log('decodedAttachment:')
+		console.log(decodedAttachment)
+		var signFileType = decodedAttachment.type
+		var signFileName
+
+		var orgFileName = decodedAttachment.fileName
+		var fileExtension = orgFileName.substring(orgFileName.lastIndexOf('.'))
+		var video = ['.m4v', '.mov', '.mp4', '.MKV', '.AVI', '.VOB', '.MPG', '.TiVo', '.FLV']
+		var fileNameNoSpace = orgFileName.replace(/ /g,"_")
+		var parts = fileNameNoSpace.split(".");
+	    if (parts[1]===undefined){
+	        signFileName = fileNameNoSpace;
+	    }else if (signFileType.indexOf('image')!== -1){
+	    	signFileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") +".jpeg"
+	    }else if(video.indexOf(fileExtension)!==-1){
+	    	signFileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") +".mp4"
+	    }else{
+	        signFileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") + "." 
+	        + parts.slice(-1)
+	    }
+	    console.log('signFileName:'+signFileName)
+		xhr.onreadystatechange = function(){
+
+		if(xhr.readyState === 4){
+		  	if(xhr.status === 200){
+			    console.log('uploaded file')
+			    if(signFileType.indexOf('msword')!==-1||signFileType.indexOf('wordprocessingml')!==-1||
+			    	signFileType.indexOf('ms-excel')!==-1||signFileType.indexOf('spreadsheetml')!==-1||
+			    	signFileType.indexOf('ms-powerpoint')!==-1||signFileType.indexOf('presentationml')!==-1){
+			    	var returnURLs = '<p><iframe src="https://view.officeapps.live.com/op/embed.aspx?src='+returnData.url
+			    	+'"></iframe><a href="'+returnData.url+'" >'+signFileName+'</a></p><br>'
+			    }else if(signFileType.indexOf('pdf')!==-1){
+			   		returnURLs = '<p><iframe src="https://docs.google.com/gview?url='+returnData.url
+			   		+'&embedded=true"></iframe><a href="'+returnData.url+'" >'+signFileName+'</a></p><br>'
+			   		
+			   	}else if(signFileType.indexOf('video')!==-1){
+			   		var returnURLs = '<p><video controls><source src="'+returnData.url+'"> </video></p>'
+			    }else if(signFileType.indexOf('image')!==-1){
+			    	var returnURLs = '<p><img src="'+returnData.url+'"/><a href="'+returnData.url+'" >'+signFileName+'</a></p><br>'
+			    }else{
+			    	var returnURLs = '<p><a href="'+returnData.url+'" >'+signFileName+'</a></p><br>'
+			    }
+			    console.log('returnURLs:'+ returnURLs)
+			   
+		  	}else{
+		    	alert('Could not upload file.');
+		  	}
+		}
+		};
+		// xhr.send(decodedAttachment);
+	})
 
 }
 
