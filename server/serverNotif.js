@@ -116,6 +116,8 @@ router.post('/scanEmailAttach', function(req, res){
 		
 	})
 	res.json(attachUrl)
+})
+
 
 function UserFeed(mainPostId, receivedUserId, notification, userId, notifText, type){
 	this.mainPostId = mainPostId
@@ -125,6 +127,8 @@ function UserFeed(mainPostId, receivedUserId, notification, userId, notifText, t
 	this.userId = userId,
 	this.notifText = notifText
 }
+
+
 
 	// db.mainPost.create({
 	// 		postText:postText,
@@ -180,7 +184,6 @@ function UserFeed(mainPostId, receivedUserId, notification, userId, notifText, t
 	// 					error: e.toString()
 	// 				})
 	// 			});
-})
 
 
 function getOauth2Client(callback) {
@@ -216,6 +219,74 @@ function getOauth2Client(callback) {
 }
 
 
+router.post('/changedEmailRead', function(req, res){
+	var messageId = req.body.messageId
+	getOauth2Client(getMailMessage)
+
+	console.log('messageId:')
+	console.log(messageId)
+	console.log(JSON.stringify(messageId, null, 4))
+	function getMailMessage(auth){	
+		console.log(JSON.stringify(auth, null, 4))
+
+		var gmail = google.gmail('v1');
+		gmail.users.messages.modify({
+			auth: auth,
+			userId: 'me',
+			removeLabelIds:['Label_2'],
+			id:messageId
+		}, function(err, labelList){
+			if (err) {
+				console.log('The API returned an error: ' + err);
+				return;
+			}
+
+			res.json(labelList)
+		})
+	}
+})
+
+router.post('/deleteEmail', function(req, res){
+	var messageId = req.body.messageId
+	getOauth2Client(deleteEmail)
+
+	console.log('messageId:')
+	console.log(messageId)
+	console.log(JSON.stringify(messageId, null, 4))
+	function deleteEmail(auth){	
+		console.log(JSON.stringify(auth, null, 4))
+
+		// var gmail = google.gmail('v1');
+		// gmail.users.messages.delete({
+		// 	auth: auth,
+		// 	userId: 'me',
+		// 	id:messageId
+		// }, function(err, labelList){
+		// 	if (err) {
+		// 		console.log('The API returned an error: ' + err);
+		// 		return;
+		// 	}
+
+		// 	res.json(labelList)
+		// })
+
+		var gmail = google.gmail('v1');
+		gmail.users.messages.trash({
+			auth: auth,
+			userId: 'me',
+			id:messageId
+		}, function(err, deleted){
+			if (err) {
+				console.log('The API delete returned an error: ' + err);
+				return;
+			}
+			console.log('----------')
+			console.log(JSON.stringify(deleted, null, 4))
+			res.json(deleted)
+		})
+	}
+})
+
 
 
 
@@ -226,12 +297,18 @@ router.post('/getEmailList', function(req, res){
 	if (nextPageToken == false){
 		getOauth2Client(getInitialList)
 		function getInitialList(auth){
+			console.log(auth)
 			var gmail = google.gmail('v1');
 			gmail.users.messages.list({
 				auth: auth,
 				userId: 'me',
 				maxResults:'20'
 			}, function(err, response) {
+				if (err) {
+					console.log('The API returned an error: ' + err);
+					return;
+				}
+				console.log(response)
 				var messageList = response.messages
 				res.json({
 					messages:messageList,

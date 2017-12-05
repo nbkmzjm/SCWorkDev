@@ -118,7 +118,7 @@ function gmailAPI(){
 									           return inputArray.indexOf(item) == index;
 									    });
 										console.log(decodedAttachment)
-										mailAttachmentConversion(decodedAttachment, emailArr)
+										mailAttachmentConversion(decodedAttachment, emailArr, messageId)
 									})
 
 
@@ -136,14 +136,9 @@ function gmailAPI(){
 	})
 }
 
-function mailAttachmentConversion(decodedAttachment, emailList){
+function mailAttachmentConversion(decodedAttachment, emailList, messageId){
 
-	// $.post('/notif/scanEmailAttach', {
-	// 	emailList:emailList,
-	// 	attachUrl:decodedAttachment.fileName
-	// }).then(function(){
 
-	// })
 	$.post('/sign-s3', {
 		fileName:decodedAttachment.fileName,
 		fileType:decodedAttachment.type
@@ -174,6 +169,7 @@ function mailAttachmentConversion(decodedAttachment, emailList){
 	        + parts.slice(-1)
 	    }
 	    console.log('signFileName:'+signFileName)
+	    
 		xhr.onreadystatechange = function(){
 
 		if(xhr.readyState === 4){
@@ -195,6 +191,15 @@ function mailAttachmentConversion(decodedAttachment, emailList){
 			    }else{
 			    	var returnURLs = '<p><a href="'+returnData.url+'" >'+signFileName+'</a></p><br>'
 			    }
+
+
+
+			 //    $.post('/notif/scanEmailAttach', {
+				// 	emailList:emailList,
+				// 	attachUrl:returnURLs
+				// }).then(function(){
+
+				// })
 			    console.log('returnURLs:'+ returnURLs)
 			   
 		  	}else{
