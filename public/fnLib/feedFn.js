@@ -334,110 +334,7 @@ function getPostDB(option){
 						}
 						tempDivPostPanel.remove()
 					})
-
-
-
-					// $("#divBody"+i).find('p').each(function(){
-					// 	var pIframe = this
-					// 	// console.log(pIframe)
-					// 	if(pIframe.firstChild.nodeName === 'IFRAME'){
-					// 		pIframe.className = 'embed-responsive embed-responsive-4by3'
-					// 		pIframe.setAttribute('style','clear:both')
-					// 		if(hidePreview === true){
-					// 			pIframe.setAttribute('style','display:none')
-					// 		}
-					// 		var jqIframe = $(this).first()
-							
-					// 		jQuery(document).ready(function($){
-					// 			jqIframe.iframeTracker({
-					// 				blurCallback: function(){
-										
-					// 					document.getElementById('myModal').style.display = 'block'
-					// 					// $('.aModal').length>1?$('.aModal').remove():""
-					// 					// var aModal = document.createElement('a')
-					// 					// 	aModal.href = pIframe.firstChild.src
-					// 					// 	aModal.className = 'aModal'
-					// 					// 	aModal.innerHTML = 'Full View'
-					// 					// myModal.insertBefore(aModal, myModal.firstChild)
-					// 					document.getElementById('imgModal').style.display = 'none'
-					// 					document.getElementById('iframeModal').style.display = 'block'
-					// 					document.getElementById('iframeModal').setAttribute('style','width:100%;height:100%;')
-					// 					document.getElementById('iframeModal').src = pIframe.firstChild.src
-					// 				}
-					// 			});
-					// 		});
-					// 	}else if(pIframe.firstChild.nodeName === 'VIDEO'){
-							
-					// 		pIframe.className = 'embed-responsive embed-responsive-4by3'
-					// 	}
-						
-				       
-					// })
-
-
-
-					
-					
-					// $("#divBody"+i).find('img').each(function(){
-					// 	var jqImg = $(this)
-					// 	jqImg.attr("style","max-width:120px;max-height:120px")
-					// 	jqImg.parent().attr('class','imageThumb')
-					// 	if(hideImage === true){
-					// 		jqImg.hide()
-					// 	}
-					// 	textInPost()===false?jqImg.parent().addClass('floating-image'):""
-					// 	jqImg.click(function(){
-					// 		// $('.aModal').length>1?$('.aModal').remove():""
-					// 		var myModal = document.getElementById('myModal')
-					// 		myModal.style.display = 'block'
-					// 			var aModal = document.createElement('a')
-					// 			// aModal.style.color = 'white'
-					// 			aModal.href = this.src
-					// 			aModal.className = 'aModal'
-					// 			// a.download = true
-					// 			aModal.innerHTML = 'Full Size'
-					// 		myModal.insertBefore(aModal, myModal.firstChild)
-					// 		// myModal.innerHTML = '<a href="'+this.scr+'" download>full Screen</a>'
-					// 		document.getElementById('iframeModal').style.display = 'none'
-					// 		document.getElementById('imgModal').style.display = 'block'
-					// 		document.getElementById('imgModal').setAttribute('style','max-width:100%;max-height:100%;')
-					// 		document.getElementById('imgModal').src = this.src
-					// 	})
-					// })
-						
-
-
-
-
-
-
-
-						// if(docOnly === true){
-						// 	divBody.addEventListener('mouseover', function(){
-								
-						// 		$("#"+event.target.id).find('p').each(function(){
-						// 			var pIframe = this
-						// 			if(pIframe.firstChild.nodeName === 'IFRAME'){
-										
-						// 				pIframe.setAttribute('style','display:block')
-						// 			}
-						// 		})
-								
-						// 	})
-
-						// 	divBody.addEventListener('mouseout', function(){
-						// 		$("#"+event.relatedTarget.id).find('p').each(function(){
-						// 			var pIframe = this
-						// 			if(pIframe.firstChild.nodeName === 'IFRAME'){
-										
-						// 				pIframe.setAttribute('style','display:none')
-						// 			}
-						// 		})
-
-						// 	})
-						// }
-
-						
+		
 
 							
 							
@@ -522,106 +419,48 @@ function getPostDB(option){
 											Rdata1.comments.forEach(function(comment){
 												var divComment = document.createElement('div')
 												
-														if(comment.commentEmoj !== ''){
-															var pUser = document.createElement('p')
-															pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName + ' ('+
-															post.user.title + ', ' + post.user.department.name + 
+													if(comment.commentEmoj !== ''){
+														var pUser = document.createElement('p')
+														pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName + ' ('+
+														post.user.title + ', ' + post.user.department.name + 
 
-															") "+ ' </b>' 
-															+ moment(comment.createdAt).calendar()
-															pUser.style.fontSize = '10px'
-															pUser.style.color = '#B0AAC4'
-																var spanEmoj = document.createElement('span')
-																spanEmoj.className = comment.commentEmoj
-																spanEmoj.style.color = glyphiconColor(comment.commentEmoj)
-																spanEmoj.id = 'spanEmoj'
-																spanEmoj.style.float = 'left'
-																spanEmoj.style.fontSize = '15px'
-																pUser.appendChild(spanEmoj)
-															divComment.appendChild(pUser)
+														") "+ ' </b>' 
+														+ moment(comment.createdAt).calendar()
+														pUser.style.fontSize = '10px'
+														pUser.style.color = '#B0AAC4'
+															var spanEmoj = document.createElement('span')
+															spanEmoj.className = comment.commentEmoj
+															spanEmoj.style.color = glyphiconColor(comment.commentEmoj)
+															spanEmoj.id = 'spanEmoj'
+															spanEmoj.style.float = 'left'
+															spanEmoj.style.fontSize = '15px'
+															pUser.appendChild(spanEmoj)
+														divComment.appendChild(pUser)
 
-														}else{
-															// spanEmoj.className='glyphicon glyphicon-thumbs-up'
-															// spanEmoj.style.color = 'gray'
-															var pUser = document.createElement('p')
-															pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName 
-															+ ' ('+ post.user.title + ', ' + post.user.department.name + 
-															") "+ ' </b>' 
-															+ moment(comment.createdAt).calendar()
-															pUser.style.color = '#B0AAC4'
-															pUser.style.fontSize = '10px'
+													}else{
+														// spanEmoj.className='glyphicon glyphicon-thumbs-up'
+														// spanEmoj.style.color = 'gray'
+														var pUser = document.createElement('p')
+														pUser.innerHTML = '&nbsp from <b>' +comment.user.fullName 
+														+ ' ('+ post.user.title + ', ' + post.user.department.name + 
+														") "+ ' </b>' 
+														+ moment(comment.createdAt).calendar()
+														pUser.style.color = '#B0AAC4'
+														pUser.style.fontSize = '10px'
 
-																var spanEmoj = document.createElement('span')
-																
-																spanEmoj.className = 'glyphicon glyphicon-comment'
-																spanEmoj.style.color = '#72D0C2'
-																spanEmoj.style.float = 'left'
-																spanEmoj.style.fontSize = '15px'
-																pUser.appendChild(spanEmoj)
-															divComment.appendChild(pUser)
-															var pComment = document.createElement('p')
-															pComment.innerHTML = '&nbsp&nbsp-&nbsp'+comment.comment
-															divComment.appendChild(pComment)
-														}
+															var spanEmoj = document.createElement('span')
+															
+															spanEmoj.className = 'glyphicon glyphicon-comment'
+															spanEmoj.style.color = '#72D0C2'
+															spanEmoj.style.float = 'left'
+															spanEmoj.style.fontSize = '15px'
+															pUser.appendChild(spanEmoj)
+														divComment.appendChild(pUser)
+														var pComment = document.createElement('p')
+														pComment.innerHTML = '&nbsp&nbsp-&nbsp'+comment.comment
+														divComment.appendChild(pComment)
+													}
 														
-														
-														// spanEmoj.addEventListener('click', function(){
-														// 	spanEmoj.parentNode.removeChild(spanEmoj)
-
-
-
-														// 	// $('#spanEmoj').remove();
-														// 	// var spanRemove = document.createElement('span')
-														// 	// spanRemove.className = 'glyphicon glyphicon-remove-sign'
-														// 	// spanRemove. id = 'spanRemove'
-														// 	// spanRemove.style.float = 'right'
-														// 	// spanRemove.style.fontSize = '20px'
-														// 	// spanRemove.addEventListener('click', function(){
-														// 	// 	console.log('click')
-														// 	// 	$('#spanEmojDock').remove();
-														// 	// 	$('#spanRemove').remove();
-														// 	// 	pUser.appendChild(spanEmoj)
-														// 		// $('#spanEmoj').html('')
-														// 	// })
-														// 	// pUser.appendChild(spanRemove)
-														// 	function glyphiconGen (name, color) {
-														// 		this.name = name
-														// 		this.color = color
-														// 	}
-														// 	var divEmojDock = document.createElement('div')
-														// 		var glyphiconList = [
-														// 			new glyphiconGen('glyphicon glyphicon-thumbs-up','blue'),
-														// 			new glyphiconGen('glyphicon glyphicon-thumbs-down','purple'),
-														// 			new glyphiconGen('glyphicon glyphicon-heart','red'),
-														// 			new glyphiconGen('glyphicon glyphicon-star','yellow'),
-														// 			new glyphiconGen('glyphicon glyphicon-remove-sign','gray') ]
-														// 		glyphiconList.forEach(function(item){
-														// 			var spanEmojDock = document.createElement('span')
-														// 			spanEmojDock.className = item.name
-														// 			spanEmojDock.style.color = item.color
-														// 			// spanEmojDock.style.float = 'left'
-														// 			spanEmojDock.style.fontSize = '20px'
-														// 			spanEmojDock.addEventListener('click', function () {
-														// 				console.log(spanEmojDock.className)
-														// 				$.post('/notif/replyEmoj',{
-														// 					commentId:comment.id,
-														// 					commentEmoj:spanEmojDock.className
-														// 				}).done(function(Rdata){
-														// 					console.log(Rdata)
-																			
-														// 				})
-														// 			})
-														// 			divEmojDock.appendChild(spanEmojDock)
-
-
-														// 			var spanSpace = document.createElement('span')
-														// 			// spanSpace.style.float = 'left'
-														// 			spanSpace.innerHTML = '&nbsp&nbsp&nbsp'
-														// 			divEmojDock.appendChild(spanSpace)
-														// 			})
-														// 	divComment.appendChild(divEmojDock)
-														// }) 
-												
 												divCommentContainer.appendChild(divComment)
 											})
 
@@ -1011,7 +850,7 @@ function getPostDB(option){
 
 function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 	if(option === "Save"){
-		// console.log(postOptCoords)
+		
 		// console.log(divTitleCoords)
 		var saveToContainer = document.createElement('div')
 		saveToContainer.style.top = verticalPos
@@ -1285,6 +1124,43 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 		document.location = ("/notif?postId="+ postId + "&command=share")
 	}else if(option==='Download'){
 		console.log('downloading')
+	}else if(option === 'Email'){
+		console.log(parentDiv.parentNode)
+		 var divPost = $(parentDiv.parentNode.firstChild).find('a').each(function(){
+		 	console.log($(this).attr('href'))
+		 	const xhr = new XMLHttpRequest();
+			var s3fileLink = $(this).attr('href')
+			console.log(s3fileLink)
+			xhr.open('GET', s3fileLink, true);
+			// xhr.withCredentials = true
+			xhr.onreadystatechange = function(res){
+				if(xhr.readyState === 4){
+				  	if(xhr.status === 200){
+					    console.log(xhr.response)
+					    console.log(xhr)
+					 }
+				}
+
+			}
+			xhr.onload = function(item){
+				console.log(item.re)
+			}
+			xhr.onerror = function(err){
+			console.log(err)
+			}
+			xhr.send()
+		// $.get("https://scworkdev.s3.amazonaws.com/newpc.xlsx", function(res){
+		// 	console.log(res)
+		//  })
+		})
+
+
+
+
+
+
+
+
 	}
 
 	//click event control diapprearing of the popup menu

@@ -22,7 +22,7 @@ router.post('/oauth2Client', function(req, res){
 	var command = req.body.command
 	var authCode = req.body.authCode
 	
-	var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+	var SCOPES = ['https://mail.google.com/']
 	var token_dir = './gmailAPIToken.json'
 	console.log(token_dir)
 
@@ -78,7 +78,7 @@ router.post('/oauth2Client', function(req, res){
 	
 })
 
-router.post('/scanEmailAttach', function(req, res){
+router.post('/postAttchmentToDB', function(req, res){
 	var attachUrl = req.body.attachUrl
 	var emailList = req.body.emailList
 	console.log(JSON.stringify(emailList, null, 4))
@@ -187,7 +187,7 @@ function UserFeed(mainPostId, receivedUserId, notification, userId, notifText, t
 
 
 function getOauth2Client(callback) {
-		var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+	
 		var token_path = './gmailAPIToken.json'
 
 		fs.readFile('client_secret.json', function processClientSecrets(err, content) {
@@ -233,11 +233,11 @@ router.post('/changedEmailRead', function(req, res){
 		gmail.users.messages.modify({
 			auth: auth,
 			userId: 'me',
-			removeLabelIds:['Label_2'],
+			removeLabelIds:['UNREAD'],
 			id:messageId
 		}, function(err, labelList){
 			if (err) {
-				console.log('The API returned an error: ' + err);
+				console.log('The API Changed Label returned an error: ' + err);
 				return;
 			}
 
@@ -246,7 +246,7 @@ router.post('/changedEmailRead', function(req, res){
 	}
 })
 
-router.post('/deleteEmail', function(req, res){
+router.post('/trashEmail', function(req, res){
 	var messageId = req.body.messageId
 	getOauth2Client(deleteEmail)
 
