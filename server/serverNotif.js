@@ -219,6 +219,48 @@ function getOauth2Client(callback) {
 }
 
 
+
+
+
+router.post('/sendEmail', function(req, res){
+
+	// function encodedGmailBody(to, from, subject, message) {
+	//     var str = ["Content-Type: text/plain; charset=\"UTF-8\"\n",
+	//         "MIME-Version: 1.0\n",
+	//         "Content-Transfer-Encoding: 7bit\n",
+	//         "to: ", to, "\n",
+	//         "from: ", from, "\n",
+	//         "subject: ", subject, "\n\n",
+	//         message
+	//     ].join('');
+	//   }
+	var raw = req.body.raw
+	var encodedRaw = new Buffer(raw).toString("base64").replace(/\+/g, '-').replace(/\//g, '_');
+	
+
+			// var raw = encodedGmailBody('ngokhanhthien@yahoo.com','wkosolution@gmail.com', 'Test Send', 'This is test body')
+
+
+	// var raw = req.body.raw
+	getOauth2Client(sendMessage)
+	function sendMessage(auth) {
+		var gmail = google.gmail('v1');
+	    gmail.users.messages.send({
+	        auth: auth,
+	        userId: 'me',
+	        resource: {
+	            raw: encodedRaw
+	        }
+	    }, function(err, response) {
+	    	if (err) {
+				console.log('The API Changed Label returned an error: ' + err);
+				return;
+			}
+	        res.json(err || response)
+	    });
+	}
+
+})
 router.post('/changedEmailRead', function(req, res){
 	var messageId = req.body.messageId
 	getOauth2Client(getMailMessage)
