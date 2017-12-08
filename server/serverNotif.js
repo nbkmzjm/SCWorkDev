@@ -344,7 +344,8 @@ router.post('/getEmailList', function(req, res){
 			gmail.users.messages.list({
 				auth: auth,
 				userId: 'me',
-				maxResults:'20'
+				maxResults:'20',
+				q:'in:INBOX'
 			}, function(err, response) {
 				if (err) {
 					console.log('The API returned an error: ' + err);
@@ -367,7 +368,7 @@ router.post('/getEmailList', function(req, res){
 			gmail.users.messages.list({
 				auth: auth,
 				userId: 'me',
-				// q:'is:unread',
+				q:'in:INBOX',
 				maxResults:'20',
 				pageToken: nextPageToken
 			}, function(err, response) {

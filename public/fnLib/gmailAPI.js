@@ -152,11 +152,30 @@ function gmailAPI(){
 }
 
 function mailAttachmentConversion(decodedAttachment, emailList, messageId){
+	var signFileType = decodedAttachment.type
+	var signFileName
 
+	var orgFileName = decodedAttachment.fileName
+	var fileExtension = orgFileName.substring(orgFileName.lastIndexOf('.'))
+	var video = ['.m4v', '.mov', '.mp4', '.MKV', '.AVI', '.VOB', '.MPG', '.TiVo', '.FLV']
+	var fileNameNoSpace = orgFileName.replace(/ /g,"_")
+	var parts = fileNameNoSpace.split(".");
+    if (parts[1]===undefined){
+        signFileName = fileNameNoSpace;
+    }else if (signFileType.indexOf('image')!== -1){
+    	signFileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") +".jpeg"
+    }else if(video.indexOf(fileExtension)!==-1){
+    	signFileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") +".mp4"
+    }else{
+        signFileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") + "." 
+        + parts.slice(-1)
+    }
+    console.log('signFileName:'+signFileName)
+    
 	//Send attachment to AWS for siging
 	$.post('/sign-s3', {
-		fileName:decodedAttachment.fileName,
-		fileType:decodedAttachment.type
+		fileName:signFileName,
+		fileType:signFileType
 	}).then(function(returnData){
 		console.log(returnData)
 
@@ -165,25 +184,7 @@ function mailAttachmentConversion(decodedAttachment, emailList, messageId){
 		xhr.open('PUT', returnData.url);
 		console.log('decodedAttachment:')
 		console.log(decodedAttachment)
-		var signFileType = decodedAttachment.type
-		var signFileName
-
-		var orgFileName = decodedAttachment.fileName
-		var fileExtension = orgFileName.substring(orgFileName.lastIndexOf('.'))
-		var video = ['.m4v', '.mov', '.mp4', '.MKV', '.AVI', '.VOB', '.MPG', '.TiVo', '.FLV']
-		var fileNameNoSpace = orgFileName.replace(/ /g,"_")
-		var parts = fileNameNoSpace.split(".");
-	    if (parts[1]===undefined){
-	        signFileName = fileNameNoSpace;
-	    }else if (signFileType.indexOf('image')!== -1){
-	    	signFileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") +".jpeg"
-	    }else if(video.indexOf(fileExtension)!==-1){
-	    	signFileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") +".mp4"
-	    }else{
-	        signFileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") + "." 
-	        + parts.slice(-1)
-	    }
-	    console.log('signFileName:'+signFileName)
+		
 	    
 		xhr.onreadystatechange = function(){
 
