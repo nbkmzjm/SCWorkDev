@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "wkosolution-188119",
+  "private_key_id": "faf574da32003476abb8266e29ee63977eebad8b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDhdnN/iVQPYIDl\nf/YcEOB6wfLSIeL5M5J30CDugCqYYj39gpzuWDBA7OnrFwXppUxCFpuf+83c3+yd\niMNRMjWhWtAXUhkDeGM8fEyxW3cF5O2s5hbUR56VG3VtIMWlaTJhEceJXqxy2JgF\nvO5yY6mabOYu82pat7R/sk/igHPKr3/yMA7nNYbOFXxdtTFdlddWZoeUiGScjCTm\nEvcyzwKosHE8CkfY106MJdWJEXx5jl+2C0RbYCi1MxwAzDXyVgNx+z8Rykv1htKm\nHou5BIcpe/SNxUeIbv2WVp5wBQ/pEUOWU4IZZ8KXpo1YCZtbzWdg9zBerj+CN+he\nSCTWbIYfAgMBAAECggEAC4+X14vSqCEyKtJ3a7P/1ruYOGctbMrUsVkWPzSKOpsb\nA6NNablS7BlZ20iocHUd5mujWj4+rZs71k4bec/hyR7PecqnZrKnIARdqGCAx2gY\nOdvogsUTYCDy0gAyskslHq4bNbOJkzABB5ZLAcmTekwoN3Ma2oD9++hISVx904A4\nlvWC9EbMDSo6EgvgsZFu8i6gUWJL+xSKOnSZexs80VA7fQvwCA1w2vxCLr4Nuo7D\nvLR37o8en8/fZ/iI+XqbOPDXpL+AMqg8MiW8tqb9EfjPZ4ls/8/HKwbyWsCB26R0\nM1JmCSMarGcsJwtbRoOBNoWjqYV1CsCGWsfbdXZ2gQKBgQD/0oqeAkVx6DYdIiXI\nZIYSEdlF+xeYsPdpIa44wdvpJNu0GQt+XweD/V8frtcUuEWu54xwUMu7yE/L3f8V\n6ppm15YO2n5z4Es5h8Fshflh70UOFWwFI1Td8YpONqqPn7ty3KxVBPJkq0rewWff\nyqgSPZUrch24zMQsnUcvNTbhgQKBgQDhnoPQg+eQC16cf3pUBxtjBqaV940bf6vx\n0Q1ozNfVVKwcwiOdGiu/GS9eIdGMAf+mhlaOo9kpx1T0qB6G1ThNOInJNwTF5vWG\nRfGkybXiTpn7DNWx+rJegaH3f5ApM8p1IwoRRZVWpco2tDoHTIZxls43uSwxhkrH\nbJTEUUP3nwKBgQC1qwIdK2e9eDXVgoZqRFihRGOTOriLCkDoO67JR4GvkykiQBbV\naw6fQLLogPTkFegGSRCGQhosBBgGomOfYLa9CaPacHcUOtewxyMougta7NuRIM1Q\n6MI/ymN5H4EH9VrcOrF2vsiTjMDiZ14oonWwXmMsMyHANkmplRcUAyoyAQKBgCZ5\nibD9TXfa+H9nnczGiX0RnUbluEKAOyo5pDfC9uuCTPd6g+g+lkc4XEOJMNrXXGlh\nb1FTz6y4OVyfbtU/dyJ0Ccsufrng8O2878BSRZoaHVgakDaRsek74gr6zfK4ykW/\ne/AGFbl4/Ern4R1th1/Hf9Mw2MB5TjdD5Pq1gQmxAoGAClkdHNoF7QBASvqjVe9z\ndZduo18QQNHxrPmxbXRlnPASfa4PwELPRDXmPEYS3E5uSov8IR7DIO89IuZ88SfC\nhMob1vS6HLq9KbrEz0gMqtDFbUWpBzt797GMmkKxjOXrIAO/gSvfj18sGvGoKBwg\nVrTYaKiXh7Z5sAhucLTsmdw=\n-----END PRIVATE KEY-----\n",
+  "client_email": "wkomailpush@wkosolution-188119.iam.gserviceaccount.com",
+  "client_id": "116655408422975120038",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/wkomailpush%40wkosolution-188119.iam.gserviceaccount.com"
+}

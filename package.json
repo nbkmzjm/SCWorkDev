@@ -9,8 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/pubsub": "^0.15.0",
     "aws-sdk": "2.48.0",
-    "base64url":"2.0.0",
+    "base64url": "2.0.0",
     "bcryptjs": "^2.3.0",
     "body-parser": "^1.13.3",
     "cookie-parser": "^1.4.0",

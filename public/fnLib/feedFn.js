@@ -1154,7 +1154,7 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 						  
 						  
 						    var boundary = "foo_bar_baz";
-						    var mailTo = 'ngokhanhthien@yahoo.com'
+						    var mailTo = 'ngokhanhthien@yahoo.com, tkngo85@gmail.com'
 						    var mailSubject = 'Gmail API Test'
 						    var mailBody = 'This is gmail api body'
 						    var fileName = 'example.pdf'

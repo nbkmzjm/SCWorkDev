@@ -2029,7 +2029,7 @@ append scripts
 		})
 		var clientId = '663682726940-26vgcsto0gigocid2emk14ij3e5sl5qu.apps.googleusercontent.com';
 		var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
-		var apiKey = 'AIzaSyDg3iwZzUKsywR59C58EW7HVb13spwbkU4';
+		//- var apiKey = 'AIzaSyDg3iwZzUKsywR59C58EW7HVb13spwbkU4';
 		var scopes = 'https://mail.google.com/';
 		function handleClientLoad() {
 			gapi.load('client:auth2', initClient);
@@ -2044,7 +2044,7 @@ append scripts
 
 				// Handle the initial sign-in state.
 				console.log(gapi.auth2.getAuthInstance().isSignedIn.get())
-				if(gapi.auth2.getAuthInstance().isSignedIn.get()){
+				if(!gapi.auth2.getAuthInstance().isSignedIn.get()){
 					gapi.auth2.getAuthInstance().signIn();
 				}
 				
@@ -2053,8 +2053,26 @@ append scripts
 				}).then(function(response) {
 					console.log(response)
 				})
-				
-			});
+
+
+				request = {
+				  'labelIds': ['INBOX'],
+				  'topicName': 'projects/wkosolution-188119/topics/wkoMailScanner'
+				}
+				console.log('initial watch mail')
+				gapi.client.gmail.users.watch({
+					userId:'me', 
+					//- 'labelIds': ['INBOX'],
+				  	'topicName': 'projects/wkosolution-188119/topics/wkoMailScanner'
+				}).then(function(res){
+
+					console.log(res)
+				})
+					
+				});
+
+
+
 		}
 
 		
