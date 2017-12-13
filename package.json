@@ -41,6 +41,7 @@
     "umzug": "^1.11.0",
     "underscore": "^1.8.3",
     "urlsafe-base64": "1.0.0",
-    "web-push": "3.2.1"
+    "web-push": "3.2.1",
+    "@google-cloud/pubsub":"0.15.0"
   }
 }

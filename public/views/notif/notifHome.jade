@@ -2053,23 +2053,9 @@ append scripts
 				}).then(function(response) {
 					console.log(response)
 				})
+			})
 
 
-				request = {
-				  'labelIds': ['INBOX'],
-				  'topicName': 'projects/wkosolution-188119/topics/wkoMailScanner'
-				}
-				console.log('initial watch mail')
-				gapi.client.gmail.users.watch({
-					userId:'me', 
-					//- 'labelIds': ['INBOX'],
-				  	'topicName': 'projects/wkosolution-188119/topics/wkoMailScanner'
-				}).then(function(res){
-
-					console.log(res)
-				})
-					
-				});
 
 
 

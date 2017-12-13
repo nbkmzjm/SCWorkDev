@@ -7,6 +7,15 @@ const webpush = require('web-push')
 var fs = require('fs')
 var middleware = require('../middleware.js')(db);
 const base64url = require('base64url')
+var google = require('googleapis');
+var googleAuth = require('google-auth-library');
+var gmail = google.gmail('v1');
+
+var aws = require('aws-sdk')
+aws.config.update({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
 
 // const vapidKeys = webpush.generateVAPIDKeys();
 // webpush.setGCMAPIKey("AIzaSyAVHtFMejQX7To7UwVqi4MWzWIfBP1qWAc");
@@ -16,8 +25,330 @@ const base64url = require('base64url')
 //   vapidKeys.privateKey
 // );
 // console.log('vapidKeys.publicKeyNOTI' + vapidKeys.publicKey)
-var google = require('googleapis');
-var googleAuth = require('google-auth-library');
+getOauth2Client(iniGmaiWatch)
+setInterval(() => {
+	getOauth2Client(iniGmaiWatch)
+	}, 124 * 36000);
+
+function iniGmaiWatch(auth){
+	request = {
+
+	  'labelIds': ['INBOX'],
+	  'topicName': 'projects/wkosolution-188119/topics/wkoMailScanner'
+	}
+	console.log('initial watch mail')
+	gmail.users.watch({
+		auth:auth,
+		userId:'me', 
+		resource:request
+	}, function(err, res){
+		if (err) {
+			console.log('Gmail Watch returned an error: ' + err);
+			return;
+		}
+		var historyId = res.historyId
+
+		const PubSub = require('@google-cloud/pubsub');
+
+		// Your Google Cloud Platform project ID
+		const projectId = 'wkosolution-188119';
+
+		// Instantiates a client
+		const pubsubClient = PubSub({
+			keyFilename: './wkosolutionPush.json',
+			projectId: projectId
+		});
+
+
+		// References an existing subscription, e.g. "my-subscription"
+		const subscription = pubsubClient.subscription('wkoMailPush');
+
+		// Create an event handler to handle messages
+		console.log('start hisId:'+historyId)
+		let messageCount = 0;
+		const messageHandler = (message) => {
+			console.log(JSON.stringify(message, null, 4))
+			console.log(`Received message ${message.id}:`);
+			console.log(`\tData: ${message.data}`);
+			console.log(`\tAttributes: ${message.attributes}`);
+			messageCount += 1;
+			console.log('before hisId:'+projectId)
+
+			gmail.users.history.list({
+				auth:auth,
+				userId: 'me',
+				startHistoryId: historyId
+			}, function(err, res){
+				console.log('history:')
+				
+				// console.log(JSON.stringify(res.history[0].messages, null, 4))
+				if(!!res.history){
+					var messages = res.history[0].messages
+					messages.forEach(function(message){
+						var mailCC = ''
+						var mailTo = ''
+						var mailFrom = ''
+
+						gmail.users.messages.get({
+							auth: auth,
+							userId: 'me',
+							id:message.id
+						}, function(err, message){
+							if (err) {
+								console.log('The API returned an error: ' + err);
+								return;
+							}                                                                                                                                                     
+							console.log(JSON.stringify(message, null, 4))
+							var headers = message.payload.headers
+							headers.forEach(function(header){
+								if(header.name === "From"){
+									mailFrom = header.value
+									
+								}
+							})
+
+							headers.forEach(function(header){
+										
+								if (header.name === "CC"||header.name === "Cc"){
+									mailCC = header.value
+								}
+								if (header.name === "To"){
+									mailTo = header.value
+								}
+							})
+
+							var parts = message.payload.parts
+							console.log(JSON.stringify(parts, null, 4))
+							if (parts !== undefined){
+								parts.forEach(function(part){
+
+									
+
+
+
+
+									if(part.filename && part.filename.length > 0){
+										var attachId = part.body.attachmentId
+										var signFileType = part.mimeType
+										var fileName
+										var origfileName = part.filename
+										var fileExtension = origfileName.substring(origfileName.lastIndexOf('.'))
+										var video = ['.m4v', '.mov', '.mp4', '.MKV', '.AVI', '.VOB', '.MPG', '.TiVo', '.FLV']
+										var fileNameNoSpace = origfileName.replace(/ /g,"_")
+										var parts = fileNameNoSpace.split(".");
+									    if (parts[1]===undefined){
+									        fileName = fileNameNoSpace;
+									    }else if (signFileType.indexOf('image')!== -1){
+									    	fileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") +".jpeg"
+									    }else if(video.indexOf(fileExtension)!==-1){
+									    	fileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") +".mp4"
+									    }else{
+									        fileName = parts.slice(0,-1).join('') + moment().format("MMDDHHmmss") + "." 
+									        + parts.slice(-1)
+									    }
+
+
+
+
+										
+
+										//Scan for Email Attachement from new mail
+										gmail.users.messages.attachments.get({
+											auth: auth,
+											userId: 'me',
+											id:attachId,
+											messageId:message.id
+										}, function(err, attachment) {
+
+											if (err) {
+												console.log('The API returned an error: ' + err);
+												return;
+											}
+											console.log('attachxxx')
+
+											var userEmail = mailCC + mailTo + mailFrom
+											var regExp = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi
+											var emailArr = userEmail.match(regExp)
+											emailArr = emailArr.filter( function( item, index, inputArray ) {
+										           return inputArray.indexOf(item) == index;
+										    });
+											var Bucket = process.env.S3Bucket
+											var fileBuffer = new Buffer(attachment.data, 'base64')
+
+											const s3 = new aws.S3({
+												apiVersion: '2006-03-01'
+											});
+											var params = {
+												Bucket: process.env.S3Bucket,
+												Key: fileName,
+												Body: fileBuffer
+											};
+											console.log('signFileType:'+signFileType)
+											console.log('fileName:'+fileName)
+											s3.putObject(params, function(err) {
+												if(err){
+													console.log(JSON.stringify(err, null, 4))
+												}
+												var fileUrl = 'https://s3.amazonaws.com/' + Bucket + '/' + fileName
+
+												if(signFileType.indexOf('msword')!==-1||signFileType.indexOf('wordprocessingml')!==-1||
+											    	signFileType.indexOf('ms-excel')!==-1||signFileType.indexOf('spreadsheetml')!==-1||
+											    	signFileType.indexOf('ms-powerpoint')!==-1||signFileType.indexOf('presentationml')!==-1){
+											    	var returnURLs = '<p><iframe src="https://view.officeapps.live.com/op/embed.aspx?src='+fileUrl
+											    	+'"></iframe><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
+											    }else if(signFileType.indexOf('pdf')!==-1){
+											   		var returnURLs = '<p><iframe src="https://docs.google.com/gview?url='+fileUrl
+											   		+'&embedded=true"></iframe><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
+											   		
+											   	}else if(signFileType.indexOf('video')!==-1){
+											   		var returnURLs = '<p><video controls><source src="'+fileUrl+'"> </video></p>'
+											    }else if(signFileType.indexOf('image')!==-1){
+											    	var returnURLs = '<p><img src="'+returnData.url+'"/><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
+											    }else{
+											    	var returnURLs = '<p><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
+											    }
+
+											    console.log('returnUrl:'+ returnURLs)
+											    console.log(emailArr)
+											    db.user.findAll({
+													where:{
+														email: {
+															$in:emailArr
+														}
+													}
+												}).then(function(users){
+
+													console.log(JSON.stringify(users, null, 4))
+													users.forEach(function(user){
+														console.log(user.id)
+														db.mainPost.create({
+														postText:returnURLs,
+														postTo:"Private",
+														postToValue:'Private',
+														userId:user.id,
+														include:'',
+														exclude:''
+														}).then(function(post){
+															var userFeed = new UserFeed(post.id, user.id, 'New', user.id,
+															 'New attachment arrived from an Email Server', 'active')
+
+															db.userFeed.create(userFeed).then(function(created){
+																// console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+																// showNotification(user.id, post)
+
+															})
+														})
+													})
+													
+												})
+											})
+
+											
+
+
+											// const fileName = req.body.fileName
+											// const fileType = req.body.fileType
+											// const s3Params = {
+											// 	Bucket: process.env.S3Bucket,
+											// 	Key: fileName,
+											// 	Expires: 900,
+											// 	ContentType: fileType,
+											// 	// "ContentLength": 9875,
+											// 	ACL: 'public-read'
+											// 	// ContentMD5:'true'
+
+											// }
+											// console.log('fileName:'+fileName)
+											// console.log('fileType:'+fileType)
+
+											// s3.getSignedUrl('putObject', s3Params, function(err, url){
+											// 	if(err){
+											// 		console.log(err);
+											// 		return res.end();
+											// 	}
+											// 	console.log('returnS3:'+ JSON.stringify(url, null, 4))
+											// 	const returnData = {
+											// 		signedRequest: url,
+											// 		url:'https://'+ process.env.S3Bucket +'.s3.amazonaws.com/'+fileName
+											// 	};
+											// 	res.json(returnData);
+											// })
+											//Decode email attchment
+											// var decodedAttachment = base64URLtoBlob(attachment.data, mimeType)
+											// decodedAttachment.fileName = part.filename
+											// console.log(mailSubject)
+											// var userEmail = mailCC + mailTo + mailFrom
+
+											// var regExp = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi
+											// var emailArr = userEmail.match(regExp)
+											// emailArr = emailArr.filter( function( item, index, inputArray ) {
+										 //           return inputArray.indexOf(item) == index;
+										 //    });
+											// console.log(decodedAttachment)
+
+											// //Trash mail after getting the attachment decoded
+											// $.post('/notif/trashEmail',{
+											// 	messageId:message.id
+											// }).done(function(changed){
+
+											// })
+											
+											// mailAttachmentConversion(decodedAttachment, emailArr, messageId)
+										})
+
+
+									}
+								})
+							}
+
+						})	
+
+					})
+				}
+				
+			});
+
+			
+			historyId = JSON.parse(new Buffer(message.data, 'base64').toString()).historyId
+			// "Ack" (acknowledge receipt of) the message
+			message.ack();
+			console.log('after hisId:'+historyId)
+			
+			// var getPageOfHistory = function(request, result) {
+			// 	request(function(resp) {
+			// 		result = result.concat(resp.history);
+			// 		var nextPageToken = resp.nextPageToken;
+			// 		if (nextPageToken) {
+			// 			request = gmail.users.history.list({
+			// 				auth:auth,
+			// 				userId: 'me',
+			// 				startHistoryId: historyId,
+			// 				pageToken: nextPageToken
+			// 			});
+			// 			getPageOfHistory(request, result);
+			// 		} else {
+			// 			console.log(JSON.stringify(request, null, 4))
+			// 		}
+			// 	});
+			// };
+			
+			// getPageOfHistory(request, []);
+		};
+
+		// Listen for new messages until timeout is hit
+		subscription.on(`message`, messageHandler);
+		// setTimeout(() => {
+		//   subscription.removeListener('message', messageHandler);
+		//   console.log(`${messageCount} message(s) received.`);
+		// }, 10 * 1000);
+
+		console.log('getting Push from WKO')
+			// console.log(JSON.stringify(res, null, 4))
+	})
+}
+
+
+
 router.post('/oauth2Client', function(req, res){
 	var command = req.body.command
 	var authCode = req.body.authCode
@@ -244,7 +575,6 @@ router.post('/sendEmail', function(req, res){
 	// var raw = req.body.raw
 	getOauth2Client(sendMessage)
 	function sendMessage(auth) {
-		var gmail = google.gmail('v1');
 	    gmail.users.messages.send({
 	        auth: auth,
 	        userId: 'me',
@@ -271,7 +601,6 @@ router.post('/changedEmailRead', function(req, res){
 	function getMailMessage(auth){	
 		console.log(JSON.stringify(auth, null, 4))
 
-		var gmail = google.gmail('v1');
 		gmail.users.messages.modify({
 			auth: auth,
 			userId: 'me',
@@ -298,7 +627,6 @@ router.post('/trashEmail', function(req, res){
 	function deleteEmail(auth){	
 		console.log(JSON.stringify(auth, null, 4))
 
-		// var gmail = google.gmail('v1');
 		// gmail.users.messages.delete({
 		// 	auth: auth,
 		// 	userId: 'me',
@@ -312,7 +640,6 @@ router.post('/trashEmail', function(req, res){
 		// 	res.json(labelList)
 		// })
 
-		var gmail = google.gmail('v1');
 		gmail.users.messages.trash({
 			auth: auth,
 			userId: 'me',
@@ -340,7 +667,6 @@ router.post('/getEmailList', function(req, res){
 		getOauth2Client(getInitialList)
 		function getInitialList(auth){
 			console.log(auth)
-			var gmail = google.gmail('v1');
 			gmail.users.messages.list({
 				auth: auth,
 				userId: 'me',
@@ -364,7 +690,6 @@ router.post('/getEmailList', function(req, res){
 	}else{
 		getOauth2Client(getMessages)
 		function getMessages(auth){
-			var gmail = google.gmail('v1');
 			gmail.users.messages.list({
 				auth: auth,
 				userId: 'me',
@@ -399,7 +724,6 @@ router.post('/getEmailMessage', function(req, res){
 	function getMailMessage(auth){
 
 
-		var gmail = google.gmail('v1');
 		var getMessage = gmail.users.messages.get({
 			auth: auth,
 			userId: 'me',
@@ -423,7 +747,6 @@ router.post('/getEmailAttachment', function(req, res){
 	console.log(messageId)
 	getOauth2Client(getMessages)
 	function getMessages(auth){
-		var gmail = google.gmail('v1');
 		gmail.users.messages.attachments.get({
 			auth: auth,
 			userId: 'me',

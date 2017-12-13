@@ -90,6 +90,7 @@ var umzug = new Umzug({
 
 
 
+	
 
 // io.on('connection', function(socket) {
 // 	console.log('user connect to socket io');
@@ -189,47 +190,7 @@ app.post('/sign-s3', middleware.requireAuthentication, function(req, res){
 	})
 })
 
-app.get('/wkoMailPush', function (req, res) {
 
-	const PubSub = require('@google-cloud/pubsub');
-
-// Your Google Cloud Platform project ID
-const projectId = 'wkosolution-188119';
-
-// Instantiates a client
-const pubsubClient = PubSub({	
-	keyFilename:'./wkosolutionPush.json',
-  	projectId: projectId
-});
-
-
-  // References an existing subscription, e.g. "my-subscription"
-  const subscription = pubsubClient.subscription('wkoMailPush');
-
-  // Create an event handler to handle messages
-  let messageCount = 0;
-  const messageHandler = (message) => {
-  	console.log(JSON.stringify(message, null, 4))
-    console.log(`Received message ${message.id}:`);
-    console.log(`\tData: ${message.data}`);
-    console.log(`\tAttributes: ${message.attributes}`);
-    messageCount += 1;
-
-    // "Ack" (acknowledge receipt of) the message
-    message.ack();
-  };
-
-  // Listen for new messages until timeout is hit
-  subscription.on(`message`, messageHandler);
-  // setTimeout(() => {
-  //   subscription.removeListener('message', messageHandler);
-  //   console.log(`${messageCount} message(s) received.`);
-  // }, 10 * 1000);
-
-	console.log('getting Push from WKO')
-	// console.log(JSON.stringify(res, null, 4))
-	res.send('ok')
-})
 
 app.get('/test', middleware.requireAuthentication, test)
 
