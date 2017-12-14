@@ -25,9 +25,8 @@ html(lang="en")
 				br
 				- if (errors)
 					p.error Please check following items:
-					
-					- each error in errors
-						li.error= error.msg
+						each error in errors
+							li.error= error.msg
 
 				//- a(href='/users') Register
 			

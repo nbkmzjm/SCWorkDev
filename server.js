@@ -58,7 +58,7 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 // app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 app.set('views', path.join(__dirname + '/public', 'views'));
 app.set("view options", {
 	layout: true
