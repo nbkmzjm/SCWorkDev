@@ -20,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING
         } ,
         notifText:{
-            type: DataTypes.STRING
+            type: DataTypes.TEXT
         },
         relationship:{
             type: DataTypes.STRING,
