@@ -1,4 +1,5 @@
 var PORT = process.env.PORT || 3000;
+
 var express = require('express');
 var app = express();
 var dotenv = require('dotenv').config()
@@ -27,15 +28,36 @@ var LocalStorage = require('node-localstorage').LocalStorage
 localStorage = new LocalStorage('./scratch')
 // const urlsafeBase64 = require('urlsafe-base64')
 var Umzug = require('umzug')
-var S3Bucket = process.env.S3Bucket
 
+
+var mkey = process.env.mkey
+var processEnv = {}
+
+fs.readFile('enKey', 'utf8', function(err, data){
+	if (err) return console.log(err)
+
+	var key = cryptojs.AES.decrypt(data.substring(5), mkey).toString(cryptojs.enc.Utf8)
+		console.log("Key List:")
+		var keyArray = key.split(',')
+		
+		keyArray.forEach(function(item, i){
+			
+			var key = item.slice(0, item.indexOf('='))
+			var value = item.slice(item.indexOf('=')+1)
+			console.log(i + ')'+key+':'+value)
+			processEnv[key] = value
+
+		})
+})
+
+var S3Bucket = processEnv.S3Bucket
 
 
 
 
 
 const vapidKeys = webpush.generateVAPIDKeys();
-webpush.setGCMAPIKey(process.env.GCMAPIKey);
+webpush.setGCMAPIKey(processEnv.GCMAPIKey);
 webpush.setVapidDetails(
   'mailto:tkngo85@gmail.com',
   vapidKeys.publicKey,
@@ -89,25 +111,7 @@ var umzug = new Umzug({
 });
 
 
-var mkey = process.env.mkey
-var processEnv = {}
 
-fs.readFile('enKey', 'utf8', function(err, data){
-	if (err) return console.log(err)
-
-	var key = cryptojs.AES.decrypt(data.substring(5), mkey).toString(cryptojs.enc.Utf8)
-		console.log("Key List:")
-		var keyArray = key.split(',')
-		
-		keyArray.forEach(function(item, i){
-			
-			var key = item.slice(0, item.indexOf('='))
-			var value = item.slice(item.indexOf('=')+1)
-			console.log(i + ')'+key+':'+value)
-			processEnv[key] = value
-
-		})
-})
 
 
 	
