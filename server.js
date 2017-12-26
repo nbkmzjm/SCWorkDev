@@ -89,6 +89,26 @@ var umzug = new Umzug({
 });
 
 
+var mkey = process.env.mkey
+var processEnv = {}
+
+fs.readFile('enKey', 'utf8', function(err, data){
+	if (err) return console.log(err)
+
+	var key = cryptojs.AES.decrypt(data.substring(5), mkey).toString(cryptojs.enc.Utf8)
+		console.log("Key List:")
+		var keyArray = key.split(',')
+		
+		keyArray.forEach(function(item, i){
+			
+			var key = item.slice(0, item.indexOf('='))
+			var value = item.slice(item.indexOf('=')+1)
+			console.log(i + ')'+key+':'+value)
+			processEnv[key] = value
+
+		})
+})
+
 
 	
 
@@ -1384,31 +1404,31 @@ umzug.up().then(function (migrations) {
 		
 		http.listen(PORT, function() {
 			console.log('Helllo Express server started on PORT ' + PORT);
-			setInterval(function(){
-				console.log('clean DB....')
-				var prior90Date = moment(new Date()).subtract(60,'days').format()
+			// setInterval(function(){
+			// 	console.log('clean DB....')
+			// 	var prior90Date = moment(new Date()).subtract(60,'days').format()
 				
-					console.log('prior90Date:'+prior90Date) 
-				db.assign.destroy({
-					where:{
-						updatedAt:{
-							$lt:prior90Date
-						}
-					}
-				}).then(function(){
-					var prior10Date = moment(new Date()).subtract(10,'days').format()
-					db.token.destroy({
-						where:{
-							createdAt:{
-								$lt:prior10Date
-							}
-						}
-					})
+			// 		console.log('prior90Date:'+prior90Date) 
+			// 	db.assign.destroy({
+			// 		where:{
+			// 			updatedAt:{
+			// 				$lt:prior90Date
+			// 			}
+			// 		}
+			// 	}).then(function(){
+			// 		var prior10Date = moment(new Date()).subtract(10,'days').format()
+			// 		db.token.destroy({
+			// 			where:{
+			// 				createdAt:{
+			// 					$lt:prior10Date
+			// 				}
+			// 			}
+			// 		})
 
-				}).catch(function(e) {
-					console.log(e);
-				});
-			}, 7*8460000);
+			// 	}).catch(function(e) {
+			// 		console.log(e);
+			// 	});
+			// }, 7*8460000);
 		});
 
 	});
