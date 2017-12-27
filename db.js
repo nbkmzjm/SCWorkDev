@@ -1,10 +1,13 @@
+
+module.exports = function(dbURL){
+
 var Sequelize = require('sequelize');
 var env = process.env.NODE_ENV || 'development';
 var sequelize;
-
+console.log(dbURL)
 if (env === 'production'){
 	
-	sequelize = new Sequelize(processEnv.DATABASE_URL, {
+	sequelize = new Sequelize(dbURL, {
 		dialect: 'postgres'
 	});
 } else {
@@ -158,4 +161,6 @@ db.mainPost.hasMany(db.tagSave,{
 })
 
 
-module.exports = db;
+
+	return db;
+}
