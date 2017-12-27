@@ -2,7 +2,7 @@ var Sequelize = require('sequelize');
 var env = process.env.NODE_ENV || 'development';
 var sequelize;
 
-if (env === 'development'){
+if (env === 'production'){
 	
 	sequelize = new Sequelize(processEnv.DATABASE_URL, {
 		dialect: 'postgres'

@@ -2,12 +2,14 @@
 var fs = require('fs');
 var readline = require('readline');
 var cryptojs = require('crypto-js');
+var dotenv = require('dotenv').config()
 
 var rl = readline.createInterface({
 		input: process.stdin,
 		output: process.stdout
 	})
 var mkey = process.env.mkey
+var data = process.env.data
 
 
 
@@ -34,7 +36,7 @@ function addKey(){
 		if (isNaN(entry) === false && entry != 0){
 
 			
-			fs.readFile('enKey', 'utf8', function(err, encrytedKey){
+			fs.readFile('.env', 'utf8', function(err, encrytedKey){
 				if (err) return console.log(err)
 
 						
@@ -44,9 +46,9 @@ function addKey(){
 				
 				var updatedKey = keyArray.join(',')
 				var encryptedKeys = 'data='+ cryptojs.AES.encrypt(updatedKey, mkey).toString()
-				fs.writeFile('enKey', encryptedKeys, function(err){
+				fs.writeFile('.env', encryptedKeys, function(err){
 					if (err) return console.log(err)
-					fs.readFile('enKey', 'utf8', function(err, encrytedKey){
+					fs.readFile('.env', 'utf8', function(err, encrytedKey){
 						if (err) return console.log(err)
 
 							keyList(encrytedKey.substring(5))
@@ -59,7 +61,7 @@ function addKey(){
 			
 
 		} else if (entry.indexOf('=')!== -1){
-			fs.readFile('enKey', 'utf8', function(err, encrytedKey){
+			fs.readFile('.env', 'utf8', function(err, encrytedKey){
 				if(!!encrytedKey){
 					var keys =  keyList(encrytedKey.substring(5))+","+ entry 
 
@@ -70,9 +72,9 @@ function addKey(){
 				
 				var encryptedKeys = 'data='+ cryptojs.AES.encrypt(keys, mkey).toString()
 				// var data = encryptedKey
-				fs.writeFile('enKey', encryptedKeys, function(err){
+				fs.writeFile('.env', encryptedKeys, function(err){
 					if (err) return console.log(err)
-					fs.readFile('enKey', 'utf8', function(err, encrytedKey){
+					fs.readFile('.env', 'utf8', function(err, encrytedKey){
 						if (err) return console.log(err)
 
 							keyList(encrytedKey.substring(5))
@@ -90,48 +92,43 @@ function addKey(){
 if (mkey !== undefined) {
 		keyProcess()
 		function keyProcess(){
-			fs.exists('enKey', function(exists){
+			fs.exists('.env', function(exists){
 				if(!exists){
-					fs.writeFile('enKey', '', function(err){
+					fs.writeFile('.env', '', function(err){
 						if (err) return console.log(err)
 					})
 				}
+				if (data === undefined){
+					rl.question('No key found. Do you want to add key?(y/n)', function(ans){
 
-				fs.readFile('enKey', 'utf8', function(err, data){
-					if (err) return console.log(err)
-					if (data === ''){
-						rl.question('No key found. Do you want to add key?(y/n)', function(ans){
+						if(ans === 'y'){
+							addKey()
+							
+							
+						}else if(ans ==='n'){
 
-							if(ans === 'y'){
-								addKey()
-								
-								
-							}else if(ans ==='n'){
+						}else{
 
-							}else{
+							console.log('Please enter y for Yes, n for No and Exit.')
+							keyProcess()
+						}
 
-								console.log('Please enter y for Yes, n for No and Exit.')
-								keyProcess()
-							}
-
-						})
-					}else{
-						fs.readFile('enKey', 'utf8', function(err, encrytedKey){
-							if (err) return console.log(err)
-								keyList(encrytedKey.substring(5))
-								addKey()
-						})
-					}
-				})
+					})
+				}else{
+					fs.readFile('.env', 'utf8', function(err, encrytedKey){
+						if (err) return console.log(err)
+							keyList(encrytedKey.substring(5))
+							addKey()
+					})
+				}
 
 			})
 			
 		}
-// } else if(){
 
 		
 }else{
-	console.log('Please provide password for editing env or Delete content of enKey for to reset all keys')
+	console.log('Please provide password for editing env or Delete content of .env for to reset all keys')
 }
 
 

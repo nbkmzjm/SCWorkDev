@@ -3,12 +3,8 @@ var PORT = process.env.PORT || 3000;
 var express = require('express');
 var app = express();
 var dotenv = require('dotenv').config()
-var aws = require('aws-sdk')
-aws.config.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-});
-aws.config.update({region: 'us-east-1'})
+
+
 var path = require('path');
 var http = require('http').Server(app);
 // var io = require('socket.io')(http);
@@ -26,33 +22,39 @@ var bcrypt = require('bcryptjs');
 var _ = require('underscore');
 var LocalStorage = require('node-localstorage').LocalStorage
 localStorage = new LocalStorage('./scratch')
+var cryptojs = require('crypto-js');
 // const urlsafeBase64 = require('urlsafe-base64')
 var Umzug = require('umzug')
 
 
 var mkey = process.env.mkey
+var envdata = process.env.data
+console.log(envdata)
+console.log('mkey:'+mkey)
 var processEnv = {}
 
-fs.readFile('enKey', 'utf8', function(err, data){
-	if (err) return console.log(err)
 
-	var key = cryptojs.AES.decrypt(data.substring(5), mkey).toString(cryptojs.enc.Utf8)
-		console.log("Key List:")
-		var keyArray = key.split(',')
+var key = cryptojs.AES.decrypt(envdata, mkey).toString(cryptojs.enc.Utf8)
+	console.log("Key List:")
+	var keyArray = key.split(',')
+	
+	keyArray.forEach(function(item, i){
 		
-		keyArray.forEach(function(item, i){
-			
-			var key = item.slice(0, item.indexOf('='))
-			var value = item.slice(item.indexOf('=')+1)
-			console.log(i + ')'+key+':'+value)
-			processEnv[key] = value
+		var key = item.slice(0, item.indexOf('='))
+		var value = item.slice(item.indexOf('=')+1)
+		console.log(i + ')'+key+':'+value)
+		processEnv[key] = value
 
-		})
-})
+	})
 
 var S3Bucket = processEnv.S3Bucket
 
-
+var aws = require('aws-sdk')
+aws.config.update({
+    accessKeyId: processEnv.AWS_ACCESS_KEY_ID,
+    secretAccessKey: processEnv.AWS_SECRET_ACCESS_KEY
+});
+aws.config.update({region: 'us-east-1'})
 
 
 
