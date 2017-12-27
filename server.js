@@ -67,10 +67,7 @@ console.log('vapidKeys.publicKey' + vapidKeys.publicKey)
 // const decodedVapidPublicKey = urlsafeBase64.decode(vapidKeys.publicKey)
 // console.log(decodedVapidPublicKey)
 
-console.log('dburl:'+ processEnv.DATABASE_URL)
 
-var TM = require('./testModule.js')('yyy');
-// var tm = new TM('xxxx')
 
 var db = require('./db.js')(processEnv.DATABASE_URL)
 var middleware = require('./middleware.js')(db);
