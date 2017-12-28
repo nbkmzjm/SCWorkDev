@@ -3,10 +3,12 @@
 	var Sequelize = require('sequelize');
 	var env = process.env.NODE_ENV || 'development';
 	var sequelize;
+	console.log(env)
+	var processEnv = require('./envDecrypt.js')
 
-	if (env === 'production'){
+	if (env === 'development'){
 		
-		sequelize = new Sequelize(dbURL, {
+		sequelize = new Sequelize(processEnv.DATABASE_URL, {
 			dialect: 'postgres'
 		});
 	} else {

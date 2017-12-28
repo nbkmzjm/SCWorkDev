@@ -1,7 +1,5 @@
 cryptojs = require('crypto-js')
 module.exports = function(db) {
-	console.log('middlewaredb')
-	console.log(db.token)
 
 	return {
 
