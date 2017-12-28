@@ -27,23 +27,11 @@ var cryptojs = require('crypto-js');
 var Umzug = require('umzug')
 
 
-var mkey = process.env.mkey
-var envdata = process.env.data
-var processEnv = {}
+var processEnv = require('./envDecrypt.js')
+console.log(processEnv.S3Bucket)
 
 
-var key = cryptojs.AES.decrypt(envdata, mkey).toString(cryptojs.enc.Utf8)
-	console.log("Key List:")
-	var keyArray = key.split(',')
-	
-	keyArray.forEach(function(item, i){
-		
-		var key = item.slice(0, item.indexOf('='))
-		var value = item.slice(item.indexOf('=')+1)
-		console.log(i + ')'+key+':'+value)
-		processEnv[key] = value
 
-	})
 
 var S3Bucket = processEnv.S3Bucket
 
@@ -52,7 +40,7 @@ aws.config.update({
     accessKeyId: processEnv.AWS_ACCESS_KEY_ID,
     secretAccessKey: processEnv.AWS_SECRET_ACCESS_KEY
 });
-aws.config.update({region: 'us-east-1'})
+aws.config.update({region: 'us-west-1'})
 
 
 
@@ -69,7 +57,8 @@ console.log('vapidKeys.publicKey' + vapidKeys.publicKey)
 
 
 
-var db = require('./db.js')(processEnv.DATABASE_URL)
+var db = require('./db.js')
+
 var middleware = require('./middleware.js')(db);
 
 app.use(cookieParser());
@@ -1402,7 +1391,7 @@ umzug.up().then(function (migrations) {
   // "migrations" will be an Array with the names of
   // pending migrations.
   	db.sequelize.sync(
-	{force: true}
+	{force: false}
 	).then(function() {
 		
 		http.listen(PORT, function() {

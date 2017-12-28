@@ -54,7 +54,7 @@ block content
             div(class="form-group" id='deptInput')
               label(class="control-label col-sm-2" for="department") Department
               span
-                input(type='button' class="btn btn-success" value='Add New' id='addDeptBtn' ) 
+                input(type='button' class="btn btn-success" value='Add New' id='addDeptBtnUser' ) 
               div(class="col-sm-4")
                 select(class="form-control" id="department" name="department")
                 
@@ -134,7 +134,7 @@ block content
             div(class="form-group")
               label(class="control-label col-sm-2" for="department") Department
               span
-                input(type='button' class="btn btn-success" value='Add New' id='addDeptBtn' ) 
+                input(type='button' class="btn btn-success" value='Add New' id='addDeptBtnWG' ) 
               div(class="col-sm-4")
                 select(class="form-control" id="WorkGroupDepartment" name="department")
             div(class="form-group")
@@ -157,8 +157,8 @@ append scripts
   script.
 
     $(function(){
-      
-       $('#title').multiselect();
+      console.log('a')
+       //- $('#title').multiselect();
       var JSONdata = !{JSONdata};
       var curUser = JSONdata.curUser
       var firstUser = JSONdata.firstUser
@@ -167,10 +167,13 @@ append scripts
       if (curUser == undefined ){
         if (JSONdata.tabx=='userForm'){
 
-          //- $('#userListTab').attr('class', '')
-          $('#deptTab').attr('class', 'active')
-          $('#').attr('class', 'tab-pane')
-          $('#deptForm').attr('class', 'tab-pane fade in active')
+          $('#userListTab').attr('class', '')
+          $('#userFormTab').attr('class', 'active')
+          //- $('#deptTab').attr('class', 'active')
+          $('#userForm').attr('class', 'tab-pane fade in active')
+          //- $('#deptTab').attr('class', 'active')
+          //- $('#').attr('class', 'tab-pane')
+          //- $('#deptForm').attr('class', 'tab-pane fade in active')
 
           $.getJSON('/users/getDept').done(function(Rdata){
             console.log(Rdata)
@@ -186,7 +189,7 @@ append scripts
                 deptName:'ADMIN',
                 status:'Active',
               }).done(function(Rdata){
-                location.reload()
+                window.location.replace(Rdata.redi)
               })
             }
           })
@@ -214,9 +217,9 @@ append scripts
               //- alert(JSON.stringify(Rdata.errors, null, 4))
                 $('.errors').html('')
                 if (typeof Rdata.errors == 'string'){
-                  $('#errors').append('<br>'+'* '+ Rdata.errors)
-                  $('#errors').addClass('error')
-                  $('#errors').addClass('col-sm-offset-2 col-sm-10')
+                  $('.errors').append('<br>'+'* '+ Rdata.errors)
+                  $('.errors').addClass('error')
+                  $('.errors').addClass('col-sm-offset-2 col-sm-10')
                 } else{
 
                   Rdata.errors.forEach(function(item){
@@ -232,13 +235,18 @@ append scripts
           });
         }
       }else{
-
-        $('#addDeptBtn').on('click', function(){
-          $('#userFormTab').attr('class', '')
-          $('#deptTab').attr('class', 'active')
-          $('#userForm').attr('class', 'tab-pane')
-          $('#deptForm').attr('class', 'tab-pane fade in active')
-        })
+          $('#addDeptBtnUser').on('click', function(){
+            $('#userFormTab').attr('class', '')
+            $('#deptTab').attr('class', 'active')
+            $('#userForm').attr('class', 'tab-pane')
+            $('#deptForm').attr('class', 'tab-pane fade in active')
+          })
+          $('#addDeptBtnWG').on('click', function(){
+            $('#userFormTab').attr('class', '')
+            $('#deptTab').attr('class', 'active')
+            $('#userForm').attr('class', 'tab-pane')
+            $('#deptForm').attr('class', 'tab-pane fade in active')
+          })
 
         $("#formDept").on('submit', function(e){
           $.post('/users/addDept',{
@@ -292,12 +300,13 @@ append scripts
             if (!!Rdata.redi){
               window.location.replace(Rdata.redi)
             }else if (!!Rdata.errors){
-            //- alert(JSON.stringify(Rdata.errors, null, 4))
+            alert(JSON.stringify(Rdata.errors, null, 4))
               $('.errors').html('')
               if (typeof Rdata.errors == 'string'){
-                $('#errors').append('<br>'+'* '+ Rdata.errors)
-                $('#errors').addClass('error')
-                $('#errors').addClass('col-sm-offset-2 col-sm-10')
+                alert('string')
+                $('.errors').append('<br>'+'* '+ Rdata.errors)
+                $('.errors').addClass('error')
+                $('.errors').addClass('col-sm-offset-2 col-sm-10')
               } else{
 
                 Rdata.errors.forEach(function(item){
@@ -340,9 +349,9 @@ append scripts
             //- alert(JSON.stringify(Rdata.errors, null, 4))
               $('.errors').html('')
               if (typeof Rdata.errors == 'string'){
-                $('#errors').append('<br>'+'* '+ Rdata.errors)
-                $('#errors').addClass('error')
-                $('#errors').addClass('col-sm-offset-2 col-sm-10')
+                $('.errors').append('<br>'+'* '+ Rdata.errors)
+                $('.errors').addClass('error')
+                $('.errors').addClass('col-sm-offset-2 col-sm-10')
               } else{
 
                 Rdata.errors.forEach(function(item){

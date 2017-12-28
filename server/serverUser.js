@@ -88,7 +88,7 @@ router.post('/addDept', function(req, res) {
 		}).catch(function(e) {
 			console.log(JSON.stringify(e, null, 4))
 			res.json({
-				errors: "User cannot be created due to " + e.errors[0].message
+				errors: e.errors[0].message
 			})
 		});
 
@@ -153,7 +153,7 @@ router.post('/addUser', function(req, res) {
 							transaction:t
 						}).then(function(settingDescriptions){
 							console.log(JSON.stringify(settingDescriptions, null, 4))
-							if(!!settingDescriptions){
+							if(settingDescriptions.length>0){
 								console.log('feedSetting exist')
 								var data = []
 								settingDescriptions.forEach(function(settingDescription){
@@ -308,7 +308,7 @@ router.post('/addUser', function(req, res) {
 		}).catch(function(e) {
 			console.log(JSON.stringify(e, null, 4))
 			res.json({
-				errors: "User cannot be created due to "
+				errors: e.errors[0].message
 			})
 		});
 		

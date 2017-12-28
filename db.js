@@ -1,10 +1,9 @@
 
-module.exports = function(dbURL){
 
 	var Sequelize = require('sequelize');
 	var env = process.env.NODE_ENV || 'development';
 	var sequelize;
-	console.log(dbURL)
+
 	if (env === 'production'){
 		
 		sequelize = new Sequelize(dbURL, {
@@ -162,5 +161,4 @@ module.exports = function(dbURL){
 
 
 
-	return db;
-}
+	module.exports = db
