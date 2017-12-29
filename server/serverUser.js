@@ -178,7 +178,7 @@ router.post('/addUser', function(req, res) {
 											as:'groupBLUser',
 											where:{
 												departmentId:user.departmentId,
-												active:1
+												active:true
 											}
 										}]
 									}).then(function(groups){
@@ -308,7 +308,7 @@ router.post('/addUser', function(req, res) {
 		}).catch(function(e) {
 			console.log(JSON.stringify(e, null, 4))
 			res.json({
-				errors: e.errors[0].message
+				errors: e
 			})
 		});
 		
