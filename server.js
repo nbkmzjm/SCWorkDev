@@ -1391,7 +1391,7 @@ umzug.up().then(function (migrations) {
   // "migrations" will be an Array with the names of
   // pending migrations.
   	db.sequelize.sync(
-	{force: false}
+	{force: true}
 	).then(function() {
 		
 		http.listen(PORT, function() {

@@ -9,7 +9,7 @@
 	if (env === 'production'){
 		
 		sequelize = new Sequelize(processEnv.DATABASE_URL, {
-			dialect: 'postgres'
+			dialect: 'postgres',
 		});
 	} else {
 		sequelize = new Sequelize('database_development', 'nbkmzjm', 'fish1ing', {
