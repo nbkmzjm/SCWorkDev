@@ -80,7 +80,7 @@ module.exports = function(sequelize, DataTypes) {
 				var hashedPassword = bcrypt.hashSync(value, salt);
 
 				this.setDataValue('password', value);
-				this.setDataValue('salt', salt);
+				// this.setDataValue('salt', salt);
 				this.setDataValue('password_hash', hashedPassword);
 
 			}

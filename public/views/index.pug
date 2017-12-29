@@ -1180,7 +1180,13 @@ append scripts
 													for(var i = 0; i<memoCheckOpts.length;i++){
 														var detailListArr = []
 														var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')
-														postDB(postTo,postToValue, postText, filter, userArray)
+														postDB({
+															postTo:postTo,
+															postToValue: postToValue,
+															postText:postText,
+															filter:filter,
+															userArray:userArray
+														})
 														if (detailList.length!=0){
 															for(var u = 0; u<detailList.length;u++){
 																detailListArr.push(detailList[u].innerHTML)
@@ -1328,6 +1334,7 @@ append scripts
 											var postToValue = 'Private'
 											var postText = 'Assigned ' + taskSC + ' for '+ fullName +' on ' + dateSC
 											var filter = 'Include'
+
 											userArray.push(userId)
 											}
 											if( ["PTO-A","PTO-X","SWIT-A","SWIT-X"].indexOf(taskSC) == -1){
@@ -1350,7 +1357,15 @@ append scripts
 																td.innerHTML=pData.Note;
 																td.style.backgroundColor = 'yellow'
 																//add feed and notification for this scheduling events
-																postDB(postTo,postToValue, postText, filter, userArray)
+																console.log(postText)
+																	postDB({
+																		postTo:postTo,
+																		postToValue: postToValue,
+																		postText:postText,
+																		filter:filter,
+																		userArray:userArray
+																		 
+																	})
 																for(var i = 1; i<memoCheckOpts.length;i++){
 																	var detailListArr = []
 																	var detailList = memoCheckOpts[i].parentNode.childNodes[2].getElementsByTagName('li')

@@ -600,11 +600,11 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				, user
 			];
 		}).spread(function(assignUpdated, curUser, assign, user) {
-			// var body = {
-			// 	Note:taskSC,
-			// 	Memo:memo||'',
-			// 	type:type
-			// }
+			var body = {
+				Note:taskSC,
+				Memo:memo||'',
+				type:type
+			}
 			// var postText;
 			// if (taskSC==='PTO-A'){
 			
