@@ -1396,6 +1396,8 @@ umzug.up().then(function (migrations) {
 		
 		http.listen(PORT, function() {
 			console.log('Helllo Express server started on PORT ' + PORT);
+			
+
 			// setInterval(function(){
 			// 	console.log('clean DB....')
 			// 	var prior90Date = moment(new Date()).subtract(60,'days').format()

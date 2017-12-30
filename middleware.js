@@ -5,7 +5,6 @@ module.exports = function(db) {
 
 		requireAuthentication: function(req, res, next) {
 			var token = req.cookies.token;
-			// console.log('token is: ' + token);
 
 			db.token.findOne({
 				where: {
@@ -14,41 +13,68 @@ module.exports = function(db) {
 			}).then(function (tokenIns){
 				if (!tokenIns){
 					
-					console.log('Token is not found');
-				}
-				req.token = tokenIns;
-				return db.user.findByToken(token);
-			}).then(function (user){
-				req.user = user;
-				next();
-			}, function (e) {
-				console.log(e);
-				db.user.findOne({
-					where:{
-						id:{
-							gt:0
+					console.log('Token is not found. Goto Login Form');
+					db.user.findOne({
+						where:{
+							id:{
+								gt:0
+							}
 						}
-					}
-				}).then(function(user){
+					}).then(function(user){
 
-					if (!!user){
-						res.redirect('/users/loginform');
-						
-						
-					}else{
-						res.render('users/usersHome', {
-							JSONdata: JSON.stringify({
-								tabx: 'userForm',
-								firstUser: true
+						if (!!user){
+							res.redirect('/users/loginform');
+							
+							
+						}else{
+							res.render('users/usersHome', {
+								JSONdata: JSON.stringify({
+									tabx: 'userForm',
+									firstUser: true
+								})
 							})
-						})
+							
+						}
 						
-					}
-					
-				})
+					})
+				}else{
+					req.token = tokenIns;
+					db.user.findByToken(token).then(function (user){
+						req.user = user;
+						next();
+					}, function (e) {
+						console.log(e);
+						db.user.findOne({
+							where:{
+								id:{
+									gt:0
+								}
+							}
+						}).then(function(user){
 
-				
-			});
+							if (!!user){
+								res.redirect('/users/loginform');
+								
+								
+							}else{
+								res.render('users/usersHome', {
+									JSONdata: JSON.stringify({
+										tabx: 'userForm',
+										firstUser: true
+									})
+								})
+								
+							}
+							
+						})
+
+						
+					});
+
+
+
+				}
+			})
 
 		},
 		logger: function(req, res, next) {

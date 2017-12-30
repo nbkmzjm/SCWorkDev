@@ -2,6 +2,8 @@ var bcrypt = require('bcryptjs');
 var _ = require('underscore');
 var cryptojs = require('crypto-js');
 var jwt = require('jsonwebtoken');
+var tokenAESKey = require('../envDecrypt.js').tokenAESKey
+
 
 module.exports = function(sequelize, DataTypes) {
 
@@ -63,9 +65,6 @@ module.exports = function(sequelize, DataTypes) {
 		// },
 		
 		
-		salt: {
-			type: DataTypes.STRING,
-		},
 		password_hash: {
 			type: DataTypes.STRING
 		},
@@ -116,10 +115,10 @@ module.exports = function(sequelize, DataTypes) {
 
 				try {
 					var stringData = JSON.stringify({id: this.get('id'), type: type});
-					var encryptedData = cryptojs.AES.encrypt(stringData, 'fish1ing').toString();
+					var encryptedData = cryptojs.AES.encrypt(stringData, tokenAESKey).toString();
 					var token = jwt.sign({
 						token: encryptedData
-						},'fish1ing');
+						},tokenAESKey);
 						return token;
 					
 					
@@ -160,8 +159,8 @@ module.exports = function(sequelize, DataTypes) {
 			findByToken: function (token){
 				return new Promise(function (resolve, reject){
 					try {
-						var decodedJWT = jwt.verify(token, 'fish1ing');
-						var bytes = cryptojs.AES.decrypt(decodedJWT.token, 'fish1ing');
+						var decodedJWT = jwt.verify(token, tokenAESKey);
+						var bytes = cryptojs.AES.decrypt(decodedJWT.token, tokenAESKey);
 						var tokenData = JSON.parse(bytes.toString(cryptojs.enc.Utf8));
 
 						user.findOne({

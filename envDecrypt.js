@@ -13,7 +13,7 @@ var key = cryptojs.AES.decrypt(envdata, mkey).toString(cryptojs.enc.Utf8)
 		
 		var key = item.slice(0, item.indexOf('='))
 		var value = item.slice(item.indexOf('=')+1)
-		console.log(i + ')'+key+':'+value)
+		console.log(i + ')'+key)
 		processEnv[key] = value
 
 	})

@@ -505,22 +505,27 @@ router.post('/login', function(req, res) {
 
 
 router.get('/logout', middleware.requireAuthentication, function(req, res) {
-	
-	var prior7Date = moment(new Date()).subtract(7,'days').format()
-	req.token.destroy().then(function() {
-		console.log('prior7Date:'+prior7Date) 
-		db.token.destroy({
-			where:{
-				createdAt:{
-					$lt:prior7Date
+	var prior14Date = moment(new Date()).subtract(14,'days').format()
+	if (!!req.token){
+		req.token.destroy().then(function() {
+			console.log('clearing token for prior14Date:'+prior14Date) 
+			db.token.destroy({
+				where:{
+					createdAt:{
+						$lt:prior14Date
+					}
 				}
-			}
-		})
+			})
+			res.redirect('loginForm');
+		}).catch(function(e) {
+			console.log('token deletion errors:'+ e)
+			res.redirect('loginForm');
+			// res.status(500).send();
+		});
+	}else{
+		console.log('No token found. Go to login!')
 		res.redirect('loginForm');
-	}).catch(function(e) {
-		res.redirect('loginForm');
-		res.status(500).send();
-	});
+	}
 });
 
 
