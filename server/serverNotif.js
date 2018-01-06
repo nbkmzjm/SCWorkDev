@@ -11,11 +11,13 @@ var google = require('googleapis');
 var googleAuth = require('google-auth-library');
 var gmail = google.gmail('v1');
 
+var processEnv = require('../envDecrypt.js')
 var aws = require('aws-sdk')
 aws.config.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    accessKeyId: processEnv.AWS_ACCESS_KEY_ID,
+    secretAccessKey: processEnv.AWS_SECRET_ACCESS_KEY
 });
+
 
 // const vapidKeys = webpush.generateVAPIDKeys();
 // webpush.setGCMAPIKey("AIzaSyAVHtFMejQX7To7UwVqi4MWzWIfBP1qWAc");
@@ -162,14 +164,14 @@ function iniGmaiWatch(auth){
 												emailArr = emailArr.filter( function( item, index, inputArray ) {
 											           return inputArray.indexOf(item) == index;
 											    });
-												var Bucket = process.env.S3Bucket
+												var Bucket = processEnv.S3Bucket
 												var fileBuffer = new Buffer(attachment.data, 'base64')
 
 												const s3 = new aws.S3({
 													apiVersion: '2006-03-01'
 												});
 												var params = {
-													Bucket: process.env.S3Bucket,
+													Bucket: processEnv.S3Bucket,
 													Key: fileName,
 													Body: fileBuffer,
 													ACL: 'public-read'
@@ -180,7 +182,7 @@ function iniGmaiWatch(auth){
 													if(err){
 														console.log(JSON.stringify(err, null, 4))
 													}
-													var fileUrl = 'https://'+ process.env.S3Bucket +'.s3.amazonaws.com/'+fileName
+													var fileUrl = 'https://'+ processEnv.S3Bucket +'.s3.amazonaws.com/'+fileName
 
 													if(signFileType.indexOf('msword')!==-1||signFileType.indexOf('wordprocessingml')!==-1||
 												    	signFileType.indexOf('ms-excel')!==-1||signFileType.indexOf('spreadsheetml')!==-1||

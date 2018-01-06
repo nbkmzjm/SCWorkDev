@@ -28,9 +28,6 @@ var Umzug = require('umzug')
 
 
 var processEnv = require('./envDecrypt.js')
-console.log(processEnv.S3Bucket)
-
-
 
 
 var S3Bucket = processEnv.S3Bucket

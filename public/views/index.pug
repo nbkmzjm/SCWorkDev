@@ -646,103 +646,105 @@ append scripts
 										if (taskSC=='SELECT'){
 											
 											console.log(JSON.stringify(userTitle, null, 4))
-											if(assign.userId==curUserId){
-												//- console.log(true)
-												//- $('#eventAction').html('')
-												//- var table = document.createElement('table');
-												//- table.setAttribute('id', 'eventActionTable');
-												//- table.draggable = true
-												//- table.addEventListener('click',function(){
-												//- 	$('#eventAction').stop()
-												//- })
+												console.log('xxxx')
+											console.log(assign.userId + '-----'+curUserId)
+											if(false){
+												
+												$('#eventAction').html('')
+												var table = document.createElement('table');
+												table.setAttribute('id', 'eventActionTable');
+												table.draggable = true
+												table.addEventListener('click',function(){
+													$('#eventAction').stop()
+												})
 
-												//- $('#eventAction').on('mouseleave', function(){
-												//- 	$('#delGly').remove()
-												//- })
+												$('#eventAction').on('mouseleave', function(){
+													$('#delGly').remove()
+												})
 
 
-												//- var tr = document.createElement('tr')
-												//- var arrayField = [ 'Event Detail','Event Date', 'Acknowledged']
+												var tr = document.createElement('tr')
+												var arrayField = [ 'Event Detail','Event Date', 'Acknowledged']
 
-												//- arrayField.forEach(function(field){
+												arrayField.forEach(function(field){
 													
-												//- 	var td = document.createElement('td')
-												//- 	td.appendChild(document.createTextNode(field))
-												//- 	tr.appendChild(td)
-												//- })
-												//- table.appendChild(tr)
-												//- $.post('/assignTracerReadWeek',{
-												//- 	sDate:weekStart.format('MM-DD-YYYY')
-												//- }).done(function(Rdata){
-												//- 	assigns = Rdata.assigns
-												//- 	assigns.forEach(function(assign, i){
-												//- 		var datePos = assign.datePos
-												//- 		assignTracers = assign.assignTracers
-												//- 		assignTracers.forEach(function(assignTracer, i){
-												//- 			var createdAt = moment(assignTracer.createdAt)
-												//- 			var tracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )+ "</b>"
+													var td = document.createElement('td')
+													td.appendChild(document.createTextNode(field))
+													tr.appendChild(td)
+												})
+												table.appendChild(tr)
+												$.post('/assignTracerReadWeek',{
+													sDate:weekStart.format('MM-DD-YYYY')
+												}).done(function(Rdata){
+													assigns = Rdata.assigns
+													assigns.forEach(function(assign, i){
+														var datePos = assign.datePos
+														assignTracers = assign.assignTracers
+														assignTracers.forEach(function(assignTracer, i){
+															var createdAt = moment(assignTracer.createdAt)
+															var tracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )+ "</b>"
 															
 
-												//- 			window['tr' + i] = document.createElement('tr')
-												//- 			if(i==0){
-												//- 				window['tr' + i].style.backgroundColor = '#C4FFCE'
-												//- 				window['tr' + i].style.borderTop = '5px solid #7B7B7B'
-												//- 			}
-												//- 			if(i==1){
-												//- 				window['tr' + i].style.backgroundColor = '#FEB6B6'
-												//- 			}
-												//- 				var td = document.createElement('td')
-												//- 				td.innerHTML = tracer
-												//- 				window['tr' + i].appendChild(td)
-												//- 				var td2 = document.createElement('td')
-												//- 				if(i==0 && dateSC == datePos){
+															window['tr' + i] = document.createElement('tr')
+															if(i==0){
+																window['tr' + i].style.backgroundColor = '#C4FFCE'
+																window['tr' + i].style.borderTop = '5px solid #7B7B7B'
+															}
+															if(i==1){
+																window['tr' + i].style.backgroundColor = '#FEB6B6'
+															}
+																var td = document.createElement('td')
+																td.innerHTML = tracer
+																window['tr' + i].appendChild(td)
+																var td2 = document.createElement('td')
+																if(i==0 && dateSC == datePos){
 																	
-												//- 					td2.innerHTML = datePos
-												//- 					td2.style.backgroundColor = 'yellow'
-												//- 				}else if(i==0){
-												//- 					td2.innerHTML = datePos
-												//- 				}else{
-												//- 					td2.innerHTML = ''
-												//- 				}
-												//- 				td2.style.fontWeight = 'bold'
+																	td2.innerHTML = datePos
+																	td2.style.backgroundColor = 'yellow'
+																}else if(i==0){
+																	td2.innerHTML = datePos
+																}else{
+																	td2.innerHTML = ''
+																}
+																td2.style.fontWeight = 'bold'
 																
-												//- 				window['tr' + i].appendChild(td2)
-												//- 				var td1 = document.createElement('td')
-												//- 					var input = document.createElement('input')
-												//- 					if (assignTracer.Read == '0'){
-												//- 						input.type = 'checkbox'
-												//- 						input.id = 'read'
-												//- 						input.name = 'read'
-												//- 						input.checked = false
+																window['tr' + i].appendChild(td2)
+																var td1 = document.createElement('td')
+																	var input = document.createElement('input')
+																	if (assignTracer.Read == '0'){
+																		input.type = 'checkbox'
+																		input.id = 'read'
+																		input.name = 'read'
+																		input.checked = false
 																		
-												//- 						input.addEventListener('click',function(){
-												//- 							$.post('/assignTracerReadUpd',{			assignTracerId:assignTracer.id,
-												//- 								curUserName:curUser.name
+																		input.addEventListener('click',function(){
+																			$.post('/assignTracerReadUpd',{			assignTracerId:assignTracer.id,
+																				curUserName:curUser.name
 
-												//- 							}).done(function(Rdata){
-												//- 								if(Rdata.updated==1){
-												//- 								input.checked = true
-												//- 								input.disabled = true
-												//- 								}
-												//- 							})
+																			}).done(function(Rdata){
+																				if(Rdata.updated==1){
+																				input.checked = true
+																				input.disabled = true
+																				}
+																			})
 																			
-												//- 						})
-												//- 					}else{
-												//- 						var input = document.createElement('span')
-												//- 						input.id = 'read'
-												//- 						input.innerHTML = assignTracer.Read
-												//- 					}
-												//- 				td1.appendChild(input)
-												//- 				window['tr' + i].appendChild(td1)
+																		})
+																	}else{
+																		var input = document.createElement('span')
+																		input.id = 'read'
+																		input.innerHTML = assignTracer.Read
+																	}
+																td1.appendChild(input)
+																window['tr' + i].appendChild(td1)
 															
-												//- 			table.appendChild(window['tr' + i])
-												//- 		})
-												//- 	})
-												//- })
+															table.appendChild(window['tr' + i])
+														})
+													})
+												})
 
 
 											}else{
-												if(arrayTitle_manager.indexOf(curUserTitle) != -1||userTitle=="Admin"){
+												if(arrayTitle_manager.indexOf(curUserTitle) != -1||userTitle=="Admin"||assign.userId==curUserId){
 													$('#eventAction').html('')
 													
 													
@@ -2076,7 +2078,7 @@ append scripts
 				var select = document.createElement('select')
 				select.id = 'selectType'
 				select.className = "form-control"
-				var arrType =['SELECT ONE', 'TASK', 'MESSAGE']
+				var arrType =['SELECT ONE', 'SCHEDULE','TASK', 'MESSAGE']
 				arrType.forEach(function(type){
 					var option = document.createElement('option')
 					option.value = type
