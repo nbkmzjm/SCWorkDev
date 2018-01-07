@@ -440,7 +440,22 @@ append scripts
 					var tr = document.createElement('tr');
 						//- tr.setAttribute('style', 'position:fixed;')
 						var th = document.createElement('th');
-							th.appendChild(document.createTextNode('User'));
+							var divViewMode = document.createElement('div')
+								var btnViewMode = document.createElement('button')
+								btnViewMode.className = 'btn btn-primary'
+								btnViewMode.id = 'btnViewMode' 
+								btnViewMode.innerHTML = 'Schedule'
+								btnViewMode.addEventListener('click', function(){
+									if(this.innerHTML==='Schedule'){
+										btnViewMode.innerHTML = 'Task'
+									}else if(this.innerHTML==='Task'){
+										btnViewMode.innerHTML = 'Message'
+									}else if(this.innerHTML==='Message'){
+										btnViewMode.innerHTML = 'Schedule'
+									}
+								})
+							divViewMode.appendChild(btnViewMode)
+						th.appendChild(divViewMode)
 							//- td.setAttribute('style', 'position:fixed;top:100px;')
 							
 						tr.appendChild(th);
