@@ -344,18 +344,39 @@ app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 	var name = req.body.pData.name
 	var value = req.body.pData.value
 	// console.log(name+'--'+value)
-	db.sysObj.upsert({
-			name: name,
-			value: value
-	}).then(function(created){
-		console.log('sysojb:')
-		console.log(created)
-		if (created === undefined){
-			console.log(value)
-			var sysObj = {}
-			sysObj[name] = value
-			res.json({sysObj:sysObj})
+	db.sysObj.findOne({
+		where:{
+				name: name
+			}
+	}).then(function(exist){
+		if(exist){
+			db.sysObj.update({
+				value:value
+			},{
+				where:{
+					name:name
+				}
+			}).then(function(update){
+				var sysObj = {}
+				sysObj[name] = value
+				res.json({sysObj:sysObj})
+			}).catch(function(e){
+				console.log(e)
+			});
+		}else{
+			db.sysObj.create({
+				value:value,
+				name:name
+			}).then(function(created){
+				var sysObj = {}
+				sysObj[name] = value
+				res.json({sysObj:sysObj})
+			}).catch(function(e){
+				console.log(e)
+			});
+
 		}
+		
 	}).catch(function(e){
 		console.log(e)
 	});
