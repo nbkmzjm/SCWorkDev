@@ -460,9 +460,12 @@ append scripts
 											}
 										}).done(function(rData){
 											//- this.innerHTML = 'TASK'
-											console.log('changed to TASK and reload data')
+											console.log(rData)
+											if(!!rData.sysObj.viewMode){
+												console.log('changed to TASK and reload data')
 
-											$.getJSON('/ajaxUser').done(mainSC);
+												$.getJSON('/ajaxUser').done(mainSC);
+											}
 											
 											//- output lock out Note
 											
@@ -477,9 +480,11 @@ append scripts
 												name:'viewMode', value:'SCHEDULE'
 											}
 										}).done(function(rData){
-											//- this.innerHTML = 'SCHEDULE'
-											$.getJSON('/ajaxUser').done(mainSC);
-											//- output lock out Note
+											if(!!rData.sysObj.viewMode){
+												console.log('changed to SCHEDULE and reload data')
+
+												$.getJSON('/ajaxUser').done(mainSC);
+											}
 											
 										});
 										

@@ -348,10 +348,13 @@ app.post('/sysObjUpdate', middleware.requireAuthentication, function(req, res){
 			name: name,
 			value: value
 	}).then(function(created){
-		// console.log(created)
+		console.log('sysojb:')
+		console.log(created)
 		if (created === undefined){
 			console.log(value)
-			res.json({lockoutDate:value})
+			var sysObj = {}
+			sysObj[name] = value
+			res.json({sysObj:sysObj})
 		}
 	}).catch(function(e){
 		console.log(e)
