@@ -454,6 +454,7 @@ append scripts
 								btnViewMode.innerHTML = viewMode
 								btnViewMode.addEventListener('click', function(){
 									if(this.innerHTML==='SCHEDULE'){
+										console.log('before changed to TASK and reload data')
 										$.post('/sysObjUpdate', {
 											pData:{
 												name:'viewMode', value:'TASK'
