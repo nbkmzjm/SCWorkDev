@@ -380,7 +380,9 @@ app.get('/taskSC', middleware.requireAuthentication, function(req, res){
 	db.assign.findAll({
 		attributes:['id', 'datePos', 'Memo', 'userId', 'Note'],
 		include:[{
+			
 			model:db.assignTracer,
+
 			include:[{
 				model:db.user
 			}]
@@ -394,7 +396,7 @@ app.get('/taskSC', middleware.requireAuthentication, function(req, res){
 			]
 	}).then(function(assign){
 		
-		// console.log(JSON.stringify(assign, null, 4))
+		console.log(JSON.stringify(assign, null, 4))
 		res.json({
 			assign,
 			 curUser
