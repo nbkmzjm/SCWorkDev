@@ -48,7 +48,7 @@ webpush.setVapidDetails(
   vapidKeys.publicKey,
   vapidKeys.privateKey
 );
-console.log('vapidKeys.publicKey' + vapidKeys.publicKey)
+// console.log('vapidKeys.publicKey' + vapidKeys.publicKey)
 // const decodedVapidPublicKey = urlsafeBase64.decode(vapidKeys.publicKey)
 // console.log(decodedVapidPublicKey)
 
@@ -399,7 +399,7 @@ app.get('/taskSC', middleware.requireAuthentication, function(req, res){
 			]
 	}).then(function(assign){
 		
-		console.log(JSON.stringify(assign, null, 4))
+		// console.log(JSON.stringify(assign, null, 4))
 		res.json({
 			assign,
 			 curUser
@@ -410,20 +410,20 @@ app.get('/taskSC', middleware.requireAuthentication, function(req, res){
 app.get('/scOverview', middleware.requireAuthentication, function(req, res){
 	
 
-	console.log('pulick key:'+ vapidKeys.publicKey)
+	// console.log('pulick key:'+ vapidKeys.publicKey)
 	var curUser= req.user;
 	var sDate = req.query.sDate
 	var eDate = req.query.eDate
 	var userId = req.query.userId
 	var datePosRange = [];
 	var vapidPublicKey = vapidKeys.publicKey
-	console.log(userId)
+	// console.log(userId)
 
 	var datePos={
 		$between:[sDate,eDate]
 	}
 	
-	console.log(sDate +':'+ eDate)
+	// console.log(sDate +':'+ eDate)
 	if (sDate.slice(-1)!=eDate.slice(-1)){
 		for(var i = 0; i<49;i++){
 			datePosRange.push(moment(new Date(sDate)).add(i,'days').format('MM-DD-YYYY'))
@@ -501,8 +501,7 @@ app.get('/assignTracerReadDay', middleware.requireAuthentication, function(req, 
 				[db.assignTracer,'createdAt', 'DESC']
 			]
 	}).then(function(assign) {
-		console.log('xxx')
-		console.log(JSON.stringify(assign, null, 4))
+		// console.log(JSON.stringify(assign, null, 4))
 			res.json({
 				assign: assign
 			});
@@ -557,7 +556,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 	var detailListArr = req.body.postdata.detailListArr||false;
 
 	var curUser = req.user
-	console.log(JSON.stringify(detailListArr, null, 4))
+	// console.log(JSON.stringify(detailListArr, null, 4))
 
 	
 	if (taskSC=='SELECT' ||taskSC=='NEW'){
@@ -770,7 +769,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 						assignTracerId:assignTracer.id
 					})
 				})
-				console.log(JSON.stringify(data, null, 4))
+				// console.log(JSON.stringify(data, null, 4))
 				
 
 				return[db.assignTracerDetail.bulkCreate(data)]
@@ -824,7 +823,7 @@ app.post('/dateSCDel', middleware.requireAuthentication, function(req, res) {
 			include:'['+userId+']',
 			exclude:''
 		}).then(function(post){
-			console.log(JSON.stringify(post, null, 4))
+			// console.log(JSON.stringify(post, null, 4))
 			
 		}).catch(function(e) {
 			console.log(e)
@@ -852,7 +851,7 @@ app.post('/dateSCDel', middleware.requireAuthentication, function(req, res) {
 		})
 	}).then(function(assignTracers){
 
-		console.log(JSON.stringify(assignTracers, null, 4))
+		// console.log(JSON.stringify(assignTracers, null, 4))
 
 	}).catch(function(e) {
 		console.log("eeroorr" + e);
@@ -907,7 +906,7 @@ app.post('/clearEvent', middleware.requireAuthentication, function(req,res){
 app.get('/taskOption', middleware.requireAuthentication, function(req, res){
 	var departmentId = req.user.departmentId
 	var curUserTitle = req.user.title;
-	console.log('cateing option')
+	// console.log('cateing option')
 	db.taskOption.findAll({
 		where:{
 			departmentId:departmentId
@@ -1040,7 +1039,7 @@ app.post('/memoOpt', middleware.requireAuthentication, function(req, res) {
 				}
 			}]
 		}).then(function(taskOptMemos) {
-			console.log(JSON.stringify(taskOptMemos, null, 4))
+			// console.log(JSON.stringify(taskOptMemos, null, 4))
 			res.json({taskOptMemos:taskOptMemos})
 		
 		}).catch(function(e) {
@@ -1063,7 +1062,7 @@ app.post('/memoOpt', middleware.requireAuthentication, function(req, res) {
 			}]
 			
 		}).then(function(taskOption) {
-			console.log(JSON.stringify(taskOption, null, 4))
+			// console.log(JSON.stringify(taskOption, null, 4))
 			res.json({taskOptMemos:taskOption.taskOptMemos})
 		
 		}).catch(function(e) {
@@ -1099,8 +1098,8 @@ app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 			model:db.taskOptDetail,
 		}]	
 	}).then(function(taskOptionMemo){
-		console.log('Max row is: '+ JSON.stringify(taskOptionMemo, null, 4))	
-		console.log(taskOptionDes)
+		// console.log('Max row is: '+ JSON.stringify(taskOptionMemo, null, 4))	
+		// console.log(taskOptionDes)
 		if (!!taskOptionMemo){
 
 			db.taskOption.findOne({
@@ -1108,7 +1107,7 @@ app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 						description:taskOptionDes
 					}
 			}).then(function(taskOption){
-				console.log('taskOption is:'+JSON.stringify(taskOption, null, 4))
+				// console.log('taskOption is:'+JSON.stringify(taskOption, null, 4))
 				
 				
 				return db.taskOptMemo.create({
@@ -1117,7 +1116,7 @@ app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 					type:type
 				})
 			}).then(function(createdTaskOptionMemo){
-				console.log('createdtaskMemo:'+JSON.stringify(createdTaskOptionMemo, null, 4))
+				// console.log('createdtaskMemo:'+JSON.stringify(createdTaskOptionMemo, null, 4))
 				var mapTaskDescription = taskOptionMemo.taskOptDetails.map(function(taskOpt) {
 					return {
 						taskDescription:taskOpt.taskDescription,
