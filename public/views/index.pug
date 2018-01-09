@@ -459,7 +459,9 @@ append scripts
 												name:'viewMode', value:'TASK'
 											}
 										}).done(function(rData){
-											this.innerHTML = 'TASK'
+											//- this.innerHTML = 'TASK'
+											console.log('changed to TASK and reload data')
+
 											$.getJSON('/ajaxUser').done(mainSC);
 											
 											//- output lock out Note
@@ -475,7 +477,7 @@ append scripts
 												name:'viewMode', value:'SCHEDULE'
 											}
 										}).done(function(rData){
-											this.innerHTML = 'TASK'
+											//- this.innerHTML = 'SCHEDULE'
 											$.getJSON('/ajaxUser').done(mainSC);
 											//- output lock out Note
 											
