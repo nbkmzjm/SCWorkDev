@@ -627,146 +627,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 				Memo:memo||'',
 				type:type
 			}
-			// var postText;
-			// if (taskSC==='PTO-A'){
 			
-			// 	postText = 'PTO is  approved for '+ user.fullName +' on ' + dateSC
-
-			// 	console.log('xxxxxxxxx'+ postText)
-			// 	db.mainPost.create({
-			// 		postText:postText,
-			// 		postTo:'friend',
-			// 		userId:curUser.id,
-			// 		include:'',
-			// 		exclude:''
-				
-					
-			// 	}).catch(function(e) {
-			// 		console.log(e)
-			// 		res.render('error', {
-			// 			error: e.toString()
-			// 		})
-			// 	});
-			// }else if(taskSC==='SWIT-R' && user.id == curUser.id){
-			// 	postText = curUser.fullName + ' is looking for coverage on ' + dateSC
-			// 	db.mainPost.create({
-			// 		postText:postText,
-			// 		postTo:'friend',
-			// 		userId:curUser.id,
-			// 		include:'',
-			// 		exclude:''
-				
-					
-			// 	}).catch(function(e) {
-			// 		console.log(e)
-			// 		res.render('error', {
-			// 			error: e.toString()
-			// 		})
-			// 	});
-			// // }else if(taskSC==='SWIT-R' && user.id != curUser.id){
-				
-			// // 	db.user.findAll({
-			// // 		where:{
-			// // 			title: {
-			// // 				$in:['Admin', "Manager"]
-			// // 			}
-			// // 		}
-			// // 	}).then(function(users){
-			// // 		var userArr = users.map(function(user){
-			// // 			return user.id
-			// // 		})
-					
-			// // 		console.log(JSON.stringify(userArr, null, 4))
-			// // 		db.mainPost.create({
-			// // 			postText:postText,
-			// // 			postTo:'mine',
-			// // 			userId:curUser.id,
-			// // 			include:JSON.stringify(userArr),
-			// // 			exclude:''
-			// // 		}).then(function(post){
-			// // 			console.log(JSON.stringify(post, null, 4))
-						
-			// // 		}).catch(function(e) {
-			// // 			console.log(e)
-			// // 			res.render('error', {
-			// // 				error: e.toString()
-			// // 			})
-			// // 		});
-			// // 	})
-
-			// }else if (taskSC==='PTO-R'||taskSC==='PTO-X' || taskSC==='SWIT-R'||taskSC==='SWIT-A'){
-			// 	console.log('PTO-R SWIT-R SWIT-A' + taskSC)
-			// 	postText = user.fullName + ' requested PTO' +' for ' + dateSC
-			// 	console.log('xxxxxxxxx'+ postText)
-			// 	db.user.findAll({
-			// 		where:{
-			// 			title: {
-			// 				$in:['Admin', "Manager"]
-			// 			}
-			// 		}
-			// 	}).then(function(users){
-			// 		var userArr = users.map(function(user){
-			// 			return user.id
-			// 		})
-			// 		if(taskSC == 'SWIT-R'){
-			// 			postText = curUser.fullName + ' ASK to work on' + dateSC + ' for ' + user.fullName + ' in exchange for pending SWIT-R day'
-			// 			userArr.push(user.id)
-			// 		}else if(taskSC == 'SWIT-A'){
-			// 			postText = curUser.fullName + ' is AGREED to work on' + dateSC + ' for ' + user.fullName + ' in exchange for pending SWIT-R day'
-			// 			userArr.push(user.id)
-
-			// 		}else if(taskSC == 'SWIT-X'){
-			// 			postText = curUser.fullName + ' is DENIED to work on' + dateSC + ' for ' + user.fullName 
-			// 			userArr.push(user.id)
-
-			// 		}else if(taskSC === 'PTO-X'){
-			// 			postText = 'PTO is  denied for '+ user.fullName +' on ' + dateSC
-			// 			userArr.push(user.id)
-			// 		}
-			// 		console.log(JSON.stringify(userArr, null, 4))
-			// 		db.mainPost.create({
-			// 			postText:postText,
-			// 			postTo:'mine',
-			// 			userId:curUser.id,
-			// 			include:JSON.stringify(userArr),
-			// 			exclude:''
-			// 		}).then(function(post){
-			// 			console.log(JSON.stringify(post, null, 4))
-						
-			// 		}).catch(function(e) {
-			// 			console.log(e)
-			// 			res.render('error', {
-			// 				error: e.toString()
-			// 			})
-			// 		});
-			// 	})
-
-			// }else{
-			// 	console.log('else')
-			// 	// if(taskSC === 'PTO-X'){
-			// 	// 	postText = 'PTO is  denied for '+ user.fullName +' on ' + dateSC
-				
-			// 	// }else{
-			// 		var postText = 'Assigned ' + taskSC + ' for '  + user.fullName +' on ' + dateSC
-			// 		console.log('xxxxxxxxx'+ postText)
-			// 	// }
-				
-			// 	// db.mainPost.create({
-			// 	// 	postText:postText,
-			// 	// 	postTo:'mine',
-			// 	// 	userId:curUser.id,
-			// 	// 	include:'['+user.id+']',
-			// 	// 	exclude:''
-			// 	// }).then(function(post){
-			// 	// 	console.log(JSON.stringify(post, null, 4))
-					
-			// 	// }).catch(function(e) {
-			// 	// 	console.log(e)
-			// 	// 	res.render('error', {
-			// 	// 		error: e.toString()
-			// 	// 	})
-			// 	// });
-			// }
 
 			res.json({
 					Note: taskSC
@@ -774,6 +635,28 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 			return [db.assignTracer.create(body), curUser, assign]
 
 		}).spread(function(assignTracer, curUser, assign){
+			console.log(assign[0].id)
+			console.log('assignTracer:')
+			console.log(JSON.stringify(assignTracer, null, 4))
+
+			db.assignTracer.update({
+				Read:curUser.name
+			},{
+				where:{
+					assignId:assign[0].id,
+					type:assignTracer.type,
+					Note:{
+						$ne:assignTracer.Note
+					}
+
+				}
+			}).catch(function(e) {
+				console.log("eeroorr" + e);
+
+				res.render('error', {
+					error: e.toString()
+				});
+			});
 
 			curUser.addAssignTracer(assignTracer).then(function(){
 				return assignTracer.reload()

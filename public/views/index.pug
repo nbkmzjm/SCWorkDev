@@ -242,7 +242,7 @@ append scripts
 				var days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 				var lockoutDate =moment(rData.lockoutDate||'4-24-16', 'MM-DD-YYYY')
 
-				//creating div scOverview
+				//creating schedule overivew for each user when clicking on their
 				function scOverview (){
 					var userId = this.userId
 					var userName = this.innerHTML
@@ -442,7 +442,8 @@ append scripts
 
 				var table = document.createElement('table');
 				table.setAttribute('id', 'main');
-				//- table.setAttribute('class','table table-striped')
+
+				//Create table header
 				var thead = document.createElement('thead')
 					var tr = document.createElement('tr');
 						//- tr.setAttribute('style', 'position:fixed;')
@@ -460,21 +461,11 @@ append scripts
 												name:'viewMode', value:'TASK'
 											}
 										}).done(function(rData){
-											//- this.innerHTML = 'TASK'
 											console.log(rData)
 											if(!!rData.sysObj.viewMode){
-												console.log('changed to TASK and reload data')
-
 												$.getJSON('/ajaxUser').done(mainSC);
 											}
-											
-											//- output lock out Note
-											
 										});
-										
-										
-										
-
 									}else if(this.innerHTML==='TASK'){
 										$.post('/sysObjUpdate', {
 											pData:{
@@ -482,44 +473,40 @@ append scripts
 											}
 										}).done(function(rData){
 											if(!!rData.sysObj.viewMode){
-												console.log('changed to SCHEDULE and reload data')
-
 												$.getJSON('/ajaxUser').done(mainSC);
 											}
-											
 										});
-										
-										
-
-										
 									}
 								})
 							divViewMode.appendChild(btnViewMode)
 						th.appendChild(divViewMode)
 							//- td.setAttribute('style', 'position:fixed;top:100px;')
 							
-						tr.appendChild(th);
-						for (var i=0; i<7; i++){
-							 
-							var th = document.createElement('th');
-							//- td.setAttribute('style', 'position:fixed;')
-							//- td.appendChild(document.createTextNode(days[dateSC.getDay()]));
-							//- td.appendChild(document.createElement('br'))
-							th.innerHTML= dateHeader.format('ddd,')+ '<br>' + dateHeader.format('MMM DD')
-							dateHeader.isSame(lockoutDate)?
-							th.style.backgroundColor= 'red':''
-							dateHeader.isSame(moment(lockoutDate).subtract(28, 'days'))?
-							th.style.backgroundColor= 'green':''
-							//- dateHeader.isSame(moment(lockoutDate).subtract(49, 'days'))?
-							//- th.style.backgroundColor= 'yellow':''
-							tr.appendChild(th);
+					tr.appendChild(th);
 
-							dateHeader.add(1, 'days');
-						}
+					for (var i=0; i<7; i++){
+						 
+						var th = document.createElement('th');
+						//- td.setAttribute('style', 'position:fixed;')
+						//- td.appendChild(document.createTextNode(days[dateSC.getDay()]));
+						//- td.appendChild(document.createElement('br'))
+						th.innerHTML= dateHeader.format('ddd,')+ '<br>' + dateHeader.format('MMM DD')
+						dateHeader.isSame(lockoutDate)?
+						th.style.backgroundColor= 'red':''
+						dateHeader.isSame(moment(lockoutDate).subtract(28, 'days'))?
+						th.style.backgroundColor= 'green':''
+						//- dateHeader.isSame(moment(lockoutDate).subtract(49, 'days'))?
+						//- th.style.backgroundColor= 'yellow':''
+						tr.appendChild(th);
+
+						dateHeader.add(1, 'days');
+					}
 				thead.appendChild(tr)			
 
 				table.appendChild(thead);
 
+
+				//Create body of the schedule table
 				var tbody = document.createElement('tbody')
 				table.appendChild(tbody)
 				
@@ -557,9 +544,7 @@ append scripts
 				
 				
 				//- alert(JSON.stringify(arrListDateSC, null, 4))
-				
 				var today = moment()
-
 				
 				//- var date21LK = moment(lockoutDate).subtract(21, 'days')
 				var date28LK = moment(lockoutDate).subtract(28, 'days')
@@ -627,7 +612,6 @@ append scripts
 
 										console.log(assignTracer.Note)
 									}
-									
 								})
 							}else{
 								assign[x].assignTracers.forEach(function(assignTracer){
@@ -636,26 +620,29 @@ append scripts
 										assignNote = assignTracer.Note
 										console.log(assignTracer.Note)
 									}
-									
 								})
-
 							}
 							var datePos = moment(assign[x].datePos,'MM-DD-YYYY')
 							var memo = assign[x].Memo
-							var tracerTask = '';
-							var firstTracerTask = '';
+							var tracer = '';
+							var firstTracer = '';
+							var tracerTask = ''
+							var firstTracerTask = ''
+							var tracerSchedule = ''
+							var firstTracerSchedule = ''
+
 							var td = document.createElement('td');
-							
 							td.setAttribute('class','cell')
 								var a = document.createElement('a')
 								noteColor(assignNote, a)
 								
 								a.innerHTML= assignNote	
-
-									if (!datePos.isBetween(date28LK,lockoutDate)){
+									//Disabled bagdes within 28 lockout days
+									//- if (!datePos.isBetween(date28LK,lockoutDate)){
+										//Create unread badges
 										var span = document.createElement('span')
 										span.style.color = '#FF8C5A'
-										span.className = "badge"
+										
 										span.style.float = 'right'
 										
 										var assignTracers = assign[x].assignTracers
@@ -675,33 +662,40 @@ append scripts
 														}else{
 															tracerTask += assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )+ "</b><br>"
 														}
+														unreadTaskCount++
 													}
-													unreadTaskCount++
-												}else{
-													//- if(assignTracer.Read == false ){
-													//- 	if (i == 0){
-													//- 		firstTracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note +(assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )
-													//- 	}else{
-													//- 		tracer += assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )+ "</b><br>"
-													//- 	}
-													//- }
-													//- unreadScheduleCount++
+													
+												}else if ('SCHEDULE'){
+													if(assignTracer.Read == false ){
+														unreadScheduleCount++
+													}
+														if (i == 0){
+															firstTracerSchedule = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note +(assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )
+															
+														}
+
+														
+													
 												}
 											
 										})
 										
 										if(viewMode=== 'TASK'){
 											if (unreadTaskCount!=0){
+												span.className = "badge"
 												span.innerHTML = unreadTaskCount
+												firstTracer = firstTracerTask
+												tracer = tracerTask
 											}
-										}else{
+										}else if ('SCHEDULE'){
 											if (unreadScheduleCount!=0){
-												span.innerHTML = unreadScheduleCount
+												span.className = "glyphicon glyphicon-edit"
 											}
+												firstTracer = firstTracerSchedule
 										}
 										
 										a.appendChild(span)
-									}
+									//- }
 
 								
 								a.setAttribute('href','#');
@@ -709,12 +703,12 @@ append scripts
 								a.setAttribute('data-trigger','hover');
 								a.setAttribute('data-placement','auto');
 								a.style.fontWeight = 'bold'
-								a.setAttribute('title', firstTracerTask);
+								a.setAttribute('title', firstTracer);
 								document.addEventListener('mousemove', function(){
 									var taskSC = $('input[name=PTO]:checked').attr('value');
 									if (taskSC=="SELECT"){
 
-										a.setAttribute('data-content', tracerTask);
+										a.setAttribute('data-content', tracer);
 										
 										$('[data-toggle="popover"]').popover({html:true})
 									//- }else if (taskSC=='SELECT'){
