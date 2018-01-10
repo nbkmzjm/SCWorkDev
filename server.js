@@ -821,7 +821,7 @@ app.get('/taskOption', middleware.requireAuthentication, function(req, res){
 	}).then(function(taskOption){
 		res.json({
 			taskOption:taskOption,
-			curUserTitle:curUserTitle
+			curUser:curUser
 		})
 	}, function(e){
 		res.render('error', {

@@ -37,11 +37,11 @@ block content
 append scripts 
 	script(src="public/fnLib/homeFn.js")
 	script(src="public/fnLib/feedFn.js")
+	script(src="public/fnLib/authFn.js")
 	script.
 
 		
 		$(function (){
-
 			//- var isChrome = function() {
 			//-     return Boolean(window.chrome);
 			//- }()
@@ -455,13 +455,11 @@ append scripts
 								btnViewMode.innerHTML = viewMode
 								btnViewMode.addEventListener('click', function(){
 									if(this.innerHTML==='SCHEDULE'){
-										console.log('before changed to TASK and reload data')
 										$.post('/sysObjUpdate', {
 											pData:{
 												name:'viewMode', value:'TASK'
 											}
 										}).done(function(rData){
-											console.log(rData)
 											if(!!rData.sysObj.viewMode){
 												$.getJSON('/ajaxUser').done(mainSC);
 											}
@@ -586,6 +584,7 @@ append scripts
 					arrListDateSC.forEach(function(item,i){
 						//- alert(JSON.stringify(item.user, null, 4))
 						var userId = item.user.id
+						var userRole = item.user.role
 						var userTitle = item.user.title
 						var dateSC = item.dateSC
 						var fullName = item.user.fullName
@@ -732,15 +731,11 @@ append scripts
 										var memo = $('#memo').val()
 										var taskSC = $('input[name=PTO]:checked').attr('value');
 										
-										var arrayTitle_manager = ['Admin', 'Manager']
 
 										
 										//- &&(curUserId==assign.userId || arrayTitle_UserTab.indexOf(curUserTitle) != -1)
 										if (taskSC=='SELECT'){
 											
-											console.log(JSON.stringify(userTitle, null, 4))
-												console.log('xxxx')
-											console.log(assign.userId + '-----'+curUserId)
 											if(false){
 												
 												$('#eventAction').html('')
@@ -837,7 +832,7 @@ append scripts
 
 
 											}else{
-												if(arrayTitle_manager.indexOf(curUserTitle) != -1||userTitle=="Admin"||assign.userId==curUserId){
+												if(roleList('B').indexOf(curUser.role) != -1||assign.userId==curUserId){
 													$('#eventAction').html('')
 													
 													var viewMode = document.getElementById('btnViewMode').innerHTML
@@ -1129,11 +1124,8 @@ append scripts
 																)
 															}
 														})
-													}else if(viewMode === 'SCHEDULE'){
-
-
-
 													}
+
 												}
 											}
 											
@@ -1154,7 +1146,7 @@ append scripts
 										}else if (taskSC=="NEW"){ 
 
 										}else if(curUserId!=userId&&
-										arrayTitle_manager.indexOf(curUserTitle) == -1&&
+										roleList('B').indexOf(curUser.role) == -1&&
 										["SWIT-R","SWIT-A","SWIT-X"].indexOf(taskSC) == -1){
 											SCNote.innerHTML= 'You are not authorized for this action'
 											
@@ -1167,7 +1159,7 @@ append scripts
 											})
 										}else if ((taskSC=="PTO-R" || taskSC=="DELETE") && 
 										selDate.isBefore(lockoutDate) && 
-										arrayTitle_manager.indexOf(curUserTitle) == -1){
+										roleList('B').indexOf(curUser.role) == -1){
 											
 											SCNote.innerHTML = 'PTO input will not be available for dates before '+ lockoutDate.format('MM-DD-YYYY')
 											$('#SCNoteDiv').html('')
@@ -1179,7 +1171,7 @@ append scripts
 											})
 										}else if (taskSC=="AVBL" && 
 										selDate.isBefore(today) && 
-										arrayTitle_manager.indexOf(curUserTitle) == -1){
+										roleList('B').indexOf(curUser.role) == -1){
 										
 										SCNote.innerHTML = 'Changes is not allowed for dates before '+ today.format('MM-DD-YYYY')
 										$('#SCNoteDiv').html('')
@@ -1325,7 +1317,7 @@ append scripts
 									var selDate = moment(dateSC,'MM-DD-YYYY')
 									var taskSC = $('input[name=PTO]:checked').attr('value');
 
-									var arrayTitle_manager = ['Admin', 'Manager']
+									
 									//- Prevent user to request after lockoutDate
 									if(taskSC == 'SELECT'){
 																		
@@ -1334,7 +1326,7 @@ append scripts
 									}else if(taskSC == 'NEW'){
 
 									}else if(curUserId!=userId&&
-									arrayTitle_manager.indexOf(curUserTitle) == -1&&
+									roleList('B').indexOf(curUser.role) == -1&&
 									["SWIT-R","SWIT-A","SWIT-X"].indexOf(taskSC) == -1){
 										SCNote.innerHTML= 'You are not authorized for this action'
 										$('#SCNoteDiv').html('')
@@ -1346,7 +1338,7 @@ append scripts
 										})
 									}else if (taskSC=="PTO-R" && 
 									selDate.isBefore(lockoutDate) && 
-									arrayTitle_manager.indexOf(curUserTitle) == -1){
+									roleList('B').indexOf(curUser.role) == -1){
 										SCNote.innerHTML = 'PTO input will not be available for dates before '+ lockoutDate.format('MM-DD-YYYY')
 										$('#SCNoteDiv').html('')
 										$('#SCNoteDiv').html(SCNote)
@@ -1357,7 +1349,7 @@ append scripts
 										})
 									}else if (taskSC=="AVBL" && 
 									selDate.isBefore(today) && 
-									arrayTitle_manager.indexOf(curUserTitle) == -1){
+									roleList('B').indexOf(curUser.role) == -1){
 										
 										SCNote.innerHTML = 'Changes is not allowed for dates before '+ today.format('MM-DD-YYYY')
 										$('#SCNoteDiv').html('')
@@ -1390,7 +1382,7 @@ append scripts
 											postText =(taskSC=='PTO-R')?' requested PTO':"'s PTO was denied"
 											postText = fullName + postText +' for ' + dateSC
 											}else if (taskSC==='PTO-A'){
-												alert('PTOA')
+												//- alert('PTOA')
 												var postTo = 'Coworker'
 												var postToValue = 'ALL'
 												var postText = 'PTO is  approved for '+ fullName +' on ' + dateSC
@@ -1762,9 +1754,8 @@ append scripts
 			
 			//- function to list taskOption from return data
 			function taskOptionFct(taskOptionDes, category, ul){
-				var arrayTitle = ['Admin', 'Manager']
-				arrayTitle.indexOf(curUserTitle)
-				var curUserTitle = Rdata.curUserTitle;
+				
+				var curUser = Rdata.curUser;
 				
 				//- var ulOpList = document.getElementById(taskOption.category + 'ListOp')
 				var li = document.createElement('li');
@@ -1793,7 +1784,7 @@ append scripts
 					li.appendChild(radio);
 					li.appendChild(document.createTextNode(taskOptionDes));
 				}else if(taskOptionDes=='NEW'){
-					if(arrayTitle.indexOf(curUserTitle)!=-1){
+					if(roleList('B').indexOf(curUser.role)!=-1){
 						li.addEventListener('click', function(){
 							activeOptionText(taskOptionDes)
 							$('#taskOption').length>0?$('#taskOption').remove():''
@@ -1910,7 +1901,7 @@ append scripts
 					li.appendChild(radio);
 					li.appendChild(document.createTextNode(taskOptionDes));
 				}else{
-					if(arrayTitle.indexOf(curUserTitle)!=-1){
+					if(roleList('B').indexOf(curUser.role)!=-1){
 						li.addEventListener('click', function(){
 							memoOptDiv("individual",taskOptionDes);
 						})

@@ -64,21 +64,38 @@ block content
               div(class="col-sm-4")
                 select(name="title" class="form-control" id="title" )
                   option(value="") Select One
-                  option(value="Admin") Administrator
-                  option(value="RPh") RPh
-                  option(value="RPh Float") RPh Float
+                  option(value="Administrator") Administrator
+                  option(value="Pharmacist") Pharmacist
+                  option(value="Pharmacist Float") Pharmacist Float
                   option(value="Manager") Manager
-                  option(value="Techn 2") Technician 2
-                  option(value="Techn 3") Technician 3
+                  option(value="Supervisor") Supervisor
+                  option(value="Technician 2") Technician 2
+                  option(value="Technician 3") Technician 3
                   option(value="Techn TPN") Technician TPN
                   option(value="Techn Float") Technician Float
+                  option(value="Quality Control") Quality Control
                   option(value="Personel") Personel
                   option(value="Associate") Associate
                   option(value="WorkGroup") WorkGroup
+                  option(value="Trainee") Trainee
+
+            div(class="form-group")
+              label(class="control-label col-sm-2" for="role") Role
+              div(class="col-sm-4")
+                select(name="role" class="form-control" id="role" )
+                  option(value="") Select One
+                  option(value="Admin") Administrator
+                  option(value="Superuser") Superuser
+                  option(value="User") User
             div(class="form-group")
               label(class="control-label col-sm-2" for="active") Active
               div(class="col-sm-1")
                 input(type="checkbox" id= 'active' class="form-control" name="active" value='true' checked)
+
+              label(class="control-label col-sm-2" for="onSchedule") On Schedule
+              div(class="col-sm-1")
+                input(type="checkbox" id= 'onSchedule' class="form-control" name="onSchedule" value='true' checked)
+
               label(class="control-label col-sm-2" for="passreset") Reset Password
               div(class="col-sm-1")
                 input(type="checkbox" id= 'passreset' class="form-control" name="passreset" value=true disabled=true)
@@ -141,6 +158,9 @@ block content
               label(class="control-label col-sm-2" for="active") Active
               div(class="col-sm-1")
                 input(type="checkbox" id= 'WorkGroupActive' class="form-control" name="active" value='true' checked)
+              label(class="control-label col-sm-2" for="onSchedule") On Schedule
+              div(class="col-sm-1")
+                input(type="checkbox" id= 'WorkGroupOnSchedule' class="form-control" name="active" value='true' checked)
               label(class="control-label col-sm-2" for="passreset") Reset Password
               div(class="col-sm-1")
                 input(type="checkbox" id= 'WorkGroupPassreset' class="form-control" name="passreset" value=true disabled=true)
@@ -164,8 +184,11 @@ append scripts
       var firstUser = JSONdata.firstUser
       console.log('curUser')
       console.log(curUser)
+
       if (curUser == undefined ){
+        //No user found
         if (JSONdata.tabx=='userForm'){
+          //middleware return tabx == userForm when there is no user in DB
 
           $('#userListTab').attr('class', '')
           $('#userFormTab').attr('class', 'active')
@@ -175,9 +198,12 @@ append scripts
           //- $('#').attr('class', 'tab-pane')
           //- $('#deptForm').attr('class', 'tab-pane fade in active')
 
+          //Check if dept exist
           $.getJSON('/users/getDept').done(function(Rdata){
             console.log(Rdata)
+
             if(Rdata.departments !== 'undefined'){
+              //Create dept Admin for first Admin user
               Rdata.departments.forEach(function(department, i){
                   var option = document.createElement('option')
                   option.value = department.id
@@ -193,11 +219,14 @@ append scripts
               })
             }
           })
+          //Pulling data form userForm to submit fist Admin user
           $("#form").on('submit', function(e){
             var active = false
             var passreset = false
+            var onSchedule = false
             $('#active').is(':checked')?active = true:''
             $('#passreset').is(':checked')?passreset = true:''
+            $('#onSchedule').is(':checked')?onSchedule = true:''
             $.post('/users/addUser',{
               //- departmentId:curUser.department.id,
               name:$('#name').val(),
@@ -207,9 +236,11 @@ append scripts
               username:$('#username').val(),
               password:$('#password').val(),
               title:$('#title').val(),
+              role:$('#title').val(),
               departmentId:$('#department').val(),
               active:active,
-              passreset:passreset
+              passreset:passreset,
+              onSchedule:onSchedule
             }).done(function(Rdata){
               if (!!Rdata.redi){
                 window.location.replace(Rdata.redi)
@@ -235,19 +266,20 @@ append scripts
           });
         }
       }else{
-          $('#addDeptBtnUser').on('click', function(){
-            $('#userFormTab').attr('class', '')
-            $('#deptTab').attr('class', 'active')
-            $('#userForm').attr('class', 'tab-pane')
-            $('#deptForm').attr('class', 'tab-pane fade in active')
-          })
-          $('#addDeptBtnWG').on('click', function(){
-            $('#userFormTab').attr('class', '')
-            $('#deptTab').attr('class', 'active')
-            $('#userForm').attr('class', 'tab-pane')
-            $('#deptForm').attr('class', 'tab-pane fade in active')
-          })
-
+      //User found
+        $('#addDeptBtnUser').on('click', function(){
+          $('#userFormTab').attr('class', '')
+          $('#deptTab').attr('class', 'active')
+          $('#userForm').attr('class', 'tab-pane')
+          $('#deptForm').attr('class', 'tab-pane fade in active')
+        })
+        $('#addDeptBtnWG').on('click', function(){
+          $('#userFormTab').attr('class', '')
+          $('#deptTab').attr('class', 'active')
+          $('#userForm').attr('class', 'tab-pane')
+          $('#deptForm').attr('class', 'tab-pane fade in active')
+        })
+        //submit new dept form
         $("#formDept").on('submit', function(e){
           $.post('/users/addDept',{
             
@@ -276,12 +308,14 @@ append scripts
           e.preventDefault();
           //- return false;
         })
-
+        // new/edit user userForm if at least one user exist
         $("#form").on('submit', function(e){
           var active = false
           var passreset = false
+          var onSchedule = false
           $('#active').is(':checked')?active = true:''
           $('#passreset').is(':checked')?passreset = true:''
+          $('#onSchedule').is(':checked')?onSchedule = true:''
           
           $.post('/users/addUser',{
             //- departmentId:curUser.department.id,
@@ -292,9 +326,11 @@ append scripts
             username:$('#username').val(),
             password:$('#password').val(),
             title:$('#title').val(),
+            role:$('#role').val(),
             departmentId:$('#department').val(),
             active:active,
-            passreset:passreset
+            passreset:passreset,
+            schedule:onSchedule
 
           }).done(function(Rdata){
             if (!!Rdata.redi){
@@ -322,12 +358,14 @@ append scripts
           return false;
         });
 
-
+        // new/edit user workGroupForm if at least one user exist
         $("#formWorkGroup").on('submit', function(e){
           var active = false
           var passreset = false
+          var onSchedule = false
           $('#WorkGroupActive').is(':checked')?active = true:''
           $('#WorkGroupPassreset').is(':checked')?passreset = true:''
+          $('#WorkGroupOnSchedule').is(':checked')?onSchedule = true:''
           
           $.post('/users/addUser',{
             //- departmentId:curUser.department.id,
@@ -340,7 +378,8 @@ append scripts
             title:'WorkGroup',
             departmentId:$('#WorkGroupDepartment').val(),
             active:active,
-            passreset:passreset
+            passreset:passreset,
+            schedule:onSchedule
 
           }).done(function(Rdata){
             if (!!Rdata.redi){
@@ -365,11 +404,15 @@ append scripts
           e.preventDefault();
           return false;
         });
-        
+
+
+        //Disabling fields depend on user role to prevent unauthorized changes
         if(curUser.department.name !== 'ADMIN'){
 
           $('#department').attr('disabled', true)
           $('#WorkGroupDepartment').attr('disabled', true)
+
+          //- if(curUser.role !=='')
           
         }else{
           $('#department').attr('disabled', false)
@@ -379,20 +422,48 @@ append scripts
           
         }
 
-        var arrayTitle_UserTab = ['Admin', 'Manager']
-        if (arrayTitle_UserTab.indexOf(curUser.title) == -1) {
-          $('#userFormTab').html('')
-          if (firstUser){
-            $('#title').attr('disabled', false)
-          }else{
-            $('#title').attr('disabled', true)
-          }
+        //disable Title and Role if not Admin/Superuser
+        //- if (['Admin', 'Superuser'].indexOf(curUser.role) == -1) {
+        //-   $('#userFormTab').html('')
+        //-   if (firstUser){
+        //-     $('#title').attr('disabled', false)
+        //-     $('#role').attr('disabled', false)
+        //-   }else{
+
+        //-     $('#title').attr('disabled', true)
+        //-     $('#role').attr('disabled', true)
+        //-   }
 
         
           
-          $('#passreset').attr('disabled', true)
+        //-   $('#passreset').attr('disabled', true)
+        //- }else{
+
+
+        //- }
+
+        if(['Admin'].indexOf(curUser.role) !== -1) {
+          $('#title').attr('disabled', false)
+          $('#role').attr('disabled', false)
+        }else{
+          if(firstUser){
+            $('#title').attr('disabled', false)
+            $('#role').attr('disabled', false)
+          }else{
+            if(['Superuser'].indexOf(curUser.role) !== -1){
+              $('#title').attr('disabled', false)
+              $('#role').attr('disabled', true)
+            }else{
+              $('#title').attr('disabled', true)
+              $('#role').attr('disabled', true)
+            }
+            
+          }
+          
         }
 
+
+        //Clear form when click on the user form tab
         $('#userFormTab').click(function(){
           $('#name').val('')
           $('#id').val('0')
@@ -424,6 +495,7 @@ append scripts
           document.getElementById('active').checked = 1
         })  
 
+        //Clear form when click on the workgroup form tab
         $('#WorkGroupFormTab').click(function(){
           $('#WorkGroupName').val('')
           $('#WorkGroupId').val('0')
@@ -453,22 +525,20 @@ append scripts
           document.getElementById('active').checked = 1
         })  
 
+        //Clear dept form when click on the dept tab
         $('#deptTab').click(function(){
           $('#deptName').val('')
           $('#status').val('Active')
           $('.error').html('')
-          
-          
-          //- document.getElementById('active').checked = 1
         })  
+
+        //reload when chick on user list
         $('#userListTab').click(function(){
           location.reload()
         })  
-
-
-
         
 
+        //Creating table for user list
         $('#horMenuList li').removeClass('active');
         $('#user').addClass('active');
 
@@ -476,7 +546,7 @@ append scripts
         table.id = 'user'
         table.className = 'table table-striped'
           var tr = document.createElement('tr')
-          var arrayField = ['Name', 'Email', 'Title', 'Active']
+          var arrayField = ['Name', 'Email', 'Title','Role', 'Active', 'On Schedule']
 
           arrayField.forEach(function(field){
             
@@ -494,7 +564,7 @@ append scripts
             console.log(JSON.stringify(Rdata, null, 4))
             Rdata.users.forEach(function(user){
               var tr = document.createElement('tr')
-                arrayField = [user.name, user.email, user.title, user.active]
+                arrayField = [user.name, user.email, user.title, user.role, user.active, user.schedule]
                 arrayField.forEach(function(field, i){
 
                   var td = document.createElement('td')
@@ -534,7 +604,7 @@ append scripts
                         //- $.post('/users/editUserForm',{userId:user.id}).done(function(){
                           //- alert(JSON.stringify(user,null,4))
                           $('#userListTab').attr('class', '')
-                          //- $('#userFormTab').attr('class', 'active')
+                          $('#userFormTab').attr('class', 'active')
                           $('#userList').attr('class', 'tab-pane')
                           $('#userForm').attr('class', 'tab-pane fade in active')
                           
@@ -545,6 +615,7 @@ append scripts
                           $('#username').val(user.username)
                           $('#password').val('')
                           $('#title').val(user.title)
+                          $('#role').val(user.role)
                           $('#passreset').attr('disabled', false)
                           
                           //- if(curUser.department.name ==='ADMIN' && $('#btnEditDept').length <1){
@@ -577,6 +648,8 @@ append scripts
                           //- }
 
                           document.getElementById('active').checked = user.active
+                          document.getElementById('role').checked = user.role
+                          document.getElementById('onSchedule').checked = user.schedule
                         //- });
                       });
                       td.appendChild(span1)

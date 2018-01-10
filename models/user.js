@@ -45,13 +45,30 @@ module.exports = function(sequelize, DataTypes) {
 				len: [5, 100]	
 			}
 		},
+		role: {
+			type: DataTypes.STRING,
+			defaultValue: false,
+			allowNull: false,
+			validate: {
+				len: [2, 20]	
+			},
+		},
 
 
 		title: {
 			type: DataTypes.STRING,
-			defaultValue: false
+			defaultValue: false,
+			allowNull: false,
+			validate: {
+				len: [2, 20]	
+			},
 		},
 		active: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false
+			
+		},
+		schedule: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: false
 			

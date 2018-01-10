@@ -30,7 +30,7 @@ module.exports = function(sequelize, DataTypes) {
 		}
 		,
 		Read:{
-			type: DataTypes.BOOLEAN,
+			type: DataTypes.STRING,
 			defaultValue: false
 		},
 		type:{

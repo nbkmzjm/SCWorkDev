@@ -105,6 +105,7 @@ router.post('/addUser', function(req, res) {
 	req.check('email', 'Email is not valid').isEmail();
 	req.check('username', 'Username must be within 5-20 characters').len(5, 20)
 	req.check('title', 'Title must be assigned').len(3)
+	req.check('role', 'Role must be assigned').len(3)
 	// req.check('department', 'Deparment must be at lease 3 characters').len(3)
 	// req.check('password', 'Password must be within 5-20 characters').len(5, 20)
 	var errors = req.validationErrors()
@@ -114,7 +115,7 @@ router.post('/addUser', function(req, res) {
 	var passreset = req.body.passreset
 		// res.redirect("/aboutuserx");
 	
-	var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'password', 'title','departmentId', 'active')
+	var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'password', 'title', 'role','departmentId', 'active', 'schedule')
 	// if(body.departmentId === 1){
 		
 	// }
@@ -319,12 +320,12 @@ router.post('/addUser', function(req, res) {
 		console.log(passreset + '--' + req.body.password)
 		if (passreset==true) {
 			req.body.password = 'banner1234'
-			var body = _.pick(req.body, 'name','lastname', 'email', 'password', 'username', 'departmentId', 'title', 'active')
+			var body = _.pick(req.body, 'name','lastname', 'email', 'password', 'username', 'departmentId', 'title','role', 'active', 'schedule')
 		}else if (req.body.password !== ''){
-			var body = _.pick(req.body, 'name','lastname', 'email', 'password', 'username', 'departmentId', 'title', 'active')
+			var body = _.pick(req.body, 'name','lastname', 'email', 'password', 'username', 'departmentId', 'title', 'role', 'active', 'schedule')
 		}else {
 			console.log('ese')
-			var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'departmentId', 'title', 'active')
+			var body = _.pick(req.body, 'name','lastname', 'email', 'username', 'departmentId', 'title', 'role', 'active', 'schedule')
 		}
 
 		db.user.update(body, {
@@ -402,8 +403,7 @@ router.post('/userList', middleware.requireAuthentication, function(req, res) {
 	var departmentId = req.body.departmentId
 
 	var para = {}
-	var arrayTitle_UserTab = ['Admin', 'Manager']
-	if (arrayTitle_UserTab.indexOf(curUser.title) !== -1) {
+	if (['Admin', 'Superuser'].indexOf(curUser.role) !== -1) {
 		if(departmentId == 1){
 			para.id = {$gt:0}
 		}else{
