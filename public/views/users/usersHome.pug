@@ -84,7 +84,7 @@ block content
               div(class="col-sm-4")
                 select(name="role" class="form-control" id="role" )
                   option(value="") Select One
-                  option(value="Admin") Administrator
+                  option(value="Administrator") Administrator
                   option(value="Superuser") Superuser
                   option(value="User") User
             div(class="form-group")
@@ -174,6 +174,7 @@ block content
             
 append scripts 
   script(src="public/fnLib/homeFn.js")
+  script(src="public/fnLib/authFn.js")
   script.
 
     $(function(){
@@ -212,7 +213,7 @@ append scripts
               })
             }else{
               $.post('/users/addDept',{
-                deptName:'ADMIN',
+                deptName:'Administrator',
                 status:'Active',
               }).done(function(Rdata){
                 window.location.replace(Rdata.redi)
@@ -407,7 +408,7 @@ append scripts
 
 
         //Disabling fields depend on user role to prevent unauthorized changes
-        if(curUser.department.name !== 'ADMIN'){
+        if(curUser.department.name !== 'Administrator'){
 
           $('#department').attr('disabled', true)
           $('#WorkGroupDepartment').attr('disabled', true)
@@ -442,21 +443,25 @@ append scripts
 
         //- }
 
-        if(['Admin'].indexOf(curUser.role) !== -1) {
+        if(roleList('A').indexOf(curUser.role) !== -1) {
           $('#title').attr('disabled', false)
           $('#role').attr('disabled', false)
+          
+            var option = document.createElement('option')
+            option.text = 'Administrator'
+            option.value = 'Administrator'
+            adminOpt.add(opt)
         }else{
+
           if(firstUser){
             $('#title').attr('disabled', false)
             $('#role').attr('disabled', false)
           }else{
-            if(['Superuser'].indexOf(curUser.role) !== -1){
+            if(roleList('B').indexOf(curUser.role) !== -1){
               $('#title').attr('disabled', false)
-              $('#role').attr('disabled', true)
-            }else{
-              $('#title').attr('disabled', true)
-              $('#role').attr('disabled', true)
+              $('#role').attr('disabled', false)
             }
+
             
           }
           
@@ -600,6 +605,20 @@ append scripts
                       span1.id = 'editGly';
                       //- click the 'x' to remove from list
                       span1.addEventListener('click', function(){
+                          $('#role').empty()
+                          var lesserRole = roleRankLesser(user.role, 'User')
+                          var adminOpt = document.getElementById('role')
+                          lesserRole.forEach(function(item, i){
+
+                            var option = document.createElement("option");
+                            option.text = item
+                            option.value = item
+
+                            adminOpt.add(option)
+                          })
+                              
+                          
+
                           $('#editGly').remove()
                         //- $.post('/users/editUserForm',{userId:user.id}).done(function(){
                           //- alert(JSON.stringify(user,null,4))

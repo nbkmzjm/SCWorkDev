@@ -808,9 +808,10 @@ app.post('/clearEvent', middleware.requireAuthentication, function(req,res){
 
 
 app.get('/taskOption', middleware.requireAuthentication, function(req, res){
+	var curUser = req.user
 	var departmentId = req.user.departmentId
 	var curUserTitle = req.user.title;
-	// console.log('cateing option')
+	console.log('cateing option')
 	db.taskOption.findAll({
 		where:{
 			departmentId:departmentId
@@ -1219,7 +1220,7 @@ app.get('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 		departmentId:curUser.departmentId
 	}
 
-	if(curUser.department==='ADMIN'){
+	if(curUser.department==='Administrator'){
 		var whereParams = {
 		active:true
 		}
@@ -1256,7 +1257,7 @@ app.post('/getManagement', middleware.requireAuthentication, function(req, res) 
 		where:{
 			departmentId:departmentId,
 			title:{
-				$in:['Admin', 'Manager']
+				$in:['Administrator', 'Manager']
 			}
 		}
 	}).then(function(users){

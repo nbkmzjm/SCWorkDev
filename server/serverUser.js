@@ -403,7 +403,7 @@ router.post('/userList', middleware.requireAuthentication, function(req, res) {
 	var departmentId = req.body.departmentId
 
 	var para = {}
-	if (['Admin', 'Superuser'].indexOf(curUser.role) !== -1) {
+	if (['Administrator', 'Superuser'].indexOf(curUser.role) !== -1) {
 		if(departmentId == 1){
 			para.id = {$gt:0}
 		}else{
