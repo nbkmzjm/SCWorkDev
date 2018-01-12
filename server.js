@@ -1220,7 +1220,7 @@ app.get('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 		departmentId:curUser.departmentId
 	}
 
-	if(curUser.department==='Administrator'){
+	if(curUser.department==='ADMINISTRATOR'){
 		var whereParams = {
 		active:true
 		}
@@ -1256,8 +1256,8 @@ app.post('/getManagement', middleware.requireAuthentication, function(req, res) 
 	db.user.findAll({
 		where:{
 			departmentId:departmentId,
-			title:{
-				$in:['Administrator', 'Manager']
+			role:{
+				$in:['Administrator', 'Superuser']
 			}
 		}
 	}).then(function(users){

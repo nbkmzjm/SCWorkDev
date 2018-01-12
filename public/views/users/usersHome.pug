@@ -71,8 +71,8 @@ block content
                   option(value="Supervisor") Supervisor
                   option(value="Technician 2") Technician 2
                   option(value="Technician 3") Technician 3
-                  option(value="Techn TPN") Technician TPN
-                  option(value="Techn Float") Technician Float
+                  option(value="Technician TPN") Technician TPN
+                  option(value="Technician Float") Technician Float
                   option(value="Quality Control") Quality Control
                   option(value="Personel") Personel
                   option(value="Associate") Associate
@@ -408,7 +408,7 @@ append scripts
 
 
         //Disabling fields depend on user role to prevent unauthorized changes
-        if(curUser.department.name !== 'Administrator'){
+        if(curUser.department.name !== 'ADMINISTRATOR'){
 
           $('#department').attr('disabled', true)
           $('#WorkGroupDepartment').attr('disabled', true)
@@ -447,10 +447,7 @@ append scripts
           $('#title').attr('disabled', false)
           $('#role').attr('disabled', false)
           
-            var option = document.createElement('option')
-            option.text = 'Administrator'
-            option.value = 'Administrator'
-            adminOpt.add(opt)
+            
         }else{
 
           if(firstUser){
