@@ -920,6 +920,7 @@ app.post('/delTaskOption', middleware.requireAuthentication, function(req, res){
 
 app.post('/memoOpt', middleware.requireAuthentication, function(req, res) {
 	var optFilter = req.body.optFilter
+	var curUser = req.user
 	var description = req.body.description
 	if(optFilter=="all"){
 		db.taskOptMemo.findAll({
@@ -957,7 +958,9 @@ app.post('/memoOpt', middleware.requireAuthentication, function(req, res) {
 	}else if(optFilter=="individual"){
 		db.taskOption.findOne({
 			where:{
-				description:description
+				description:description,
+				departmentId:curUser.departmentId
+
 			},
 			include:[{
 				model:db.taskOptMemo,
@@ -983,6 +986,7 @@ app.post('/memoOpt', middleware.requireAuthentication, function(req, res) {
 
 app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 	var memoChbx = req.body.memoChbx
+	var curUser = req.user
 	var taskOptionDes = req.body.taskOptionDes
 	var type = req.body.type
 	console.log(memoChbx+'-'+taskOptionDes+'-'+type)
@@ -1003,13 +1007,16 @@ app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 			model:db.taskOptDetail,
 		}]	
 	}).then(function(taskOptionMemo){
-		// console.log('Max row is: '+ JSON.stringify(taskOptionMemo, null, 4))	
+		console.log('Max row is: '+ JSON.stringify(taskOptionMemo, null, 4))	
 		// console.log(taskOptionDes)
 		if (!!taskOptionMemo){
+		
 
 			db.taskOption.findOne({
 					where: {
-						description:taskOptionDes
+						description:taskOptionDes,
+						departmentId:curUser.departmentId
+
 					}
 			}).then(function(taskOption){
 				// console.log('taskOption is:'+JSON.stringify(taskOption, null, 4))
@@ -1021,14 +1028,14 @@ app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 					type:type
 				})
 			}).then(function(createdTaskOptionMemo){
-				// console.log('createdtaskMemo:'+JSON.stringify(createdTaskOptionMemo, null, 4))
+				console.log('createdtaskMemo:'+JSON.stringify(createdTaskOptionMemo, null, 4))
 				var mapTaskDescription = taskOptionMemo.taskOptDetails.map(function(taskOpt) {
 					return {
 						taskDescription:taskOpt.taskDescription,
 						taskOptMemoId:createdTaskOptionMemo.id
 					}
 				});
-
+				console.log('mapTaskDescription:'+JSON.stringify(createdTaskOptionMemo, null, 4))
 
 
 				if(!!mapTaskDescription){
@@ -1049,7 +1056,8 @@ app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 
 			db.taskOption.findOne({
 					where: {
-						description:taskOptionDes
+						description:taskOptionDes,
+						departmentId:curUser.departmentId
 					}
 			}).then(function(taskOption){
 

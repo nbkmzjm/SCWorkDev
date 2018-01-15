@@ -1959,6 +1959,7 @@ append scripts
 				optFilter:optFilter,
 				description:description
 			}).done(function(Rdata){
+				console.log(Rdata)
 				
 				var ul = document.createElement('ul')
 				ul.setAttribute('role', 'menu')
@@ -1986,6 +1987,7 @@ append scripts
 							var checkValue = 0
 							input.checked == false?checkValue=false:checkValue=true
 							console.log(checkValue)
+							//Memorize which memo being check
 							$.post('/checkedMemoUpd',{
 								checkedMemoValue:checkValue,
 								checkedMemoId:taskOptMemo.id
@@ -2069,7 +2071,7 @@ append scripts
 					li.appendChild(input)
 					li.appendChild(document.createTextNode(taskOptMemo.memo+'--'+ taskOptMemo.type))
 
-
+					//Load memo detail when FIRST click on the taskoption
 					if (input.checked == true){
 						var nestedOl = document.createElement('ol')
 						nestedOl.setAttribute('role', 'menu')
