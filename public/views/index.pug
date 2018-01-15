@@ -655,7 +655,7 @@ append scripts
 											
 												
 												if(assignTracer.type=='TASK'){
-													if(assignTracer.Read == false ){
+													if(assignTracer.Read == 'false' ){
 														if (i == 0){
 															firstTracerTask = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note +(assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )
 														}else{
@@ -665,7 +665,7 @@ append scripts
 													}
 													
 												}else if ('SCHEDULE'){
-													if(assignTracer.Read == false ){
+													if(assignTracer.Read == 'false' ){
 														unreadScheduleCount++
 													}
 														if (i == 0){
@@ -686,7 +686,7 @@ append scripts
 												firstTracer = firstTracerTask
 												tracer = tracerTask
 											}
-										}else if ('SCHEDULE'){
+										}else if (viewMode === 'SCHEDULE'){
 											if (unreadScheduleCount!=0){
 												span.className = "glyphicon glyphicon-edit"
 											}
@@ -965,7 +965,7 @@ append scripts
 																		window['tr' + i].appendChild(td)
 																		var td1 = document.createElement('td')
 																			var input = document.createElement('input')
-																			if (assignTracer.Read == '0'){
+																			if (assignTracer.Read == 'false'){
 																				input.type = 'checkbox'
 																				input.id = 'readTask'
 																				input.name = 'read'
