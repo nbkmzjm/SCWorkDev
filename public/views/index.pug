@@ -257,11 +257,11 @@ append scripts
 					divSCOverview.style.opacity= 0;
 					var a = 0 
 					var myInv = setInterval(function(){
-							a = a + 0.1
+							a = a + 0.2
 							divSCOverview.style.opacity= a;
 							a>1?clearInterval(myInv):""
 						
-					}, 200)
+					}, 100)
 					
 					divSCOverview.style.top = event.clientY-185+'px'
 
@@ -338,11 +338,11 @@ append scripts
 														$.getJSON('/ajaxUser').done(mainSC);
 													})
 													assign.forEach(function(assign, i){
-														console.log(assign.Note)
+														console.log(assign)
 														
 														if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
 															noteColor(assign.Note, a)
-															a.innerHTML = scOverviewDate.format('MMM DD')+ '<br> <b>'+ assign.Note  + '</b>'
+															a.innerHTML = scOverviewDate.format('MMM DD')+ '<br> <b>'+ assign.assignTracers[0].Note  + '</b>'
 														}
 													})
 													a.setAttribute('href','#');
@@ -369,12 +369,12 @@ append scripts
 													a.scOverviewDate = scOverviewDate.format('MM-DD-YYYY')
 													a.addEventListener('click', function(){
 														$('#calendar').val(this.scOverviewDate)
-														$.post('/ajaxUser').done(mainSC);
+														$.getJSON('/ajaxUser').done(mainSC);
 													})
 													assign.forEach(function(assign, i){
 														if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
 															noteColor(assign.Note, a)
-															a.innerHTML = scOverviewDate.format('MMM DD')+ '<br> <b>'+ assign.Note  + '</b>'
+															a.innerHTML = scOverviewDate.format('MMM DD')+ '<br> <b>'+ assign.assignTracers[0].Note  + '</b> <br> '+ assign.assignTracers[0].Memo
 															
 														}
 													})
@@ -400,40 +400,50 @@ append scripts
 					span.innerHTML = '';
 					span.zIndex = 1;
 					span.style.position = 'absolute'
+					//- span.style.top = '-25px'
 					span.style.fontSize = "25px"
 					span.style.color = 'red'
 					span.className = "glyphicon glyphicon-remove"
 					span.id = 'delGly';
 					//- click the 'x' to remove from list
-					span.addEventListener('click', function(){
-						divSCOverview.remove()
 					
-					});
 					
 					divSCOverview.appendChild(span)
 					divSCOverview.addEventListener('mouseleave', function(){
 						this.style.zIndex = '0'
 					})
-					divSCOverview.addEventListener('mousedown', function(event){
-						var mousedownPosX = event.pageX
-						var mousedownPosY = event.pageY
-						this.style.position = 'absolute'
-						var self = this
-						document.onmousemove = function(event){
-							console.log(event.pageX)
-							self.style.left = event.pageX-50+'px'
-							self.style.top = event.pageY-220+'px'
+					divSCOverview.addEventListener('mousedown', scOverviewMouseDown)
+					function scOverviewMouseDown(event){
+						event.target.id==='delGly'?this.remove():''
+						//- if(event.target.na)
+						if(!!event.target.firstElementChild){
+							var parentClickEle = event.target.firstElementChild.nodeName
 						}
+						console.log(parentClickEle)
+						if(parentClickEle!="A"&&parentClickEle!="BR"){
+							var mousedownPosX = event.pageX
+							var mousedownPosY = event.pageY
+							this.style.position = 'absolute'
+							var self = this
+							var divSCOverviewPos = self.getBoundingClientRect()
+							document.onmousemove = function(event){
+								console.log(event.pageX)
+								console.log(divSCOverviewPos)
+								
+								self.style.left = event.pageX-50+'px'
+								self.style.top = event.pageY-230+'px'
+							}
 
-						this.onmouseup = function() {
-							self.style.zIndex = '1'
-							document.onmousemove = null
-						}
+							this.onmouseup = function() {
+								self.style.zIndex = '1'
+								document.onmousemove = null
+							}
 
-						document.onmouseup = function() {
-							document.onmousemove = null
+							document.onmouseup = function() {
+								document.onmousemove = null
+							}
 						}
-					})
+					}
 					mainSCDiv.append(divSCOverview)
 					$('#divSCOverview').fadeIn(500)
 
