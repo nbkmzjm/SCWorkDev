@@ -897,7 +897,7 @@ append scripts
 																						//- trHead.appendChild(tdHead)
 																					table.appendChild(trHead)
 																					var trTitle = document.createElement("tr")
-																						var headerArr = ['Task','Comments', 'Value','Completed By', 'Updated At']
+																						var headerArr = ['Task','Comments', 'Value','Completed_By', 'Updated_At']
 																						headerArr.forEach(function(header, i){
 																							var td = document.createElement('td')
 																							td.innerHTML = header
@@ -908,8 +908,9 @@ append scripts
 																					assignTracer.assignTracerDetails.forEach(function(assignTracerDetail, j){
 																						var trContent = document.createElement('tr')
 																							console.log(assignTracerDetail)
-																							var contentArr = [assignTracerDetail.Description,assignTracerDetail.Comments, assignTracerDetail.Value,assignTracerDetail.CompletedBy, assignTracerDetail.updatedAt]
+																							var contentArr = [assignTracerDetail.Description,assignTracerDetail.Comments, assignTracerDetail.Value,assignTracerDetail.CompletedBy, moment(assignTracerDetail.updatedAt).format('MM/DD/YYYY')]
 																							contentArr.forEach(function(content, i){
+																								//- alert(content+'-'+i)
 																								var tdContent = document.createElement('td')
 																								if (content=="" && i==1){
 																									var input = document.createElement('input')

@@ -1009,8 +1009,9 @@ app.post('/memoChbx', middleware.requireAuthentication, function(req, res) {
 	}).then(function(taskOptionMemo){
 		console.log('Max row is: '+ JSON.stringify(taskOptionMemo, null, 4))	
 		// console.log(taskOptionDes)
-		if (!!taskOptionMemo){
 		
+		if (!!taskOptionMemo){
+			//if task option memo exist, copy all details item and attach this new created one
 
 			db.taskOption.findOne({
 					where: {
