@@ -1242,7 +1242,8 @@ app.get('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 		where:whereParams, 
 		order:[
 				// ['department'],
-				['title']
+				['title'],
+				['name']
 
 			]
 		,
