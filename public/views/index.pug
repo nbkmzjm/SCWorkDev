@@ -730,6 +730,7 @@ append scripts
 								td.appendChild(a)
 								
 								td.addEventListener('click', function(assign, userId){
+									//Generate table to list all changes of schedule or task
 									return function(){
 										$('#eventAction').stop()
 										$('#eventAction').fadeIn()
@@ -745,7 +746,7 @@ append scripts
 										
 										//- &&(curUserId==assign.userId || arrayTitle_UserTab.indexOf(curUserTitle) != -1)
 										if (taskSC=='SELECT'){
-											
+											//list changes for the whole week ***NOT in USE****
 											if(false){
 												
 												$('#eventAction').html('')
@@ -848,6 +849,7 @@ append scripts
 													var viewMode = document.getElementById('btnViewMode').innerHTML
 													console.log(viewMode)
 													if(viewMode === 'TASK'){
+														//get all TASK changes
 														$.getJSON('/assignTracerReadDay',{
 															type:'TASK',
 															assignId:assign.id

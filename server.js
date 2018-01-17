@@ -409,7 +409,10 @@ app.get('/taskSC', middleware.requireAuthentication, function(req, res){
 
 			include:[{
 				model:db.user
-			}]
+			}],
+			where:{
+				Read:'false'
+			}
 			
 		}],
 		where:{
@@ -608,7 +611,7 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 
 			return [
 				db.assign.update({
-					Note: taskSC
+					Note: ''
 				},
 				{
 					where: {
@@ -628,7 +631,8 @@ app.post('/dateSC', middleware.requireAuthentication, function(req, res) {
 			var body = {
 				Note:taskSC,
 				Memo:memo||'',
-				type:type
+				type:type,
+				Read:'false'
 			}
 			
 
