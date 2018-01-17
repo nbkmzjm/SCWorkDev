@@ -918,7 +918,7 @@ append scripts
 																					assignTracer.assignTracerDetails.forEach(function(assignTracerDetail, j){
 																						var trContent = document.createElement('tr')
 																							console.log(assignTracerDetail)
-																							var contentArr = [assignTracerDetail.Description,assignTracerDetail.Comments, assignTracerDetail.Value,assignTracerDetail.CompletedBy, moment(assignTracerDetail.updatedAt).format('MM/DD/YYYY')]
+																							var contentArr = [assignTracerDetail.Description,assignTracerDetail.Comments, assignTracerDetail.Value,assignTracerDetail.CompletedBy, moment(assignTracerDetail.updatedAt).format('MMM D@HH:m')]
 																							contentArr.forEach(function(content, i){
 																								//- alert(content+'-'+i)
 																								var tdContent = document.createElement('td')
@@ -1290,7 +1290,7 @@ append scripts
 														postDB({
 															postTo:postTo,
 															postToValue: postToValue,
-															postText:postText,
+															postText:'<p>'+ postText + '</p>',
 															filter:filter,
 															userArray:userArray
 														})
@@ -1468,7 +1468,7 @@ append scripts
 																	postDB({
 																		postTo:postTo,
 																		postToValue: postToValue,
-																		postText:postText,
+																		postText:'<p>'+ postText + '</p>',
 																		filter:filter,
 																		userArray:userArray
 																		 

@@ -173,7 +173,7 @@ app.post('/sign-s3', middleware.requireAuthentication, function(req, res){
 	const fileName = req.body.fileName
 	const fileType = req.body.fileType
 	const s3Params = {
-		Bucket: process.env.S3Bucket,
+		Bucket: S3Bucket,
 		Key: fileName,
 		Expires: 900,
 		ContentType: fileType,
@@ -193,7 +193,7 @@ app.post('/sign-s3', middleware.requireAuthentication, function(req, res){
 		console.log('returnS3:'+ JSON.stringify(url, null, 4))
 		const returnData = {
 			signedRequest: url,
-			url:'https://'+ process.env.S3Bucket +'.s3.amazonaws.com/'+fileName
+			url:'https://'+ S3Bucket +'.s3.amazonaws.com/'+fileName
 		};
 		res.json(returnData);
 	})
