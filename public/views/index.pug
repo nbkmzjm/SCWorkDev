@@ -269,7 +269,7 @@ append scripts
 						tblOverview.id = 'tblOverview'
 							var thead = document.createElement('thead')
 								var tr = document.createElement('tr')
-								tr.style.backgroundColor = '#82E9EF'
+								tr.style.backgroundColor = '#A9CAD6'
 								for (var i=0; i<7; i++){
 
 									var th = document.createElement('th')
@@ -342,13 +342,13 @@ append scripts
 														
 														if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
 															noteColor(assign.Note, a)
-															a.innerHTML = scOverviewDate.format('MMM DD')+ '<br> <b>'+ assign.assignTracers[0].Note  + '</b>'
+															a.innerHTML = scOverviewDate.format('MMM DD')+ '<br> <b>'+ assign.assignTracers[0].Note  + '</b> <br> '+ assign.assignTracers[0].Memo
 														}
 													})
 													a.setAttribute('href','#');
 													td.appendChild(a)
 												var tr = document.createElement('tr')
-												tr.style.backgroundColor = '#7ECCD5'
+												tr.style.backgroundColor = '#AADDC7'
 												scOverviewCurWeekStart.isSame(scOverviewDate)?
 												tr.style.backgroundColor = '#14B9DE':""
 												
@@ -715,7 +715,7 @@ append scripts
 								a.setAttribute('title', firstTracer);
 								document.addEventListener('mousemove', function(){
 									var taskSC = $('input[name=PTO]:checked').attr('value');
-									if (taskSC=="SELECT"){
+									//- if (taskSC=="SELECT"){
 
 										a.setAttribute('data-content', tracer);
 										
@@ -723,9 +723,9 @@ append scripts
 									//- }else if (taskSC=='SELECT'){
 									//- 	a.setAttribute('data-content', 'Memo:<br>' + memo);
 									//- 	$('[data-toggle="popover"]').popover({html:true})
-									}else{
-										$('[data-toggle="popover"]').popover('destroy')
-									}
+									//- }else{
+										//- $('[data-toggle="popover"]').popover('destroy')
+									//- }
 								})
 								td.appendChild(a)
 								
@@ -890,7 +890,7 @@ append scripts
 																		td.innerHTML = tracer
 																		if(assignTracer.Read!=='DELETED'){
 																			td.addEventListener('click', function(){
-																				
+																				$('#taskDetailTable').remove()
 																				var table = document.createElement('table');
 																				table.setAttribute('id', 'taskDetailTable');
 																				
@@ -899,19 +899,26 @@ append scripts
 																					ev.dataTransfer.setData("tableId", ev.target.id);
 																				}
 																					var trHead = document.createElement('tr')
-																						//- var tdHead = document.createElement('td')
-																						trHead.innerHTML = assignTracer.Memo
-																						trHead.addEventListener('click',function(){
+																						var tdHead = document.createElement('td')
+																						tdHead.innerHTML = assignTracer.Memo
+																						tdHead.addEventListener('click',function(){
 																							$('#taskTable').show()
 																							$('#taskDetailTable').remove()
 																							
 																						})
-																						//- trHead.appendChild(tdHead)
+																							var span = document.createElement('span')
+																							span.style.color = 'red'
+																							span.style.float = 'right'
+																							span.className = "glyphicon glyphicon-remove-sign"
+																							tdHead.appendChild(span)
+
+																						trHead.appendChild(tdHead)
 																					table.appendChild(trHead)
 																					var trTitle = document.createElement("tr")
 																						var headerArr = ['Task','Comments', 'Value','Completed_By', 'Updated_At']
 																						headerArr.forEach(function(header, i){
 																							var td = document.createElement('td')
+																							td.setAttribute("style", "font-weight:bold");
 																							td.innerHTML = header
 																							trTitle.appendChild(td)
 																						})
@@ -938,18 +945,24 @@ append scripts
 																									var input = document.createElement('input')
 																									input.type = 'checkbox'
 																									input.addEventListener('click', function(){
+
 																										console.log(curUser.name)
-																										$.post('/assignTracerDetailUpd',{
-																											comments:$("#taskComment"+j).val(),
-																											value:$("#taskValue"+j).val(),
-																											assignTracerDetailId:assignTracerDetail.id,
-																											curUserName:curUser.name
-																										}).done(function(Rdata){
-																											if(Rdata.updated==1){
-																												input.checked = true
-																												input.disabled = true
-																											}
-																										})
+																										if($("#taskValue"+j).val()!=''){
+																											$.post('/assignTracerDetailUpd',{
+																												comments:$("#taskComment"+j).val(),
+																												value:$("#taskValue"+j).val(),
+																												assignTracerDetailId:assignTracerDetail.id,
+																												curUserName:curUser.name
+																											}).done(function(Rdata){
+																												if(Rdata.updated==1){
+																													input.checked = true
+																													input.disabled = true
+																												}
+																											})
+																										}else{
+																											alert('Please enter n/a if value is not applicatble')
+																											input.checked = false
+																										}
 
 																									})
 																									tdContent.appendChild(input)
@@ -985,7 +998,8 @@ append scripts
 																				input.checked = false
 																				
 																				input.addEventListener('click',function(){
-																					$.post('/assignTracerReadUpd',{			assignTracerId:assignTracer.id,
+																					$.post('/assignTracerReadUpd',{
+																					assignTracerId:assignTracer.id,
 																						curUserName:curUser.name
 
 																					}).done(function(Rdata){
@@ -1029,9 +1043,11 @@ append scripts
 															}
 
 																
-															
+															table.addEventListener('click',function(){
+																$('#eventAction').stop()
+															})
 															$('#eventAction').append(table
-															//- , $('#eventAction').fadeOut(4000, function(){})
+															, $('#eventAction').fadeOut(4000, function(){})
 															)
 														})
 													}else if(viewMode === 'SCHEDULE'){
@@ -1080,8 +1096,8 @@ append scripts
 																	window['tr' + i] = document.createElement('tr')
 																		var td = document.createElement('td')
 																		td.innerHTML = tracer
-																		
 																		window['tr' + i].appendChild(td)
+
 																		var td1 = document.createElement('td')
 																			var input = document.createElement('input')
 																			if (assignTracer.Read == 'false'){
@@ -1131,9 +1147,9 @@ append scripts
 																	table.appendChild(window['tr' + i])
 																})
 																$('#eventAction').append(table
-																//- , $('#eventAction').fadeOut(4000, function(){
+																, $('#eventAction').fadeOut(3000, function(){
 																	
-																//- })
+																})
 																)
 															}
 														})
@@ -1566,7 +1582,7 @@ append scripts
 							tdUser.addEventListener('click', scOverview)
 							//- alert(arr[i].dateSC)
 							window['tr' + userId] = document.createElement('tr');
-							window['tr' + userId].style.borderTop = '3px groove #ABF7FE'
+							window['tr' + userId].style.borderTop = '5px solid #6ADAB7'
 							window['tr' + userId].appendChild(tdUser);
 							window['tr' + userId].appendChild(td);
 							//- table.appendChild(window['tr' + userId]);
