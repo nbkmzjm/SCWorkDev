@@ -2502,7 +2502,7 @@ router.post('/addPostEmoj', middleware.requireAuthentication, function(req, res)
 	}).then(function(comment){
 		console.log("mainPostuserId"+JSON.stringify(comment, null, 4))
 		db.userFeed.findAll({
-			attributes:[db.Sequelize.literal('DISTINCT `receivedUserId`'),'receivedUserId'],
+			attributes:['receivedUserId'],
 			where:{
 				mainPostId:mainPostId
 			}
