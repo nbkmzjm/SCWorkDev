@@ -815,7 +815,8 @@ router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 			// 	attributes:[]
 				
 			// }],
-			attributes:['tagName', 'type','category',
+			//**********Only include what column needed in attrbutes and group by
+			attributes:['tagName', 'type','category', 
 				[db.Sequelize.fn('MAX', db.Sequelize.col('id')), 'MAX']
 			],
 			group:[['tagName'],['category'],['type']]
@@ -2419,7 +2420,8 @@ router.post('/replyPost', middleware.requireAuthentication, function(req, res) {
 		}).then(function(mainPost){
 			
 			db.userFeed.findAll({
-				attributes:[db.Sequelize.literal('DISTINCT `receivedUserId`'),'receivedUserId'],
+				// attributes:[db.Sequelize.literal('DISTINCT `receivedUserId`'),'receivedUserId'],
+				attributes:['receivedUserId'],
 				where:{
 					mainPostId:mainPostId
 				}
