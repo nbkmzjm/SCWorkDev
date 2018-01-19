@@ -811,11 +811,11 @@ router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 		console.log('department'+JSON.stringify(department, null, 4))
 		return db.tagSave.findAll({
 			// include:[{
-				// model:db.mainPost,
-				// attributes:[]
-			// 	group:[['id']]
+			// 	model:db.mainPost,
+			// 	attributes:[]
+				
 			// }],
-			attributes:['id','tagName', 'type', 'category',
+			attributes:['tagName', 'type', 'mainPostId','category',
 				[db.Sequelize.fn('MAX', db.Sequelize.col('id')), 'MAX']
 			],
 			group:[['tagName'],['category'],['type']]
@@ -828,7 +828,8 @@ router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 					type:'Personal',
 					userId:user.id
 				}]
-			}
+			},
+			raw:true
 		})
 	}).then(function(tagSaves){
 		console.log('tagSaves'+JSON.stringify(tagSaves, null, 4))
