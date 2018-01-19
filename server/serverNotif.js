@@ -812,9 +812,9 @@ router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 		return db.tagSave.findAll({
 			include:[{
 				model:db.mainPost,
-				attributes:['postToValue', 'postTo']
+				attributes:['id','postToValue', 'postTo']
 			}],
-			attributes:['tagName','mainPostId', 'type', 'category'
+			attributes:['id','tagName','mainPostId', 'type', 'category'
 				// db.Sequelize.fn('MAX', db.Sequelize.col('createdAt'))
 			],
 			group:[['id'],['tagName'],['category'],['type']]
