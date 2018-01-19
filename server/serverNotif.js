@@ -817,7 +817,7 @@ router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 			attributes:['tagName','mainPostId', 'type', 'category'
 				// db.Sequelize.fn('MAX', db.Sequelize.col('createdAt'))
 			],
-			group:[['tagName'],['category'],['type']]
+			group:[['id'],['tagName'],['category'],['type']]
 			,
 			
 			where:{
