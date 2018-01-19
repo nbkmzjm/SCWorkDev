@@ -810,13 +810,13 @@ router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 	}).then(function(department){
 		console.log('department'+JSON.stringify(department, null, 4))
 		return db.tagSave.findAll({
-			include:[{
-			// 	model:db.mainPost,
-				attributes:[],
+			// include:[{
+				// model:db.mainPost,
+				// attributes:[]
 			// 	group:[['id']]
-			}],
-			attributes:['id','tagName','mainPostId', 'type', 'category',
-				db.Sequelize.fn('COUNT', db.Sequelize.col('id'))
+			// }],
+			attributes:['id','tagName', 'type', 'category',
+				[db.Sequelize.fn('MAX', db.Sequelize.col('id')), 'MAX']
 			],
 			group:[['tagName'],['category'],['type']]
 			,
