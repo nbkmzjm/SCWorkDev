@@ -153,25 +153,26 @@ function getPostDB(option){
 	
 	
 	
-
+	var loadNumber = 0
 	//Initial feeds
 		getFeed()
 
 
 	//Active scrolling: loading main post as users scrolling
-	var loadNumber
+	
 
 
 	if(viewFormat === "Panel"){
-		loadNumber = 4
+		loadNumber = 5
 	}else if (viewFormat === "List"){
 		loadNumber = 12
+
 		var tableFeed = document.createElement('table')
 			tableFeed.className = 'table table-sm'
 			tableFeed.id = 'tblFeed'
 				var theadFeed = document.createElement('thead')
 					var trHeadFeed = document.createElement('tr')
-						var headerFeed = ['', 'Option','Posted', 'Date', 'Size']
+						var headerFeed = ['','Document','Option','Posted', 'Date', 'Size']
 						headerFeed.forEach(function (item) {
 							var th = document.createElement('th')
 							th.setAttribute('scope', 'col')
@@ -200,9 +201,10 @@ function getPostDB(option){
 			if(y >= containHeight ){
 				//load more feeds when at bottom of the page
 				getFeed()
-				loadNumber = loadNumber + 4
+				loadNumber = loadNumber + 5
 			}
 		}else if(viewFormat === 'List'){
+			console.log('xxxx')
 			if(y >= containHeight){
 				//load more feeds when at bottom of the page
 				getFeed()
@@ -220,7 +222,7 @@ function getPostDB(option){
 		if (viewFormat === 'Panel'){
 			$.post('/notif/getFeed',{
 				loadNumber:loadNumber,
-				limit:4,
+				limit:5,
 				viewOption:viewOption,
 				viewOnly:viewOnly,
 				byMe:byMe,
@@ -233,6 +235,8 @@ function getPostDB(option){
 				eDate:eDate
 
 			}).done(function(Rdata){
+				console.log('pppppppppp')
+				console.log(Rdata)
 
 				var textInPost = function(){
 					var result = false;
@@ -388,7 +392,7 @@ function getPostDB(option){
 										var spanBtnText = document.createElement('span')
 											// spanBtnText.style.color = '#FF8C5A'
 											
-											spanBtnText.innerHTML = 'Load Comments'
+											spanBtnText.innerHTML = 'Comments'
 										comment.appendChild(spanBtnText)
 										var spanBagdes = document.createElement('span')
 											spanBagdes.style.color = '#FF8C5A'
@@ -530,6 +534,22 @@ function getPostDB(option){
 										postOptContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
 										postOptContainer.className = 'popUpContainer'
 										postOptContainer.id = 'postOptContainer'
+											// var span = document.createElement('span')
+											// span.innerHTML = '';
+											// span.style.color = 'red'
+											// span.style.float = 'right'
+											// span.className = "glyphicon glyphicon-remove-circle"
+											// span.id = 'delGly';
+											// //- click the 'x' to remove from list
+											// span.addEventListener('click', function(){
+											// 	$('#postOptContainer').remove()
+												
+												
+											// });
+											// postOptContainer.appendChild(span)
+											closeRedIcon(postOptContainer,postOptContainer)
+											
+
 											var postOptContainerUl = document.createElement('ul')
 												postOptContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
 												
@@ -676,6 +696,8 @@ function getPostDB(option){
 						sDate:sDate,
 						eDate:eDate
 					}).done(function(Rdata){
+						console.log('llllllllllllll')
+						console.log(Rdata)
 						Rdata.posts.forEach(function(post, i){
 
 							var tempDiv = document.createElement('div')
@@ -688,7 +710,7 @@ function getPostDB(option){
 								var tdNameItem 
 								$(this).find('a').each(function(){
 									var ahref = this.parentNode.firstChild
-									
+									console.log(ahref)
 									var trBodyFeed = document.createElement('tr')
 										var tdPostId = document.createElement('td')
 											var span = document.createElement('span')
@@ -784,12 +806,15 @@ function getPostDB(option){
 
 												// console.log(postOptCoords)
 												// console.log(divTitleCoords)
+
 												$('#postOptContainer').length>0?$('#postOptContainer').remove():''
 												var postOptContainer = document.createElement('div')
 												postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top+ 600 +'px'
 												postOptContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
 												postOptContainer.className = 'popUpContainer'
 												postOptContainer.id = 'postOptContainer'
+
+													closeRedIcon(postOptContainer,postOptContainer)
 													var postOptContainerUl = document.createElement('ul')
 														postOptContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
 														

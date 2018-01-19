@@ -46,6 +46,7 @@ block content
 
 append scripts 
 	script(src="public/fnLib/feedFn.js")
+	script(src="public/fnLib/homeFn.js")
 	script(src="public/fnLib/tagSaveFn.js")
 	script(src="public/fnLib/gmailAPI.js")
 	script(src="node_modules/jquery.iframetracker/jquery.iframetracker.js")
@@ -166,6 +167,7 @@ append scripts
 					divInputGroup.appendChild(inputPost)
 
 					var divInputBtn = document.createElement('div')
+					divInputBtn.style.marginTop = "10px"
 					//- divInputBtn.className = 
 						//DIV contain fileupload and its action
 						var fileUpload = document.createElement("input")
@@ -561,7 +563,7 @@ append scripts
 									selectViewFilter.className = 'form-control'
 									selectViewFilter.name = 'viewPostFrom'
 									selectViewFilter.id = 'viewPostFrom'
-										var optionList = ['Coworker','Colleague','WorkGroup', 'Coworker of Colleague','Private', 'Public']
+										var optionList = ['Private','WorkGroup','Coworker','Colleague', 'Coworker of Colleague','Public']
 											var optionDB = document.createElement('option')
 											optionDB.value = setting.value
 											optionDB.innerHTML = setting.value
@@ -619,7 +621,7 @@ append scripts
 								labelViewOnly.innerHTML = 'View Only: '
 								divViewFilter.appendChild(labelViewOnly)
 
-							
+								
 								//DIV contain checkbox for VIEW ONLY and its action
 								var divViewOnly = document.createElement('div')
 								divViewOnly.className = 'col-sm-1'
@@ -715,10 +717,55 @@ append scripts
 
 
 
+								
+
+								
+
+							divFilterGroup.appendChild(divViewFilter)
+
+							var divViewFilter2 = document.createElement('div')
+							divViewFilter2.style.clear = 'both'
+							divViewFilter2.className = 'form-group col-sm-12'
+								//- // DIV contain label for BY OTHER
+								//- var labelDocOnly = document.createElement('label')
+								//- labelDocOnly.className = 'col-sm-1'
+								//- labelDocOnly.innerHTML = 'Document Only:'
+								//- divViewFilter2.appendChild(labelDocOnly)
+
+								//- //DIV contain checkbox for BY OTHER and its action
+								//- var divDocOnly = document.createElement('div')
+								//- divDocOnly.className = 'col-sm-1'
+									
+								//- 	var docOnly = document.createElement('input')
+								//- 	docOnly.type = 'checkbox'
+								//- 	docOnly.className = 'form-control'
+								//- 	docOnly.id = 'docOnly'
+								//- 	docOnly.value = 'false'
+								//- 	docOnly.addEventListener('click', function(){
+
+								//- 		//- if(this.checked === true){
+								//- 			getPostDB({
+								//- 				viewOption:selectViewFilter.value,
+								//- 				docOnly:$('#docOnly').is(':checked'),
+								//- 			})
+								//- 			$('#divPostContainer').html('')
+								//- 		//- }else{
+								//- 			//- getPostDB({
+								//- 			//- 	getPostDB({
+								//- 			//- 	viewOption:selectViewFilter.value,
+								//- 			//- 	docOnly:$('#docOnly').is(':checked'),
+								//- 			//- })
+								//- 			//- $('#divPostContainer').html('')
+								//- 		//- }
+								//- 	})
+								//- 	divDocOnly.appendChild(docOnly)
+								//- divViewFilter2.appendChild(divDocOnly)
+
+								//Div Date Range
 								var labelDateRange = document.createElement('label')
 								labelDateRange.className = 'col-sm-1'
 								labelDateRange.innerHTML = 'Search Date:'
-								divViewFilter.appendChild(labelDateRange)
+								divViewFilter2.appendChild(labelDateRange)
 								
 								var divDateRange = document.createElement('div')
 								divDateRange.className = 'col-sm-2'
@@ -803,49 +850,7 @@ append scripts
 										});
 									})
 									divDateRange.appendChild(dateCalenderEnd)
-								divViewFilter.appendChild(divDateRange)
-
-								
-
-							divFilterGroup.appendChild(divViewFilter)
-
-							var divViewFilter2 = document.createElement('div')
-							divViewFilter2.style.clear = 'both'
-							divViewFilter2.className = 'form-group col-sm-12'
-								//- // DIV contain label for BY OTHER
-								//- var labelDocOnly = document.createElement('label')
-								//- labelDocOnly.className = 'col-sm-1'
-								//- labelDocOnly.innerHTML = 'Document Only:'
-								//- divViewFilter2.appendChild(labelDocOnly)
-
-								//- //DIV contain checkbox for BY OTHER and its action
-								//- var divDocOnly = document.createElement('div')
-								//- divDocOnly.className = 'col-sm-1'
-									
-								//- 	var docOnly = document.createElement('input')
-								//- 	docOnly.type = 'checkbox'
-								//- 	docOnly.className = 'form-control'
-								//- 	docOnly.id = 'docOnly'
-								//- 	docOnly.value = 'false'
-								//- 	docOnly.addEventListener('click', function(){
-
-								//- 		//- if(this.checked === true){
-								//- 			getPostDB({
-								//- 				viewOption:selectViewFilter.value,
-								//- 				docOnly:$('#docOnly').is(':checked'),
-								//- 			})
-								//- 			$('#divPostContainer').html('')
-								//- 		//- }else{
-								//- 			//- getPostDB({
-								//- 			//- 	getPostDB({
-								//- 			//- 	viewOption:selectViewFilter.value,
-								//- 			//- 	docOnly:$('#docOnly').is(':checked'),
-								//- 			//- })
-								//- 			//- $('#divPostContainer').html('')
-								//- 		//- }
-								//- 	})
-								//- 	divDocOnly.appendChild(docOnly)
-								//- divViewFilter2.appendChild(divDocOnly)
+								divViewFilter2.appendChild(divDateRange)
 
 								// DIV contain label for VIEW FILTER
 								var labelViewFormat = document.createElement('label')
@@ -872,6 +877,7 @@ append scripts
 
 										
 									selectViewFormat.addEventListener('change', function(){
+										//- $.scrollTo(document.getElementById('SELECT'),800, {offset:{top:-200}})
 										console.log(selectViewFilter.value)
 										$('#divPostContainer').html('')
 										//- $('#viewOnly').attr('checked', false)
@@ -947,60 +953,56 @@ append scripts
 
 
 								// DIV contain label for Hide Content
-								var labelViewContent = document.createElement('label')
-								labelViewContent.className = 'col-sm-1'
-								labelViewContent.innerHTML = 'Hide Content:'
-								divViewFilter2.appendChild(labelViewContent)
+								//- var labelViewContent = document.createElement('label')
+								//- labelViewContent.className = 'col-sm-1'
+								//- labelViewContent.innerHTML = 'Hide Content:'
+								//- divViewFilter2.appendChild(labelViewContent)
 
-								divViewContent = document.createElement('div')
-								divViewContent.className = 'col-sm-2'
-									viewContentOpt = document.createElement('select')
-									//- viewContentOpt.className = 'form-control'
-									//- viewContentOpt.classList.add('col-sm-4')
+								//- divViewContent = document.createElement('div')
+								//- divViewContent.className = 'col-sm-2'
+								//- 	viewContentOpt = document.createElement('select')
+								//- 	//- viewContentOpt.className = 'form-control'
+								//- 	//- viewContentOpt.classList.add('col-sm-4')
 
-									//- select.className = ''
-									//- select.name = 'postTo'
-									viewContentOpt.id = 'viewContentOpt'
-									viewContentOpt.multiple = 'multiple'
-									viewContentOpt.name = 'multiselect[]'
-									contentOptArr = ['Downloads', 'Images', 'Previews', 'Videos']
-									contentOptArr.forEach(function(item){
-											console.log('item:'+ item)
-											var option = document.createElement('option')
-											option.value = item
-											option.innerHTML = item
-											viewContentOpt.appendChild(option)
-									})
-									divViewContent.appendChild(viewContentOpt)
-								divViewFilter2.appendChild(divViewContent)
+								//- 	//- select.className = ''
+								//- 	//- select.name = 'postTo'
+								//- 	viewContentOpt.id = 'viewContentOpt'
+								//- 	viewContentOpt.multiple = 'multiple'
+								//- 	viewContentOpt.name = 'multiselect[]'
+								//- 	contentOptArr = ['Downloads', 'Images', 'Previews', 'Videos']
+								//- 	contentOptArr.forEach(function(item){
+								//- 			console.log('item:'+ item)
+								//- 			var option = document.createElement('option')
+								//- 			option.value = item
+								//- 			option.innerHTML = item
+								//- 			viewContentOpt.appendChild(option)
+								//- 	})
+								//- 	divViewContent.appendChild(viewContentOpt)
+								//- divViewFilter2.appendChild(divViewContent)
 
 
-								var labelContentFilter = document.createElement('label')
-								labelContentFilter.className = 'col-sm-1'
-								labelContentFilter.innerHTML = 'Content Filter:'
-								divViewFilter2.appendChild(labelContentFilter)
+								//- var labelContentFilter = document.createElement('label')
+								//- labelContentFilter.className = 'col-sm-1'
+								//- labelContentFilter.innerHTML = 'Content Filter:'
+								//- divViewFilter2.appendChild(labelContentFilter)
 
-								divContentFilter = document.createElement('div')
-								divContentFilter.className = 'col-sm-2'
-									contentFilterOpt = document.createElement('select')
-									//- viewContentOpt.className = 'form-control'
-									//- viewContentOpt.classList.add('col-sm-4')
-
-									//- select.className = ''
-									//- select.name = 'postTo'
-									contentFilterOpt.id = 'contentFilterOpt'
-									contentFilterOpt.multiple = 'multiple'
-									contentFilterOpt.name = 'multiselect[]'
-									contentFilterOptArr = ['Documents', 'Images', 'Videos']
-									contentFilterOptArr.forEach(function(item){
-											console.log('item:'+ item)
-											var option = document.createElement('option')
-											option.value = item
-											option.innerHTML = item
-											contentFilterOpt.appendChild(option)
-									})
-									divContentFilter.appendChild(contentFilterOpt)
-								divViewFilter2.appendChild(divContentFilter)
+								//- divContentFilter = document.createElement('div')
+								//- divContentFilter.className = 'col-sm-2'
+								//- 	contentFilterOpt = document.createElement('select')
+									
+								//- 	contentFilterOpt.id = 'contentFilterOpt'
+								//- 	contentFilterOpt.multiple = 'multiple'
+								//- 	contentFilterOpt.name = 'multiselect[]'
+								//- 	contentFilterOptArr = ['Documents', 'Images', 'Videos']
+								//- 	contentFilterOptArr.forEach(function(item){
+								//- 			console.log('item:'+ item)
+								//- 			var option = document.createElement('option')
+								//- 			option.value = item
+								//- 			option.innerHTML = item
+								//- 			contentFilterOpt.appendChild(option)
+								//- 	})
+								//- 	divContentFilter.appendChild(contentFilterOpt)
+								//- divViewFilter2.appendChild(divContentFilter)
 
 
 
@@ -1009,72 +1011,72 @@ append scripts
 							divFilterGroup.appendChild(divViewFilter2)
 							
 							
-							$('#viewContentOpt').multiselect({
-								onChange: function(element, checked, select){
-									var checkedArr = $('#viewContentOpt').val()
-									var hideDownload = hideImage = hideVideo = hidePreview = false
+							//- $('#viewContentOpt').multiselect({
+							//- 	onChange: function(element, checked, select){
+							//- 		var checkedArr = $('#viewContentOpt').val()
+							//- 		var hideDownload = hideImage = hideVideo = hidePreview = false
 									
-									checkedArr.forEach(function(item){
-										if(item === 'Downloads'){
-											hideDownload = true
-										}else if (item === 'Images'){
-											hideImage = true
-										}else if (item === 'Videos'){
-											hideVideo = true
-										}else if (item === 'Previews'){
-											hidePreview = true
-										}
-									})
-									console.log('hideDownload:'+hideDownload)
-									console.log('hideImage:'+hideImage)
+							//- 		checkedArr.forEach(function(item){
+							//- 			if(item === 'Downloads'){
+							//- 				hideDownload = true
+							//- 			}else if (item === 'Images'){
+							//- 				hideImage = true
+							//- 			}else if (item === 'Videos'){
+							//- 				hideVideo = true
+							//- 			}else if (item === 'Previews'){
+							//- 				hidePreview = true
+							//- 			}
+							//- 		})
+							//- 		console.log('hideDownload:'+hideDownload)
+							//- 		console.log('hideImage:'+hideImage)
 
-									getPostDB({
-										viewOption:selectViewFilter.value,
-										hideVideo:hideVideo,
-										hideDownload:hideDownload,
-										hideImage:hideImage,
-										hidePreview:hidePreview
-									})
+							//- 		getPostDB({
+							//- 			viewOption:selectViewFilter.value,
+							//- 			hideVideo:hideVideo,
+							//- 			hideDownload:hideDownload,
+							//- 			hideImage:hideImage,
+							//- 			hidePreview:hidePreview
+							//- 		})
 
-									//- if(checked !== true ){
-									//- 	if(element.val()=== 'Videos'){
-									//- 		getPostDB({
-									//- 			viewOption:selectViewFilter.value,
-									//- 			hideVideo:checked,
-									//- 		})
-									//- 	}else if (element.val()=== 'Downloads'){
-									//- 		getPostDB({
-									//- 			viewOption:selectViewFilter.value,
-									//- 			hideDownload:checked,
-									//- 		})
-									//- 	}else if (element.val()=== 'Images'){
-									//- 		getPostDB({
-									//- 			viewOption:selectViewFilter.value,
-									//- 			hideImage:checked,
-									//- 		})
-									//- 	}else if (element.val()=== 'Previews'){
-									//- 		getPostDB({
-									//- 			viewOption:selectViewFilter.value,
-									//- 			hidePreview:checked,
-									//- 		})
-									//- 	}
+							//- 		//- if(checked !== true ){
+							//- 		//- 	if(element.val()=== 'Videos'){
+							//- 		//- 		getPostDB({
+							//- 		//- 			viewOption:selectViewFilter.value,
+							//- 		//- 			hideVideo:checked,
+							//- 		//- 		})
+							//- 		//- 	}else if (element.val()=== 'Downloads'){
+							//- 		//- 		getPostDB({
+							//- 		//- 			viewOption:selectViewFilter.value,
+							//- 		//- 			hideDownload:checked,
+							//- 		//- 		})
+							//- 		//- 	}else if (element.val()=== 'Images'){
+							//- 		//- 		getPostDB({
+							//- 		//- 			viewOption:selectViewFilter.value,
+							//- 		//- 			hideImage:checked,
+							//- 		//- 		})
+							//- 		//- 	}else if (element.val()=== 'Previews'){
+							//- 		//- 		getPostDB({
+							//- 		//- 			viewOption:selectViewFilter.value,
+							//- 		//- 			hidePreview:checked,
+							//- 		//- 		})
+							//- 		//- 	}
 										
-									//- }else if(checked === true && element.val()=== 'Documents'){
-									//- 	getPostDB({
-									//- 		viewOption:selectViewFilter.value,
-									//- 		hideDoc:checked,
-									//- 	})
+							//- 		//- }else if(checked === true && element.val()=== 'Documents'){
+							//- 		//- 	getPostDB({
+							//- 		//- 		viewOption:selectViewFilter.value,
+							//- 		//- 		hideDoc:checked,
+							//- 		//- 	})
 
 
-									//- }
-								}
-							});
+							//- 		//- }
+							//- 	}
+							//- });
 							
-							$('#contentFilterOpt').multiselect({
+							//- $('#contentFilterOpt').multiselect({
 
-							})
-							//- $('#viewContentOpt').multiselect('selectAll', false);
-							//- $('#viewContentOpt').multiselect('updateButtonText');
+							//- })
+							//- //- $('#viewContentOpt').multiselect('selectAll', false);
+							//- //- $('#viewContentOpt').multiselect('updateButtonText');
 
 
 
@@ -1088,9 +1090,10 @@ append scripts
 
 								//
 								var label = document.createElement('label')
-								label.className = 'col-sm-2'
-								label.innerHTML = 'Post Filter: '
+								label.className = 'col-sm-1'
+								label.innerHTML = 'Post To: '
 								divInputGroupFilter.appendChild(label)
+								divInputBtn.insertBefore(label, btnPost)
 					
 								divSelect = document.createElement('div')
 								divSelect.className = 'col-sm-3'
@@ -1108,7 +1111,7 @@ append scripts
 										select.appendChild(option)
 										
 
-										var optionList = ['Coworker','Colleague', 'Coworker of Colleague','WorkGroup','Private', 'Public']
+										var optionList = ['Private','WorkGroup','Coworker','Colleague', 'Coworker of Colleague','Public']
 
 										optionList.forEach(function(item, i){
 											if(item !== setting.value){
@@ -1150,7 +1153,7 @@ append scripts
 															selectCoworker.appendChild(option)
 													})
 													divSelectCoworker.appendChild(selectCoworker)
-												divInputGroupFilter.insertBefore(divSelectCoworker, divSelectFilter)
+												divInputGroupFilter.appendChild(divSelectCoworker)
 
 												$('#selectCoworker').multiselect({
 													includeSelectAllOption:true
@@ -1189,7 +1192,7 @@ append scripts
 															selectColleague.appendChild(option)
 													})
 													divSelectColleague.appendChild(selectColleague)
-												divInputGroupFilter.insertBefore(divSelectColleague, divSelectFilter)
+												divInputGroupFilter.appendChild(divSelectColleague)
 
 												$('#selectColleague').multiselect({
 													includeSelectAllOption:true
@@ -1229,7 +1232,7 @@ append scripts
 															selectCoofColleague.appendChild(option)
 													})
 													divSelectCoofColleague.appendChild(selectCoofColleague)
-												divInputGroupFilter.insertBefore(divSelectCoofColleague, divSelectFilter)
+												divInputGroupFilter.appendChild(divSelectCoofColleague)
 
 												$('#selectCoofColleague').multiselect({
 													includeSelectAllOption:true
@@ -1278,7 +1281,7 @@ append scripts
 														})
 													}
 													divSelectWorkGroup.appendChild(selectWorkGroup)
-												divInputGroupFilter.insertBefore(divSelectWorkGroup, divSelectFilter)
+												divInputGroupFilter.appendChild(divSelectWorkGroup)
 												$('#selectWorkGroup').multiselect({
 													buttonText: function(){
 														return 'Select WorkGroup'
@@ -1296,135 +1299,135 @@ append scripts
 									})
 
 									divSelect.appendChild(select)
-								divInputGroupFilter.appendChild(divSelect)
+								divInputBtn.insertBefore(divSelect, btnPost)
 
 								
 
 								//DIV include, exclude person and/or departments with in post and its actions
-								divSelectFilter = document.createElement('div')
-								divSelectFilter.className = 'col-sm-3'
+							//- 	divSelectFilter = document.createElement('div')
+							//- 	divSelectFilter.className = 'col-sm-3'
 								
 
-									selectFilter = document.createElement('select')
-									selectFilter.className = 'form-control selectpicker'
+							//- 		selectFilter = document.createElement('select')
+							//- 		selectFilter.className = 'form-control selectpicker'
 
-									selectFilter.classList.add('col-sm-4')
-									selectFilter.name = 'selectFilter'
-									selectFilter.id = 'selectFilter'
-										var optionList = [
-												'Select Filter',
-												'Include' 
-												//- 'Exclude', '
-												//- Include Department'
-												]
+							//- 		selectFilter.classList.add('col-sm-4')
+							//- 		selectFilter.name = 'selectFilter'
+							//- 		selectFilter.id = 'selectFilter'
+							//- 			var optionList = [
+							//- 					'Select Filter',
+							//- 					'Include' 
+							//- 					//- 'Exclude', '
+							//- 					//- Include Department'
+							//- 					]
 
-										optionList.forEach(function(item, i){
-											//- if(item !== setting.value){
-												var option = document.createElement('option')
-												option.value = item
-												option.innerHTML = item
-												selectFilter.appendChild(option)
-											//- }
+							//- 			optionList.forEach(function(item, i){
+							//- 				//- if(item !== setting.value){
+							//- 					var option = document.createElement('option')
+							//- 					option.value = item
+							//- 					option.innerHTML = item
+							//- 					selectFilter.appendChild(option)
+							//- 				//- }
 
-										})
-									selectFilter.addEventListener('change', function(){
-										selectFilter.value === 'Exclude'?$('#divSelectDept').remove():""
+							//- 			})
+							//- 		selectFilter.addEventListener('change', function(){
+							//- 			selectFilter.value === 'Exclude'?$('#divSelectDept').remove():""
 
 
-										//Whether include or exclude selected
-										if((selectFilter.value === 'Include'||selectFilter.value === 'Exclude')&& $('#friendSearch').length <1){
+							//- 			//Whether include or exclude selected
+							//- 			if((selectFilter.value === 'Include'||selectFilter.value === 'Exclude')&& $('#friendSearch').length <1){
 											
-											//DIV contain input search
-											divfriendSearch = document.createElement('div')
-											divfriendSearch.className = 'col-sm-3'
-											divfriendSearch.id = 'divfriendSearch'
-												var input = document.createElement('input')
+							//- 				//DIV contain input search
+							//- 				divfriendSearch = document.createElement('div')
+							//- 				divfriendSearch.className = 'col-sm-3'
+							//- 				divfriendSearch.id = 'divfriendSearch'
+							//- 					var input = document.createElement('input')
 												
-												//- input.placeholder = 'Search Person'
-												input.className ='form-control'
-												input.id = 'friendSearch'
+							//- 					//- input.placeholder = 'Search Person'
+							//- 					input.className ='form-control'
+							//- 					input.id = 'friendSearch'
 												
-												input.setAttribute('href','#');
-												input.setAttribute('data-toggle','popover');
-												input.setAttribute('data-trigger','hover');
-												input.setAttribute('data-placement','auto');
-												input.style.fontWeight = 'bold'
-												input.setAttribute('title', 'Selected User');
+							//- 					input.setAttribute('href','#');
+							//- 					input.setAttribute('data-toggle','popover');
+							//- 					input.setAttribute('data-trigger','hover');
+							//- 					input.setAttribute('data-placement','auto');
+							//- 					input.style.fontWeight = 'bold'
+							//- 					input.setAttribute('title', 'Selected User');
 												
-												//popover selected users when hovering over the input search
-												document.addEventListener('mousemove', function(){
-													input.setAttribute('data-content', JSON.stringify(userSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
-													$('[data-toggle="popover"]').popover({html:true})
+							//- 					//popover selected users when hovering over the input search
+							//- 					document.addEventListener('mousemove', function(){
+							//- 						input.setAttribute('data-content', JSON.stringify(userSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
+							//- 						$('[data-toggle="popover"]').popover({html:true})
 													
-												})
-												divfriendSearch.appendChild(input)
-											divInputGroupFilter.appendChild(divfriendSearch)
-											BHUserList("friendSearch")
+							//- 					})
+							//- 					divfriendSearch.appendChild(input)
+							//- 				divInputGroupFilter.appendChild(divfriendSearch)
+							//- 				BHUserList("friendSearch")
 											
 
-											//typeahead display person info during search
-											//- $('#friendSearch').bind('typeahead:selected', function(obj, group, name){
-											//- 	$('#friendSearch').typeahead('val', '')
-											//- 	userSelected.push(group.name.substring(0,group.name.indexOf("_")))
-											//- 	userIdSelected.push(group.groupBLUserId)
-											//- 	//- $('#friendSearch').val('.....')
-											//- 	console.log(obj)
-											//- 	console.log(group)
-											//- 	console.log(name)
+							//- 				//typeahead display person info during search
+							//- 				$('#friendSearch').bind('typeahead:selected', function(obj, group, name){
+							//- 					$('#friendSearch').typeahead('val', '')
+							//- 					userSelected.push(group.name.substring(0,group.name.indexOf("_")))
+							//- 					userIdSelected.push(group.groupBLUserId)
+							//- 					//- $('#friendSearch').val('.....')
+							//- 					console.log(obj)
+							//- 					console.log(group)
+							//- 					console.log(name)
 											
-											//- })
-										//When department is selected
-										}else if (selectFilter.value === 'Include Department'){
-											//- $('#divfriendSearch').remove()
+							//- 				})
+							//- 			//When department is selected
+							//- 			}else if (selectFilter.value === 'Include Department'){
+							//- 				//- $('#divfriendSearch').remove()
 
-											//get list of dept from server
-											$.post('/notif/getDept').done(function(Rdata){
-												if($('#selectDept').length<1){
+							//- 				//get list of dept from server
+							//- 				$.post('/notif/getDept').done(function(Rdata){
+							//- 					if($('#selectDept').length<1){
 
-													var divSelectDept = document.createElement('div')
-													divSelectDept.className = 'col-sm-3'
-													divSelectDept.id = 'divSelectDept'
-														var selectDept = document.createElement('select')
-														selectDept.className = 'form-control'
-														selectDept.setAttribute('href','#');
-														selectDept.setAttribute('data-toggle','popover');
-														selectDept.setAttribute('data-trigger','hover');
-														selectDept.setAttribute('data-placement','auto');
-														selectDept.style.fontWeight = 'bold'
-														selectDept.setAttribute('title', 'Selected Department');
+							//- 						var divSelectDept = document.createElement('div')
+							//- 						divSelectDept.className = 'col-sm-3'
+							//- 						divSelectDept.id = 'divSelectDept'
+							//- 							var selectDept = document.createElement('select')
+							//- 							selectDept.className = 'form-control'
+							//- 							selectDept.setAttribute('href','#');
+							//- 							selectDept.setAttribute('data-toggle','popover');
+							//- 							selectDept.setAttribute('data-trigger','hover');
+							//- 							selectDept.setAttribute('data-placement','auto');
+							//- 							selectDept.style.fontWeight = 'bold'
+							//- 							selectDept.setAttribute('title', 'Selected Department');
 														
-														var optionDefault = document.createElement('option')
-														optionDefault.innerHTML = 'Select Department'
-														selectDept.appendChild(optionDefault)
-														//adding depts to dropdown menu
-														Rdata.department.forEach(function(dept, i){
-															//- if(item !== setting.value){
-																var option = document.createElement('option')
-																option.value = JSON.stringify(dept, null, 4)
-																option.innerHTML = dept.name
+							//- 							var optionDefault = document.createElement('option')
+							//- 							optionDefault.innerHTML = 'Select Department'
+							//- 							selectDept.appendChild(optionDefault)
+							//- 							//adding depts to dropdown menu
+							//- 							Rdata.department.forEach(function(dept, i){
+							//- 								//- if(item !== setting.value){
+							//- 									var option = document.createElement('option')
+							//- 									option.value = JSON.stringify(dept, null, 4)
+							//- 									option.innerHTML = dept.name
 
-																selectDept.appendChild(option)
-															//- }
-														})
-														selectDept.addEventListener('change', function(){
-															var dept = JSON.parse(selectDept.value)
-															userIdSelected.push(dept.status)
-															deptSelected.push(dept.name)
-															//- console.log(selectDept.value.name)
-														})
-														divSelectDept.appendChild(selectDept)
-													divInputGroupFilter.appendChild(divSelectDept)
-													document.addEventListener('mousemove', function(){
-														selectDept.setAttribute('data-content', JSON.stringify(deptSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
-														$('[data-toggle="popover"]').popover({html:true})
+							//- 									selectDept.appendChild(option)
+							//- 								//- }
+							//- 							})
+							//- 							selectDept.addEventListener('change', function(){
+							//- 								var dept = JSON.parse(selectDept.value)
+							//- 								userIdSelected.push(dept.status)
+							//- 								deptSelected.push(dept.name)
+							//- 								//- console.log(selectDept.value.name)
+							//- 							})
+							//- 							divSelectDept.appendChild(selectDept)
+							//- 						divInputGroupFilter.appendChild(divSelectDept)
+							//- 						document.addEventListener('mousemove', function(){
+							//- 							selectDept.setAttribute('data-content', JSON.stringify(deptSelected, null, 4).replace(/"/g,"").replace("[","").replace("]",""));
+							//- 							$('[data-toggle="popover"]').popover({html:true})
 													
-													})
-												}
-											})
-										}
-									})
-								divSelectFilter.appendChild(selectFilter)
-							divInputGroupFilter.appendChild(divSelectFilter)
+							//- 						})
+							//- 					}
+							//- 				})
+							//- 			}
+							//- 		})
+							//- 	divSelectFilter.appendChild(selectFilter)
+							//- divInputGroupFilter.appendChild(divSelectFilter)
 
 							divShareBtn = document.createElement('div')
 								var shareBtn = document.createElement('button')
@@ -1450,17 +1453,7 @@ append scripts
 							divInputGroupFilter.appendChild(divShareBtn)
 
 
-							divTagBtn = document.createElement('div')
-								var tagBtn = document.createElement('button')
-								tagBtn.className = 'col-sm-2 btn btn-primary'
-								tagBtn.innerHTML = 'Tag Manager'
-								tagBtn.id = 'shareBtn'
-								//- tagBtn.style.display = 'none'
-								divTagBtn.appendChild(tagBtn)
-								tagBtn.addEventListener('click',function(){
-									tagManagerTabClick()
-								})
-							divInputGroupFilter.appendChild(divTagBtn)
+							
 
 
 							divFilterGroup.append(divInputGroupFilter)

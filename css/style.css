@@ -171,6 +171,7 @@
 }
 
 #main td:nth-child(7), 
+#main td:nth-child(2), 
 #tblOverview td:nth-child(6){
 	border-left:7px solid #077EBB;
 	/*background-color: #A5E8B4;*/
@@ -213,7 +214,7 @@
 }
 
 #eventTable, #taskTable{
-	width: 50%;
+	width: 70%;
 	border: 6px none #ABF7FE;
 	margin: 0 auto;
 
