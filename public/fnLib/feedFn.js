@@ -1151,88 +1151,101 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 		console.log('downloading')
 	}else if(option === 'Email'){
 		console.log(parentDiv.parentNode)
-		// gapi.client.gmail.users.labels.list({
-		// 		  	'userId': 'me'
-		// 		}).then(function(response) {
-		// 			console.log(response)
-		// 		})
-		 var divPost = $(parentDiv.parentNode.firstChild).find('a').each(function(){
+		var emailWindow = document.createElement('div')
+		emailWindow.id = 'emailWindow'
+		emailWindow.style.top = '150px'
+			var mailRecipient = document.createElement('input')
+			mailRecipient.style.width = '500px'
+			emailWindow.appendChild(mailRecipient)
+
+			var btnSendMail = document.createElement('input')
+			btnSendMail.type = 'button'
+			btnSendMail.value = 'SEND'
+			btnSendMail.addEventListener('click',()=>{
+				var arrayMailRec = mailRecipient.value.replace(/\s+/g, '').split(',')
+				console.log(arrayMailRec)
+			})
+			emailWindow.appendChild(btnSendMail)
+
+		$('#Feed').append(emailWindow)
+
+		//  var divPost = $(parentDiv.parentNode.firstChild).find('a').each(function(){
 		 	
-			var s3fileLink = $(this).attr('href')
-			console.log(s3fileLink)
-			const xhr = new XMLHttpRequest();
-			xhr.open('GET', s3fileLink, true);
-			xhr.responseType = 'arraybuffer'
-			// xhr.withCredentials = true
-			xhr.onreadystatechange = function(res){
-				if(xhr.readyState === 4){
-				  	if(xhr.status === 200){
-					    // console.log(xhr.response)
-					    console.log(xhr)
-					    var mimeType = 'application/pdf'
-					    var blob = new Blob([xhr.response], {type:mimeType});
-					    // console.log(blob)
-					    var reader = new window.FileReader();
-						reader.readAsDataURL(blob); 
-						reader.onloadend = function() {
-				            base64data = reader.result.split('base64,')[1];                
+		// 	var s3fileLink = $(this).attr('href')
+		// 	console.log(s3fileLink)
+		// 	const xhr = new XMLHttpRequest();
+		// 	xhr.open('GET', s3fileLink, true);
+		// 	xhr.responseType = 'arraybuffer'
+		// 	// xhr.withCredentials = true
+		// 	xhr.onreadystatechange = function(res){
+		// 		if(xhr.readyState === 4){
+		// 		  	if(xhr.status === 200){
+		// 			    // console.log(xhr.response)
+		// 			    console.log(xhr)
+		// 			    var mimeType = 'application/pdf'
+		// 			    var blob = new Blob([xhr.response], {type:mimeType});
+		// 			    // console.log(blob)
+		// 			    var reader = new window.FileReader();
+		// 				reader.readAsDataURL(blob); 
+		// 				reader.onloadend = function() {
+		// 		            base64data = reader.result.split('base64,')[1];                
 						  
 						  
-						    var boundary = "foo_bar_baz";
-						    var mailTo = 'ngokhanhthien@yahoo.com, tkngo85@gmail.com'
-						    var mailSubject = 'Gmail API Test'
-						    var mailBody = 'This is gmail api body'
-						    var fileName = 'example.pdf'
-							var content = [
-								'Content-Type: multipart/mixed; boundary="foo_bar_baz"\r\n',
-								'MIME-Version: 1.0\r\n',
-								// 'From: ngokhanhthien@yahoo.com\r\n',
-								'To: '+ mailTo + '\r\n',
-								'Subject: ' + mailSubject + '\r\n\r\n',
+		// 				    var boundary = "foo_bar_baz";
+		// 				    var mailTo = 'ngokhanhthien@yahoo.com, tkngo85@gmail.com'
+		// 				    var mailSubject = 'Gmail API Test'
+		// 				    var mailBody = 'This is gmail api body'
+		// 				    var fileName = 'example.pdf'
+		// 					var content = [
+		// 						'Content-Type: multipart/mixed; boundary="foo_bar_baz"\r\n',
+		// 						'MIME-Version: 1.0\r\n',
+		// 						// 'From: ngokhanhthien@yahoo.com\r\n',
+		// 						'To: '+ mailTo + '\r\n',
+		// 						'Subject: ' + mailSubject + '\r\n\r\n',
 
-								'--foo_bar_baz\r\n',
-								'Content-Type: text/plain; charset="UTF-8"\r\n',
-								'MIME-Version: 1.0\r\n',
-								'Content-Transfer-Encoding: 7bit\r\n\r\n',
+		// 						'--foo_bar_baz\r\n',
+		// 						'Content-Type: text/plain; charset="UTF-8"\r\n',
+		// 						'MIME-Version: 1.0\r\n',
+		// 						'Content-Transfer-Encoding: 7bit\r\n\r\n',
 
-								mailBody + '\r\n\r\n',
+		// 						mailBody + '\r\n\r\n',
 
-								'--foo_bar_baz\r\n',
-								'Content-Type: '+ mimeType +'\r\n',
-								'MIME-Version: 1.0\r\n',
-								'Content-Transfer-Encoding: base64\r\n',
-								'Content-Disposition: attachment; filename='+ fileName+ '\r\n\r\n',
+		// 						'--foo_bar_baz\r\n',
+		// 						'Content-Type: '+ mimeType +'\r\n',
+		// 						'MIME-Version: 1.0\r\n',
+		// 						'Content-Transfer-Encoding: base64\r\n',
+		// 						'Content-Disposition: attachment; filename='+ fileName+ '\r\n\r\n',
 
-								base64data, '\r\n\r\n',
+		// 						base64data, '\r\n\r\n',
 
-								'--foo_bar_baz--'
-					   		].join('');
+		// 						'--foo_bar_baz--'
+		// 			   		].join('');
 							  
-							var sendRequest = gapi.client.gmail.users.messages.send({
-							    'userId': 'me',
-							    'resource': {
-							      'raw': window.btoa(content).replace(/\+/g, '-').replace(/\//g, '_')
-							    }
-							});
+		// 					var sendRequest = gapi.client.gmail.users.messages.send({
+		// 					    'userId': 'me',
+		// 					    'resource': {
+		// 					      'raw': window.btoa(content).replace(/\+/g, '-').replace(/\//g, '_')
+		// 					    }
+		// 					});
 
-							sendRequest.execute(function(send){
-								console.log(send)
-							});
-						}
+		// 					sendRequest.execute(function(send){
+		// 						console.log(send)
+		// 					});
+		// 				}
 						
 
-					}
-				}
+		// 			}
+		// 		}
 
-			}
-			xhr.onload = function(item){
-				console.log(item)
-			}
-			xhr.onerror = function(err){
-			console.log(err)
-			}
-			xhr.send()
-		})
+		// 	}
+		// 	xhr.onload = function(item){
+		// 		console.log(item)
+		// 	}
+		// 	xhr.onerror = function(err){
+		// 	console.log(err)
+		// 	}
+		// 	xhr.send()
+		// })
 
 	}
 
