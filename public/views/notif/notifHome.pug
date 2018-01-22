@@ -55,6 +55,14 @@ append scripts
 	script.
 
 		$(function(){
+			//Adding remove method for IE
+			if (!('remove' in Element.prototype)) {
+			    Element.prototype.remove = function() {
+			        if (this.parentNode) {
+			            this.parentNode.removeChild(this);
+			        }
+			    };
+			}
 			
 			//close modal Pictures
 			var myModal = document.getElementById('myModal')
@@ -100,33 +108,36 @@ append scripts
 				myMCEini('textarea')
 			}
 
-			  
+			
 		
 			//function for update notification badges
 			function push_update_notification(msg){
-				if(navigator.serviceWorker.controller){
+				if(is_safari && is_chrome){
+					alert('pususssssss')
+					if(navigator.serviceWorker.controller){
 
-			        navigator.serviceWorker.addEventListener('message', function(event){
-			        	if(event.data.command == 'pushActivation'){
-			        		console.log("run push activation");
-			        		$.post('/notif/getNewNotifCount').done(function(Rdata){
+				        navigator.serviceWorker.addEventListener('message', function(event){
+				        	if(event.data.command == 'pushActivation'){
+				        		console.log("run push activation");
+				        		$.post('/notif/getNewNotifCount').done(function(Rdata){
 
-			        			console.log('recieving update contain..')
-			        			$('#badgeNotif').html(Rdata.userFeed)
-			        		})
-			        	}else if(event.data.command == 'updateNotif'){
-			        		$.post('/notif/getNewNotif').done(function(Rdata){
+				        			console.log('recieving update contain..')
+				        			$('#badgeNotif').html(Rdata.userFeed)
+				        		})
+				        	}else if(event.data.command == 'updateNotif'){
+				        		$.post('/notif/getNewNotif').done(function(Rdata){
 
-			        			console.log('recieving update contain..')
-			        			$('#notifBtn').html(Rdata.userFeed)
-			        		})
-			        		
-			        	}
-			        	
-			        })
-			        navigator.serviceWorker.controller.postMessage({'command':'POST'});
-				    
-			   	}
+				        			console.log('recieving update contain..')
+				        			$('#notifBtn').html(Rdata.userFeed)
+				        		})
+				        		
+				        	}
+				        	
+				        })
+				        navigator.serviceWorker.controller.postMessage({'command':'POST'});
+					    
+				   	}
+				}
 			}
 				//ok
 
@@ -601,7 +612,6 @@ append scripts
 										//- 	byOther:$('#byOther').is(':checked')
 
 										//- })
-
 										
 										$.post('/notif/setFeedSetting',{
 											settingId:setting.id,
@@ -1458,7 +1468,7 @@ append scripts
 							
 
 
-							divFilterGroup.append(divInputGroupFilter)
+							divFilterGroup.appendChild(divInputGroupFilter)
 								
 
 							var lineHR = document.createElement('HR')
@@ -1468,7 +1478,7 @@ append scripts
 							lineHR.style.backgroundColor = 'grey'
 							//- lineHR.setAttribute('style','box-shadow:0 10px 10px -10px grey inset;')
 							
-							divInputGroupFilter.append(lineHR)
+							divInputGroupFilter.appendChild(lineHR)
 							
 							//diplay share button after clicking share 
 							if(command === 'share'){
@@ -2026,35 +2036,35 @@ append scripts
 		var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
 		//- var apiKey = 'AIzaSyDg3iwZzUKsywR59C58EW7HVb13spwbkU4';
 		var scopes = 'https://mail.google.com/';
-		function handleClientLoad() {
-			gapi.load('client:auth2', initClient);
-		}
-		function initClient() {
-			gapi.client.init({
-				discoveryDocs: DISCOVERY_DOCS,
-				clientId: clientId,
-				scope: scopes
-			}).then(function (ini) {
-				// Listen for sign-in state changes.
+		//- function handleClientLoad() {
+		//- 	gapi.load('client:auth2', initClient);
+		//- }
+		//- function initClient() {
+		//- 	gapi.client.init({
+		//- 		discoveryDocs: DISCOVERY_DOCS,
+		//- 		clientId: clientId,
+		//- 		scope: scopes
+		//- 	}).then(function (ini) {
+		//- 		// Listen for sign-in state changes.
 
-				// Handle the initial sign-in state.
-				console.log(gapi.auth2.getAuthInstance().isSignedIn.get())
-				if(!gapi.auth2.getAuthInstance().isSignedIn.get()){
-					gapi.auth2.getAuthInstance().signIn();
-				}
+		//- 		// Handle the initial sign-in state.
+		//- 		console.log(gapi.auth2.getAuthInstance().isSignedIn.get())
+		//- 		if(!gapi.auth2.getAuthInstance().isSignedIn.get()){
+		//- 			gapi.auth2.getAuthInstance().signIn();
+		//- 		}
 				
-				gapi.client.gmail.users.labels.list({
-				  	'userId': 'me'
-				}).then(function(response) {
-					console.log(response)
-				})
-			})
+		//- 		gapi.client.gmail.users.labels.list({
+		//- 		  	'userId': 'me'
+		//- 		}).then(function(response) {
+		//- 			console.log(response)
+		//- 		})
+		//- 	})
 
 
 
 
 
-		}
+		//- }
 
 		
 

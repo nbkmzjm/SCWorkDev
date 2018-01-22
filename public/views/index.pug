@@ -1727,15 +1727,18 @@ append scripts
 			var taskOpListLength = 10
 			console.log(arrCate)
 			console.log(Object.keys(arrCate).length)
-			if (Object.keys(arrCate).length > 5){
-				var colNumber = 1
-			}else{
-				var colNumber = 2
-			}
 			
+			var colNumber 
 			for(key in arrCate){
 
 				if(arrCate[key].length<taskOpListLength){
+					arrCate[key].forEach(function(val){
+						if(val.length>8){
+							colNumber=2
+						}else{
+							colNumber=1
+						}
+					})
 					var ul = document.createElement('ul')
 					ul.setAttribute('role', 'menu')
 					ul.className = 'col-sm-'+ colNumber
@@ -1751,6 +1754,7 @@ append scripts
 					arrCate[key].forEach(function(val){
 						taskOptionFct(val, key, ul)
 					})
+					
 					$('#taskOptionUL').append(ul)	
 
 				}else{

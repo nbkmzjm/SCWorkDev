@@ -70,3 +70,29 @@ moment.updateLocale('en', {
         sameElse : 'MMMM D [@] LT'
     }
 });
+
+function ValidateEmail(email) 
+{
+ if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
+  {
+    return (true)
+  }
+    return (email)
+}
+
+
+function closeRedIcon(divToRemove, parentDiv){
+	var span = document.createElement('span')
+	span.innerHTML = '';
+	span.style.color = 'red'
+	span.style.float = 'right'
+	span.className = "glyphicon glyphicon-remove-circle"
+	span.id = 'delGly';
+	//- click the 'x' to remove from list
+	span.addEventListener('click', function(){
+		divToRemove.remove()
+		
+		
+	});
+	parentDiv.appendChild(span)
+}

@@ -809,7 +809,7 @@ function getPostDB(option){
 
 												$('#postOptContainer').length>0?$('#postOptContainer').remove():''
 												var postOptContainer = document.createElement('div')
-												postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top+ 600 +'px'
+												postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top+ 370 +'px'
 												postOptContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
 												postOptContainer.className = 'popUpContainer'
 												postOptContainer.id = 'postOptContainer'
@@ -1150,102 +1150,259 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 	}else if(option==='Download'){
 		console.log('downloading')
 	}else if(option === 'Email'){
-		console.log(parentDiv.parentNode)
+		console.log(parentDiv.parentNode.childNodes[1])
 		var emailWindow = document.createElement('div')
 		emailWindow.id = 'emailWindow'
 		emailWindow.style.top = '150px'
+			closeRedIcon(emailWindow, emailWindow)
+
 			var mailRecipient = document.createElement('input')
 			mailRecipient.style.width = '500px'
+			mailRecipient.placeholder = 'Enter comma seperated emails'
 			emailWindow.appendChild(mailRecipient)
 
 			var btnSendMail = document.createElement('input')
 			btnSendMail.type = 'button'
 			btnSendMail.value = 'SEND'
-			btnSendMail.addEventListener('click',()=>{
-				var arrayMailRec = mailRecipient.value.replace(/\s+/g, '').split(',')
-				console.log(arrayMailRec)
+			btnSendMail.addEventListener('click',function(){
+				var stringMailRec = mailRecipient.value.replace(/\s+/g, '')
+				var arrayMailRec = stringMailRec.split(',')
+				var emailValid = true
+				arrayMailRec.forEach(function(item){
+					if(ValidateEmail(item)!==true){
+						alert('Please verify this email address:  '+ ValidateEmail(item))
+						emailValid = false
+					}
+				})
+
+				if (emailValid){
+					var attachmentExist = false
+					$(parentDiv.parentNode.firstChild).find('img').each(function(){
+						attachmentExist = true
+						var s3ImageLink = $(this).attr('src')
+						getS3File(s3ImageLink)
+					})
+
+					$(parentDiv.parentNode.firstChild).find('a').each(function(){
+						attachmentExist = true
+		 	
+						var s3fileLink = $(this).attr('href')
+						getS3File(s3fileLink)
+						
+					})
+
+					$(parentDiv.parentNode.firstChild).find('source').each(function(){
+						attachmentExist = true
+		 	
+						var s3VideoLink = $(this).attr('src')
+						getS3File(s3VideoLink)
+						
+					})
+
+					$(parentDiv.parentNode.childNodes[1]).find('img').each(function(){
+						attachmentExist = true
+						var s3ImageLink = $(this).attr('src')
+						getS3File(s3ImageLink)
+					})
+
+					$(parentDiv.parentNode.childNodes[1]).find('a').each(function(){
+						attachmentExist = true
+		 	
+						var s3fileLink = $(this).attr('href')
+						getS3File(s3fileLink)
+						
+					})
+
+					$(parentDiv.parentNode.childNodes[1]).find('source').each(function(){
+						attachmentExist = true
+		 	
+						var s3VideoLink = $(this).attr('src')
+						getS3File(s3VideoLink)
+						
+					})
+					function getS3File(s3Link){
+
+					
+						const xhr = new XMLHttpRequest();
+						xhr.open('GET', s3Link, true);
+						xhr.responseType = 'arraybuffer'
+						// xhr.withCredentials = true
+						xhr.onreadystatechange = function(res){
+							if(xhr.readyState === 4){
+							  	if(xhr.status === 200){
+								    console.log(xhr.response)
+								    console.log(xhr)
+								    var fileExt = xhr.responseURL.slice(xhr.responseURL.lastIndexOf('.')+1)
+									  	var mimeTypeRef ={
+									  		aac	:'audio/aac',
+											abw	:'application/x-abiword',
+											arc	:'application/octet-stream',
+											avi	:'video/x-msvideo',
+											azw	:'application/vndamazonebook',
+											bin	:'application/octet-stream',
+											aac	:'audio/aac',
+											abw	:'application/x-abiword',
+											arc	:'application/octet-stream',
+											avi	:'video/x-msvideo',
+											azw	:'application/vndamazonebook',
+											bin	:'application/octet-stream',
+											bz	:'application/x-bzip',
+											bz2	:'application/x-bzip2',
+											csh	:'application/x-csh',
+											css	:'text/css',
+											csv	:'text/csv',
+											doc	:'application/msword',
+											docx:'application/vndopenxmlformats-officedocumentwordprocessingmldocument',
+											eot	:'application/vndms-fontobject',
+											epub:'application/epub+zip',
+											gif	:'image/gif',
+											htm:'text/html',
+											html:'text/html',
+											ico	:'image/x-icon',
+											ics	:'text/calendar',
+											jar	:'application/java-archive',
+											jpeg:'image/jpeg',
+											jpg	:'image/jpeg',
+											js	:'application/javascript',
+											json	:'application/json',
+											mid:'audio/midi',
+											midi	:'audio/midi',
+											mpeg	:'video/mpeg',
+											mpkg	:',application/vnd/apple.installer+xml',
+											mp4:'application/mp4',
+											odp	:'application/vndoasisopendocumentpresentation',
+											ods	:'application/vndoasisopendocumentspreadsheet',
+											odt	:'application/vndoasisopendocumenttext',
+											oga	:'audio/ogg',
+											ogv	:'video/ogg',
+											ogx	:'application/ogg',
+											otf	:'font/otf',
+											png	:'image/png',
+											pdf	:'application/pdf',
+											ppt	:'application/vndms-powerpoint',
+											pptx	:'application/vndopenxmlformats-officedocumentpresentationmlpresentation',
+											rar	:'application/x-rar-compressed',
+											rtf	:'application/rtf',
+											sh	:'application/x-sh',
+											svg	:'image/svg+xml',
+											swf	:'application/x-shockwave-flash',
+											tar	:'application/x-tar',
+											tif:'image/tiff',
+											tiff	:'image/tiff',
+											ts	:'application/typescript',
+											ttf	:'font/ttf',
+											vsd	:'application/vndvisio',
+											wav	:'audio/x-wav',
+											weba	:'audio/webm',
+											webm	:'video/webm',
+											webp	:'image/webp',
+											woff	:'font/woff',
+											woff2	:'font/woff2',
+											xhtml	:'application/xhtml+xml',
+											xls	:'application/vndms-excel',
+											xlsx:	'application/vndopenxmlformats-officedocumentspreadsheetmlsheet',
+											xml:	'application/xml',
+											xul:	'application/vndmozillaxul+xml',
+											zip:	'application/zip',
+											'3gp':	'video/3gpp',
+											'3g2':	'video/3gpp2',
+											'7z':	'application/x-7z-compressed'
+
+									  	}
+									  	console.log(fileExt)
+									  	console.log(mimeTypeRef[fileExt])
+								    var mimeType = mimeTypeRef[fileExt]
+								    var blob = new Blob([xhr.response], {type:mimeType});
+								    // console.log(blob)
+								    var reader = new window.FileReader();
+									reader.readAsDataURL(blob); 
+									reader.onloadend = function() {
+							            base64data = reader.result.split('base64,')[1];                
+									  
+
+
+									    var boundary = "foo_bar_baz";
+									    var mailTo = stringMailRec
+									    var mailSubject = 'Attachment(s) from wkopro.com'
+									    var fileName = xhr.responseURL.slice(xhr.responseURL.lastIndexOf('/')+1)
+									    var mailBody =  $('#curUserName').text() + ' from wkopro.com web application sent you an attachment.'
+										var content = [
+											'Content-Type: multipart/mixed; boundary="foo_bar_baz"\r\n',
+											'MIME-Version: 1.0\r\n',
+											// 'From: ngokhanhthien@yahoo.com\r\n',
+											'To: '+ mailTo + '\r\n',
+											'Subject: ' + mailSubject + '\r\n\r\n',
+
+											'--foo_bar_baz\r\n',
+											'Content-Type: text/plain; charset="UTF-8"\r\n',
+											'MIME-Version: 1.0\r\n',
+											'Content-Transfer-Encoding: 7bit\r\n\r\n',
+
+											mailBody + '\r\n\r\n',
+
+											'--foo_bar_baz\r\n',
+											'Content-Type: '+ mimeType +'\r\n',
+											'MIME-Version: 1.0\r\n',
+											'Content-Transfer-Encoding: base64\r\n',
+											'Content-Disposition: attachment; filename='+ fileName+ '\r\n\r\n',
+
+											base64data, '\r\n\r\n',
+
+											'--foo_bar_baz--'
+								   		].join('');
+										  
+										var sendRequest = gapi.client.gmail.users.messages.send({
+										    'userId': 'me',
+										    'resource': {
+										      'raw': window.btoa(content).replace(/\+/g, '-').replace(/\//g, '_')
+										    }
+										});
+
+										sendRequest.execute(function(send){
+											console.log(send)
+										});
+									}
+									
+
+								}
+							}
+
+						}
+						xhr.onload = function(item){
+							console.log(item)
+						}
+						xhr.onerror = function(err){
+						console.log(err)
+						}
+						xhr.send()
+					}
+					console.log(attachmentExist)
+					if(!attachmentExist){
+						alert('There is no attachment in the post to email')
+					}
+				}
+
 			})
+
 			emailWindow.appendChild(btnSendMail)
 
 		$('#Feed').append(emailWindow)
 
-		//  var divPost = $(parentDiv.parentNode.firstChild).find('a').each(function(){
-		 	
-		// 	var s3fileLink = $(this).attr('href')
-		// 	console.log(s3fileLink)
-		// 	const xhr = new XMLHttpRequest();
-		// 	xhr.open('GET', s3fileLink, true);
-		// 	xhr.responseType = 'arraybuffer'
-		// 	// xhr.withCredentials = true
-		// 	xhr.onreadystatechange = function(res){
-		// 		if(xhr.readyState === 4){
-		// 		  	if(xhr.status === 200){
-		// 			    // console.log(xhr.response)
-		// 			    console.log(xhr)
-		// 			    var mimeType = 'application/pdf'
-		// 			    var blob = new Blob([xhr.response], {type:mimeType});
-		// 			    // console.log(blob)
-		// 			    var reader = new window.FileReader();
-		// 				reader.readAsDataURL(blob); 
-		// 				reader.onloadend = function() {
-		// 		            base64data = reader.result.split('base64,')[1];                
-						  
-						  
-		// 				    var boundary = "foo_bar_baz";
-		// 				    var mailTo = 'ngokhanhthien@yahoo.com, tkngo85@gmail.com'
-		// 				    var mailSubject = 'Gmail API Test'
-		// 				    var mailBody = 'This is gmail api body'
-		// 				    var fileName = 'example.pdf'
-		// 					var content = [
-		// 						'Content-Type: multipart/mixed; boundary="foo_bar_baz"\r\n',
-		// 						'MIME-Version: 1.0\r\n',
-		// 						// 'From: ngokhanhthien@yahoo.com\r\n',
-		// 						'To: '+ mailTo + '\r\n',
-		// 						'Subject: ' + mailSubject + '\r\n\r\n',
+		// var span = document.createElement('span')
+		// span.innerHTML = '';
+		// span.style.color = 'red'
+		// span.style.float = 'right'
+		// span.className = "glyphicon glyphicon-remove-circle"
+		// span.id = 'delGly';
+		// //- click the 'x' to remove from list
+		// span.addEventListener('click', function(){
+		// 	emailWindow.remove()
+			
+			
+		// });
+		// parentDiv.appendChild(span)
 
-		// 						'--foo_bar_baz\r\n',
-		// 						'Content-Type: text/plain; charset="UTF-8"\r\n',
-		// 						'MIME-Version: 1.0\r\n',
-		// 						'Content-Transfer-Encoding: 7bit\r\n\r\n',
-
-		// 						mailBody + '\r\n\r\n',
-
-		// 						'--foo_bar_baz\r\n',
-		// 						'Content-Type: '+ mimeType +'\r\n',
-		// 						'MIME-Version: 1.0\r\n',
-		// 						'Content-Transfer-Encoding: base64\r\n',
-		// 						'Content-Disposition: attachment; filename='+ fileName+ '\r\n\r\n',
-
-		// 						base64data, '\r\n\r\n',
-
-		// 						'--foo_bar_baz--'
-		// 			   		].join('');
-							  
-		// 					var sendRequest = gapi.client.gmail.users.messages.send({
-		// 					    'userId': 'me',
-		// 					    'resource': {
-		// 					      'raw': window.btoa(content).replace(/\+/g, '-').replace(/\//g, '_')
-		// 					    }
-		// 					});
-
-		// 					sendRequest.execute(function(send){
-		// 						console.log(send)
-		// 					});
-		// 				}
-						
-
-		// 			}
-		// 		}
-
-		// 	}
-		// 	xhr.onload = function(item){
-		// 		console.log(item)
-		// 	}
-		// 	xhr.onerror = function(err){
-		// 	console.log(err)
-		// 	}
-		// 	xhr.send()
-		// })
+		
 
 	}
 

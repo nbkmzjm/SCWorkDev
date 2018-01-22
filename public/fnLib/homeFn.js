@@ -1,20 +1,6 @@
 
 
-function closeRedIcon(divToRemove, parentDiv){
-	var span = document.createElement('span')
-	span.innerHTML = '';
-	span.style.color = 'red'
-	span.style.float = 'right'
-	span.className = "glyphicon glyphicon-remove-circle"
-	span.id = 'delGly';
-	//- click the 'x' to remove from list
-	span.addEventListener('click', function(){
-		divToRemove.remove()
-		
-		
-	});
-	parentDiv.appendChild(span)
-}
+
 
 function calendarPick(){
 
