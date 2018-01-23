@@ -236,7 +236,7 @@ function getPostDB(option){
 
 			}).done(function(Rdata){
 				console.log('pppppppppp')
-				console.log(Rdata)
+				alert('a')
 
 				var textInPost = function(){
 					var result = false;
@@ -251,7 +251,7 @@ function getPostDB(option){
 				}
 				
 				Rdata.posts.forEach(function(post, i){
-					// console.log(post)
+					alert('b')
 					var tempDivPostPanel = document.createElement('div')
 						tempDivPostPanel.id = 'tempDivPostPanel'
 						tempDivPostPanel.innerHTML = post.postText
@@ -271,7 +271,7 @@ function getPostDB(option){
 					divPostPanel.appendChild(divBody)
 
 					$("#tempDivPostPanel").find('p').each(function(){
-						
+						alert('c')
 						var p = this
 						console.log(p.firstChild)
 						if(p.firstChild.nodeName === 'IMG' ){
