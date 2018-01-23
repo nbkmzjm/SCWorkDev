@@ -1219,7 +1219,8 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	console.log('limit: '+ limit)
 	console.log('loadNumber: '+ loadNumber)
 	
-	
+	console.log('sDate:'+ sDate)
+	console.log('eDate:'+ sDate)
 
 	//set Post by me
 	if(byMe==='true' && byOther !== 'true'){
@@ -1389,8 +1390,6 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						return userFeed.mainPost
 					})
 					// console.log('posts:' + JSON.stringify(posts, null, 4))
-					console.log('ppppppppposts')
-					console.log(JSON.stringify(posts, null, 4))
 					res.json({posts:posts})
 				}).catch(function(e) {
 					console.log(e)
@@ -1719,8 +1718,6 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						limit: 12,
 						offset: loadNumber
 						}).then(function(posts){
-							console.log('ppppppppposts')
-							console.log(JSON.stringify(posts, null, 4))
 							res.json({posts:posts})
 						})
 					})
