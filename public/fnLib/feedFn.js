@@ -190,29 +190,29 @@ function getPostDB(option){
 	
 
 	//determind when scroll to the bottom
-	window.onscroll = function(event){
-		console.log('xxx:'+ viewFormat)
-		var wrap = document.getElementById('divPostContainer')
-		var containHeight = wrap.offsetHeight //height of loaded contain
-		var yOffset = window.pageYOffset  //how much scrolled to the top
-		var windowHt = window.innerHeight // height of visible contain
-		var y = yOffset + windowHt
-		if( viewFormat === 'Panel'){
-			if(y >= containHeight ){
-				//load more feeds when at bottom of the page
-				getFeed()
-				loadNumber = loadNumber + 5
-			}
-		}else if(viewFormat === 'List'){
-			console.log('xxxx')
-			if(y >= containHeight){
-				//load more feeds when at bottom of the page
-				getFeed()
-				loadNumber = loadNumber + 12
-			}
-		}
+	// window.onscroll = function(event){
+	// 	console.log('xxx:'+ viewFormat)
+	// 	var wrap = document.getElementById('divPostContainer')
+	// 	var containHeight = wrap.offsetHeight //height of loaded contain
+	// 	var yOffset = window.pageYOffset  //how much scrolled to the top
+	// 	var windowHt = window.innerHeight // height of visible contain
+	// 	var y = yOffset + windowHt
+	// 	if( viewFormat === 'Panel'){
+	// 		if(y >= containHeight ){
+	// 			//load more feeds when at bottom of the page
+	// 			getFeed()
+	// 			loadNumber = loadNumber + 5
+	// 		}
+	// 	}else if(viewFormat === 'List'){
+	// 		console.log('xxxx')
+	// 		if(y >= containHeight){
+	// 			//load more feeds when at bottom of the page
+	// 			getFeed()
+	// 			loadNumber = loadNumber + 12
+	// 		}
+	// 	}
 		
-	}
+	// }
 
 	function getFeed(){
 		
@@ -298,7 +298,7 @@ function getPostDB(option){
 								document.getElementById('imgModal').src = this.src
 							})
 
-							
+							alert(img.src)
 							divBody.appendChild(img)
 						}else if(p.firstChild.nodeName === 'IFRAME'){
 
@@ -336,7 +336,7 @@ function getPostDB(option){
 						}else{
 							divBody.appendChild(p)
 						}
-						tempDivPostPanel.remove()
+						// tempDivPostPanel.remove()
 					})
 		
 
