@@ -1220,7 +1220,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	console.log('loadNumber: '+ loadNumber)
 	
 	console.log('sDate:'+ sDate)
-	console.log('eDate:'+ sDate)
+	console.log('eDate:'+ eDate)
 
 	//set Post by me
 	if(byMe==='true' && byOther !== 'true'){
