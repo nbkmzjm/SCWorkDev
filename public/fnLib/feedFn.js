@@ -236,22 +236,22 @@ function getPostDB(option){
 
 			}).done(function(Rdata){
 				console.log('pppppppppp')
-				alert('a')
+				alert(JSON.stringify(Rdata.posts,4, null))
 
-				var textInPost = function(){
-					var result = false;
-					var pTags = [].slice.call(document.getElementById('divBody'+i).getElementsByTagName('p'))
-					pTags.forEach(function(pTag, u){
-						console.log(pTag)
-						if(pTag.firstChild.nodeName!=='IMG'&&pTag.firstChild.nodeName!=='IFRAME'){
-							result =  true
-						}
-					})
-					return result
-				}
+				// var textInPost = function(){
+				// 	var result = false;
+				// 	var pTags = [].slice.call(document.getElementById('divBody'+i).getElementsByTagName('p'))
+				// 	pTags.forEach(function(pTag, u){
+				// 		console.log(pTag)
+				// 		if(pTag.firstChild.nodeName!=='IMG'&&pTag.firstChild.nodeName!=='IFRAME'){
+				// 			result =  true
+				// 		}
+				// 	})
+				// 	return result
+				// }
 				
 				Rdata.posts.forEach(function(post, i){
-					alert('b')
+					alert(JSON.stringify(post,4, null))
 					var tempDivPostPanel = document.createElement('div')
 						tempDivPostPanel.id = 'tempDivPostPanel'
 						tempDivPostPanel.innerHTML = post.postText
