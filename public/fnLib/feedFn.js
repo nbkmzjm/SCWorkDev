@@ -236,7 +236,8 @@ function getPostDB(option){
 
 			}).done(function(Rdata){
 				console.log('pppppppppp')
-				alert(JSON.stringify(Rdata.posts,4, null))
+				alert(JSON.stringify(Rdata,4, null))
+				console.log(Rdata)
 
 				// var textInPost = function(){
 				// 	var result = false;
