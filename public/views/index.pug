@@ -194,9 +194,7 @@ append scripts
 			calendarPick();
 			
 			$.getJSON('/ajaxUser').done(mainSC, function(){
-				$.post('/notif/getNewNotifCount').done(function(Rdata){
-					$('#badgeNotif').html(Rdata.userFeed)
-				})
+				
 				//- setInterval(function(){
 				//- 	//- alert('5 second')
 				//- 	document.getElementById('SELECT').checked = true

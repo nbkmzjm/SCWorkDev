@@ -174,7 +174,15 @@ append scripts
 					inputPost.id = 'post'
 					inputPost.className = 'form-control'
 					inputPost.placeholder = 'Post announcement here'
+					inputPost.addEventListener('keyup', function(){
+						if(document.getElementById("post").value.trim() !== ''){
+							$("#btnPost").prop("disabled",false)
+						}else{
+							$("#btnPost").prop("disabled",true)
+						}
+					})
 					divInputGroup.appendChild(inputPost)
+						
 
 					var divInputBtn = document.createElement('div')
 					divInputBtn.style.marginTop = "10px"
@@ -404,7 +412,7 @@ append scripts
 						divInputBtn.appendChild(btnPost)
 					divInputGroup.appendChild(divInputBtn)
 
-
+					
 
 					//DIV contain progress-bar
 					var divProgress = document.createElement('div')
@@ -439,7 +447,7 @@ append scripts
 
 					//- divInputGroup.appendChild(divInputGroupBtn)
 				$('#Feed').append(divInputGroup)
-
+				
 				document.getElementById("post").focus()
 
 
@@ -1136,7 +1144,7 @@ append scripts
 
 										console.log(this.parentNode.parentNode.childNodes[3])
 										$('#divSelectColleague').length != 0?$('#divSelectColleague').remove():""
-										//- $('#divSelectCoworker').length != 0?$('#divSelectCoworker').remove():""
+										$('#divSelectCoworker').length != 0?$('#divSelectCoworker').remove():""
 										$('#divSelectCoofColleague').length != 0?$('#divSelectCoofColleague').remove():""
 										$('#divSelectWorkGroup').length != 0?$('#divSelectWorkGroup').remove():""
 										if(select.value === 'Coworker'){
@@ -1164,7 +1172,7 @@ append scripts
 															selectCoworker.appendChild(option)
 													})
 													divSelectCoworker.appendChild(selectCoworker)
-												divInputGroupFilter.appendChild(divSelectCoworker)
+													divInputBtn.insertBefore(divSelectCoworker, btnPost)
 
 												$('#selectCoworker').multiselect({
 													includeSelectAllOption:true
@@ -1203,7 +1211,7 @@ append scripts
 															selectColleague.appendChild(option)
 													})
 													divSelectColleague.appendChild(selectColleague)
-												divInputGroupFilter.appendChild(divSelectColleague)
+												divInputBtn.insertBefore(divSelectColleague, btnPost)
 
 												$('#selectColleague').multiselect({
 													includeSelectAllOption:true
@@ -1243,7 +1251,7 @@ append scripts
 															selectCoofColleague.appendChild(option)
 													})
 													divSelectCoofColleague.appendChild(selectCoofColleague)
-												divInputGroupFilter.appendChild(divSelectCoofColleague)
+												divInputBtn.insertBefore(divSelectCoofColleague, btnPost)
 
 												$('#selectCoofColleague').multiselect({
 													includeSelectAllOption:true
@@ -1292,7 +1300,9 @@ append scripts
 														})
 													}
 													divSelectWorkGroup.appendChild(selectWorkGroup)
-												divInputGroupFilter.appendChild(divSelectWorkGroup)
+													divInputBtn.insertBefore(divSelectWorkGroup, btnPost)
+
+
 												$('#selectWorkGroup').multiselect({
 													buttonText: function(){
 														return 'Select WorkGroup'

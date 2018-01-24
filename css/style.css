@@ -114,7 +114,7 @@
 	color: #D849D3;
 	z-index: 1;
 	position: fixed;
-	top:50px;
+	top:55px;
 	/*left:0px;*/
 	width: 1200;
 	margin-left: -7px;
@@ -236,7 +236,7 @@
 
 #taskOptionDiv{
 	position: relative;
-	top: 50px;
+	top: 55px;
 }
 
 #taskOptMemoDiv{
@@ -284,7 +284,7 @@
 	border-radius: 10px;
 	position: fixed;
 	box-shadow: 20px 20px 5px #3F4E4D;
-    left: 200px;
+    left: 70px;
 /*    width: 75%;
     height: 75%;*/
     background: #7EA7AB;

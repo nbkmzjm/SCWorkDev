@@ -478,7 +478,7 @@ router.post('/login', function(req, res) {
 		}).then(function(tokenInstance) {
 			// res.header('Auth', tokenInstance.get('token')).json(userInstance.toPublicJSON());
 			res.cookie('token', tokenInstance.get('token'), {
-				maxAge: 60000000
+				maxAge: 600000000
 			});
 			res.redirect('/');
 		}).catch(function(e) {

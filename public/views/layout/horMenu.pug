@@ -11,9 +11,11 @@
 				//- button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#")
 				//- 	span(class="sr-only") Shopping Cart
 				//- 	span(class="glyphicon glyphicon-shopping-cart" aria-hidden="false")
-				button(id= 'testbtn') Test
+				
 				button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#taskOptionDiv" id='optionTextS') 
-					span(class="glyphicon glyphicon-edit" aria-hidden="true") SELECT 
+					span(class="glyphicon glyphicon-edit" aria-hidden="true") SELECT
+				button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" id='notifBtnS') 
+					span(class="glyphicon glyphicon-bell" aria-hidden="true" style="color:#F4911C;font-size:20px") 
 
 				a(class="navbar-brand", href="/")
 					span(class="glyphicon glyphicon-home" aria-hidden="false") BCP 
@@ -54,43 +56,62 @@ script.
 	        Excel.Workbooks.Open("https://scworkdevx.s3.amazonaws.com/05261512479450CompensationProrationModelingTool.xlsx");
 			
 		})
-		var span = document.createElement('span')
-		span.style.color = '#FF8C5A'
-		span.className = "badge"
-		span.id = 'badgeNotif'
-		span.style.float = 'right'
 
-		document.getElementById('notifBtn').appendChild(span)
+		var spanNotif = document.createElement('span')
+		spanNotif.style.color = '#F4911C'
+		spanNotif.className = "badge"
+		spanNotif.style.fontSize = '10px'
+		spanNotif.id = 'badgeNotif'
+		spanNotif.style.float = 'right'
+		//- var spanNotifS = spanNotif.cloneNode(true)
+		document.getElementById('notifBtn').appendChild(spanNotif)
+
+		var spanNotifS = document.createElement('span')
+		spanNotifS.style.color = '#F4911C'
+		spanNotifS.className = "badge"
+		spanNotifS.style.fontSize = '10px'
+		spanNotifS.id = 'badgeNotifS'
+		spanNotifS.style.float = 'right'
+		document.getElementById('notifBtnS').appendChild(spanNotifS)
+		
+
+		//get notification getNewNotifCount
+		$.post('/notif/getNewNotifCount').done(function(Rdata){
+			$('#badgeNotif').html(Rdata.userFeed)
+			$('#badgeNotifS').html(Rdata.userFeed)
+		})
 
 		$.getJSON('/users/curUser').done(function(Rdata){
 			
 			$('#curUserName').append(Rdata.curUserName)
 		})
 		
-		document.getElementById('notifBtn').addEventListener('click', function(){
+		document.getElementById('notifBtn').addEventListener('click',notifMessages)
+		document.getElementById('notifBtnS').addEventListener('click',notifMessages)
+		function notifMessages(){
 			$('#notifContainer').html('')
 			document.getElementById('notifContainer').style.height = '700px'
 			document.getElementById('notifContainer').style.width = '500px'
 			
-			var span = document.createElement('span')
-			span.innerHTML = '';
-			span.zIndex = 1;
-			span.style.position = '-webkit-sticky'
-			span.style.position = 'sticky'
-			span.style.float = 'right'
-			span.style.top = '0'
-			span.style.fontSize = "25px"
-			span.style.color = '#DF7E01'
-			span.className = "glyphicon glyphicon-remove"
-			span.id = 'delGly';
+			var spanClose = document.createElement('span')
+			spanClose.innerHTML = '';
+			spanClose.zIndex = 1;
+			spanClose.style.position = '-webkit-sticky'
+			spanClose.style.position = 'sticky'
+			spanClose.style.float = 'right'
+			spanClose.style.top = '0'
+			spanClose.style.fontSize = "25px"
+			spanClose.style.color = '#DF7E01'
+			spanClose.className = "glyphicon glyphicon-remove"
+			spanClose.id = 'delGly';
 			//- click the 'x' to remove from list
-			span.addEventListener('click', function(){
+			spanClose.addEventListener('click', function(){
 				$('#notifContainer').html('')
 				document.getElementById('notifContainer').style.height = '0px'
 				document.getElementById('notifContainer').style.width = '0px'
 			
 			});
-			$('#notifContainer').append(span)
+			$('#notifContainer').append(spanClose)
 			$.post('/notif/getNewNotif').done(function(Rdata){
 				console.log('recieving update contain..')
 				var tblNotif = document.createElement('table')
@@ -138,7 +159,7 @@ script.
 				$.post('notif/clearNewNotif').done(function(){})
 				
 			})
-		})
+		}
 
 		document.getElementById('signOut').addEventListener('click',function(){
 			console.log('signOut..')

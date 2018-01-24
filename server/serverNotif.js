@@ -2448,10 +2448,10 @@ router.post('/replyPost', middleware.requireAuthentication, function(req, res) {
 						bulkData.push(userFeed)
 					}
 				})
-				console.log('bulkData: '+JSON.stringify(bulkData, null, 4))
+				console.log('bulkDatacomment: '+JSON.stringify(bulkData, null, 4))
 				return db.userFeed.bulkCreate(bulkData)
 				res.json({
-					comment:comment
+					data:bulkData
 				})
 			})
 		})
@@ -2676,7 +2676,7 @@ router.post('/getNewNotif', middleware.requireAuthentication, function(req, res)
 		order:[ 
 			['createdAt', 'DESC']
 		],
-		limit: 100
+		limit: 300
 		
 	}).then(function(userFeeds) {
 

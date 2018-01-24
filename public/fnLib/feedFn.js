@@ -172,7 +172,7 @@ function getPostDB(option){
 			tableFeed.id = 'tblFeed'
 				var theadFeed = document.createElement('thead')
 					var trHeadFeed = document.createElement('tr')
-						var headerFeed = ['','Document','Option','Posted', 'Date', 'Size']
+						var headerFeed = ['Preview','Document','Option','Posted', 'Date', 'Size']
 						headerFeed.forEach(function (item) {
 							var th = document.createElement('th')
 							th.setAttribute('scope', 'col')
@@ -348,13 +348,13 @@ function getPostDB(option){
 							$.post('/notif/getCommentCount',{
 								mainPostId:post.id
 							}).done(function(Rdata){
-
+								$('#divTitle'+ post.id).remove()
 								var emojCount = Rdata.emojCount
 								var divTitle = document.createElement('div')
 								divTitle.className = 'panel-heading'
 
 								divTitle.classList.add('postPanel')
-								divTitle.id = 'divTitle'
+								divTitle.id = 'divTitle'+post.id
 
 									//Posted users with date and time
 									var pUser = document.createElement('span')
@@ -408,8 +408,8 @@ function getPostDB(option){
 											mainPostId:post.id
 										}).done(function(Rdata1){
 											// console.log(Rdata1)
-											$('#comment'+ post.id).length>0?$('#comment'+ post.id).remove():""
-											
+											// $('#comment'+ post.id).length>0?$('#comment'+ post.id).remove():""
+											$('#comment'+ post.id).remove()
 											var divCommentContainer = document.createElement('div')
 											divCommentContainer.className='collapse'
 											divCommentContainer.setAttribute('style','margin-top:10px')
@@ -488,17 +488,19 @@ function getPostDB(option){
 															$.post('/notif/replyPost',{
 																mainPostId:post.id,
 																comment:replyPost.value
-															}).done(function(Rdata){
-																if(!!Rdata){
-																	getComment()
-																	divTitle.parentNode.removeChild(divTitle)
-																	// var divComment = document.createElement('div')
-																	// divComment.innerHTML = Rdata.comment.comment
+															}).done(function(commentx){
+																// if(!!Rdata){
+																
+																// 	divTitle.parentNode.removeChild(divTitle)
+																// 	alert('done')
+																// 	// var divComment = document.createElement('div')
+																// 	// divComment.innerHTML = Rdata.comment.comment
 																	
-																	// divCommentContainer.insertBefore(divComment, divCommentPost)
-																}
+																// 	// divCommentContainer.insertBefore(divComment, divCommentPost)
+																// }
 																
 															})
+															getComment()
 														}) 
 														span.appendChild(btn)
 													divCommentPost.appendChild(span)
@@ -631,6 +633,7 @@ function getPostDB(option){
 														// console.log(Rdata)
 														divTitle.parentNode.removeChild(divTitle)
 														getComment()
+														alert('done')
 													})
 												})
 												divEmojDock.appendChild(spanEmojDock)
@@ -713,7 +716,10 @@ function getPostDB(option){
 											var span = document.createElement('span')
 											span.className = "glyphicon glyphicon-eye-open"
 											span.style.fontSize = "20px"
-											span.addEventListener('mouseenter', function(){
+											span.addEventListener('click', divPreview)
+											span.addEventListener('mouseenter', divPreview)
+
+											function divPreview(){
 												console.log(this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.id)
 												$('#divPreview').remove()
 												var divPreview = document.createElement('div')
@@ -766,7 +772,7 @@ function getPostDB(option){
 												
 
 
-											})
+											}
 											tdPostId.appendChild(span)
 
 
@@ -1144,7 +1150,7 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 		})
 	}else if(option==='Share'){
 		document.location = ("/notif?postId="+ postId + "&command=share")
-		
+
 	}else if(option==='Download'){
 		console.log('downloading')
 	}else if(option === 'Email'){
