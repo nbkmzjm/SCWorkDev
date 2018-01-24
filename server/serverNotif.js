@@ -1220,7 +1220,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	console.log('loadNumber: '+ loadNumber)
 	
 	console.log('sDate:'+ sDate)
-	console.log('eDate:'+ eDate)
+	console.log('eDate:'+ sDate)
 
 	//set Post by me
 	if(byMe==='true' && byOther !== 'true'){
@@ -2422,7 +2422,8 @@ router.post('/replyPost', middleware.requireAuthentication, function(req, res) {
 			
 			db.userFeed.findAll({
 				// attributes:[db.Sequelize.literal('DISTINCT `receivedUserId`'),'receivedUserId'],
-				attributes:['receivedUserId'],
+				attributes:[db.Sequelize.fn('DISTINCT', db.Sequelize.col('receivedUserId')),'receivedUserId'],
+				// attributes:['receivedUserId'],
 				where:{
 					mainPostId:mainPostId
 				}
@@ -2507,7 +2508,7 @@ router.post('/addPostEmoj', middleware.requireAuthentication, function(req, res)
 	}).then(function(comment){
 		console.log("mainPostuserId"+JSON.stringify(comment, null, 4))
 		db.userFeed.findAll({
-			attributes:['receivedUserId'],
+			attributes:[db.Sequelize.fn('DISTINCT', db.Sequelize.col('receivedUserId')),'receivedUserId'],
 			where:{
 				mainPostId:mainPostId
 			}

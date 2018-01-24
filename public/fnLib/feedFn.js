@@ -1144,6 +1144,7 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 		})
 	}else if(option==='Share'){
 		document.location = ("/notif?postId="+ postId + "&command=share")
+		
 	}else if(option==='Download'){
 		console.log('downloading')
 	}else if(option === 'Email'){

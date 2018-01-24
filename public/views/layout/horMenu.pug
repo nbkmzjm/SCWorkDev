@@ -75,9 +75,10 @@ script.
 			var span = document.createElement('span')
 			span.innerHTML = '';
 			span.zIndex = 1;
-			span.style.position = 'absolute'
-			span.style.right = '1px'
-			span.style.top = '1px'
+			span.style.position = '-webkit-sticky'
+			span.style.position = 'sticky'
+			span.style.float = 'right'
+			span.style.top = '0'
 			span.style.fontSize = "25px"
 			span.style.color = '#DF7E01'
 			span.className = "glyphicon glyphicon-remove"
@@ -102,7 +103,7 @@ script.
 					console.log(userFeed)
 					var tr = document.createElement('tr')
 							if(userFeed.notification === 'read'){
-								tr.style.backgroundColor = '#82C3FF'
+								tr.style.backgroundColor = '#FFFFFF'
 							} else if(userFeed.notification === 'viewed'){
 								tr.style.backgroundColor = '#C0FFFD'
 							}
