@@ -2041,39 +2041,34 @@ append scripts
 			
 
 		})
-		var clientId = '663682726940-lit96is858c0pnsbfr5tde2cl8qno3rq.apps.googleusercontent.com';
+		var clientId = '663682726940-o3gv9tif8u8o54sv1qcifq00no9h2b37.apps.googleusercontent.com';
 		var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
 		//- var apiKey = 'AIzaSyDg3iwZzUKsywR59C58EW7HVb13spwbkU4';
 		var scopes = 'https://mail.google.com/';
-		//- function handleClientLoad() {
-		//- 	gapi.load('client:auth2', initClient);
-		//- }
-		//- function initClient() {
-		//- 	gapi.client.init({
-		//- 		discoveryDocs: DISCOVERY_DOCS,
-		//- 		clientId: clientId,
-		//- 		scope: scopes
-		//- 	}).then(function (ini) {
-		//- 		// Listen for sign-in state changes.
+		function handleClientLoad() {
+			gapi.load('client:auth2', initClient);
+		}
+		function initClient() {
+			gapi.client.init({
+				discoveryDocs: DISCOVERY_DOCS,
+				clientId: clientId,
+				scope: scopes
+			}).then(function (ini) {
+				// Listen for sign-in state changes.
 
-		//- 		// Handle the initial sign-in state.
-		//- 		console.log(gapi.auth2.getAuthInstance().isSignedIn.get())
-		//- 		if(!gapi.auth2.getAuthInstance().isSignedIn.get()){
-		//- 			gapi.auth2.getAuthInstance().signIn();
-		//- 		}
+				// Handle the initial sign-in state.
+				console.log(gapi.auth2.getAuthInstance().isSignedIn.get())
+				if(!gapi.auth2.getAuthInstance().isSignedIn.get()){
+					gapi.auth2.getAuthInstance().signIn();
+				}
 				
-		//- 		gapi.client.gmail.users.labels.list({
-		//- 		  	'userId': 'me'
-		//- 		}).then(function(response) {
-		//- 			console.log(response)
-		//- 		})
-		//- 	})
-
-
-
-
-
-		//- }
+				gapi.client.gmail.users.labels.list({
+				  	'userId': 'me'
+				}).then(function(response) {
+					console.log(response)
+				})
+			})
+		}
 
 		
 
