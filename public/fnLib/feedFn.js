@@ -144,8 +144,8 @@ function getPostDB(option){
 	var hideImage = option.hideImage||false
 	var hideVideo = option.hideVideo||false
 	var hidePreview = option.hidePreview||false
-	var sDate = option.sDate||moment(new Date()).subtract(180, 'days').format('MM-DD-YYYY')
-	var eDate = option.eDate||moment(new Date()).add(1,'days').format('MM-DD-YYYY')
+	var sDate = option.sDate||moment(new Date()).subtract(365, 'days').format('MM-DD-YYYY')
+	var eDate = option.eDate||moment(new Date()).add(3,'days').format('MM-DD-YYYY')
 	var viewFormat = option.viewFormat||'Panel'
 	console.log('xxxViewOption:'+ viewOption)
 	console.log('viewFormat:'+ viewFormat)
@@ -1377,6 +1377,7 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 						}
 						xhr.onerror = function(err){
 						console.log(err)
+						alert('Email cannot be sent. Please contact Admin')
 						}
 						xhr.send()
 					}
