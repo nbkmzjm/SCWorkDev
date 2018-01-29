@@ -17,6 +17,8 @@ aws.config.update({
     accessKeyId: processEnv.AWS_ACCESS_KEY_ID,
     secretAccessKey: processEnv.AWS_SECRET_ACCESS_KEY
 });
+var multer = require('multer')
+
 
 
 // const vapidKeys = webpush.generateVAPIDKeys();
@@ -545,6 +547,76 @@ router.post('/sendEmail', function(req, res){
 	}
 
 })
+
+var upload = multer({dest:__dirname + '/public/uploads'})
+var type = upload.single('file')
+
+router.post('/emailAttachmentFile', type, function (req,res) {
+	var attachmentFile = req.file
+	var mailRecipient = req.body.mailRecipient
+
+	console.log('attachment file:')
+	var base64File = new Buffer(fs.readFileSync(attachmentFile.path)).toString('base64')
+
+
+	//     var boundary = "foo_bar_baz";
+    var mailTo = mailRecipient
+    var mailSubject = 'Attachment(s) from wkopro.com'
+    var fileName = attachmentFile.originalname
+    var mailBody =  ' Thien from wkopro.com web application sent you an attachment.'
+	var content = [
+		'Content-Type: multipart/mixed; boundary="foo_bar_baz"\r\n',
+		'MIME-Version: 1.0\r\n',
+		// 'From: ngokhanhthien@yahoo.com\r\n',
+		'To: '+ mailTo + '\r\n',
+		'Subject: ' + mailSubject + '\r\n\r\n',
+
+		'--foo_bar_baz\r\n',
+		'Content-Type: text/plain; charset="UTF-8"\r\n',
+		'MIME-Version: 1.0\r\n',
+		'Content-Transfer-Encoding: 7bit\r\n\r\n',
+
+		mailBody + '\r\n\r\n',
+
+		'--foo_bar_baz\r\n',
+		'Content-Type: '+ attachmentFile.mimeType +'\r\n',
+		'MIME-Version: 1.0\r\n',
+		'Content-Transfer-Encoding: base64\r\n',
+		'Content-Disposition: attachment; filename='+ fileName+ '\r\n\r\n',
+
+		base64File, '\r\n\r\n',
+
+		'--foo_bar_baz--'
+		].join('');
+
+		var encodedMail = new Buffer(content).toString("base64").replace(/\+/g, '-').replace(/\//g, '_')
+		getOauth2Client(sendMessage)
+		function sendMessage(auth) {
+		    gmail.users.messages.send({
+		        auth: auth,
+		        userId: 'me',
+		        resource: {
+		            raw: encodedMail
+		        }
+		    }, function(err, response) {
+		    	if (err) {
+					console.log('The API Changed Label returned an error: ' + err);
+					return;
+				}
+		        res.json(err || response)
+		    });
+		}
+
+
+
+
+
+
+	console.log(JSON.stringify(base64File, null, 4))
+	console.log(JSON.stringify(req.file, null, 4))
+	console.log(JSON.stringify(req.body, null, 4))
+})
+
 router.post('/changedEmailRead', function(req, res){
 	var messageId = req.body.messageId
 	getOauth2Client(getMailMessage)

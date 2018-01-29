@@ -1316,56 +1316,81 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 									  	console.log(fileExt)
 									  	console.log(mimeTypeRef[fileExt])
 								    var mimeType = mimeTypeRef[fileExt]
+								    var fileName = xhr.responseURL.slice(xhr.responseURL.lastIndexOf('/')+1)
 								    var blob = new Blob([xhr.response], {type:mimeType});
+								    var fd = new FormData()
+								    fd.append('file', blob, fileName)
+								    fd.append('mailRecipient', stringMailRec)
+								    // $.post('/notif/emailAttachmentFile', {
+								    // 	attachmentFile:'fsfs'
+								    // }).done(function () {
+
+								    // })
+
+								    $.ajax({
+								    	url: '/notif/emailAttachmentFile',
+								    	type: 'POST',
+								    	data:fd,
+								    	contentType: false,
+								    	processData: false,
+								    	success: function(data){
+
+								    	}, 
+								    	error: function(){
+
+								    	}
+								    })
+
+								   
 								    // console.log(blob)
-								    var reader = new window.FileReader();
-									reader.readAsDataURL(blob); 
-									reader.onloadend = function() {
-							            base64data = reader.result.split('base64,')[1];                
+								 //    var reader = new window.FileReader();
+									// reader.readAsDataURL(blob); 
+									// reader.onloadend = function() {
+							  //           base64data = reader.result.split('base64,')[1];                
 									  
 
 
-									    var boundary = "foo_bar_baz";
-									    var mailTo = stringMailRec
-									    var mailSubject = 'Attachment(s) from wkopro.com'
-									    var fileName = xhr.responseURL.slice(xhr.responseURL.lastIndexOf('/')+1)
-									    var mailBody =  $('#curUserName').text() + ' from wkopro.com web application sent you an attachment.'
-										var content = [
-											'Content-Type: multipart/mixed; boundary="foo_bar_baz"\r\n',
-											'MIME-Version: 1.0\r\n',
-											// 'From: ngokhanhthien@yahoo.com\r\n',
-											'To: '+ mailTo + '\r\n',
-											'Subject: ' + mailSubject + '\r\n\r\n',
+									//     var boundary = "foo_bar_baz";
+									//     var mailTo = stringMailRec
+									//     var mailSubject = 'Attachment(s) from wkopro.com'
+									//     var fileName = xhr.responseURL.slice(xhr.responseURL.lastIndexOf('/')+1)
+									//     var mailBody =  $('#curUserName').text() + ' from wkopro.com web application sent you an attachment.'
+									// 	var content = [
+									// 		'Content-Type: multipart/mixed; boundary="foo_bar_baz"\r\n',
+									// 		'MIME-Version: 1.0\r\n',
+									// 		// 'From: ngokhanhthien@yahoo.com\r\n',
+									// 		'To: '+ mailTo + '\r\n',
+									// 		'Subject: ' + mailSubject + '\r\n\r\n',
 
-											'--foo_bar_baz\r\n',
-											'Content-Type: text/plain; charset="UTF-8"\r\n',
-											'MIME-Version: 1.0\r\n',
-											'Content-Transfer-Encoding: 7bit\r\n\r\n',
+									// 		'--foo_bar_baz\r\n',
+									// 		'Content-Type: text/plain; charset="UTF-8"\r\n',
+									// 		'MIME-Version: 1.0\r\n',
+									// 		'Content-Transfer-Encoding: 7bit\r\n\r\n',
 
-											mailBody + '\r\n\r\n',
+									// 		mailBody + '\r\n\r\n',
 
-											'--foo_bar_baz\r\n',
-											'Content-Type: '+ mimeType +'\r\n',
-											'MIME-Version: 1.0\r\n',
-											'Content-Transfer-Encoding: base64\r\n',
-											'Content-Disposition: attachment; filename='+ fileName+ '\r\n\r\n',
+									// 		'--foo_bar_baz\r\n',
+									// 		'Content-Type: '+ mimeType +'\r\n',
+									// 		'MIME-Version: 1.0\r\n',
+									// 		'Content-Transfer-Encoding: base64\r\n',
+									// 		'Content-Disposition: attachment; filename='+ fileName+ '\r\n\r\n',
 
-											base64data, '\r\n\r\n',
+									// 		base64data, '\r\n\r\n',
 
-											'--foo_bar_baz--'
-								   		].join('');
+									// 		'--foo_bar_baz--'
+								 //   		].join('');
 										  
-										var sendRequest = gapi.client.gmail.users.messages.send({
-										    'userId': 'me',
-										    'resource': {
-										      'raw': window.btoa(content).replace(/\+/g, '-').replace(/\//g, '_')
-										    }
-										});
+									// 	var sendRequest = gapi.client.gmail.users.messages.send({
+									// 	    'userId': 'me',
+									// 	    'resource': {
+									// 	      'raw': window.btoa(content).replace(/\+/g, '-').replace(/\//g, '_')
+									// 	    }
+									// 	});
 
-										sendRequest.execute(function(send){
-											console.log(send)
-										});
-									}
+									// 	sendRequest.execute(function(send){
+									// 		console.log(send)
+									// 	});
+									// }
 									
 
 								}
@@ -1377,7 +1402,7 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 						}
 						xhr.onerror = function(err){
 						console.log(err)
-						alert('Email cannot be sent. Please contact Admin')
+						alert('Unable to get the file. Please contact Admin')
 						}
 						xhr.send()
 					}
