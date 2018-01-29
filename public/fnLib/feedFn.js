@@ -1169,6 +1169,8 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 			btnSendMail.type = 'button'
 			btnSendMail.value = 'SEND'
 			btnSendMail.addEventListener('click',function(){
+				alert('send click')
+				
 				var stringMailRec = mailRecipient.value.replace(/\s+/g, '')
 				var arrayMailRec = stringMailRec.split(',')
 				var emailValid = true
@@ -1321,12 +1323,7 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 								    var fd = new FormData()
 								    fd.append('file', blob, fileName)
 								    fd.append('mailRecipient', stringMailRec)
-								    // $.post('/notif/emailAttachmentFile', {
-								    // 	attachmentFile:'fsfs'
-								    // }).done(function () {
-
-								    // })
-
+								    
 								    $.ajax({
 								    	url: '/notif/emailAttachmentFile',
 								    	type: 'POST',
@@ -1334,12 +1331,48 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 								    	contentType: false,
 								    	processData: false,
 								    	success: function(data){
-
+								    		if(data.labelIds[0]=='SENT'){
+								    			var p = document.createElement('p')
+								    			p.innerHTML = 'EMAIL SENT'
+								    			p.style.color = 'red'
+								    			emailWindow.appendChild(p)
+								    			setTimeout(function(){
+													$('#emailWindow').fadeOut()
+													emailWindow.remove()
+												}, 3000)
+								    			
+								    		}
+								    		
 								    	}, 
 								    	error: function(){
+								    		var p = document.createElement('p')
+								    			p.innerHTML = 'Email can not be sent. Please try again and/or contact Admin'
+								    			p.style.color = 'red'
+								    			emailWindow.appendChild(p)
+								    			setTimeout(function(){
+													$('#emailWindow').fadeOut()
+													emailWindow.remove()
+												}, 3000)
 
 								    	}
+
+								    // 	function sendEmailConfirm(){
+								    // 		var p = document.createElement('p')
+								    // 			p.innerHTML = 'Email can not be sent. Please try again and/or contact Admin'
+								    // 			p.style.color = 'red'
+								    // 			emailWindow.appendChild(p)
+								    // 			setTimeout(function(){
+												// 	$('#emailWindow').fadeOut()
+												// 	emailWindow.remove()
+												// }, 2000)
+
+								    // 	}
+
 								    })
+
+
+
+
 
 								   
 								    // console.log(blob)
@@ -1401,14 +1434,28 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 							console.log(item)
 						}
 						xhr.onerror = function(err){
-						console.log(err)
-						alert('Unable to get the file. Please contact Admin')
+							console.log(err)
+							var p = document.createElement('p')
+			    			p.innerHTML = 'Unable to get the file. Please contact Admin'
+			    			p.style.color = 'red'
+			    			emailWindow.appendChild(p)
+			    			setTimeout(function(){
+								$('#emailWindow').fadeOut()
+								emailWindow.remove()
+							}, 3000)
 						}
 						xhr.send()
 					}
 					console.log(attachmentExist)
 					if(!attachmentExist){
-						alert('There is no attachment in the post to email')
+						var p = document.createElement('p')
+			    			p.innerHTML= 'There is no attachment in post to email'
+			    			p.style.color = 'red'
+			    			emailWindow.appendChild(p)
+			    			setTimeout(function(){
+								$('#emailWindow').fadeOut()
+								emailWindow.remove()
+							}, 3000)
 					}
 				}
 

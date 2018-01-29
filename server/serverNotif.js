@@ -603,16 +603,15 @@ router.post('/emailAttachmentFile', type, function (req,res) {
 					console.log('The API Changed Label returned an error: ' + err);
 					return;
 				}
+				console.log(JSON.stringify(response, null, 4))
+				if(response.labelIds[0]=='SENT'){
+					fs.unlink(attachmentFile.path)
+				}
 		        res.json(err || response)
 		    });
 		}
 
 
-
-
-
-
-	console.log(JSON.stringify(base64File, null, 4))
 	console.log(JSON.stringify(req.file, null, 4))
 	console.log(JSON.stringify(req.body, null, 4))
 })
@@ -1288,11 +1287,6 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	var postId = req.body.postId
 	var sDate = new Date(req.body.sDate)
 	var eDate = new Date(req.body.eDate)
-	console.log('limit: '+ limit)
-	console.log('loadNumber: '+ loadNumber)
-	
-	console.log('sDate:'+ sDate)
-	console.log('eDate:'+ sDate)
 
 	//set Post by me
 	if(byMe==='true' && byOther !== 'true'){
@@ -1359,8 +1353,6 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 				userId:curUser.id
 			}
 		}
-		console.log('xxxxxxxxxx')
-		console.log(sDate+ eDate)
 		db.tagSave.findAll({
 			attributes:['mainPostId'],
 			where:wherepara1,
@@ -1510,7 +1502,6 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 
 				if(viewOnly!=='true'){
 					
-					console.log('sDate'+ sDate + eDate)
 					var filter = getFeedsPara({
 						//if db field is fulldate, use New Date to feed into sequelize date filtering
 						createdAt:{
