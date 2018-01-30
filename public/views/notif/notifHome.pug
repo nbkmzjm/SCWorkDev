@@ -609,8 +609,7 @@ append scripts
 											byOther:$('#byOther').is(':checked'),
 											sDate:$('#calendarStart').val(),
 											eDate:$('#calendarEnd').val(),
-											postSize:$('#postSize').val(),
-											viewFormat:$('#viewFormat').val()
+											postSize:$('#postSize').val()
 										})
 										//- getPostDB({
 										//- 	viewOption:selectViewFilter.value,
@@ -657,8 +656,7 @@ append scripts
 												byOther:$('#byOther').is(':checked'),
 												sDate:$('#calendarStart').val(),
 												eDate:$('#calendarEnd').val(),
-												postSize:$('#postSize').val(),
-												viewFormat:$('#viewFormat').val()
+												postSize:$('#postSize').val()
 											})
 											
 									
@@ -691,8 +689,7 @@ append scripts
 											byOther:$('#byOther').is(':checked'),
 											sDate:$('#calendarStart').val(),
 											eDate:$('#calendarEnd').val(),
-											postSize:$('#postSize').val(),
-											viewFormat:$('#viewFormat').val()
+											postSize:$('#postSize').val()
 										})
 									})
 									divByMe.appendChild(byMe)
@@ -723,8 +720,7 @@ append scripts
 											byOther:$('#byOther').is(':checked'),
 											sDate:$('#calendarStart').val(),
 											eDate:$('#calendarEnd').val(),
-											postSize:$('#postSize').val(),
-											viewFormat:$('#viewFormat').val()
+											postSize:$('#postSize').val()
 										})
 									})
 									divByOther.appendChild(byOther)
@@ -799,6 +795,20 @@ append scripts
 									dateCalenderStart.style.width = '125px'
 									dateCalenderStart.style.fontSize = '100%'
 									//- dateCalenderStart.style.border = '2px transparent'
+									dateCalenderStart.addEventListener('keyup', function(){
+										if(this.value.trim() == ''){
+											$('#divPostContainer').html('')
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:$('#viewOnly').is(':checked'),
+												byMe:$('#byMe').is(':checked'),
+												byOther:$('#byOther').is(':checked'),
+												sDate:$('#calendarStart').val(),
+												eDate:$('#calendarEnd').val(),
+												postSize:$('#postSize').val()
+											})
+										}
+									})
 									dateCalenderStart.addEventListener('mouseover', function(){
 										$("#calendarStart").datepicker({
 											// beforeShow: function(){
@@ -815,8 +825,7 @@ append scripts
 													byOther:$('#byOther').is(':checked'),
 													sDate:$('#calendarStart').val(),
 													eDate:$('#calendarEnd').val(),
-													postSize:$('#postSize').val(),
-													viewFormat:$('#viewFormat').val()
+													postSize:$('#postSize').val()
 												})
 												
 												
@@ -838,6 +847,21 @@ append scripts
 									dateCalenderEnd.style.width = '125px'
 									dateCalenderEnd.style.fontSize = '100%'
 									//- dateCalenderEnd.style.border = '2px transparent'
+
+									dateCalenderEnd.addEventListener('keyup', function(){
+										if(this.value.trim() == ''){
+											$('#divPostContainer').html('')
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:$('#viewOnly').is(':checked'),
+												byMe:$('#byMe').is(':checked'),
+												byOther:$('#byOther').is(':checked'),
+												sDate:$('#calendarStart').val(),
+												eDate:$('#calendarEnd').val(),
+												postSize:$('#postSize').val()
+											})
+										}
+									})
 									dateCalenderEnd.addEventListener('mouseover', function(){
 										$("#calendarEnd").datepicker({
 											
@@ -857,8 +881,7 @@ append scripts
 														byOther:$('#byOther').is(':checked'),
 														sDate:$('#calendarStart').val(),
 														eDate:$('#calendarEnd').val(),
-														postSize:$('#postSize').val(),
-														viewFormat:$('#viewFormat').val()
+														postSize:$('#postSize').val()
 													})
 														
 												//- }
@@ -870,52 +893,52 @@ append scripts
 								divViewFilter2.appendChild(divDateRange)
 
 								// DIV contain label for VIEW FILTER
-								var labelViewFormat = document.createElement('label')
-								labelViewFormat.className = 'col-sm-1'
-								labelViewFormat.innerHTML = 'View Format '
-								divViewFilter2.appendChild(labelViewFormat)
+								//- var labelViewFormat = document.createElement('label')
+								//- labelViewFormat.className = 'col-sm-1'
+								//- labelViewFormat.innerHTML = 'View Format '
+								//- divViewFilter2.appendChild(labelViewFormat)
 
 
 								// DIV contain selections for VIEW FILTER
-								var divViewFormat = document.createElement('div')
-								divViewFormat.className = 'col-sm-2'
+								//- var divViewFormat = document.createElement('div')
+								//- divViewFormat.className = 'col-sm-2'
 
-									//List option from the Array 
-									var selectViewFormat = document.createElement('select')
-									selectViewFormat.className = 'form-control'
-									selectViewFormat.id = 'viewFormat'
-										var optionList = ['Panel', 'List']
-										optionList.forEach(function(item){
-											var optionDB = document.createElement('option')
-											optionDB.value = item
-											optionDB.innerHTML = item
-											selectViewFormat.appendChild(optionDB)
-										})
-
-										
-									selectViewFormat.addEventListener('change', function(){
-										//- $.scrollTo(document.getElementById('SELECT'),800, {offset:{top:-200}})
-										console.log(selectViewFilter.value)
-										$('#divPostContainer').html('')
-										//- $('#viewOnly').attr('checked', false)
-										
-
-										getPostDB({
-											viewOption:selectViewFilter.value,
-											viewOnly:$('#viewOnly').is(':checked'),
-											byMe:$('#byMe').is(':checked'),
-											byOther:$('#byOther').is(':checked'),
-											sDate:$('#calendarStart').val(),
-											eDate:$('#calendarEnd').val(),
-											postSize:$('#postSize').val(),
-											viewFormat:$('#viewFormat').val()
-										})
+								//- 	//List option from the Array 
+								//- 	var selectViewFormat = document.createElement('select')
+								//- 	selectViewFormat.className = 'form-control'
+								//- 	selectViewFormat.id = 'viewFormat'
+								//- 		var optionList = ['Panel', 'List']
+								//- 		optionList.forEach(function(item){
+								//- 			var optionDB = document.createElement('option')
+								//- 			optionDB.value = item
+								//- 			optionDB.innerHTML = item
+								//- 			selectViewFormat.appendChild(optionDB)
+								//- 		})
 
 										
-									})
+								//- 	selectViewFormat.addEventListener('change', function(){
+								//- 		//- $.scrollTo(document.getElementById('SELECT'),800, {offset:{top:-200}})
+								//- 		console.log(selectViewFilter.value)
+								//- 		$('#divPostContainer').html('')
+								//- 		//- $('#viewOnly').attr('checked', false)
+										
+
+								//- 		getPostDB({
+								//- 			viewOption:selectViewFilter.value,
+								//- 			viewOnly:$('#viewOnly').is(':checked'),
+								//- 			byMe:$('#byMe').is(':checked'),
+								//- 			byOther:$('#byOther').is(':checked'),
+								//- 			sDate:$('#calendarStart').val(),
+								//- 			eDate:$('#calendarEnd').val(),
+								//- 			viewFormat:$('#viewFormat').val()
+								//- 			postSize:$('#postSize').val()
+								//- 		})
+
+										
+								//- 	})
 									
-									divViewFormat.appendChild(selectViewFormat)
-								divViewFilter2.appendChild(divViewFormat)
+								//- 	divViewFormat.appendChild(selectViewFormat)
+								//- divViewFilter2.appendChild(divViewFormat)
 
 								// DIV contain label for Post Size
 								var postSizeLable = document.createElement('label')
@@ -932,7 +955,7 @@ append scripts
 									postSizeOpt.className = 'form-control'
 									postSizeOpt.name = 'postSize'
 									postSizeOpt.id = 'postSize'
-										var optionList = ['Medium','Small','Large']
+										var optionList = ['Medium','Small','Large','List']
 											//- var optionDB = document.createElement('option')
 											//- optionDB.value = setting.value
 											//- optionDB.innerHTML = setting.value
@@ -948,21 +971,47 @@ append scripts
 
 										})
 									postSizeOpt.addEventListener('change', function(){
-										console.log(postSizeOpt.value)
-										$('#divPostContainer').html('')
+										console.log(this.value)
+										if(this.value === 'List'){
+											$('#divPostContainer').html('')
 										//- $('#viewOnly').attr('checked', false)
 										
 
-										getPostDB({postSize:postSizeOpt.value})
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:$('#viewOnly').is(':checked'),
+												byMe:$('#byMe').is(':checked'),
+												byOther:$('#byOther').is(':checked'),
+												sDate:$('#calendarStart').val(),
+												eDate:$('#calendarEnd').val(),
+												postSize:$('#postSize').val(),
+											})
 
-										
-										//- $.post('/notif/setFeedSetting',{
-										//- 	settingId:setting.id,
-										//- 	settingValue:postSizeOpt.value,
-										//- 	action:'update'
-										//- }).done(function(Rdata){
 
-										//- })
+										}else{
+											$('#divPostContainer').html('')
+											//- $('#viewOnly').attr('checked', false)
+											
+
+											getPostDB({
+												viewOption:selectViewFilter.value,
+												viewOnly:$('#viewOnly').is(':checked'),
+												byMe:$('#byMe').is(':checked'),
+												byOther:$('#byOther').is(':checked'),
+												sDate:$('#calendarStart').val(),
+												eDate:$('#calendarEnd').val(),
+												postSize:$('#postSize').val(),
+											})
+
+											
+											//- $.post('/notif/setFeedSetting',{
+											//- 	settingId:setting.id,
+											//- 	settingValue:postSizeOpt.value,
+											//- 	action:'update'
+											//- }).done(function(Rdata){
+
+											//- })
+										}
 									})
 									
 									divPostSize.appendChild(postSizeOpt)

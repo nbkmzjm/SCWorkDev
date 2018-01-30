@@ -20,8 +20,8 @@ aws.config.update({
 });
 var multer = require('multer')
 
-
-
+var mkey = process.env.mkey
+console.log(mkey)
 // const vapidKeys = webpush.generateVAPIDKeys();
 // webpush.setGCMAPIKey("AIzaSyAVHtFMejQX7To7UwVqi4MWzWIfBP1qWAc");
 // webpush.setVapidDetails(
@@ -32,32 +32,50 @@ var multer = require('multer')
 // console.log('vapidKeys.publicKeyNOTI' + vapidKeys.publicKey)
 
 router.get('/test', function(req, res){
-	console.log('test')
-	console.log(processEnv.AWS_ACCESS_KEY_ID)
-	var s3 = new aws.S3()
-	fs.readFile('PCB.PNG', function(err, data){
-		console.log(data)
-		var base64data = new Buffer(data, 'binary')
-		console.log(base64data)
+	fs.readFile('.env', 'utf8', function(err, encrytedKey){
+		if (err) return console.log(err)
 
-		s3.putObject({
-			Bucket:'wkosolution',
-			Key:'dior',
-			Body:data
-			// ContentType:'image/png',
-			// ContentEncoding:'binary',
-			// ACL:'public-read'
-
-		}, function(err, response){
-			if(err){
-				console.log(err)
-			}else{
-				console.log(response)
+				
+		var key = cryptojs.AES.decrypt(encrytedKey.substring(5), mkey).toString(cryptojs.enc.Utf8)
+		var keyArray = key.split(',')
+		var oauth2client_id=false
+		var oauth2client_secret=false
+		var oauth2client_redirect=false
+		console.log(keyArray)
+		keyArray.forEach(function(item, i){
+			console.log(item.slice(0, item.indexOf('=')))
+			if(item.slice(0, item.indexOf('='))==='oauth2client_id'){
+				oauth2client_id = item.slice(item.indexOf('=')+1)
+				console.log(oauth2client_id)
+			}
+			if(item.slice(0, item.indexOf('='))==='oauth2client_secret'){
+				oauth2client_secret= item.slice(item.indexOf('=')+1)
+				console.log(oauth2client_secret)
+			}
+			if(item.slice(0, item.indexOf('='))==='oauth2client_redirect'){
+				oauth2client_redirect = item.slice(item.indexOf('=')+1)
+				console.log(oauth2client_redirect)
 			}
 		})
 
-	})
+		if(oauth2client_id===false||oauth2client_secret===false||oauth2client_redirect===false){
+			console.log('Missing oauth2Client information for processEnv. Please exit and update')
+		}
+		// keyArray.splice(entry,1)
+		
+		// var updatedKey = keyArray.join(',')
+		// var encryptedKeys = 'data='+ cryptojs.AES.encrypt(updatedKey, mkey).toString()
+		// fs.writeFile('.env', encryptedKeys, function(err){
+		// 	if (err) return console.log(err)
+		// 	fs.readFile('.env', 'utf8', function(err, encrytedKey){
+		// 		if (err) return console.log(err)
 
+		// 			keyList(encrytedKey.substring(5))
+		// 			addKey()
+		// 	})
+		// })
+	})
+	
 })
 
 getOauth2Client(iniGmaiWatch)
@@ -277,8 +295,8 @@ function iniGmaiWatch(auth){
 																include:'',
 																exclude:''
 																}).then(function(post){
-																	var userFeed = new UserFeed(post.id, user.id, 'New', user.id,
-																	 'New attachment arrived from an Email Server', 'active')
+																	var userFeed = new UserFeed(post.id, user.id, 'new', user.id,
+																	 'New attachment sent from '+ mailFrom, 'active')
 																	console.log('sending new feed')
 																	db.userFeed.create(userFeed).then(function(created){
 																		// console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
@@ -352,6 +370,10 @@ router.post('/oauth2Client', function(req, res){
 	var SCOPES = ['https://mail.google.com/']
 	var token_dir = './gmailAPIToken.json'
 	console.log(token_dir)
+
+
+
+	
 
 	fs.readFile('client_secret.json', function processClientSecrets(err, content) {
 		if (err) {

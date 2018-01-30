@@ -2,22 +2,47 @@
 
 	var Sequelize = require('sequelize');
 	var env = process.env.NODE_ENV || 'development';
+
 	var sequelize;
 	console.log(env)
 	var processEnv = require('./envDecrypt.js')
+	var dblog = process.env.dblog||false
+	console.log(dblog)
 
 	if (env === 'production'){
-		
-		sequelize = new Sequelize(processEnv.DATABASE_URL, {
-			dialect: 'postgres',
-		});
+		if(dblog==true){
+			sequelize = new Sequelize(processEnv.DATABASE_URL, {
+				dialect: 'postgres',
+				logging:true
+			});
+		}else{
+			sequelize = new Sequelize(processEnv.DATABASE_URL, {
+				dialect: 'postgres',
+				logging:false
+			});
+		}
 	} else {
-		sequelize = new Sequelize('database_development', 'nbkmzjm', 'fish1ing', {
-		host:"localhost",
-		dialect:'sqlite',
-		storage: __dirname + '/data/dev-todo-api.sqlite',
-		logging:false
-		});
+		console.log('xx')
+		
+		if(dblog==true){
+			sequelize = new Sequelize('database_development', 'nbkmzjm', 'fish1ing', {
+			host:"localhost",
+			dialect:'sqlite',
+			storage: __dirname + '/data/dev-todo-api.sqlite',
+			logging:true
+			});
+
+		}else{
+			sequelize = new Sequelize('database_development', 'nbkmzjm', 'fish1ing', {
+			host:"localhost",
+			dialect:'sqlite',
+			storage: __dirname + '/data/dev-todo-api.sqlite',
+			logging:false
+			});
+
+
+		}
+		
 	}
 
 
