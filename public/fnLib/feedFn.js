@@ -1436,7 +1436,7 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 						xhr.onerror = function(err){
 							console.log(err)
 							var p = document.createElement('p')
-			    			p.innerHTML = 'Unable to get the file. Please contact Admin'
+			    			p.innerHTML = 'Unable to compose file for email. Please contact Admin'
 			    			p.style.color = 'red'
 			    			emailWindow.appendChild(p)
 			    			setTimeout(function(){

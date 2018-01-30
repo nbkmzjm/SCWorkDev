@@ -70,7 +70,7 @@ function iniGmaiWatch(auth){
 		// Create an event handler to handle messages
 		console.log('start hisId:'+historyId)
 		let messageCount = 0;
-		const messageHandler = (message) => {
+		const messageHandler = function(message){
 			console.log(JSON.stringify(message, null, 4))
 			console.log(`Received message ${message.id}:`);
 			console.log(`\tData: ${message.data}`);
@@ -85,7 +85,7 @@ function iniGmaiWatch(auth){
 			}, function(err, res){
 				console.log('history:')
 				
-				// console.log(JSON.stringify(res.history[0].messages, null, 4))
+				console.log(JSON.stringify(res.history[0].messages, null, 4))
 				if(!!res.history){
 					var messages = res.history[0].messages
 					messages.forEach(function(message){
@@ -158,7 +158,7 @@ function iniGmaiWatch(auth){
 													console.log('The API returned an error: ' + err);
 													return;
 												}
-												console.log('attachxxx')
+												console.log('attachment.data')
 
 												var userEmail = mailCC + mailTo + mailFrom
 												var regExp = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi
@@ -167,89 +167,95 @@ function iniGmaiWatch(auth){
 											           return inputArray.indexOf(item) == index;
 											    });
 												var Bucket = processEnv.S3Bucket
+												console.log(processEnv.S3Bucket)
 												var fileBuffer = new Buffer(attachment.data, 'base64')
-
-												const s3 = new aws.S3({
-													apiVersion: '2006-03-01'
-												});
+												
+												console.log(fileBuffer)
+												const s3 = new aws.S3();
 												var params = {
 													Bucket: processEnv.S3Bucket,
 													Key: fileName,
 													Body: fileBuffer,
+													// ContentEncoding: 'arraybuffer',
+													// ContentType:'application/pdf',
 													ACL: 'public-read'
+									
 												};
 												console.log('signFileType:'+signFileType)
 												console.log('fileName:'+fileName)
-												s3.putObject(params, function(err) {
+
+												s3.putObject(params, function(err, data) {
 													if(err){
-														console.log(JSON.stringify(err, null, 4))
-													}
-													var fileUrl = 'https://'+ processEnv.S3Bucket +'.s3.amazonaws.com/'+fileName
+														console.log('s3uploadError: '+ JSON.stringify(err, null, 4))
+														console.log('s3uploadErrorData: '+ JSON.stringify(data, null, 4))
+													}else{
+														var fileUrl = 'https://'+ processEnv.S3Bucket +'.s3.amazonaws.com/'+fileName
 
-													if(signFileType.indexOf('msword')!==-1||signFileType.indexOf('wordprocessingml')!==-1||
-												    	signFileType.indexOf('ms-excel')!==-1||signFileType.indexOf('spreadsheetml')!==-1||
-												    	signFileType.indexOf('ms-powerpoint')!==-1||signFileType.indexOf('presentationml')!==-1){
-												    	var returnURLs = '<p><iframe src="https://view.officeapps.live.com/op/embed.aspx?src='+fileUrl
-												    	+'"></iframe><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
-												    }else if(signFileType.indexOf('pdf')!==-1){
-												   		var returnURLs = '<p><iframe src="https://docs.google.com/gview?url='+fileUrl
-												   		+'&embedded=true"></iframe><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
-												   		
-												   	}else if(signFileType.indexOf('video')!==-1){
-												   		var returnURLs = '<p><video controls><source src="'+fileUrl+'"> </video></p>'
-												    }else if(signFileType.indexOf('image')!==-1){
-												    	var returnURLs = '<p><img src="'+returnData.url+'"/><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
-												    }else{
-												    	var returnURLs = '<p><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
-												    }
+														if(signFileType.indexOf('msword')!==-1||signFileType.indexOf('wordprocessingml')!==-1||
+													    	signFileType.indexOf('ms-excel')!==-1||signFileType.indexOf('spreadsheetml')!==-1||
+													    	signFileType.indexOf('ms-powerpoint')!==-1||signFileType.indexOf('presentationml')!==-1){
+													    	var returnURLs = '<p><iframe src="https://view.officeapps.live.com/op/embed.aspx?src='+fileUrl
+													    	+'"></iframe><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
+													    }else if(signFileType.indexOf('pdf')!==-1){
+													   		var returnURLs = '<p><iframe src="https://docs.google.com/gview?url='+fileUrl
+													   		+'&embedded=true"></iframe><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
+													   		
+													   	}else if(signFileType.indexOf('video')!==-1){
+													   		var returnURLs = '<p><video controls><source src="'+fileUrl+'"> </video></p>'
+													    }else if(signFileType.indexOf('image')!==-1){
+													    	var returnURLs = '<p><img src="'+returnData.url+'"/><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
+													    }else{
+													    	var returnURLs = '<p><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
+													    }
 
-												    console.log('returnUrl:'+ returnURLs)
-												    console.log(emailArr)
+													    console.log('returnUrl:'+ returnURLs)
+													    console.log(emailArr)
 
-												    gmail.users.messages.trash({
-														auth: auth,
-														userId: 'me',
-														id:message.id
-													}, function(err, deleted){
-														if (err) {
-															console.log('The API delete returned an error: ' + err);
-															return;
-														}
-														console.log('----------')
-														console.log(JSON.stringify(deleted, null, 4))
-													})
-
-												    db.user.findAll({
-														where:{
-															email: {
-																$in:emailArr
+													    gmail.users.messages.trash({
+															auth: auth,
+															userId: 'me',
+															id:message.id
+														}, function(err, deleted){
+															if (err) {
+																console.log('The API delete returned an error: ' + err);
+																return;
 															}
-														}
-													}).then(function(users){
+															console.log('----------')
+															console.log(JSON.stringify(deleted, null, 4))
+														})
 
-														console.log(JSON.stringify(users, null, 4))
-														users.forEach(function(user){
-															console.log(user.id)
-															db.mainPost.create({
-															postText:returnURLs,
-															postTo:"Private",
-															postToValue:'Private',
-															userId:user.id,
-															include:'',
-															exclude:''
-															}).then(function(post){
-																var userFeed = new UserFeed(post.id, user.id, 'New', user.id,
-																 'New attachment arrived from an Email Server', 'active')
+													    db.user.findAll({
+															where:{
+																email: {
+																	$in:emailArr
+																}
+															}
+														}).then(function(users){
 
-																db.userFeed.create(userFeed).then(function(created){
-																	// console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
-																	// showNotification(user.id, post)
+															console.log(JSON.stringify(users, null, 4))
+															users.forEach(function(user){
+																console.log(user.id)
+																db.mainPost.create({
+																postText:returnURLs,
+																postTo:"Private",
+																postToValue:'Private',
+																userId:user.id,
+																include:'',
+																exclude:''
+																}).then(function(post){
+																	var userFeed = new UserFeed(post.id, user.id, 'New', user.id,
+																	 'New attachment arrived from an Email Server', 'active')
 
+																	db.userFeed.create(userFeed).then(function(created){
+																		// console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
+																		// showNotification(user.id, post)
+
+																	})
 																})
 															})
+															
 														})
-														
-													})
+													}
 												})
 											})
 										}
@@ -551,19 +557,22 @@ router.post('/sendEmail', function(req, res){
 var upload = multer({dest:__dirname + '/public/uploads'})
 var type = upload.single('file')
 
-router.post('/emailAttachmentFile', type, function (req,res) {
+router.post('/emailAttachmentFile', middleware.requireAuthentication, type, function (req,res) {
+	var user = req.user
+
 	var attachmentFile = req.file
 	var mailRecipient = req.body.mailRecipient
 
 	console.log('attachment file:')
 	var base64File = new Buffer(fs.readFileSync(attachmentFile.path)).toString('base64')
-
+	console.log(user.email)
 
 	//     var boundary = "foo_bar_baz";
-    var mailTo = mailRecipient
-    var mailSubject = 'Attachment(s) from wkopro.com'
+    var mailTo = user.email +', ' +mailRecipient
+    console.log(mailTo)
+    var mailSubject = user.fullName +' sent attachment(s) from wkopro.com'
     var fileName = attachmentFile.originalname
-    var mailBody =  ' Thien from wkopro.com web application sent you an attachment.'
+    var mailBody = 'wkopro.com web application sent you an attachment.'
 	var content = [
 		'Content-Type: multipart/mixed; boundary="foo_bar_baz"\r\n',
 		'MIME-Version: 1.0\r\n',
