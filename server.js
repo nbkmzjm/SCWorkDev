@@ -122,6 +122,7 @@ app.get('/message', function(req, res){
 	
 })
 
+
 app.post('/showNoti', function(req, res){
 	var text = req.body.text
 

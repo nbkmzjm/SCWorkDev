@@ -15,7 +15,8 @@ var processEnv = require('../envDecrypt.js')
 var aws = require('aws-sdk')
 aws.config.update({
     accessKeyId: processEnv.AWS_ACCESS_KEY_ID,
-    secretAccessKey: processEnv.AWS_SECRET_ACCESS_KEY
+    secretAccessKey: processEnv.AWS_SECRET_ACCESS_KEY,
+    region: 'us-west-1'
 });
 var multer = require('multer')
 
@@ -29,6 +30,36 @@ var multer = require('multer')
 //   vapidKeys.privateKey
 // );
 // console.log('vapidKeys.publicKeyNOTI' + vapidKeys.publicKey)
+
+router.get('/test', function(req, res){
+	console.log('test')
+	console.log(processEnv.AWS_ACCESS_KEY_ID)
+	var s3 = new aws.S3()
+	fs.readFile('PCB.PNG', function(err, data){
+		console.log(data)
+		var base64data = new Buffer(data, 'binary')
+		console.log(base64data)
+
+		s3.putObject({
+			Bucket:'wkosolution',
+			Key:'dior',
+			Body:data
+			// ContentType:'image/png',
+			// ContentEncoding:'binary',
+			// ACL:'public-read'
+
+		}, function(err, response){
+			if(err){
+				console.log(err)
+			}else{
+				console.log(response)
+			}
+		})
+
+	})
+
+})
+
 getOauth2Client(iniGmaiWatch)
 setInterval(() => {
 	getOauth2Client(iniGmaiWatch)
@@ -85,7 +116,7 @@ function iniGmaiWatch(auth){
 			}, function(err, res){
 				console.log('history:')
 				
-				console.log(JSON.stringify(res.history[0].messages, null, 4))
+				// console.log(JSON.stringify(res.history[0].messages, null, 4))
 				if(!!res.history){
 					var messages = res.history[0].messages
 					messages.forEach(function(message){
@@ -161,23 +192,26 @@ function iniGmaiWatch(auth){
 												console.log('attachment.data')
 
 												var userEmail = mailCC + mailTo + mailFrom
+												userEmail= userEmail.toLowerCase()
 												var regExp = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi
 												var emailArr = userEmail.match(regExp)
+												console.log(emailArr)
 												emailArr = emailArr.filter( function( item, index, inputArray ) {
 											           return inputArray.indexOf(item) == index;
 											    });
+											    console.log('-------------')
+											    console.log(emailArr)
 												var Bucket = processEnv.S3Bucket
 												console.log(processEnv.S3Bucket)
 												var fileBuffer = new Buffer(attachment.data, 'base64')
 												
 												console.log(fileBuffer)
-												const s3 = new aws.S3();
+												var s3 = new aws.S3({apiVersion: '2006-03-01'});
 												var params = {
 													Bucket: processEnv.S3Bucket,
 													Key: fileName,
 													Body: fileBuffer,
-													// ContentEncoding: 'arraybuffer',
-													// ContentType:'application/pdf',
+													ContentEncoding: 'base64',
 													ACL: 'public-read'
 									
 												};
@@ -203,7 +237,7 @@ function iniGmaiWatch(auth){
 													   	}else if(signFileType.indexOf('video')!==-1){
 													   		var returnURLs = '<p><video controls><source src="'+fileUrl+'"> </video></p>'
 													    }else if(signFileType.indexOf('image')!==-1){
-													    	var returnURLs = '<p><img src="'+returnData.url+'"/><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
+													    	var returnURLs = '<p><img src="'+fileUrl+'"/><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
 													    }else{
 													    	var returnURLs = '<p><a href="'+fileUrl+'" >'+fileName+'</a></p><br>'
 													    }
@@ -245,7 +279,7 @@ function iniGmaiWatch(auth){
 																}).then(function(post){
 																	var userFeed = new UserFeed(post.id, user.id, 'New', user.id,
 																	 'New attachment arrived from an Email Server', 'active')
-
+																	console.log('sending new feed')
 																	db.userFeed.create(userFeed).then(function(created){
 																		// console.log('pushUserId: '+JSON.stringify(pushUserId, null, 4))
 																		// showNotification(user.id, post)
@@ -1423,7 +1457,6 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						return userFeed.mainPost
 					})
 					
-					console.log('postsXC:' + JSON.stringify(posts, null, 4))
 					res.json({posts:posts})
 				}).catch(function(e) {
 					console.log(e)	
