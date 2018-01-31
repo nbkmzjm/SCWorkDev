@@ -21,7 +21,6 @@ aws.config.update({
 var multer = require('multer')
 
 var mkey = process.env.mkey
-console.log(mkey)
 // const vapidKeys = webpush.generateVAPIDKeys();
 // webpush.setGCMAPIKey("AIzaSyAVHtFMejQX7To7UwVqi4MWzWIfBP1qWAc");
 // webpush.setVapidDetails(
@@ -32,49 +31,40 @@ console.log(mkey)
 // console.log('vapidKeys.publicKeyNOTI' + vapidKeys.publicKey)
 
 router.get('/test', function(req, res){
-	fs.readFile('.env', 'utf8', function(err, encrytedKey){
-		if (err) return console.log(err)
 
-				
-		var key = cryptojs.AES.decrypt(encrytedKey.substring(5), mkey).toString(cryptojs.enc.Utf8)
-		var keyArray = key.split(',')
-		var oauth2client_id=false
-		var oauth2client_secret=false
-		var oauth2client_redirect=false
-		console.log(keyArray)
-		keyArray.forEach(function(item, i){
-			console.log(item.slice(0, item.indexOf('=')))
-			if(item.slice(0, item.indexOf('='))==='oauth2client_id'){
-				oauth2client_id = item.slice(item.indexOf('=')+1)
-				console.log(oauth2client_id)
-			}
-			if(item.slice(0, item.indexOf('='))==='oauth2client_secret'){
-				oauth2client_secret= item.slice(item.indexOf('=')+1)
-				console.log(oauth2client_secret)
-			}
-			if(item.slice(0, item.indexOf('='))==='oauth2client_redirect'){
-				oauth2client_redirect = item.slice(item.indexOf('=')+1)
-				console.log(oauth2client_redirect)
-			}
-		})
+	
 
-		if(oauth2client_id===false||oauth2client_secret===false||oauth2client_redirect===false){
-			console.log('Missing oauth2Client information for processEnv. Please exit and update')
-		}
-		// keyArray.splice(entry,1)
+	// fs.readFile('.env', 'utf8', function(err, encrytedKey){
+	// 	if (err) return console.log(err)
+
+
+	// 	var key = cryptojs.AES.decrypt(encrytedKey.substring(5), mkey).toString(cryptojs.enc.Utf8)
+	// 	var keyArray = key.split(',')
+	// 	var oauth2client_id=false
+	// 	var oauth2client_secret=false
+	// 	var oauth2client_redirect=false
+	// 	console.log(keyArray)
+	// 	keyArray.forEach(function(item, i){
+	// 		console.log(item.slice(0, item.indexOf('=')))
+	// 		if(item.slice(0, item.indexOf('='))==='oauth2client_id'){
+	// 			oauth2client_id = item.slice(item.indexOf('=')+1)
+	// 			console.log(oauth2client_id)
+	// 		}
+	// 		if(item.slice(0, item.indexOf('='))==='oauth2client_secret'){
+	// 			oauth2client_secret= item.slice(item.indexOf('=')+1)
+	// 			console.log(oauth2client_secret)
+	// 		}
+	// 		if(item.slice(0, item.indexOf('='))==='oauth2client_redirect'){
+	// 			oauth2client_redirect = item.slice(item.indexOf('=')+1)
+	// 			console.log(oauth2client_redirect)
+	// 		}
+	// 	})
+
+	// 	if(oauth2client_id===false||oauth2client_secret===false||oauth2client_redirect===false){
+	// 		console.log('Missing oauth2Client information for processEnv. Please exit and update')
+	// 	}
 		
-		// var updatedKey = keyArray.join(',')
-		// var encryptedKeys = 'data='+ cryptojs.AES.encrypt(updatedKey, mkey).toString()
-		// fs.writeFile('.env', encryptedKeys, function(err){
-		// 	if (err) return console.log(err)
-		// 	fs.readFile('.env', 'utf8', function(err, encrytedKey){
-		// 		if (err) return console.log(err)
-
-		// 			keyList(encrytedKey.substring(5))
-		// 			addKey()
-		// 	})
-		// })
-	})
+	// })
 	
 })
 
@@ -369,60 +359,70 @@ router.post('/oauth2Client', function(req, res){
 	
 	var SCOPES = ['https://mail.google.com/']
 	var token_dir = './gmailAPIToken.json'
-	console.log(token_dir)
 
 
+	fs.readFile('.env', 'utf8', function(err, encrytedKey){
+		if (err) return console.log(err)
 
-	
+				
+		var key = cryptojs.AES.decrypt(encrytedKey.substring(5), mkey).toString(cryptojs.enc.Utf8)
+		var keyArray = key.split(',')
+		var oauth2client_id=false
+		var oauth2client_secret=false
+		var oauth2client_redirect=false
+		keyArray.forEach(function(item, i){
+			console.log(item.slice(0, item.indexOf('=')))
+			if(item.slice(0, item.indexOf('='))==='oauth2client_id'){
+				oauth2client_id = item.slice(item.indexOf('=')+1)
+			}
+			if(item.slice(0, item.indexOf('='))==='oauth2client_secret'){
+				oauth2client_secret= item.slice(item.indexOf('=')+1)
+			}
+			if(item.slice(0, item.indexOf('='))==='oauth2client_redirect'){
+				oauth2client_redirect = item.slice(item.indexOf('=')+1)
+			}
+		})
 
-	fs.readFile('client_secret.json', function processClientSecrets(err, content) {
-		if (err) {
-			console.log('Error loading client secret file: ' + err);
-			return;
-		}
-		var credentials = JSON.parse(content)
-		var clientSecret = credentials.installed.client_secret;
-		var clientId = credentials.installed.client_id;
-		var redirectUrl = credentials.installed.redirect_uris[0];
-
-		console.log(clientSecret)
-
-		var auth = new googleAuth()
-		var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl)
-
-		var authUrl = oauth2Client.generateAuthUrl({
-			access_type: 'offline',
-			scope: SCOPES
-		});
-
-		if(command === 'getTokenLink'){
-			res.json({
-				authUrl:authUrl
-			})
+		if(oauth2client_id===false||oauth2client_secret===false||oauth2client_redirect===false){
+			console.log('Missing oauth2Client information for processEnv. Please exit and update')
 		}else{
-			oauth2Client.getToken(authCode, function(erorr, token) {
-				if (erorr) {
-					console.log('Error while trying to retrieve access token', erorr);
-					res.json({
-						error:"Error while trying to retrieve access token. Please try again"
-					})
-				}
-				oauth2Client.credentials = token;
 
-				// fs.mkdirSync(token_dir)
-				fs.writeFile(token_dir, JSON.stringify(token))
-				// storeToken(token);
-				// callback(oauth2Client);
-				console.log('xxxxx')
-				console.log(token)
-				res.json({
-					oauth2Client:oauth2Client
-				})
+			var auth = new googleAuth()
+			var oauth2Client = new auth.OAuth2(oauth2client_id, oauth2client_secret, oauth2client_redirect)
+
+			var authUrl = oauth2Client.generateAuthUrl({
+				access_type: 'offline',
+				scope: SCOPES
 			});
-			
+
+			if(command === 'getTokenLink'){
+				res.json({
+					authUrl:authUrl
+				})
+			}else{
+				oauth2Client.getToken(authCode, function(erorr, token) {
+					if (erorr) {
+						console.log('Error while trying to retrieve access token', erorr);
+						res.json({
+							error:"Error while trying to retrieve access token. Please try again"
+						})
+					}
+					oauth2Client.credentials = token;
+
+					// fs.mkdirSync(token_dir)
+					fs.writeFile(token_dir, JSON.stringify(token))
+					// storeToken(token);
+					// callback(oauth2Client);
+					res.json({
+						oauth2Client:'token updated'
+					})
+				});
+				
+			}
 		}
 		
-	});
+	})
+	
 
 	
 })
@@ -537,20 +537,33 @@ function UserFeed(mainPostId, receivedUserId, notification, userId, notifText, t
 
 function getOauth2Client(callback) {
 	
-		var token_path = './gmailAPIToken.json'
-
-		fs.readFile('client_secret.json', function processClientSecrets(err, content) {
-			if (err) {
-				console.log('Error loading client secret file: ' + err);
+	var token_path = './gmailAPIToken.json'
+	fs.readFile('.env', 'utf8', function(err, encrytedKey){
+		if (err) return console.log(err)
+		var key = cryptojs.AES.decrypt(encrytedKey.substring(5), mkey).toString(cryptojs.enc.Utf8)
+		var keyArray = key.split(',')
+		var oauth2client_id=false
+		var oauth2client_secret=false
+		var oauth2client_redirect=false
+		keyArray.forEach(function(item, i){
+			console.log(item.slice(0, item.indexOf('=')))
+			if(item.slice(0, item.indexOf('='))==='oauth2client_id'){
+				oauth2client_id = item.slice(item.indexOf('=')+1)
 			}
-			var credentials = JSON.parse(content)
-			var clientSecret = credentials.installed.client_secret;
-			var clientId = credentials.installed.client_id;
-			var redirectUrl = credentials.installed.redirect_uris[0];
+			if(item.slice(0, item.indexOf('='))==='oauth2client_secret'){
+				oauth2client_secret= item.slice(item.indexOf('=')+1)
+			}
+			if(item.slice(0, item.indexOf('='))==='oauth2client_redirect'){
+				oauth2client_redirect = item.slice(item.indexOf('=')+1)
+			}
+		})
 
+		if(oauth2client_id===false||oauth2client_secret===false||oauth2client_redirect===false){
+			console.log('Missing oauth2Client information for processEnv. Please exit and update')
+		}else{
 
 			var auth = new googleAuth()
-			var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl)
+			var oauth2Client = new auth.OAuth2(oauth2client_id, oauth2client_secret, oauth2client_redirect)
 
 			fs.readFile(token_path, function(err, token) {
 				if (err) {
@@ -563,8 +576,12 @@ function getOauth2Client(callback) {
 					callback(oauth2Client)
 				}
 			});
-		})
 
+
+
+		}
+	})
+				
 }
 
 
