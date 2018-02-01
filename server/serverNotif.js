@@ -125,7 +125,7 @@ function iniGmaiWatch(auth){
 				console.log('history:')
 				
 				console.log(JSON.stringify(res, null, 4))
-				if(res !== null && res.history[0]!== null){
+				if(res !== undefined && res !== null &&res.history!== null && res.history!== undefined){
 					var messages = res.history[0].messages
 					messages.forEach(function(message){
 						var mailCC = ''

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "wkopro-193920",
+  "private_key_id": "1136c41bc828d53bb03c53bd47a931b8eb16d140",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC1dLCZN/OFshuc\nU+5DnSwxzrJN/fob+Jd+fE+07WwuyBPFTpQsFHhjvvK06VFMFZsm4jDoGtP6tlio\nxN7J/xQuOI8K4rvaHQNeoUDJkTzf7Qnc53+SyPg/OgDekCmO8dz9lrQTtCKchBSp\nD4Z3ohBfmqFlk+BA+RsTB3savEHxPWPGSfi4IJMB8dlUEZoecalWJVuScV8Vo2G4\nNB/11+ijPmHH2JjUW3u/lM6B3R57QB5BkxEgWjLQuv6dWR/mDbLXXT9VesFeLk1g\nogPARXjFKEz80/IE1MZTm/DGUNInwRPInOnE63a8WVB5DQVCwOH8K7Zv9MkEoB9e\nbGmtI9MLAgMBAAECggEAWK4vxKHonPV/svX94wOEXs8yqxUtz8+9Ui600aqbDX3w\n06PknGpgr/bZLPs+JR4GFonC9xxtbwEA8XJNo5DLLw+rMNnAjwdQ50WNoTUe+B0j\njdeBrJ4VXOkfFaaE+PxRUYn+dga6R53xbvJMeFk3AVJUAI21smtMBQ/J5TYOUDQo\nq2Rw37GWoj3QgSfywJhKsp/byEwqNnhlzC5NCfZz16QLUMyLuxoG0V83oxzyZFad\nQDDu/bNK6fvM9ULnFwgX7ilfCmB1ftc2Uc8ua/e4XnHLt3UkNC3Ui9M+jbvmt7Ia\nCXWA/O+1UzipwwGlpdcYojIyw+TRLupiGGq6lZtzoQKBgQD4cSMvMu2o+NidODim\ns6MCeqsxqWDmnWX7hiKJqQ8VodJBqoIxKoWKAg21+I85HiKDDvgISe967q5A5pGl\ngbAd87UfiLw9J9npbaNPNRuqnLzi+GqrRSp6W7UzAjrCGHs9x5LnIB6H8qKA23Sd\n5s26mk23oiYpuGZt1VqJMv6gUQKBgQC6+d2IDPG06Ldhqr8QI4sga3pupZkQDiOc\nyA9a+cB1FwULEBxRPRJ9dWKDTxafO6ZhrvB/5o1OWC1P4IS8W1cbltP0cvcvpX7I\nYMV9wpNxYGxrgHnXDit4SnvycDsEg2q/pt5Vlsy09f57cEPgB6kGdTHraatRUIdo\nL//9M04imwKBgHLBz769h4nFaEk27vQRhfpfLzSBSIE9sx27l7h+nrkfRj+OwxRy\nz7wvtqWXapC3mrlu8KLjg/sExPi1iBErFm6/Y6ptPoYBImbwfb7YiS8FtzogBSWX\njUd3lPs6zGlbZZHj3bdk3rVtHiLnO7a0JdNL8xofjAE5bBbPtkIpi/QBAoGALHMS\nMzHAlF1umw1YdqG8hWyHop5DkQmLdc4puFr/YdajIEooMTfvmVu6m7TFj/1CRJ6u\nFfndRe64dvDNHWopfymQIeDi2rThOwmmaYtEOgPOQpA8Zt+7fdFXPf9oSF5llkI5\nQOekqrCAWyAJQs0PZbWetHRegeo/BonCtZLo1FkCgYA301LQTZONl4E0rUliy5eH\neC/86Px5quRfho6E7NMbm2Q+1kMJVXAnX8o7AohagVJGagVy9wqX8WZKuHoD/OJy\nwKq9F9ZEgSZE1TdgenfRbV3utm0f2OAGr7n0NYxbJ4j7FDopqgXYCHmfW6k5DXcG\n0RIDq8CAb1/vJ22XNTXBCw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "wkopromailwatch@wkopro-193920.iam.gserviceaccount.com",
+  "client_id": "111975623420725289210",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/wkopromailwatch%40wkopro-193920.iam.gserviceaccount.com"
+}
