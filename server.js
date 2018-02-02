@@ -60,7 +60,9 @@ var middleware = require('./middleware.js')(db);
 
 app.use(cookieParser());
 // app.use(middleware.logger);
-app.use(bodyParser.json());
+app.use(bodyParser.json({
+	limit:'10mb'
+}));
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
