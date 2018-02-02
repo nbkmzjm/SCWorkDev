@@ -1171,7 +1171,6 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 			btnSendMail.type = 'button'
 			btnSendMail.value = 'SEND'
 			btnSendMail.addEventListener('click',function(){
-				alert('send click')
 				
 				var stringMailRec = mailRecipient.value.replace(/\s+/g, '')
 				var arrayMailRec = stringMailRec.split(',')

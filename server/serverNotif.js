@@ -77,7 +77,7 @@ function iniGmaiWatch(auth){
 	request = {
 
 	  'labelIds': ['INBOX'],
-	  'topicName': 'projects/wkosolution-188119/topics/wkoMailScanner'
+	  'topicName': 'projects/wkopro-193920/topics/wkosolutionWatch'
 	}
 	console.log('initial watch mail')
 	gmail.users.watch({
@@ -94,17 +94,17 @@ function iniGmaiWatch(auth){
 		const PubSub = require('@google-cloud/pubsub');
 
 		// Your Google Cloud Platform project ID
-		const projectId = 'wkosolution-188119';
+		const projectId = 'wkopro-193920';
 
 		// Instantiates a client
 		const pubsubClient = PubSub({
-			keyFilename: './wkosolutionPush.json',
+			keyFilename: './wkoproMailWatch.json',
 			projectId: projectId
 		});
 
 
 		// References an existing subscription, e.g. "my-subscription"
-		const subscription = pubsubClient.subscription('wkoMailPush');
+		const subscription = pubsubClient.subscription('wkoproAttachmentScanner');
 
 		// Create an event handler to handle messages
 		console.log('start hisId:'+historyId)
@@ -163,7 +163,9 @@ function iniGmaiWatch(auth){
 
 								var parts = message.payload.parts
 								console.log(JSON.stringify(parts, null, 4))
-								if (parts !== undefined){
+
+								if (parts !== undefined && mailFrom!=='wkosolution@gmail.com'){
+									//Stop generate file from attachment if sent from wkosolution.com to an email address
 									parts.forEach(function(part){
 										if(part.filename && part.filename.length > 0){
 											var attachId = part.body.attachmentId
