@@ -1985,45 +1985,49 @@ append scripts
 
 			//Setting TAB contain
 			$('#SettingTab').on('click', function(){
-				
 				$('#Setting').html('')
+				
+					
 				var divSettingContainer = document.createElement('div')
-					var labelAuthUrl = document.createElement('label')
-					labelAuthUrl.className = 'col-sm-5'
-					labelAuthUrl.innerHTML = 'Reset Gmail Token:'
-					divSettingContainer.appendChild(labelAuthUrl)
+					if(curUser.role==='Administrator'){
+						var labelAuthUrl = document.createElement('label')
+						labelAuthUrl.className = 'col-sm-5'
+						labelAuthUrl.innerHTML = 'Reset Gmail Token:'
+						divSettingContainer.appendChild(labelAuthUrl)
 
 
-					var authUrllink = document.createElement('a')
-					authUrllink.className = 'col-sm-3'
-					authUrllink.innerHTML = 'Reset'
-					authUrllink.addEventListener('click', function(){
+						var authUrllink = document.createElement('a')
+						authUrllink.className = 'col-sm-3'
+						authUrllink.innerHTML = 'Reset'
+						authUrllink.addEventListener('click', function(){
 
-						$.post('/notif/oauth2Client',{
-							command:'getTokenLink'
-						}).done(function(Rdata){
-							authUrllink.innerHTML = 'Click to get token'
-							var tokenInput = document.createElement('input')
-							tokenInput.placeholder = 'Enter Token here'
-							tokenInput.addEventListener('blur', function(){
-								$.post('/notif/oauth2Client',{
-									authCode:this.value
-								}).done(function(Rdata){
-									if(!!Rdata.error){
-										alert(Rdata.error)
-									}else{
+							$.post('/notif/oauth2Client',{
+								command:'getTokenLink'
+							}).done(function(Rdata){
+								authUrllink.innerHTML = 'Click to get token'
+								var tokenInput = document.createElement('input')
+								tokenInput.placeholder = 'Enter Token here'
+								tokenInput.addEventListener('blur', function(){
+									$.post('/notif/oauth2Client',{
+										authCode:this.value
+									}).done(function(Rdata){
+										if(!!Rdata.error){
+											alert(Rdata.error)
+										}else{
 
-									window.location.href = '/notif'
-									}
+										window.location.href = '/notif'
+										}
+									})
+
 								})
+								divSettingContainer.appendChild(tokenInput)
 
+								window.open(Rdata.authUrl)
 							})
-							divSettingContainer.appendChild(tokenInput)
-
-							window.open(Rdata.authUrl)
 						})
-					})
-					divSettingContainer.appendChild(authUrllink)
+						divSettingContainer.appendChild(authUrllink)
+					}
+
 
 
 

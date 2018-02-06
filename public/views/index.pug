@@ -202,7 +202,7 @@ append scripts
 				//- }, 30000)
 
 				document.getElementById('optionTextS').addEventListener('click',function(){
-					$.scrollTo(document.getElementById('SELECT'),800, {offset:{top:-200}});
+					$.scrollTo(document.getElementById('taskOptMemoDiv'),800, {offset:{top:-200}});
 				})
 			});
 			
@@ -1105,7 +1105,8 @@ append scripts
 																				input.checked = false
 																				
 																				input.addEventListener('click',function(){
-																					$.post('/assignTracerReadUpd',{			assignTracerId:assignTracer.id,
+																					$.post('/assignTracerReadUpd',{			
+																					assignTracerId:assignTracer.id,
 																						curUserName:curUser.name
 
 																					}).done(function(Rdata){
@@ -1799,6 +1800,10 @@ append scripts
 					radio.setAttribute('type','radio');
 					radio.setAttribute('name','PTO');
 					radio.setAttribute('value',taskOptionDes);
+
+				li.addEventListener('click', function(){
+					$.scrollTo(document.getElementById('taskOptMemoDiv'),800, {offset:{top:-200}});
+				})
 				
 				if(taskOptionDes=='SELECT'){
 					
@@ -2014,7 +2019,7 @@ append scripts
 						input.value = taskOptMemo.memo
 
 						input.addEventListener('click', function(){
-
+							alert('click')
 							var checkValue = 0
 							input.checked == false?checkValue=false:checkValue=true
 							console.log(checkValue)

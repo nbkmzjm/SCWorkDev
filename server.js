@@ -414,7 +414,7 @@ app.get('/taskSC', middleware.requireAuthentication, function(req, res){
 				model:db.user
 			}],
 			where:{
-				Read:'false'
+				// Read:'false'
 			}
 			
 		}],
