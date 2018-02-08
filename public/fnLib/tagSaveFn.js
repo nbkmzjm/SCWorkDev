@@ -95,44 +95,44 @@ function tagManagerTabClick(){
 
 
 
-		// DIV contain label for VIEW FILTER
-		var labelViewFormat = document.createElement('label')
-		labelViewFormat.className = 'col-sm-1'
-		labelViewFormat.innerHTML = 'View Format '
-		divTagFilter.appendChild(labelViewFormat)
+		// // DIV contain label for VIEW FILTER
+		// var labelViewFormat = document.createElement('label')
+		// labelViewFormat.className = 'col-sm-1'
+		// labelViewFormat.innerHTML = 'View Format '
+		// divTagFilter.appendChild(labelViewFormat)
 
 
-		// DIV contain selections for VIEW FILTER
-		var divViewFormat = document.createElement('div')
-		divViewFormat.className = 'col-sm-2'
+		// // DIV contain selections for VIEW FILTER
+		// var divViewFormat = document.createElement('div')
+		// divViewFormat.className = 'col-sm-2'
 
-			//List option from the Array 
-			var selectViewFormat = document.createElement('select')
-			selectViewFormat.className = 'form-control'
-				var optionList = ['Panel', 'List']
-				optionList.forEach(function(item){
-					var optionDB = document.createElement('option')
-					optionDB.value = item
-					optionDB.innerHTML = item
-					selectViewFormat.appendChild(optionDB)
+		// 	//List option from the Array 
+		// 	var selectViewFormat = document.createElement('select')
+		// 	selectViewFormat.className = 'form-control'
+		// 		var optionList = ['Panel', 'List']
+		// 		optionList.forEach(function(item){
+		// 			var optionDB = document.createElement('option')
+		// 			optionDB.value = item
+		// 			optionDB.innerHTML = item
+		// 			selectViewFormat.appendChild(optionDB)
 
-				})
-			selectViewFormat.addEventListener('change', function(){
+		// 		})
+		// 	selectViewFormat.addEventListener('change', function(){
 
-				if(this.value === "List"){
-					divPostSize.style.display = 'None'
-					postSizeLable.style.display = 'None'
+		// 		if(this.value === "List"){
+		// 			divPostSize.style.display = 'None'
+		// 			postSizeLable.style.display = 'None'
 
 
-				}else{
-					postSizeLable.style.display = 'Block'
-					divPostSize.style.display = 'Block'
-				}
-			})
+		// 		}else{
+		// 			postSizeLable.style.display = 'Block'
+		// 			divPostSize.style.display = 'Block'
+		// 		}
+		// 	})
 
 			
-			divViewFormat.appendChild(selectViewFormat)
-		divTagFilter.appendChild(divViewFormat)
+		// 	divViewFormat.appendChild(selectViewFormat)
+		// divTagFilter.appendChild(divViewFormat)
 
 		// DIV contain label for Post Size
 		var postSizeLable = document.createElement('label')
@@ -148,7 +148,7 @@ function tagManagerTabClick(){
 			var postSizeOpt = document.createElement('select')
 			postSizeOpt.className = 'form-control'
 			postSizeOpt.name = 'postSize'
-				var optionListSize = ['Medium','Small','Large']
+				var optionListSize = ['Medium','Small','Large', 'List']
 
 				optionListSize.forEach(function(item, i){
 					var optionSize = document.createElement('option')
@@ -223,7 +223,6 @@ function tagManagerTabClick(){
 	            	tagType:item.type,
 	            	tagCategory:item.category,
 	            	postSize:postSizeOpt.value,
-	            	viewFormat:selectViewFormat.value,
 	            	sDate:dateCalenderStart.value,
 	            	eDate:dateCalenderEnd.value
 	            })

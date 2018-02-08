@@ -156,6 +156,7 @@ function getPostDB(option){
 	var loadNumber = 0
 	//Initial feeds
 		getFeed()
+		console.log('initial feeds')
 
 
 	//Active scrolling: loading main post as users scrolling
@@ -209,6 +210,7 @@ function getPostDB(option){
 			if(y >= containHeight ){
 				//load more feeds when at bottom of the page
 				getFeed()
+				console.log('next feeds')
 				loadNumber = loadNumber + 5
 			}
 		}

@@ -318,6 +318,7 @@ append scripts
 									var orgFileName = arrayFile[i].name
 									var fileExtension = orgFileName.substring(orgFileName.lastIndexOf('.'))
 									var video = ['.m4v', '.mov', '.mp4', '.MKV', '.AVI', '.VOB', '.MPG', '.TiVo', '.FLV']
+
 									var fileNameNoSpace = orgFileName.replace(/ /g,"_")
 									var parts = fileNameNoSpace.split(".");
 								    if (parts[1]===undefined){
@@ -370,9 +371,15 @@ append scripts
 												    var htmlbreak = (i == arrayFile.length - 1)?'</a></p>':'</a></p><br><br><br>'
 												    console.log(signFileType)
 												    //- inputValueImage,'image'+curUser.id+moment().format("MMDDHHmmssSSSS")
-												    if(signFileType.indexOf('msword')!==-1||signFileType.indexOf('wordprocessingml')!==-1||
-												    	signFileType.indexOf('ms-excel')!==-1||signFileType.indexOf('spreadsheetml')!==-1||
-												    	signFileType.indexOf('ms-powerpoint')!==-1||signFileType.indexOf('presentationml')!==-1){
+												    var iframeOffice = ['.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx']
+												    if(iframeOffice.indexOf(fileExtension)!==-1||
+												    signFileType.indexOf('msword')!==-1||
+												    signFileType.indexOf('wordprocessingml')!==-1||
+												    signFileType.indexOf('ms-excel')!==-1||
+												    signFileType.indexOf('spreadsheetml')!==-1||
+												    signFileType.indexOf('ms-powerpoint')!==-1||
+												    signFileType.indexOf('presentationml')!==-1
+												    ){
 												    	returnURLs = returnURLs + '<p><iframe src="https://view.officeapps.live.com/op/embed.aspx?src='+returnData.url+'"></iframe><a href="'+returnData.url+'" >'+signFileName+'</a></p><br><br><br>'
 												    }else if(signFileType.indexOf('pdf')!==-1){
 												   		returnURLs = returnURLs + '<p><iframe src="https://docs.google.com/gview?url='+returnData.url+'&embedded=true"></iframe><a href="'+returnData.url+'" >'+signFileName+htmlbreak
@@ -386,13 +393,24 @@ append scripts
 												    }
 												    
 												    console.log("returnURLs:"+returnURLs)
+												    	
+												    if($('#combFile').is(':checked')===false){
+													    postDBGroupSelect(inputPostValuewithURL+returnURLs)
+													    returnURLs = ''
+													}
+
 												    i++
 												    if(i< arrayFile.length){
+												    	
+												    	
 												    	uploadReturnURL(arrayFile)
+												    	
 												    }else{
 												    	//- alert('all done ready for DB save')
 												    	console.log("returnURLsFinal:"+returnURLs)
-												    	postDBGroupSelect(inputPostValuewithURL+returnURLs)
+											    		if($('#combFile').is(':checked')===true){
+												    		postDBGroupSelect(inputPostValuewithURL+returnURLs)
+												    	}
 												    }
 											  	}else{
 											    	alert('Could not upload files.');
@@ -410,6 +428,26 @@ append scripts
 						
 						}) 
 						divInputBtn.appendChild(btnPost)
+
+						var labelCombFile = document.createElement('label')
+						labelCombFile.className = 'col-sm-2'
+						labelCombFile.innerHTML = 'All files in 1 post: '
+
+						divInputBtn.appendChild(labelCombFile)
+
+						var divCombFile = document.createElement('div')
+						divCombFile.className = 'col-sm-1'
+							
+							var combFile = document.createElement('input')
+							combFile.type = 'checkbox'
+							combFile.className = 'form-control'
+							combFile.id = 'combFile'
+							combFile.checked = true
+							
+							divCombFile.appendChild(combFile)
+						divInputBtn.appendChild(divCombFile)
+
+
 					divInputGroup.appendChild(divInputBtn)
 
 					
@@ -2125,4 +2163,4 @@ append scripts
 
 		
 
-	script(src="https://apis.google.com/js/client.js?onload=handleClientLoad")
+	//- script(src="https://apis.google.com/js/client.js?onload=handleClientLoad")

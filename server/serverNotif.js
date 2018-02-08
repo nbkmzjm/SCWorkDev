@@ -1371,7 +1371,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 	var postId = req.body.postId
 	var sDate = new Date(req.body.sDate)
 	var eDate = new Date(req.body.eDate)
-
+	console.log('limit:'+ limit)
 	//set Post by me
 	if(byMe==='true' && byOther !== 'true'){
 		console.log('by me ')
@@ -1460,7 +1460,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 			order:[
 				[db.mainPost, 'createdAt', 'DESC']
 			],
-			limit: 12,
+			limit: limit,
 			offset: loadNumber
 
 		}).then(function(tagSaves){
@@ -1861,7 +1861,7 @@ router.post('/getFeed', middleware.requireAuthentication, function(req, res) {
 						order:[
 							['createdAt', 'DESC']
 						],
-						limit: 12,
+						limit: limit,
 						offset: loadNumber
 						}).then(function(posts){
 							res.json({posts:posts})
