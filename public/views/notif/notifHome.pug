@@ -393,7 +393,7 @@ append scripts
 												    }
 												    
 												    console.log("returnURLs:"+returnURLs)
-												    	
+
 												    if($('#combFile').is(':checked')===false){
 													    postDBGroupSelect(inputPostValuewithURL+returnURLs)
 													    returnURLs = ''
@@ -1737,7 +1737,7 @@ append scripts
 					getPostDB({postId:postId})
 				}else{
 					getPostDB({
-						//- viewFormat:'List'
+						postSize:'List'
 					})
 				}
 			}

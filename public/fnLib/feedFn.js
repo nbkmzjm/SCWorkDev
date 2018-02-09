@@ -95,7 +95,7 @@ function postDB(option){
 		userArray:userArrayString
 	}).done(function(Rdata){
 		//****undo to work with notification
-		// location.reload()
+		location.reload()
 		console.log(Rdata)
 	})
 					
@@ -162,6 +162,7 @@ function getPostDB(option){
 	//Active scrolling: loading main post as users scrolling
 	
 
+	var listId = []
 
 	if (postSize === "List"){
 		loadNumber = 12
@@ -171,13 +172,72 @@ function getPostDB(option){
 			tableFeed.id = 'tblFeed'
 				var theadFeed = document.createElement('thead')
 					var trHeadFeed = document.createElement('tr')
-						var headerFeed = ['Preview','Document','Option','Posted', 'Date', 'Size']
+						var headerFeed = ['Preview','Document','Option','Posted', 'Date']
 						headerFeed.forEach(function (item) {
-							var th = document.createElement('th')
-							th.setAttribute('scope', 'col')
-							th.innerHTML = item
-							trHeadFeed.appendChild(th)
+							
+
+							if(item === 'Option'){
+
+								var tdOptMenu = document.createElement('td')
+								//Post option menue
+								var postOpt = document.createElement('span')
+								postOpt.id = 'postOpt'
+								postOpt.className = 'glyphicon glyphicon-collapse-down'
+								postOpt.onclick = function(){
+									var thisPostDiv = this.parentNode.parentNode
+									
+									// console.log(event.clientY)
+									
+									var divTitleCoords = divPostContainer.getBoundingClientRect()
+									var postOptCoords = this.getBoundingClientRect()
+
+									// console.log(postOptCoords)
+									// console.log(divTitleCoords)
+
+									$('#postOptContainer').length>0?$('#postOptContainer').remove():''
+									var postOptContainer = document.createElement('div')
+									postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top+ 370 +'px'
+									postOptContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
+									postOptContainer.className = 'popUpContainer'
+									postOptContainer.id = 'postOptContainer'
+
+										closeRedIcon(postOptContainer,postOptContainer)
+										var postOptContainerUl = document.createElement('ul')
+											postOptContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
+											
+											var optList = ['Hide', 'Share', 'Email', 'Save', 'Unsave', 'Download']
+											optList.forEach(function(option){
+												var postOptContainerLi = document.createElement('li')
+													var a = document.createElement('a')
+													a.href='#'
+													a.innerHTML = option
+													a.onclick = function(){
+														event.preventDefault()
+														listId = listId.filter( function( item, index, inputArray ) {
+													           return inputArray.indexOf(item) == index;
+													    });
+														postOptClick(this.innerHTML, postOptCoords.bottom - divTitleCoords.top+ 340 +'px',
+														 postOptCoords.left - divTitleCoords.left + 'px', tdOptMenu, listId)
+													}
+													postOptContainerLi.appendChild(a)
+												postOptContainerUl.appendChild(postOptContainerLi)
+											})
+										postOptContainer.appendChild(postOptContainerUl)
+									tdOptMenu.appendChild(postOptContainer)
+								}
+								tdOptMenu.appendChild(postOpt)
+							trHeadFeed.appendChild(tdOptMenu)
+							}else{
+								var th = document.createElement('th')
+								th.setAttribute('scope', 'col')
+								th.id = item
+								th.innerHTML = item
+								trHeadFeed.appendChild(th)
+							}
+
+
 						})
+
 						
 					theadFeed.appendChild(trHeadFeed)
 				tableFeed.appendChild(theadFeed)
@@ -257,6 +317,9 @@ function getPostDB(option){
 									console.log(ahref)
 									var trBodyFeed = document.createElement('tr')
 										var tdPostId = document.createElement('td')
+
+											
+
 											var span = document.createElement('span')
 											span.className = "glyphicon glyphicon-eye-open"
 											span.style.fontSize = "20px"
@@ -329,6 +392,25 @@ function getPostDB(option){
 												document.location = ("/notif?postId="+ post.id)
 											})
 											tdPostId.appendChild(spaninfo)
+
+
+											var checkBox = document.createElement('input')
+											checkBox.type = 'checkbox'
+											checkBox.style.fontSize ='20px'
+											checkBox.value = 'value'
+											checkBox.name = post.id
+											checkBox.addEventListener('click', function(){
+												if(this.checked === true){
+													listId.push(post.id)
+												}else{
+													var itemIndex = listId.indexOf(post.id)
+													listId.splice(itemIndex, 1)
+
+												}
+
+												
+											})
+											tdPostId.appendChild(checkBox)
 										
 										trBodyFeed.appendChild(tdPostId)
 
@@ -373,7 +455,7 @@ function getPostDB(option){
 																a.innerHTML = option
 																a.onclick = function(){
 																	event.preventDefault()
-																	postOptClick(this.innerHTML, postOptCoords.bottom - divTitleCoords.top+ 600 +'px',
+																	postOptClick(this.innerHTML, postOptCoords.bottom - divTitleCoords.top+ 340 +'px',
 																	 postOptCoords.left - divTitleCoords.left + 'px', tdPostedBy, post.id)
 																}
 																postOptContainerLi.appendChild(a)
