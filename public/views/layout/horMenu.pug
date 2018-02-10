@@ -8,9 +8,9 @@
 					span(class="icon-bar")
 					span(class="icon-bar")
 
-				//- button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#")
-				//- 	span(class="sr-only") Shopping Cart
-				//- 	span(class="glyphicon glyphicon-shopping-cart" aria-hidden="false")
+				button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#")
+					span(class="sr-only") Shopping Cart
+					span(class="glyphicon glyphicon-shopping-cart" aria-hidden="false")
 				
 				button(type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#taskOptionDiv" id='optionTextS') 
 					span(class="glyphicon glyphicon-edit" aria-hidden="true") SELECT
@@ -44,16 +44,50 @@
 					li  
 						a(href="/users/logout" id= 'signOut' class="btn btn-info btn-md")
 							span(class="glyphicon glyphicon-log-out")  Sign-Out
+						//- button(id= 'testbtn' class="btn btn-info btn-md") TEST
+							
 #notifContainer
 	
 script.
 	$(function (){
 
 		$('#testbtn').click(function(){
-			 var Excel = new ActiveXObject("Excel.Application");
-			 var ExcelSheet = new ActiveXObject("Excel.Sheet"); 
-	        Excel.Visible = true;
-	        Excel.Workbooks.Open("https://scworkdevx.s3.amazonaws.com/05261512479450CompensationProrationModelingTool.xlsx");
+			var array = [1,2,3,4]
+			function delay(){
+				return new Promise(function(resolve){
+					setTimeout(resolve,3000)
+				})
+			}
+
+			async function processArray(array){
+				
+				for(const item of array){
+					console.log('waiting...')
+					await delay()
+					console.log(item)
+
+				}
+
+			}
+
+			
+			//- async function processArray(array){
+			//- 	for(const item of array){
+			//- 		setTimeout(function(){
+			//- 		console.log('waiting...')
+
+			//- 		}, 2000)
+			//- 		console.log(item)
+			//- 	}
+				
+			//- }
+
+			processArray(array)
+
+			 //- var Excel = new ActiveXObject("Excel.Application");
+			 //- var ExcelSheet = new ActiveXObject("Excel.Sheet"); 
+	   //-      Excel.Visible = true;
+	   //-      Excel.Workbooks.Open("https://scworkdevx.s3.amazonaws.com/05261512479450CompensationProrationModelingTool.xlsx");
 			
 		})
 

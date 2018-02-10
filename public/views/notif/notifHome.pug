@@ -411,6 +411,8 @@ append scripts
 											    		if($('#combFile').is(':checked')===true){
 												    		postDBGroupSelect(inputPostValuewithURL+returnURLs)
 												    	}
+												    	//Reload after POST
+												    	location.reload()
 												    }
 											  	}else{
 											    	alert('Could not upload files.');
@@ -442,7 +444,7 @@ append scripts
 							combFile.type = 'checkbox'
 							combFile.className = 'form-control'
 							combFile.id = 'combFile'
-							combFile.checked = true
+							combFile.checked = false
 							
 							divCombFile.appendChild(combFile)
 						divInputBtn.appendChild(divCombFile)

@@ -29,9 +29,44 @@ var mkey = process.env.mkey
 //   vapidKeys.privateKey
 // );
 // console.log('vapidKeys.publicKeyNOTI' + vapidKeys.publicKey)
+// var array = [1,2,3,4]
+// void async function processArray(array){
+// 	for(const item of array){
+// 		setTimeout(function(){
+// 		console.log('waiting...')
+
+// 		}, 2000)
+// 		console.log(item)
+// 	}
+	
+// }
+
+// processArray(array)
 
 router.get('/test', function(req, res){
 
+
+
+	var array = [1,2,3,4]
+	console.log('test')
+
+			async function processArray(array){
+				
+				for(const item of array){
+					await function(){
+
+						return new Promise(function(resolve){
+							setTimeout(resolve,3000)
+						})
+
+					}()
+					console.log(item)
+
+				}
+
+			}
+
+			processArray(array)
 	
 
 	// fs.readFile('.env', 'utf8', function(err, encrytedKey){
@@ -65,6 +100,9 @@ router.get('/test', function(req, res){
 	// 	}
 		
 	// })
+	res.json({
+		test:'test'
+	})
 	
 })
 
@@ -930,14 +968,14 @@ router.post('/sharePostContain', middleware.requireAuthentication, function(req,
 router.post('/hidePost', middleware.requireAuthentication, function(req, res){
 	var user = req.user
 	
-	var postId = req.body.mainPostId
-	console.log('postId'+JSON.stringify(postId, null, 4))
+	var postIds = req.body.mainPostIds
+	console.log('postId'+JSON.stringify(postIds, null, 4))
 	
 	db.userFeed.update({
 		status:'hidden'
 	},{
 		where:{
-			mainPostId:postId,
+			mainPostId:postIds,
 			receivedUserId:user.id
 			
 		}
@@ -1004,13 +1042,18 @@ router.post('/getTagSave', middleware.requireAuthentication, function(req, res){
 router.post('/getTagToUnsave', middleware.requireAuthentication, function(req, res){
 	var user = req.user
 	
-	var postId = req.body.postId
-	console.log('postId'+JSON.stringify(postId, null, 4))
+	var postIds = req.body.postIds
+	console.log('postIds'+JSON.stringify(postIds, null, 4))
 	
 	db.tagSave.findAll({
-				
+		attributes:[
+			'tagName', 'type','category',
+			[db.Sequelize.fn('MAX', db.Sequelize.col('id')), 'MAX']
+
+		],
+		group:[['tagName'],['category'],['type']],
 		where:{
-			mainPostId:postId
+			mainPostId:postIds
 		}
 	}).then(function(tagSaves){
 		console.log('tagSaves'+JSON.stringify(tagSaves, null, 4))
@@ -1029,87 +1072,125 @@ router.post('/getTagToUnsave', middleware.requireAuthentication, function(req, r
 
 router.post('/unsaveTag', middleware.requireAuthentication, function(req, res){
 	var user = req.user
-	var body = _.pick(req.body, 'mainPostId','type', 'tagName', 'category')
+	var body = _.pick(req.body, 'mainPostIds','type', 'tagName', 'category')
 	body.userId = user.id
 	
 	var postId = req.body.postId
-	console.log('postId'+JSON.stringify(postId, null, 4))
-	
-	db.tagSave.destroy({
-		where:{
-			mainPostId:body.mainPostId,
-			type:body.type,
-			tagName:body.tagName,
-			category:body.category,
-			userId:body.userId
-			
+	console.log('body'+JSON.stringify(body, null, 4))
+
+	processArray(body.mainPostIds)
+
+	async function processArray(array){
+				
+		for(const mainPostId of array){
+			await function(){
+
+				return new Promise(function(resolve){
+					db.tagSave.destroy({
+						where:{
+							mainPostId:mainPostId,
+							type:body.type,
+							tagName:body.tagName,
+							category:body.category,
+							userId:body.userId
+							
+						}
+					}).then(function(deleted){
+						console.log('deleted'+JSON.stringify(deleted, null, 4))
+						resolve()
+					}).catch(function(e) {
+						console.log(e)
+						res.render('error', {
+							error: e.toString()
+						})
+					});
+				})
+
+			}()
+
 		}
-	}).then(function(deleted){
-		console.log('deleted'+JSON.stringify(deleted, null, 4))
-		
-		res.json(deleted)
-	}).catch(function(e) {
-		console.log(e)
-		res.render('error', {
-			error: e.toString()
-		})
-	});
+
+	}
+
+	
+	
+	
+
+	res.json('deleted')
 
 	
 })
 
 router.post('/postTagSave', middleware.requireAuthentication, function(req, res){
 	var user = req.user
-	var body = _.pick(req.body, 'mainPostId','type', 'tagName', 'category')
+	var body = _.pick(req.body, 'mainPostIds','type', 'tagName', 'category')
 	body.userId = user.id
 	// body.departmentId = user.departmentId
-	console.log('postBody'+ JSON.stringify(body, null, 4))
-	db.department.findOne({
-		where:{
-			id:user.departmentId
-		}
-	}).then(function(department){
+	console.log('postBody'+ JSON.stringify(body.mainPostIds, null, 4))
 
-		if(body.type === 'Department'){
-			var type = department.name
-		}else{
-			var type = body.type
-		}
+		async function processArray(array){
+				
+			for(const mainPostId of array){
+				await function(){
+					return new Promise(function(resolve){
+						// setTimeout(resolve,3000)
 
-		return [db.tagSave.findOrCreate({
-			where:{
-				mainPostId:body.mainPostId,
-				type:type,
-				tagName:body.tagName,
-				category:body.category
-				// userId:body.userId
+						db.department.findOne({
+							where:{
+								id:user.departmentId
+							}
+						}).then(function(department){
+
+							if(body.type === 'Department'){
+								var type = department.name
+							}else{
+								var type = body.type
+							}
+
+							return [db.tagSave.findOrCreate({
+								where:{
+									mainPostId:mainPostId,
+									type:type,
+									tagName:body.tagName,
+									category:body.category
+									// userId:body.userId
+								}
+							}),type]
+						}).spread(function(tagSaves, type){
+							console.log('c:'+user.id)
+							return [db.tagSave.update({
+								userId:user.id
+							},{
+								where:{
+									mainPostId:mainPostId,
+									type:type,
+									tagName:body.tagName,
+									category:body.category
+								}
+							}),tagSaves[0]]
+
+						}).spread(function(updated, tagSaves){
+							console.log(JSON.stringify(tagSaves, null, 4))
+							
+							resolve('done')
+							
+						}).catch(function(e) {
+							console.log(e)
+							res.render('error', {
+								error: e.toString()
+							})
+						});
+					})
+
+				}()
+
 			}
-		}),type]
-	}).spread(function(tagSaves, type){
-		console.log(type)
-		return [db.tagSave.update({
-			userId:user.id
-		},{
-			where:{
-				mainPostId:body.mainPostId,
-				type:type,
-				tagName:body.tagName,
-				category:body.category
-			}
-		}),tagSaves[0]]
 
-	}).spread(function(updated, tagSaves){
-		console.log(JSON.stringify(tagSaves, null, 4))
+		}
+
+		processArray(body.mainPostIds)
 		
-		
-		res.json(tagSaves)
-	}).catch(function(e) {
-		console.log(e)
-		res.render('error', {
-			error: e.toString()
-		})
-	});
-	
+		res.json('Tags Saved')
 })
 
 

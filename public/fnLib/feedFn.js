@@ -95,7 +95,7 @@ function postDB(option){
 		userArray:userArrayString
 	}).done(function(Rdata){
 		//****undo to work with notification
-		location.reload()
+		// location.reload()
 		console.log(Rdata)
 	})
 					
@@ -205,7 +205,7 @@ function getPostDB(option){
 										var postOptContainerUl = document.createElement('ul')
 											postOptContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
 											
-											var optList = ['Hide', 'Share', 'Email', 'Save', 'Unsave', 'Download']
+											var optList = ['Hide', 'Save', 'Unsave']
 											optList.forEach(function(option){
 												var postOptContainerLi = document.createElement('li')
 													var a = document.createElement('a')
@@ -230,7 +230,7 @@ function getPostDB(option){
 							}else{
 								var th = document.createElement('th')
 								th.setAttribute('scope', 'col')
-								th.id = item
+								th.id = 'th'+item
 								th.innerHTML = item
 								trHeadFeed.appendChild(th)
 							}
@@ -398,8 +398,21 @@ function getPostDB(option){
 											checkBox.type = 'checkbox'
 											checkBox.style.fontSize ='20px'
 											checkBox.value = 'value'
+
 											checkBox.name = post.id
 											checkBox.addEventListener('click', function(){
+												var checkBoxList = this.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("input")
+												var cboxCount = 0
+												for (var i=0; i<checkBoxList.length; i++) {       
+										           if (checkBoxList[i].type == "checkbox" && checkBoxList[i].checked == true){
+										              cboxCount++;
+										              
+										           }
+
+        										}
+        										console.log(cboxCount)
+        										$('#thPreview').text('Selected: '+cboxCount)
+        										$('#thPreview').css('color', 'red')
 												if(this.checked === true){
 													listId.push(post.id)
 												}else{
@@ -962,7 +975,7 @@ function getPostDB(option){
 	return true
 }
 
-function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
+function postOptClick(option, verticalPos, horizontalPos, parentDiv, postIds){
 	if(option === "Save"){
 		
 		// console.log(divTitleCoords)
@@ -1046,7 +1059,7 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 			            
 
 					$.post('/notif/postTagSave',{
-						mainPostId:postId,
+						mainPostIds:postIds,
 						type:item.type,
 						tagName:item.tagName,
 						category:item.category
@@ -1092,7 +1105,7 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 			 					addTagCategoryBtn.onclick = function(){
 			 						// console.log('adding'+ addTagCategory.value)
 			 							$.post('/notif/postTagSave',{
-										mainPostId:postId,
+										mainPostIds:postIds,
 										category:addTagCategory.value.toUpperCase(),
 										type:type,
 										tagName:query
@@ -1183,7 +1196,7 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 		            	type:'POST',
 		                url: '/notif/getTagToUnsave',
 		                data:{
-		                	postId:postId
+		                	postIds:postIds
 		                }
 		                
 		            }
@@ -1202,7 +1215,7 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 			            
 
 					$.post('/notif/unsaveTag',{
-						mainPostId:postId,
+						mainPostIds:postIds,
 						type:item.type,
 						tagName:item.tagName,
 						category:item.category
@@ -1230,9 +1243,10 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postId){
 	}else if(option==='Hide'){
 
 		$.post('/notif/hidePost',{
-			mainPostId:postId
+			mainPostIds:postIds
 		}).done(function(hidden){
-			thisPostDiv.remove()
+			location.reload()
+			// thisPostDiv.remove()
 		})
 	}else if(option==='Share'){
 		document.location = ("/notif?postId="+ postId + "&command=share")
