@@ -393,6 +393,43 @@ function getPostDB(option){
 											})
 											tdPostId.appendChild(spaninfo)
 
+											var cboxLabel = document.createElement('label')
+												cboxLabel.className = 'cboxLabel'
+												var cboxInput = document.createElement('input')
+												cboxInput.type = 'checkbox'
+												cboxInput.name = post.id
+												cboxInput.addEventListener('click', function(){
+													var checkBoxList = this.parentNode.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("input")
+													var cboxCount = 0
+													for (var i=0; i<checkBoxList.length; i++) {       
+											           if (checkBoxList[i].type == "checkbox" && checkBoxList[i].checked == true){
+											              cboxCount++;
+											              
+											           }
+
+	        										}
+	        										console.log(cboxCount)
+	        										$('#thPreview').text('Checked: '+cboxCount)
+	        										$('#thPreview').css('color', 'red')
+													if(this.checked === true){
+														listId.push(post.id)
+													}else{
+														var itemIndex = listId.indexOf(post.id)
+														listId.splice(itemIndex, 1)
+
+													}
+
+													
+												})
+												cboxLabel.appendChild(cboxInput)
+
+												var checkmark = document.createElement('span')
+												checkmark.className = 'checkmark'
+												cboxLabel.appendChild(checkmark)
+											tdPostId.appendChild(cboxLabel)
+
+
+
 
 											var checkBox = document.createElement('input')
 											checkBox.type = 'checkbox'
@@ -423,7 +460,7 @@ function getPostDB(option){
 
 												
 											})
-											tdPostId.appendChild(checkBox)
+											// tdPostId.appendChild(checkBox)
 										
 										trBodyFeed.appendChild(tdPostId)
 

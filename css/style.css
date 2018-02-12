@@ -411,6 +411,57 @@
 	
 
 }
+ /*Create a custom checkbox */
+.checkmark{
+	position: absolute;
+	height: 20px;
+	width: 20px;
+	background: #DEDBDB;
+}
+
+.cboxLabel{
+	cursor:pointer;
+}
+/* Hide the browser's default checkbox */
+.cboxLabel input{
+	opacity: 0;
+	cursor:pointer;
+
+}
+/* On mouse-over, add a grey background color */
+.cboxLabel:hover input ~ .checkmark {
+    background-color: #ECCB83;
+}
+
+/* When the checkbox is checked, add a blue background */
+.cboxLabel input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.cboxLabel input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.cboxLabel .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
 
 .imageThumb:hover {opacity: 0.7;}
 
