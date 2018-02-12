@@ -1,5 +1,7 @@
 
 
+
+
 function myMCEini(selector){
 	tinymce.init({
 	    selector: selector,
@@ -172,6 +174,7 @@ function getPostDB(option){
 			tableFeed.id = 'tblFeed'
 				var theadFeed = document.createElement('thead')
 					var trHeadFeed = document.createElement('tr')
+
 						var headerFeed = ['Preview','Document','Option','Posted', 'Date']
 						headerFeed.forEach(function (item) {
 							
@@ -179,9 +182,14 @@ function getPostDB(option){
 							if(item === 'Option'){
 
 								var tdOptMenu = document.createElement('td')
+								tdOptMenu.id = 'thSticky'
+
 								//Post option menue
 								var postOpt = document.createElement('span')
-								postOpt.id = 'postOpt'
+								
+								postOpt.id = 'postOptAll'
+								postOpt.style.display = 'None'
+								postOpt.style.color = '#2196F3'
 								postOpt.className = 'glyphicon glyphicon-collapse-down'
 								postOpt.onclick = function(){
 									var thisPostDiv = this.parentNode.parentNode
@@ -196,7 +204,7 @@ function getPostDB(option){
 
 									$('#postOptContainer').length>0?$('#postOptContainer').remove():''
 									var postOptContainer = document.createElement('div')
-									postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top+ 370 +'px'
+									postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top+ 200 +'px'
 									postOptContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
 									postOptContainer.className = 'popUpContainer'
 									postOptContainer.id = 'postOptContainer'
@@ -403,17 +411,28 @@ function getPostDB(option){
 													var cboxCount = 0
 													for (var i=0; i<checkBoxList.length; i++) {       
 											           if (checkBoxList[i].type == "checkbox" && checkBoxList[i].checked == true){
-											              cboxCount++;
-											              
+											              	cboxCount++;
 											           }
-
 	        										}
-	        										console.log(cboxCount)
-	        										$('#thPreview').text('Checked: '+cboxCount)
-	        										$('#thPreview').css('color', 'red')
+
+	        										if(cboxCount==0){
+										           		$('#thPreview').text("Preview")
+        												$('#thPreview').css('color', 'black')
+        												$('#postOptAll').hide()
+
+										           }else{
+	        										
+		        										$('#thPreview').text('Checked: '+cboxCount)
+		        										$('#thPreview').css('color', '#2196F3')
+		        										$('#postOptAll').show()
+		        									}
+
+
 													if(this.checked === true){
+														//Add checkbox name to Array when check
 														listId.push(post.id)
 													}else{
+														//Otherwise remove from Array
 														var itemIndex = listId.indexOf(post.id)
 														listId.splice(itemIndex, 1)
 
@@ -488,7 +507,7 @@ function getPostDB(option){
 
 												$('#postOptContainer').length>0?$('#postOptContainer').remove():''
 												var postOptContainer = document.createElement('div')
-												postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top+ 370 +'px'
+												postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top+ 200 +'px'
 												postOptContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
 												postOptContainer.className = 'popUpContainer'
 												postOptContainer.id = 'postOptContainer'
