@@ -208,6 +208,11 @@ function tagManagerTabClick(){
 	            }
 	 
 	        },
+
+	        onClick: function (node, a, item, event) {
+	        	$('#tagPost').val('cc')
+
+	        },
 	        onClickAfter: function (node, a, item, event) {
 	 			
 	            event.preventDefault();
@@ -226,7 +231,7 @@ function tagManagerTabClick(){
 	            	sDate:dateCalenderStart.value,
 	            	eDate:dateCalenderEnd.value
 	            })
-	            $('#tagPost').blur();
+	            $('#tagPost').val(item.tagName+' ('+item.category+')');
 
 	 
 	        },
