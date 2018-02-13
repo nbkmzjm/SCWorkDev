@@ -235,6 +235,78 @@ function getPostDB(option){
 								}
 								tdOptMenu.appendChild(postOpt)
 							trHeadFeed.appendChild(tdOptMenu)
+
+							}else if (item ==='Preview'){
+
+								var th = document.createElement('th')
+								th.setAttribute('scope', 'col')
+								th.id = 'th'+item
+								
+
+								var thPreviewText = document.createElement('span')
+								thPreviewText.id = 'thPreviewText'
+								thPreviewText.innerHTML = 'Preview'
+								th.appendChild(thPreviewText)
+
+								var cboxLabel = document.createElement('label')
+									cboxLabel.className = 'cboxLabel'
+									var cboxInput = document.createElement('input')
+									cboxInput.type = 'checkbox'
+									cboxInput.name = post.id
+									cboxInput.addEventListener('click', function(){
+										var checkBoxList = this.parentNode.parentNode.parentNode.parentNode.parentNode.getElementsByTagName("input")
+										if(this.checked=== true){
+											
+											var cboxCount = 0
+											for (var i=0; i<checkBoxList.length; i++) {       
+									           if (checkBoxList[i].type == "checkbox"){
+									           		checkBoxList[i].checked = true
+									              	cboxCount++;
+									           }
+											}
+
+											if(cboxCount!==0){
+												thPreviewText.innerHTML = (cboxCount-1)+' of '+ (checkBoxList.length-1)
+												$('#thPreviewText').css('color', '#2196F3')
+	    										$('#postOptAll').show()
+	    									}
+
+
+											if(this.checked === true){
+												//Add checkbox name to Array when check
+												listId.push(post.id)
+											}else{
+												//Otherwise remove from Array
+												var itemIndex = listId.indexOf(post.id)
+												listId.splice(itemIndex, 1)
+
+											}
+
+										}else{
+											$('#postOptAll').hide()
+											thPreviewText.innerHTML = "Preview"
+											$('#thPreviewText').css('color', 'black')
+											for (var i=0; i<checkBoxList.length; i++) {       
+									           if (checkBoxList[i].type == "checkbox"){
+									           		checkBoxList[i].checked = false
+									           }
+											}
+										}
+
+										
+									})
+									cboxLabel.appendChild(cboxInput)
+
+									var checkmark = document.createElement('span')
+									checkmark.className = 'checkmark'
+									cboxLabel.appendChild(checkmark)
+									th.appendChild(cboxLabel)
+
+
+								trHeadFeed.appendChild(th)
+
+								
+
 							}else{
 								var th = document.createElement('th')
 								th.setAttribute('scope', 'col')
@@ -260,6 +332,17 @@ function getPostDB(option){
 
 	//determind when scroll to the bottom
 	window.onscroll = function(event){
+		//Adding to checkbox total when loading more item
+		var checkBoxList = document.getElementById('tblFeed').getElementsByTagName('input')
+		var cboxCount = 0
+		for (var i=0; i<checkBoxList.length; i++) {       
+           if (checkBoxList[i].type == "checkbox" && checkBoxList[i].checked == true){
+              	cboxCount++;
+           }
+		}
+		$('#thPreviewText').text(cboxCount+' of '+ (checkBoxList.length-1))
+
+
 		console.log('xxx:'+ viewFormat)
 		var wrap = document.getElementById('divPostContainer')
 		var containHeight = wrap.offsetHeight //height of loaded contain
@@ -416,14 +499,13 @@ function getPostDB(option){
 	        										}
 
 	        										if(cboxCount==0){
-										           		$('#thPreview').text("Preview")
-        												$('#thPreview').css('color', 'black')
+										           		$('#thPreviewText').text("Preview")
+        												$('#thPreviewText').css('color', 'black')
         												$('#postOptAll').hide()
 
 										           }else{
-	        										
-		        										$('#thPreview').text('Checked: '+cboxCount)
-		        										$('#thPreview').css('color', '#2196F3')
+	        											$('#thPreviewText').text(cboxCount+' of '+ (checkBoxList.length-1) )
+		        										$('#thPreviewText').css('color', '#2196F3')
 		        										$('#postOptAll').show()
 		        									}
 
@@ -516,7 +598,7 @@ function getPostDB(option){
 													var postOptContainerUl = document.createElement('ul')
 														postOptContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
 														
-														var optList = ['Hide', 'Share', 'Email', 'Save', 'Unsave', 'Download']
+														var optList = ['Hide', 'Share', 'Email', 'Save', 'Unsave']
 														optList.forEach(function(option){
 															var postOptContainerLi = document.createElement('li')
 																var a = document.createElement('a')
@@ -900,7 +982,7 @@ function getPostDB(option){
 											var postOptContainerUl = document.createElement('ul')
 												postOptContainerUl.setAttribute('style', 'list-style:none;padding:5px 10px 5px 10px;')
 												
-												var optList = ['Hide', 'Share', 'Email', 'Save', 'Unsave', 'Download']
+												var optList = ['Hide', 'Share', 'Email', 'Save', 'Unsave']
 												optList.forEach(function(option){
 													var postOptContainerLi = document.createElement('li')
 														var a = document.createElement('a')
@@ -1307,8 +1389,6 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postIds){
 	}else if(option==='Share'){
 		document.location = ("/notif?postId="+ postId + "&command=share")
 
-	}else if(option==='Download'){
-		console.log('downloading')
 	}else if(option === 'Email'){
 		console.log(parentDiv.parentNode.childNodes[1])
 		var emailWindow = document.createElement('div')

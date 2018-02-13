@@ -1078,7 +1078,14 @@ router.post('/unsaveTag', middleware.requireAuthentication, function(req, res){
 	var postId = req.body.postId
 	console.log('body'+JSON.stringify(body, null, 4))
 
-	processArray(body.mainPostIds)
+	if (body.mainPostids instanceof Array){
+		var mainPostIdArray = body.mainPostIds
+	}else{
+		var mainPostIdArray = []
+		mainPostIdArray.push(body.mainPostIds)
+	}
+
+	processArray(mainPostIdArray)
 
 	async function processArray(array){
 				
@@ -1127,6 +1134,13 @@ router.post('/postTagSave', middleware.requireAuthentication, function(req, res)
 	body.userId = user.id
 	// body.departmentId = user.departmentId
 	console.log('postBody'+ JSON.stringify(body.mainPostIds, null, 4))
+
+	if (body.mainPostids instanceof Array){
+		var mainPostIdArray = body.mainPostIds
+	}else{
+		var mainPostIdArray = []
+		mainPostIdArray.push(body.mainPostIds)
+	}
 
 		async function processArray(array){
 				
@@ -1188,7 +1202,7 @@ router.post('/postTagSave', middleware.requireAuthentication, function(req, res)
 
 		}
 
-		processArray(body.mainPostIds)
+		processArray(mainPostIdArray)
 		
 		res.json('Tags Saved')
 })
