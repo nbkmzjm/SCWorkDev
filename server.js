@@ -1311,6 +1311,9 @@ app.use('/users', user);
 var notif = require('./server/serverNotif.js'); 
 app.use('/notif', notif)
 
+var admin = require('./server/serverAdmin.js'); 
+app.use('/admin', admin)
+
 
 umzug.up().then(function (migrations) {
 	console.log(migrations)
