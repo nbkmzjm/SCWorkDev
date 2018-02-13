@@ -202,12 +202,14 @@ function getPostDB(option){
 									// console.log(postOptCoords)
 									// console.log(divTitleCoords)
 
-									$('#postOptContainer').length>0?$('#postOptContainer').remove():''
+									$('#postOptContainerAll').length>0?$('#postOptContainerAll').remove():''
 									var postOptContainer = document.createElement('div')
 									postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top+ 200 +'px'
 									postOptContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
+									postOptContainer.style.backgroundColor = '#2196F3'
+
 									postOptContainer.className = 'popUpContainer'
-									postOptContainer.id = 'postOptContainer'
+									postOptContainer.id = 'postOptContainerAll'
 
 										closeRedIcon(postOptContainer,postOptContainer)
 										var postOptContainerUl = document.createElement('ul')
@@ -219,13 +221,26 @@ function getPostDB(option){
 													var a = document.createElement('a')
 													a.href='#'
 													a.innerHTML = option
+													a.style.color = 'white'
+													a.style.fontWeight = 'bold'
+
 													a.onclick = function(){
 														event.preventDefault()
+														console.log(document.getElementById('tblFeed'))
 														listId = listId.filter( function( item, index, inputArray ) {
 													           return inputArray.indexOf(item) == index;
 													    });
 														postOptClick(this.innerHTML, postOptCoords.bottom - divTitleCoords.top+ 340 +'px',
 														 postOptCoords.left - divTitleCoords.left + 'px', tdOptMenu, listId)
+
+														// if(!!document.getElementById('tblFeed')){
+														// 	var checkBoxList = document.getElementById('tblFeed').getElementsByTagName('input')
+														// 	for (var i=0; i<checkBoxList.length; i++) {       
+													 //           if (checkBoxList[i].type == "checkbox" ){
+													 //              	checkBoxList[i].checked = false
+													 //           }
+														// 	}
+														// }
 													}
 													postOptContainerLi.appendChild(a)
 												postOptContainerUl.appendChild(postOptContainerLi)
@@ -333,14 +348,16 @@ function getPostDB(option){
 	//determind when scroll to the bottom
 	window.onscroll = function(event){
 		//Adding to checkbox total when loading more item
-		var checkBoxList = document.getElementById('tblFeed').getElementsByTagName('input')
-		var cboxCount = 0
-		for (var i=0; i<checkBoxList.length; i++) {       
-           if (checkBoxList[i].type == "checkbox" && checkBoxList[i].checked == true){
-              	cboxCount++;
-           }
+		if(!!document.getElementById('tblFeed')){
+			var checkBoxList = document.getElementById('tblFeed').getElementsByTagName('input')
+			var cboxCount = 0
+			for (var i=0; i<checkBoxList.length; i++) {       
+	           if (checkBoxList[i].type == "checkbox" && checkBoxList[i].checked == true){
+	              	cboxCount++;
+	           }
+			}
+			$('#thPreviewText').text(cboxCount+' of '+ (checkBoxList.length-1))
 		}
-		$('#thPreviewText').text(cboxCount+' of '+ (checkBoxList.length-1))
 
 
 		console.log('xxx:'+ viewFormat)
@@ -591,6 +608,7 @@ function getPostDB(option){
 												var postOptContainer = document.createElement('div')
 												postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top+ 200 +'px'
 												postOptContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
+												postOptContainer.style.backgroundColor = "#292929"
 												postOptContainer.className = 'popUpContainer'
 												postOptContainer.id = 'postOptContainer'
 
@@ -604,6 +622,8 @@ function getPostDB(option){
 																var a = document.createElement('a')
 																a.href='#'
 																a.innerHTML = option
+																a.style.color = 'white'
+																a.style.fontWeight = 'bold'
 																a.onclick = function(){
 																	event.preventDefault()
 																	postOptClick(this.innerHTML, postOptCoords.bottom - divTitleCoords.top+ 340 +'px',
@@ -961,6 +981,7 @@ function getPostDB(option){
 										var postOptContainer = document.createElement('div')
 										postOptContainer.style.top = postOptCoords.bottom - divTitleCoords.top +'px'
 										postOptContainer.style.left = postOptCoords.left - divTitleCoords.left + 'px'
+										postOptContainer.style.backgroundColor = '#0C610C'
 										postOptContainer.className = 'popUpContainer'
 										postOptContainer.id = 'postOptContainer'
 											// var span = document.createElement('span')
@@ -988,6 +1009,8 @@ function getPostDB(option){
 														var a = document.createElement('a')
 														a.href='#'
 														a.innerHTML = option
+														a.style.fontWeight = 'bold'
+														a.style.color = '#D9F9D7'
 														a.onclick = function(){
 															event.preventDefault()
 															postOptClick(this.innerHTML, postOptCoords, divTitleCoords, divTitle, post.id)
@@ -1202,7 +1225,18 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postIds){
 						tagName:item.tagName,
 						category:item.category
 					}).done(function(){
+						if(!!document.getElementById('tblFeed')){
+							var checkBoxList = document.getElementById('tblFeed').getElementsByTagName('input')
+							for (var i=0; i<checkBoxList.length; i++) {       
+					           if (checkBoxList[i].type == "checkbox" ){
+					              	checkBoxList[i].checked = false
+					           }
+							}
+						}
 						$('#result-container').text('');
+						$('#postOptContainerAll').remove()
+
+
 					})
 		 
 		        },
@@ -1250,6 +1284,7 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postIds){
 										}).done(function(){
 											
 											$('#saveToContainer').remove()
+
 										})
 			 					}
 			 				}
@@ -1358,7 +1393,17 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postIds){
 						tagName:item.tagName,
 						category:item.category
 					}).done(function(){
+						if(!!document.getElementById('tblFeed')){
+							var checkBoxList = document.getElementById('tblFeed').getElementsByTagName('input')
+							for (var i=0; i<checkBoxList.length; i++) {       
+					           if (checkBoxList[i].type == "checkbox" ){
+					              	checkBoxList[i].checked = false
+					           }
+							}
+						}
 						$('#result-container').text('');
+						$('#postOptContainerAll').remove()
+
 					})
 		 
 		        },
@@ -1735,6 +1780,7 @@ function postOptClick(option, verticalPos, horizontalPos, parentDiv, postIds){
 		}else{
 			$('#saveToContainer').remove()
 			$('#postOptContainer').remove()
+			
 		}
 		
 	}

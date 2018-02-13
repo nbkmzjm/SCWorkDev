@@ -1135,7 +1135,7 @@ router.post('/postTagSave', middleware.requireAuthentication, function(req, res)
 	// body.departmentId = user.departmentId
 	console.log('postBody'+ JSON.stringify(body.mainPostIds, null, 4))
 
-	if (body.mainPostids instanceof Array){
+	if (body.mainPostIds instanceof Array){
 		var mainPostIdArray = body.mainPostIds
 	}else{
 		var mainPostIdArray = []
