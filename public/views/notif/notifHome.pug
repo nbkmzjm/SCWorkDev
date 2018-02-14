@@ -21,7 +21,6 @@ block content
 				iframe(id='iframeModal' class='modal-content')
 			ul(class="nav nav-tabs")
 				li(class="active" id='feedTab')
-
 					a(data-toggle="tab" href="#Feed") Feeds
 				li(id='RelationshipTab')
 					a(data-toggle="tab"  href="#Relationships") Relationships
@@ -55,6 +54,8 @@ append scripts
 	script.
 
 		$(function(){
+			$('#horMenuList li').removeClass('active');
+			$('#notifNav').addClass('active');
 			//Adding remove method for IE
 			if (!('remove' in Element.prototype)) {
 			    Element.prototype.remove = function() {

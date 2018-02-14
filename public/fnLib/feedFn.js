@@ -149,16 +149,17 @@ function getPostDB(option){
 	var sDate = option.sDate||moment(new Date()).subtract(365, 'days').format('MM-DD-YYYY')
 	var eDate = option.eDate||moment(new Date()).add(3,'days').format('MM-DD-YYYY')
 	var viewFormat = option.viewFormat||'Panel'
-	console.log('xxxViewOption:'+ viewOption)
-	console.log('viewFormat:'+ viewFormat)
 
 	
 	
 	
 	var loadNumber = 0
+	const loadLimit = 5
 	//Initial feeds
 		getFeed()
 		console.log('initial feeds')
+		console.log(loadNumber)
+
 
 
 	//Active scrolling: loading main post as users scrolling
@@ -166,9 +167,9 @@ function getPostDB(option){
 
 	var listId = []
 
-	if (postSize === "List"){
-		loadNumber = 12
+	if(postSize==='List'){
 
+		loadNumber = loadLimit
 		var tableFeed = document.createElement('table')
 			tableFeed.className = 'table table-sm'
 			tableFeed.id = 'tblFeed'
@@ -338,11 +339,26 @@ function getPostDB(option){
 				tableFeed.appendChild(theadFeed)
 
 		divPostContainer.appendChild(tableFeed)	
-		
 	}else{
-		loadNumber = 5
+		loadNumber = loadLimit
 	}
+		
 
+
+	var containHeight
+	var wrap
+	var feedLoading = setInterval(function(){
+		wrap = document.getElementById('divPostContainer')
+		containHeight = wrap.offsetHeight
+		// console.log('containHeight:'+containHeight)
+		getFeed()
+		loadNumber = loadNumber + loadLimit
+		if(containHeight>700){
+			clearInterval(feedLoading)
+		
+		}
+
+	}, 100)
 	
 
 	//determind when scroll to the bottom
@@ -360,34 +376,32 @@ function getPostDB(option){
 		}
 
 
-		console.log('xxx:'+ viewFormat)
-		var wrap = document.getElementById('divPostContainer')
-		var containHeight = wrap.offsetHeight //height of loaded contain
+		wrap = document.getElementById('divPostContainer')
+		containHeight = wrap.offsetHeight //height of loaded contain
 		var yOffset = window.pageYOffset  //how much scrolled to the top
 		var windowHt = window.innerHeight // height of visible contain
 		var y = yOffset + windowHt
+		// console.log('windowHt:'+windowHt)
+		// console.log('yOffset:'+yOffset)
+		// console.log('y:'+y)
+		// console.log('containHeight:'+containHeight)
 
-		if(postSize === 'List'){
-			console.log('xxxx')
-			if(y >= containHeight){
-				//load more feeds when at bottom of the page
-				getFeed()
-				loadNumber = loadNumber + 12
-			}
-		}else{
-			if(y >= containHeight ){
-				//load more feeds when at bottom of the page
-				getFeed()
-				console.log('next feeds')
-				loadNumber = loadNumber + 5
-			}
+		
+		if(y >= containHeight){
+			//load more feeds when at bottom of the page
+			getFeed()
+			loadNumber = loadNumber + loadLimit
+			
 		}
+
+			
+	
 		
 	}
 
 	function getFeed(){
 		
-		console.log('loadNumber:'+loadNumber)
+		// console.log('loadNumber:'+loadNumber)
 		// console.log('eDate:'+ eDate)
 		// console.log('viewOption'+ viewOption)
 		if (postSize === 'List'){
@@ -396,7 +410,7 @@ function getPostDB(option){
 				var tbodyFeed = document.createElement('tbody')
 					$.post('/notif/getFeed',{
 						loadNumber:loadNumber,
-						limit:12,
+						limit:loadLimit,
 						viewOption:viewOption,
 						viewOnly:viewOnly,
 						byMe:byMe,
@@ -408,8 +422,7 @@ function getPostDB(option){
 						sDate:sDate,
 						eDate:eDate
 					}).done(function(Rdata){
-						console.log('llllllllllllll')
-						console.log(Rdata)
+						// console.log(Rdata)
 						Rdata.posts.forEach(function(post, i){
 
 							var tempDiv = document.createElement('div')
@@ -422,7 +435,6 @@ function getPostDB(option){
 								var tdNameItem 
 								$(this).find('a').each(function(){
 									var ahref = this.parentNode.firstChild
-									console.log(ahref)
 									var trBodyFeed = document.createElement('tr')
 										var tdPostId = document.createElement('td')
 
@@ -672,7 +684,7 @@ function getPostDB(option){
 		}else{
 			$.post('/notif/getFeed',{
 				loadNumber:loadNumber,
-				limit:5,
+				limit:loadLimit,
 				viewOption:viewOption,
 				viewOnly:viewOnly,
 				byMe:byMe,
