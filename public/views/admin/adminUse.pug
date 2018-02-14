@@ -1,0 +1,36 @@
+extends ../layout/layout.pug
+
+	
+block title 
+	title Users
+
+block header
+	#header
+	include ../layout/header.pug
+
+block horMenu
+	include ../layout/horMenu.pug
+
+block content
+	#container
+		#userContainer
+			
+			p Admin Use Only. Please select a different tab.
+
+
+
+append scripts 
+	script(src="public/fnLib/feedFn.js")
+	script(src="public/fnLib/homeFn.js")
+	script(src="public/fnLib/tagSaveFn.js")
+	script(src="public/fnLib/gmailAPI.js")
+	script(src="node_modules/jquery.iframetracker/jquery.iframetracker.js")
+	
+
+	script.
+
+		$(function(){
+			
+
+
+		})

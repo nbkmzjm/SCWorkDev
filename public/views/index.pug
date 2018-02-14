@@ -617,7 +617,7 @@ append scripts
 								assign[x].assignTracers.forEach(function(assignTracer){
 									if(assignTracer.type === "SCHEDULE"){
 
-										assignNote = assignTracer.Note
+										assignNote = assign[x].assignTracers[0].Note
 
 										console.log(assignTracer.Note)
 									}
@@ -626,7 +626,7 @@ append scripts
 								assign[x].assignTracers.forEach(function(assignTracer){
 									if(assignTracer.type === "TASK"){
 
-										assignNote = assignTracer.Note
+										assignNote = assign[x].assignTracers[0].Note
 										console.log(assignTracer.Note)
 									}
 								})

@@ -409,7 +409,9 @@ app.get('/taskSC', middleware.requireAuthentication, function(req, res){
 		include:[{
 			
 			model:db.assignTracer,
-
+			attributes:['Note', 'Memo', 'Read','type', 'assignId', 'userId','createdAt'
+				// [db.Sequelize.fn('MAX', db.Sequelize.col('createdAt')), 'MAX']
+			],
 			include:[{
 				model:db.user
 			}],
@@ -422,11 +424,11 @@ app.get('/taskSC', middleware.requireAuthentication, function(req, res){
 			datePos
 		},
 		order:[
-				[db.assignTracer,'createdAt', 'DESC']
+				[db.assignTracer,'id', 'DESC']
 			]
 	}).then(function(assign){
 		
-		// console.log(JSON.stringify(assign, null, 4))
+		console.log(JSON.stringify(assign, null, 4))
 		res.json({
 			assign,
 			 curUser
