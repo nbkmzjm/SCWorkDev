@@ -424,7 +424,7 @@ app.get('/taskSC', middleware.requireAuthentication, function(req, res){
 			datePos
 		},
 		order:[
-				[db.assignTracer,'id', 'DESC']
+				[db.assignTracer,'id']
 			]
 	}).then(function(assign){
 		

@@ -614,19 +614,19 @@ append scripts
 							var viewMode = document.getElementById('btnViewMode').innerHTML
 							var assignNote = ''
 							if(viewMode=== 'SCHEDULE'){
-								assign[x].assignTracers.forEach(function(assignTracer){
+								assign[x].assignTracers.forEach(function(assignTracer, i){
 									if(assignTracer.type === "SCHEDULE"){
 
-										assignNote = assign[x].assignTracers[0].Note
+										assignNote = assign[x].assignTracers[i].Note
 
 										console.log(assignTracer.Note)
 									}
 								})
 							}else{
-								assign[x].assignTracers.forEach(function(assignTracer){
+								assign[x].assignTracers.forEach(function(assignTracer, i){
 									if(assignTracer.type === "TASK"){
 
-										assignNote = assign[x].assignTracers[0].Note
+										assignNote = assign[x].assignTracers[i].Note
 										console.log(assignTracer.Note)
 									}
 								})
@@ -658,6 +658,7 @@ append scripts
 
 										var unreadTaskCount = 0;
 										var unreadScheduleCount = 0;
+										var totalScheduleCount = 0
 										assignTracers.forEach(function(assignTracer, i){
 											
 											var createdAt = moment(assignTracer.createdAt)
@@ -674,7 +675,8 @@ append scripts
 														unreadTaskCount++
 													}
 													
-												}else if ('SCHEDULE'){
+												}else if (assignTracer.type=='SCHEDULE'){
+													totalScheduleCount++
 													if(assignTracer.Read == 'false' ){
 														unreadScheduleCount++
 													}
@@ -697,7 +699,7 @@ append scripts
 												tracer = tracerTask
 											}
 										}else if (viewMode === 'SCHEDULE'){
-											if (unreadScheduleCount!=0){
+											if (unreadScheduleCount!=0 && totalScheduleCount >1 ){
 												span.className = "glyphicon glyphicon-edit"
 											}
 												firstTracer = firstTracerSchedule
