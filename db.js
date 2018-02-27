@@ -11,6 +11,7 @@
 
 	if (env === 'production'){
 		if(dblog=='true'){
+			console.log('dblog=true')
 			sequelize = new Sequelize(processEnv.DATABASE_URL, {
 				dialect: 'postgres',
 				logging:true

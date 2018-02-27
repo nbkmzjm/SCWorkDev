@@ -2,6 +2,10 @@
 	color: red;
 }
 
+.selectGreen{
+	background-color: green
+}
+
 #horMenu{
 	max-width:1200px;
 	margin:0 auto;

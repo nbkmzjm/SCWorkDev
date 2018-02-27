@@ -845,6 +845,8 @@ append scripts
 
 
 											}else{
+												$(this).closest('table').find('td').not(this).removeClass('selectGreen');
+												td.classList.add('selectGreen')
 												if(roleList('B').indexOf(curUser.role) != -1||assign.userId==curUserId){
 													$('#eventAction').html('')
 													
@@ -1055,11 +1057,13 @@ append scripts
 													}else if(viewMode === 'SCHEDULE'){
 
 
+
 														$.getJSON('/assignTracerReadDay',{
 															type:'SCHEDULE',
 															assignId:assign.id
 														}).done(function(Rdata){
 															if(!!Rdata.assign){
+
 																assignTracers = Rdata.assign.assignTracers
 																console.log(JSON.stringify(assignTracers, null, 4))
 																var table = document.createElement('table');

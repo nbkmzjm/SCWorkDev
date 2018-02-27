@@ -20,7 +20,7 @@ function titleList(letterIndex){
 }
 
 
-function roleRankGreater (role, reference){
+function getGreaterRole (role){
 
 	var roleArray = [
 		'Administrator',
@@ -39,7 +39,7 @@ function roleRankGreater (role, reference){
 
 }
 
-function roleRankLesser (role, reference){
+function getLesserRole (role){
 
 	var roleArray = [
 		'Administrator',

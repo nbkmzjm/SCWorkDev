@@ -604,8 +604,10 @@ append scripts
                       span1.id = 'editGly';
                       //- click the 'x' to remove from list
                       span1.addEventListener('click', function(){
+                          console.log('User.role:'+user.role)
+                          console.log('#role:'+curUser.role)
                           $('#role').empty()
-                          var lesserRole = roleRankLesser(user.role, 'User')
+                          var lesserRole = getLesserRole(curUser.role)
                           var adminOpt = document.getElementById('role')
                           lesserRole.forEach(function(item, i){
 

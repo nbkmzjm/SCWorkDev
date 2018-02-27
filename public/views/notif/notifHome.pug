@@ -434,7 +434,7 @@ append scripts
 
 						var labelCombFile = document.createElement('label')
 						labelCombFile.className = 'col-sm-2'
-						labelCombFile.innerHTML = 'All files in 1 post: '
+						labelCombFile.innerHTML = 'All files in same post: '
 
 						divInputBtn.appendChild(labelCombFile)
 
@@ -609,7 +609,7 @@ append scripts
 								// DIV contain label for VIEW FILTER
 								var label = document.createElement('label')
 								label.className = 'col-sm-1'
-								label.innerHTML = 'View Filter: '
+								label.innerHTML = 'View Post From: '
 								divViewFilter.appendChild(label)
 
 
@@ -1005,7 +1005,6 @@ append scripts
 										optionList.forEach(function(item, i){
 											//- if(item !== setting.value){
 												var option = document.createElement('option')
-												option.value = item
 												option.innerHTML = item
 												postSizeOpt.appendChild(option)
 											//- }
@@ -1740,7 +1739,7 @@ append scripts
 					getPostDB({postId:postId})
 				}else{
 					getPostDB({
-						postSize:'List'
+						//- postSize:'List'
 					})
 				}
 			}

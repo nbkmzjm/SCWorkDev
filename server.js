@@ -1238,6 +1238,7 @@ app.get('/ajaxUser', middleware.requireAuthentication, function(req, res) {
 	console.log(JSON.stringify(curUser, null, 4))
 	var whereParams = {
 		active:true,
+		schedule:true,
 		departmentId:curUser.departmentId
 	}
 
