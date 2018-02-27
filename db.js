@@ -10,7 +10,7 @@
 	console.log(dblog)
 
 	if (env === 'production'){
-		if(dblog==true){
+		if(dblog=='true'){
 			sequelize = new Sequelize(processEnv.DATABASE_URL, {
 				dialect: 'postgres',
 				logging:true
@@ -24,7 +24,8 @@
 	} else {
 		console.log('xx')
 		
-		if(dblog==true){
+		if(dblog=='true'){
+			console.log('dblog=true')
 			sequelize = new Sequelize('database_development', 'nbkmzjm', 'fish1ing', {
 			host:"localhost",
 			dialect:'sqlite',
