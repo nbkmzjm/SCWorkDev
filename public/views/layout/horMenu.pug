@@ -132,7 +132,7 @@ script.
 
 							
 							var td = document.createElement('td')
-							td.innerHTML = '<b>'+userFeed.notifText + '</b>' + moment(userFeed.createdAt).calendar()
+							td.innerHTML = '<b>'+userFeed.notifText + '</b><br>' + moment(userFeed.createdAt).calendar()
 							td.addEventListener('click', function(){
 								document.location = ("/notif?postId="+ userFeed.mainPost.id)
 								$.post('notif/viewedNotif',{
