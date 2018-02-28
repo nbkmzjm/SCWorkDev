@@ -325,12 +325,17 @@ append scripts
 												
 												var scOverviewDate = moment(weekStart, 'MM-DD-YYYY');
 												var td = document.createElement('td')
+													var divDate = document.createElement('p')
+													divDate.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')
+													divDate.style.backgroundColor = '#A67EB7'
+													divDate.style.color = 'white'
+													td.appendChild(divDate)
 												
 												//- td.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')+ '<br> -'
 													var a = document.createElement('a')
 
 													a.style.color = '#0000BE'
-													a.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')+ '<br> &nbsp'
+
 													
 													a.scOverviewDate = scOverviewDate.format('MM-DD-YYYY')
 													a.addEventListener('click', function(){
@@ -342,7 +347,7 @@ append scripts
 														
 														if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
 															noteColor(assign.Note, a)
-															a.innerHTML = scOverviewDate.format('MMM DD')+ '<br> <b>'+ assign.assignTracers[0].Note  + '</b> <br> '+ assign.assignTracers[0].Memo
+															a.innerHTML ='<b>'+ assign.assignTracers[0].Note  + '</b> <br> '+ assign.assignTracers[0].Memo
 														}
 													})
 													a.setAttribute('href','#');
@@ -361,9 +366,17 @@ append scripts
 											}else{
 												var scOverviewDate = moment(weekStart, 'MM-DD-YYYY').isoWeekday(1);
 												var td = document.createElement('td')
+
+													var divDate = document.createElement('p')
+													divDate.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')
+													divDate.style.backgroundColor = '#A67EB7'
+													divDate.style.color = 'white'
+													td.appendChild(divDate)
+
+
 													var a = document.createElement('a')
 													a.style.color = '#0000BE'
-													a.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')+ '<br> &nbsp'
+													//- a.innerHTML = scOverviewDate.add(i, 'days').format('MMM DD')+ '<br> &nbsp'
 													
 												
 													a.scOverviewDate = scOverviewDate.format('MM-DD-YYYY')
@@ -374,9 +387,10 @@ append scripts
 													assign.forEach(function(assign, i){
 														if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
 															noteColor(assign.Note, a)
-															a.innerHTML = scOverviewDate.format('MMM DD')+ '<br> <b>'+ assign.assignTracers[0].Note  + '</b> <br> '+ assign.assignTracers[0].Memo
+															a.innerHTML =  '<b>'+ assign.assignTracers[0].Note  + '</b> <br> '+ assign.assignTracers[0].Memo
 															
 														}
+													
 													})
 													a.setAttribute('href','#');
 													td.appendChild(a)
