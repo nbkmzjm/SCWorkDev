@@ -346,7 +346,7 @@ append scripts
 														console.log(assign)
 														
 														if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
-															noteColor(assign.Note, a)
+															noteColor(assign.assignTracers[0].Note, a)
 															a.innerHTML ='<b>'+ assign.assignTracers[0].Note  + '</b> <br> '+ assign.assignTracers[0].Memo
 														}
 													})
@@ -386,7 +386,7 @@ append scripts
 													})
 													assign.forEach(function(assign, i){
 														if(moment(assign.datePos, 'MM-DD-YYYY').isSame(scOverviewDate)){
-															noteColor(assign.Note, a)
+															noteColor(assign.assignTracers[0].Note, a)
 															a.innerHTML =  '<b>'+ assign.assignTracers[0].Note  + '</b> <br> '+ assign.assignTracers[0].Memo
 															
 														}
