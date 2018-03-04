@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../db.js');
+var db = require('pg')
 var moment = require('moment');
 var _ = require('underscore');
+var processEnv = require('../envDecrypt.js')
 
 var middleware = require('../middleware.js')(db);
 
@@ -32,6 +34,7 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 		res.render('admin/adminUse')
 	}
 	
+
 	
 	// var arrayTitle_UserTab = ['admin', 'manager']
 	// if (arrayTitle_UserTab.indexOf(curUserTitle) !== -1) {
@@ -39,6 +42,34 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 	// } else {
 	// 	res.render('index')
 	// }
+
+})
+
+
+router.get('/createDB', function (res, res) {
+	var dbConn = processEnv.DATABASE_URL
+
+	var dbClient = new db.Client(dbConn)
+
+	
+	var query = "CREATE TABLE test (id INTEGER PRIMARY KEY AUTOINCREMENT, user VARCHAR(255) NOT NULL, login INTEGER)"
+	dbClient.connect(function(err){
+		if(err){
+			console.log('connection err:'+ err)
+			throw err
+		}
+
+		dbClient.query(query, function(err){
+			if(err){
+				console.log('query Error:'+ err)
+			}else{
+				console.log('Success')
+				res.end()
+			}
+		})
+	})
+
+
 
 })
 
