@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../db.js');
-var db = require('pg')
+var pgdb = require('pg')
 var moment = require('moment');
 var _ = require('underscore');
 var processEnv = require('../envDecrypt.js')
@@ -49,10 +49,10 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 router.get('/createDB', function (res, res) {
 	var dbConn = processEnv.DATABASE_URL
 
-	var dbClient = new db.Client(dbConn)
+	var dbClient = new pgdb.Client(dbConn)
 
 	
-	var query = "CREATE TABLE test (id INTEGER PRIMARY KEY AUTOINCREMENT, user VARCHAR(255) NOT NULL, login INTEGER)"
+	var query = "CREATE TABLE test (id INT , username VARCHAR(255) , login INTEGER)"
 	dbClient.connect(function(err){
 		if(err){
 			console.log('connection err:'+ err)

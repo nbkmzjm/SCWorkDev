@@ -4,7 +4,6 @@ module.exports = function(db) {
 	return {
 
 		requireAuthentication: function(req, res, next) {
-			console.log(JSON.stringify(req, null, 4))
 			var token = req.cookies.token;
 
 			db.token.findOne({
