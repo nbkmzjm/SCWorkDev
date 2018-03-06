@@ -15,12 +15,14 @@ block content
 	#container
 		//- iframe(id="office_frame" name="office_frame" title="Office Online Frame" style="position: absolute;width: 70%;height: 70%;")
  
-		form(id="office_form" name="office_form" target="office_frame"
-		action="https://word-view.officeapps-df.live.com/wv/wordviewerframe.aspx?WOPISrc=https://wkosolution.s3.amazonaws.com/wopi/files/Perineal_Cream0207181132.docx/contents" method="post")
-			input(name="access_token" value="yZhdN1qgywcOQWhyEMVpB6NE3pvBksvcLXsrFKXNtBeDTPW%2fu62g2t%2fOCWSlb3jUGaz1zc%2fzOzbNgAredLdhQI1Q7sPPqUv2owO78olmN74DV%2fv52OZIkBG%2b8jqjwmUobcjXVIC1BG9g%2fynMN0itZklL2x27Z2imCF6xELcQUuGdkoXBj%2bI%2bTlKM" type="hidden")
-			input(name="access_token_ttl" value="1518889157000" type="hidden")
-		<span id="frameholder"></span>
-
+		//- form(id="office_form" name="office_form" target="office_frame"
+		//- action="https://word-view.officeapps-df.live.com/wv/wordviewerframe.aspx?WOPISrc=https://wkosolution.s3.amazonaws.com/wopi/files/Perineal_Cream0207181132.docx/contents" method="post")
+		//- 	input(name="access_token" value="yZhdN1qgywcOQWhyEMVpB6NE3pvBksvcLXsrFKXNtBeDTPW%2fu62g2t%2fOCWSlb3jUGaz1zc%2fzOzbNgAredLdhQI1Q7sPPqUv2owO78olmN74DV%2fv52OZIkBG%2b8jqjwmUobcjXVIC1BG9g%2fynMN0itZklL2x27Z2imCF6xELcQUuGdkoXBj%2bI%2bTlKM" type="hidden")
+		//- 	input(name="access_token_ttl" value="1518889157000" type="hidden")
+		//- span(id="frameholder")
+		iframe(height="500px" width="100%" src="https://javascript.info" name="iframe_a")
+		p
+			a(href="https://www.w3schools.com" target="iframe_a") W3Schools.com
 
 
 append scripts 
@@ -34,8 +36,8 @@ append scripts
 	script.
 
 		$(function(){
-			$('#horMenuList li').removeClass('active');
-			$('#adminNav').addClass('active');
+			//- $('#horMenuList li').removeClass('active');
+			//- $('#adminNav').addClass('active');
 
 			//- var frameholder = document.getElementById('frameholder');
 		 //-    var office_frame = document.createElement('iframe');
@@ -52,6 +54,9 @@ append scripts
 		 //-    frameholder.appendChild(office_frame);
 
 		 //-    document.getElementById('office_form').submit();
+
+		 
+
 
 			
 
