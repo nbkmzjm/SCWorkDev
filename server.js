@@ -416,7 +416,9 @@ app.get('/taskSC', middleware.requireAuthentication, function(req, res){
 				model:db.user
 			}],
 			where:{
-				// Read:'false'
+				Read:{
+					$ne:'DELETED'
+				}
 			}
 			
 		}],
@@ -428,7 +430,7 @@ app.get('/taskSC', middleware.requireAuthentication, function(req, res){
 			]
 	}).then(function(assign){
 		
-		console.log(JSON.stringify(assign, null, 4))
+		console.log("API/taskSC"+JSON.stringify(assign, null, 4))
 		res.json({
 			assign,
 			 curUser
