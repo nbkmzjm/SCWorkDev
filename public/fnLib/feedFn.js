@@ -97,7 +97,7 @@ function postDB(option){
 		userArray:userArrayString
 	}).done(function(Rdata){
 		//****undo to work with notification
-		// location.reload()
+		location.reload()
 		console.log(Rdata)
 	})
 					
