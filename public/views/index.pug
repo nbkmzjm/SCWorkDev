@@ -1824,10 +1824,29 @@ append scripts
 					radio.setAttribute('value',taskOptionDes);
 
 				li.addEventListener('click', function(){
-					console.log('ccccccccccc')
 					$.scrollTo(document.getElementById('taskOptMemoDiv'),800, {offset:{top:-200}});
 				})
-				
+				li.addEventListener('contextmenu', function(e){
+					e.preventDefault()
+					if (li.childNodes.length >2){
+							li.removeChild(li.childNodes[2])
+						}
+
+					var span = document.createElement('span')
+					span.innerHTML = '';
+					span.style.color = 'red'
+					span.className = "glyphicon glyphicon-remove-circle"
+					span.id = 'delGly';
+					//- click the 'x' to remove from list
+					span.addEventListener('click', function(){
+
+						$.post('/delTaskOption',{taskOption:taskOptionDes}).done(function(pData){
+							ul.removeChild(li)
+						});
+						
+					});
+					li.appendChild(span)
+				})
 				if(taskOptionDes=='SELECT'){
 					
 					
@@ -1977,27 +1996,7 @@ append scripts
 				//- radio.setAttribute('checked','checked');
 				
 
-				//- click on list item to bring up the 'x'
-				li.addEventListener('click',function(){
-					if (li.childNodes.length >2){
-							li.removeChild(li.childNodes[2])
-						}
-
-					var span = document.createElement('span')
-					span.innerHTML = '';
-					span.style.color = 'red'
-					span.className = "glyphicon glyphicon-remove-circle"
-					span.id = 'delGly';
-					//- click the 'x' to remove from list
-					span.addEventListener('click', function(){
-
-						$.post('/delTaskOption',{taskOption:taskOptionDes}).done(function(pData){
-							ul.removeChild(li)
-						});
-						
-					});
-					li.appendChild(span)
-				});
+				
 				//- the 'x' disapear on mouseleave
 				li.addEventListener('mouseleave',function(){
 					if ($('#delGly').length>0){
