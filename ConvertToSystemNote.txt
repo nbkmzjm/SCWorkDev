@@ -2,4 +2,4 @@ DELETE NPM LINK BEFORE INSTALL NEW MODULE
 DELETE MODULE ICONS HERE BEFORE NPM INSTALL NEW VERSION
 DO NOT DELETE NODE 7.0 (14,440KB)
 SQLITE ONLY SUPPORT BY NODE 7.0 AND OLDER
-COPY NODE 7.0 TO 2 LOCATION: C:\Program Files\nodejs\node_modules\npm\bin AND C:\Program Files\nodejs\node_modules\npm\bin\node-gyp-bin
+COPY NODE 7.0 TO 3 LOCATION: C:\Program Files\nodejs AND C:\Program Files\nodejs\node_modules\npm\bin AND C:\Program Files\nodejs\node_modules\npm\bin\node-gyp-bin
