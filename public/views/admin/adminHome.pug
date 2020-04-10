@@ -20,9 +20,10 @@ block content
 		//- 	input(name="access_token" value="yZhdN1qgywcOQWhyEMVpB6NE3pvBksvcLXsrFKXNtBeDTPW%2fu62g2t%2fOCWSlb3jUGaz1zc%2fzOzbNgAredLdhQI1Q7sPPqUv2owO78olmN74DV%2fv52OZIkBG%2b8jqjwmUobcjXVIC1BG9g%2fynMN0itZklL2x27Z2imCF6xELcQUuGdkoXBj%2bI%2bTlKM" type="hidden")
 		//- 	input(name="access_token_ttl" value="1518889157000" type="hidden")
 		//- span(id="frameholder")
-		iframe(height="500px" width="100%" src="https://javascript.info" name="iframe_a")
-		p
-			a(href="https://www.w3schools.com" target="iframe_a") W3Schools.com
+
+		//- iframe(height="500px" width="100%" src="https://javascript.info" name="iframe_a")
+		//- p
+		//- 	a(href="https://www.w3schools.com" target="iframe_a") W3Schools.com
 
 
 append scripts 
@@ -36,6 +37,9 @@ append scripts
 	script.
 
 		$(function(){
+			var container = $('#container');
+				container.html('XXXXXXXXXXXXXX');
+				var JSONdata = !{JSONdata};
 			//- $('#horMenuList li').removeClass('active');
 			//- $('#adminNav').addClass('active');
 
