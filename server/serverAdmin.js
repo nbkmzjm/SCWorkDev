@@ -115,201 +115,196 @@ async function coinAPI (method, path, body){
 	
 
 
-const websocket = new CoinbasePro.WebsocketClient(
-	['BTC-USD'],
-	'wss://ws-feed.pro.coinbase.com',
-	{
-		  key: apiKey,
-		  secret: apiSecret,
-		  passphrase: passphrase,
-	}
-	,
-	{ channels: [  'heartbeat'] }
-);
+// const websocket = new CoinbasePro.WebsocketClient(
+// 	['BTC-USD'],
+// 	'wss://ws-feed.pro.coinbase.com',
+// 	{
+// 		  key: apiKey,
+// 		  secret: apiSecret,
+// 		  passphrase: passphrase,
+// 	}
+// 	,
+// 	{ channels: [  'heartbeat'] }
+// );
 
-websocket.on('open', data => {
-	console.log("openxxxxxxxxxxxxxxxxxxxx")
-	websocket.unsubscribe({ channels: ['heartbeat'] });
-	websocket.subscribe({ product_ids: ['BTC-USD'], channels: ['ticker', 'user'] });
+// websocket.on('open', data => {
+// 	console.log("openxxxxxxxxxxxxxxxxxxxx")
+// 	websocket.unsubscribe({ channels: ['heartbeat'] });
+// 	websocket.subscribe({ product_ids: ['BTC-USD'], channels: ['ticker', 'user'] });
 	
-  });
-var price 
-var buyPrice
-var openBuyOrderSize
-var stopPrice
-var limitPrice
-var openBuyOrder
+//   });
+// var price 
+// var buyPrice
+// var openBuyOrderSize
+// var stopPrice
+// var limitPrice
+// var openBuyOrder
+// var activeOrder
 
-var fillOrder = {
-	id:'',
-	status:''
-}
-var filledOrder = {
-	id:'',
-	price:0,
-	size:0,
-	trailStop: false
+// var fillOrder = {
+// 	id:'',
+// 	status:''
+// }
 
-}
+// var orderStatus = 'done'
+// var filledOrder = {
+// 	id:'',
+// 	price:0,
+// 	size:0,
+// 	trailStop: false
 
-let currentTime  = 0
+// }
 
-let preTime  = 0
-let deltaTime = 0
-let culTime = 0
+// let currentTime  = 0
 
-// websocket.subscribe({channels:['full']}) 
-const websocketData = (data) =>{
-	currentTime = coinAPI('GET', '/time').then((result)=>{
-		currentTime = result.epoch
-		deltaTime = currentTime - preTime
-		// console.log('Delta Time: ' + JSON.stringify(deltaTime, null, 4))
-		culTime = culTime + deltaTime
-		// console.log('Cultime: ' + JSON.stringify(culTime, null, 4))
-		preTime = currentTime
+// let preTime  = 0
+// let deltaTime = 0
+// let culTime = 0
 
-		if (culTime >= 0.5){
-			if (data.type === 'ticker'){
-				price = data.price
-				console.log('Price: ' + JSON.stringify(price, null, 4))
+// // websocket.subscribe({channels:['full']}) 
+// const websocketData = (data) =>{
+// 	currentTime = coinAPI('GET', '/time').then((result)=>{
+// 		currentTime = result.epoch
+// 		deltaTime = currentTime - preTime
+// 		// console.log('Delta Time: ' + JSON.stringify(deltaTime, null, 4))
+// 		culTime = culTime + deltaTime
+// 		// console.log('Cultime: ' + JSON.stringify(culTime, null, 4))
+// 		preTime = currentTime
+
+// 		if (culTime >= 0.5){
+// 			if (data.type === 'ticker'){
+// 				price = data.price
+// 				console.log('Price: ' + JSON.stringify(price, null, 4))
 		
 				
-				authedClient.getOrders((err, res, orders) =>{
-					if (orders !== undefined ){
-						//if open order exist
-						if(orders.length != 0 && fillOrder.id == ''){
-							openBuyOrder = orders.filter(obj => {
-								return obj.side === 'buy'
-							})
+// 				authedClient.getOrders((err, res, orders) =>{
+// 					if (orders !== undefined ){
+// 						//if open order exist
+// 						if(orders.length != 0 && orderStatus == 'done'){
+// 							openBuyOrder = orders.filter(obj => {
+// 								return obj.side === 'buy'
+// 							})
 
-							// filledOrder = orders.filter(obj => 
-							// 	obj.status === 'done' && obj.id == filledOrder.id
-							// )
+// 							// activeOrder = orders.filter(obj => 
+// 							// 	obj.status === 'done' && obj.id == filledOrder.id
+// 							// )
 		
-							if (openBuyOrder.length != 0){
-		
-								fillOrder.id = openBuyOrder[0].id
-								console.log('buy order: ' + JSON.stringify(openBuyOrder[0], null, 4))
-							}
-						}else if (orders.length == 0 && fillOrder.id != ''){
-							console.log('fillOrderssss:') 
-							console.log(JSON.stringify(fillOrder.id, null, 4))
-							authedClient.getFills({order_id: fillOrder.id}, function(err, res, data){
+// 							if (openBuyOrder.length != 0){
+// 								orderStatus == 'fill'
+// 								fillOrder.id = openBuyOrder[0].id
+// 								console.log('buy order: ' + JSON.stringify(openBuyOrder[0], null, 4))
+// 							}
+// 						}else if (orders.length == 0 && orderStatus == 'fill'){
+// 							console.log('fillOrderssss:') 
+// 							console.log(JSON.stringify(fillOrder.id, null, 4))
+// 							authedClient.getFills({order_id: fillOrder.id}, function(err, res, data){
 								
-								if(data !== undefined){
-									if(data.length == 0){
-									fillOrder.id = ''
-									console.log('cancel buy order')
-									}else{
-										var filled = data[0]
-										console.log('get fills:')
-										console.log(JSON.stringify(filled, null, 4))
-										var params = {
-											price: filled.price - 400,
-											size: filled.size,
-											side: 'sell',
-											stop: 'loss',
-											stop_price: filled.price - 400 + 10,
-											product_id: 'BTC-USD'
-										}
+// 								if(data !== undefined){
+// 									if(data.length == 0){
+// 									fillOrder.id = ''
+// 									console.log('cancel buy order')
+// 									}else{
+// 										var filled = data[0]
+// 										console.log('get fills:')
+// 										console.log(JSON.stringify(filled, null, 4))
+// 										var params = {
+// 											price: filled.price - 400,
+// 											size: filled.size,
+// 											side: 'sell',
+// 											stop: 'loss',
+// 											stop_price: filled.price - 400 + 10,
+// 											product_id: 'BTC-USD'
+// 										}
 		
-										console.log('params')
-										console.log(JSON.stringify(params, null, 4))
+// 										console.log('params')
+// 										console.log(JSON.stringify(params, null, 4))
 							
-										authedClient.placeOrder(params, function(err, res, data){
-											console.log('placed limit order:')
-											console.log(JSON.stringify(data, null, 4))
-											// buyPrice = buyOrder.price
-											// limitPrice = buyPrice - 400
-											// stopPrice = limitPrice + 10
-					
-											// deltaPrice = price - buyPrice
-											// console.log('Delta Price:' + deltaPrice)
-											// if ( deltaPrice > 200){
-											// 	console.log('exe stop loss')
-											// }
-											filledOrder.id = filled.order_id
-											filledOrder.price = filled.price
-											filledOrder.size = filled.size
+// 										authedClient.placeOrder(params, function(err, res, data){
+// 											console.log('placed limit order:')
+// 											console.log(JSON.stringify(data, null, 4))
 											
-										});
-										fillOrder.id = ''
-									}
-								}
-							})
-						}
-					} 
-				})
-				console.log('delta price:')
-				console.log(price - filledOrder.price)
-				console.log('filledOrder.id:')
-				console.log(filledOrder.id)
+// 											orderStatus = 'stopLoss'
+// 											filledOrder.id = filled.order_id
+// 											filledOrder.price = filled.price
+// 											filledOrder.size = filled.size
+											
+// 										});
+// 										fillOrder.id = ''
+// 									}
+// 								}
+// 							})
+// 						}
+// 					} 
+// 				})
+// 				console.log('delta price:')
+// 				console.log(price - filledOrder.price)
+// 				console.log('filledOrder.id:')
+// 				console.log(filledOrder.id)
 
-				if(filledOrder.id != '' && price - filledOrder.price > 200){
+// 				if(orderStatus == 'stopLoss' && price - filledOrder.price > 200){
 					
-					var params = {
-						price: price -50,
-						size: filledOrder.size,
-						side: 'sell',
-						stop: 'loss',
-						stop_price: price - 50 + 5,
-						product_id: 'BTC-USD'
-					}
+// 					var params = {
+// 						price: price -50,
+// 						size: filledOrder.size,
+// 						side: 'sell',
+// 						stop: 'loss',
+// 						stop_price: price - 50 + 5,
+// 						product_id: 'BTC-USD'
+// 					}
 
-					console.log('params trailing stop')
-					console.log(JSON.stringify(params, null, 4))
-					coinAPI('DELETE', '/orders').then((result)=>{
-						console.log("deleted xxxxxxxxxxxxxxxxx")
-						console.log(JSON.stringify(result, null, 4))
+// 					console.log('params trailing stop')
+// 					console.log(JSON.stringify(params, null, 4))
+// 					coinAPI('DELETE', '/orders').then((result)=>{
+// 						console.log("deleted xxxxxxxxxxxxxxxxx")
+// 						console.log(JSON.stringify(result, null, 4))
 
-						authedClient.placeOrder(params, function(err, res, data){
-							console.log('placed trailing limit order:')
-							console.log(JSON.stringify(data, null, 4))
-	
-							filledOrder.trailStop = true
-							filledOrder.price = data.price + 50
-							filledOrder.id = ''
+// 						authedClient.placeOrder(params, function(err, res, data){
+// 							console.log('placed trailing limit order:')
+// 							console.log(JSON.stringify(data, null, 4))
+// 							orderStatus = 'trailLoss'
+// 							filledOrder.price = data.price + 50
+// 							filledOrder.id = ''
 													
-						});
+// 						});
 	
-					})
+// 					})
 					
-				}
+// 				}
 
-				if(filledOrder.trailStop == true && price - filledOrder.price > 20){
-					var params = {
-						price: price -50,
-						size: filledOrder.size,
-						side: 'sell',
-						stop: 'loss',
-						stop_price: price - 50 + 5,
-						product_id: 'BTC-USD'
-					}
+// 				if(orderStatus == 'trailLoss' && price - filledOrder.price > 20){
+// 					var params = {
+// 						price: price -50,
+// 						size: filledOrder.size,
+// 						side: 'sell',
+// 						stop: 'loss',
+// 						stop_price: price - 50 + 5,
+// 						product_id: 'BTC-USD'
+// 					}
 
-					console.log('params trailing stop')
-					console.log(JSON.stringify(params, null, 4))
-					coinAPI('DELETE', '/orders').then((result)=>{
-						console.log("deleted xxxxxxxxxxxxxxxxx")
-						console.log(JSON.stringify(result, null, 4))
+// 					console.log('params trailing stop')
+// 					console.log(JSON.stringify(params, null, 4))
+// 					coinAPI('DELETE', '/orders').then((result)=>{
+// 						console.log("deleted xxxxxxxxxxxxxxxxx")
+// 						console.log(JSON.stringify(result, null, 4))
 
-						authedClient.placeOrder(params, function(err, res, data){
-							console.log('placed trailing limit order:')
-							console.log(JSON.stringify(data, null, 4))
+// 						authedClient.placeOrder(params, function(err, res, data){
+// 							console.log('placed trailing limit order:')
+// 							console.log(JSON.stringify(data, null, 4))
 	
-							filledOrder.trailStop = true
-							filledOrder.price = data.price + 50
+// 							filledOrder.trailStop = true
+// 							filledOrder.price = data.price + 50
 							
 													
-						});
+// 						});
 	
-					})
+// 					})
 
-				}
-			}
-			culTime = 0	
-		}
+// 				}
+// 			}
+// 			culTime = 0	
+// 		}
 
-	})
+// 	})
 
 	
 	
@@ -318,25 +313,27 @@ const websocketData = (data) =>{
 
 	 
 	
-}
+// }
 
 
-// authedClient.getOrders({status: 'open' }, (err, res, order) =>{
-// 	console.log('Open order: ' + JSON.stringify(order, null, 4))
-// })
+// // authedClient.getOrders({status: 'open' }, (err, res, order) =>{
+// // 	console.log('Open order: ' + JSON.stringify(order, null, 4))
+// // })
 
 
-websocket.on('message', websocketData);
+// websocket.on('message', websocketData);
 
 
 
-//   websocket.subscribe({ product_ids: ['LTC-USD'], channels: ['ticker', 'user'] });
-  websocket.on('error', err => {
-	/* handle error */
-  });
-  websocket.on('close', () => {
-	/* ... */
-  });
+// //   websocket.subscribe({ product_ids: ['LTC-USD'], channels: ['ticker', 'user'] });
+//   websocket.on('error', err => {
+// 	/* handle error */
+//   });
+//   websocket.on('close', () => {
+// 	/* ... */
+//   });
+
+//   websocket.on('message', websocketData);
 
 
 
@@ -355,6 +352,10 @@ router.get('/', middleware.requireAuthentication, function(req, res) {
 		}]
 		}).then(function(curUser){
 			console.log("xxxxxxxxxxxxxxxxx")
+			websocket.on('close', function(){
+				console.log('close')
+			})
+
 			//'wss://ws-feed-public.sandbox.pro.coinbase.com'
 			
 
