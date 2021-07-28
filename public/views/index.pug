@@ -16,7 +16,6 @@ block content
 		#test
 		div(class='collapse row container-fluid' id='taskOptionDiv')
 		div(class='row container-fluid' id='taskOptMemoDiv')
-			//xxxxxxxxxxxxxx
 			//- ul(class="col-sm-2" role="menu" id='menuTaskOption')
 
 			//- ul(class="col-sm-4" role="menu")
@@ -746,359 +745,142 @@ append scripts
 									//- }
 								})
 								td.appendChild(a)
-								
-								td.addEventListener('click', function(assign, userId){
+
+								td.addEventListener('dblclick', function(assign, userId){
 									//Generate table to list all changes of schedule or task
 									return function(){
 										$('#eventAction').stop()
 										$('#eventAction').fadeIn()
-										$('#SCNote').stop()
-										$('#SCNote').fadeIn()
 										var Note = assign.Note
 										var dateSC = assign.datePos
-										var selDate = moment(dateSC,'MM-DD-YYYY')
 										var memo = $('#memo').val()
-										var taskSC = $('input[name=PTO]:checked').attr('value');
-										
 
-										
-										//- &&(curUserId==assign.userId || arrayTitle_UserTab.indexOf(curUserTitle) != -1)
-										if (taskSC=='SELECT'){
-											//list changes for the whole week ***NOT in USE****
-											if(false){
+										if(false)
+										{
+											$('#eventAction').html('')
+											var table = document.createElement('table');
+											table.setAttribute('id', 'eventActionTable');
+											table.draggable = true
+											table.addEventListener('click',function(){
+												$('#eventAction').stop()
+											})
+
+											$('#eventAction').on('mouseleave', function(){
+												$('#delGly').remove()
+											})
+
+
+											var tr = document.createElement('tr')
+											var arrayField = [ 'Event Detail','Event Date', 'Acknowledged']
+
+											arrayField.forEach(function(field){
 												
-												$('#eventAction').html('')
-												var table = document.createElement('table');
-												table.setAttribute('id', 'eventActionTable');
-												table.draggable = true
-												table.addEventListener('click',function(){
-													$('#eventAction').stop()
-												})
+												var td = document.createElement('td')
+												td.appendChild(document.createTextNode(field))
+												tr.appendChild(td)
+											})
+											table.appendChild(tr)
+											$.post('/assignTracerReadWeek',{
+												sDate:weekStart.format('MM-DD-YYYY')
+											}).done(function(Rdata){
+												assigns = Rdata.assigns
+												assigns.forEach(function(assign, i){
+													var datePos = assign.datePos
+													assignTracers = assign.assignTracers
+													assignTracers.forEach(function(assignTracer, i){
+														var createdAt = moment(assignTracer.createdAt)
+														var tracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )+ "</b>"
+														
 
-												$('#eventAction').on('mouseleave', function(){
-													$('#delGly').remove()
-												})
-
-
-												var tr = document.createElement('tr')
-												var arrayField = [ 'Event Detail','Event Date', 'Acknowledged']
-
-												arrayField.forEach(function(field){
-													
-													var td = document.createElement('td')
-													td.appendChild(document.createTextNode(field))
-													tr.appendChild(td)
-												})
-												table.appendChild(tr)
-												$.post('/assignTracerReadWeek',{
-													sDate:weekStart.format('MM-DD-YYYY')
-												}).done(function(Rdata){
-													assigns = Rdata.assigns
-													assigns.forEach(function(assign, i){
-														var datePos = assign.datePos
-														assignTracers = assign.assignTracers
-														assignTracers.forEach(function(assignTracer, i){
-															var createdAt = moment(assignTracer.createdAt)
-															var tracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )+ "</b>"
-															
-
-															window['tr' + i] = document.createElement('tr')
-															if(i==0){
-																window['tr' + i].style.backgroundColor = '#C4FFCE'
-																window['tr' + i].style.borderTop = '5px solid #7B7B7B'
-															}
-															if(i==1){
-																window['tr' + i].style.backgroundColor = '#FEB6B6'
-															}
-																var td = document.createElement('td')
-																td.innerHTML = tracer
-																window['tr' + i].appendChild(td)
-																var td2 = document.createElement('td')
-																if(i==0 && dateSC == datePos){
-																	
-																	td2.innerHTML = datePos
-																	td2.style.backgroundColor = 'yellow'
-																}else if(i==0){
-																	td2.innerHTML = datePos
-																}else{
-																	td2.innerHTML = ''
-																}
-																td2.style.fontWeight = 'bold'
+														window['tr' + i] = document.createElement('tr')
+														if(i==0){
+															window['tr' + i].style.backgroundColor = '#C4FFCE'
+															window['tr' + i].style.borderTop = '5px solid #7B7B7B'
+														}
+														if(i==1){
+															window['tr' + i].style.backgroundColor = '#FEB6B6'
+														}
+															var td = document.createElement('td')
+															td.innerHTML = tracer
+															window['tr' + i].appendChild(td)
+															var td2 = document.createElement('td')
+															if(i==0 && dateSC == datePos){
 																
-																window['tr' + i].appendChild(td2)
-																var td1 = document.createElement('td')
-																	var input = document.createElement('input')
-																	if (assignTracer.Read == '0'){
-																		input.type = 'checkbox'
-																		input.id = 'read'
-																		input.name = 'read'
-																		input.checked = false
-																		
-																		input.addEventListener('click',function(){
-																			$.post('/assignTracerReadUpd',{			assignTracerId:assignTracer.id,
-																				curUserName:curUser.name
-
-																			}).done(function(Rdata){
-																				if(Rdata.updated==1){
-																				input.checked = true
-																				input.disabled = true
-																				}
-																			})
-																			
-																		})
-																	}else{
-																		var input = document.createElement('span')
-																		input.id = 'read'
-																		input.innerHTML = assignTracer.Read
-																	}
-																td1.appendChild(input)
-																window['tr' + i].appendChild(td1)
+																td2.innerHTML = datePos
+																td2.style.backgroundColor = 'yellow'
+															}else if(i==0){
+																td2.innerHTML = datePos
+															}else{
+																td2.innerHTML = ''
+															}
+															td2.style.fontWeight = 'bold'
 															
-															table.appendChild(window['tr' + i])
-														})
+															window['tr' + i].appendChild(td2)
+															var td1 = document.createElement('td')
+																var input = document.createElement('input')
+																if (assignTracer.Read == '0'){
+																	input.type = 'checkbox'
+																	input.id = 'read'
+																	input.name = 'read'
+																	input.checked = false
+																	
+																	input.addEventListener('click',function(){
+																		$.post('/assignTracerReadUpd',{			assignTracerId:assignTracer.id,
+																			curUserName:curUser.name
+
+																		}).done(function(Rdata){
+																			if(Rdata.updated==1){
+																			input.checked = true
+																			input.disabled = true
+																			}
+																		})
+																		
+																	})
+																}else{
+																	var input = document.createElement('span')
+																	input.id = 'read'
+																	input.innerHTML = assignTracer.Read
+																}
+															td1.appendChild(input)
+															window['tr' + i].appendChild(td1)
+														
+														table.appendChild(window['tr' + i])
 													})
 												})
-
-
-											}else{
-												$(this).closest('table').find('td').not(this).removeClass('selectGreen');
-												td.classList.add('selectGreen')
-												if(roleList('B').indexOf(curUser.role) != -1||assign.userId==curUserId){
-													$('#eventAction').html('')
-													
-													var viewMode = document.getElementById('btnViewMode').innerHTML
-													console.log(viewMode)
-													if(viewMode === 'TASK'){
-														//get all TASK changes
-														$.getJSON('/assignTracerReadDay',{
-															type:'TASK',
-															assignId:assign.id
-														}).done(function(Rdata){
-															if(!!Rdata.assign){
-																assignTracers = Rdata.assign.assignTracers
-																var table = document.createElement('table');
-																table.setAttribute('id', 'taskTable');
-																table.draggable = true
-																table.ondragstart = function(ev){
-																	ev.dataTransfer.setData("tableId", ev.target.id);
-																}
-
-
-																$('#taskTable').on('mouseleave', function(){
-																	$('#delGly').remove()
-																})
-
-
-																var tr = document.createElement('tr')
-																	var arrayField = ["TASKS for "+ assign.datePos, 'Pending TASKS']
-
-																	arrayField.forEach(function(field){
-																		
-																		var td = document.createElement('td')
-																		td.appendChild(document.createTextNode(field))
-																		tr.appendChild(td)
-																	})
-																	table.appendChild(tr)
-																assignTracers.forEach(function(assignTracer, i){
-																	
-																	var createdAt = moment(assignTracer.createdAt)
-																	var tracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Task</u>: "  + assignTracer.Memo:"</b>" )+ "</b>"
-																	
-
-																	window['tr' + i] = document.createElement('tr')
-																		var td = document.createElement('td')
-																		td.innerHTML = tracer
-																		if(assignTracer.Read!=='DELETED'){
-																			td.addEventListener('click', function(){
-																				$('#taskDetailTable').remove()
-																				var table = document.createElement('table');
-																				table.setAttribute('id', 'taskDetailTable');
-																				
-																				table.draggable = true
-																				table.ondragstart = function(ev){
-																					ev.dataTransfer.setData("tableId", ev.target.id);
-																				}
-																					var trHead = document.createElement('tr')
-																						var tdHead = document.createElement('td')
-																						tdHead.innerHTML = assignTracer.Memo
-																						tdHead.addEventListener('click',function(){
-																							$('#taskTable').show()
-																							$('#taskDetailTable').remove()
-																							
-																						})
-																							var span = document.createElement('span')
-																							span.style.color = 'red'
-																							span.style.float = 'right'
-																							span.className = "glyphicon glyphicon-remove-sign"
-																							tdHead.appendChild(span)
-
-																						trHead.appendChild(tdHead)
-																					table.appendChild(trHead)
-																					var trTitle = document.createElement("tr")
-																						var headerArr = ['Task','Comments', 'Value','Completed', 'Updated']
-																						headerArr.forEach(function(header, i){
-																							var td = document.createElement('td')
-																							td.setAttribute("style", "font-weight:bold");
-																							td.innerHTML = header
-																							trTitle.appendChild(td)
-																						})
-																					table.appendChild(trTitle)
-
-																					assignTracer.assignTracerDetails.forEach(function(assignTracerDetail, j){
-																						var trContent = document.createElement('tr')
-																							console.log(assignTracerDetail)
-																							var contentArr = [assignTracerDetail.Description,assignTracerDetail.Comments, assignTracerDetail.Value,assignTracerDetail.CompletedBy, moment(assignTracerDetail.updatedAt).format('MMM D@HH:m')]
-																							contentArr.forEach(function(content, i){
-																								//- alert(content+'-'+i)
-																								var tdContent = document.createElement('td')
-																								if (content=="" && i==1){
-																									var input = document.createElement('input')
-																									input.id = 'taskComment'+ j
-																									input.type = 'text'
-																									tdContent.appendChild(input)
-																								}else if (content=="" && i==2){
-																									var input = document.createElement('input')
-																									input.id = 'taskValue' + j
-																									input.type = 'text'
-																									tdContent.appendChild(input)
-																								}else if (content==0 && i==3){
-																									var input = document.createElement('input')
-																									input.type = 'checkbox'
-																									input.addEventListener('click', function(){
-
-																										console.log(curUser.name)
-																										if($("#taskValue"+j).val()!=''){
-																											$.post('/assignTracerDetailUpd',{
-																												comments:$("#taskComment"+j).val(),
-																												value:$("#taskValue"+j).val(),
-																												assignTracerDetailId:assignTracerDetail.id,
-																												curUserName:curUser.name
-																											}).done(function(Rdata){
-																												if(Rdata.updated==1){
-																													input.checked = true
-																													input.disabled = true
-																												}
-																											})
-																										}else{
-																											alert('Please enter n/a if value is not applicatble')
-																											input.checked = false
-																										}
-
-																									})
-																									tdContent.appendChild(input)
-
-																								}else {
-																									tdContent.innerHTML = content
-																								}
-																								trContent.appendChild(tdContent)
-																							})
-																						table.appendChild(trContent)
-																					})
-
-
-																					
-																				table.addEventListener('click',function(){
-																					$('#eventAction').stop()
-																				})
-																				
-
-																				$('#eventAction').on('mouseleave', function(){
-																					$('#delGly').remove()
-																				})
-																				$('#eventAction').append(table)
-																			})
-																		}
-																		window['tr' + i].appendChild(td)
-																		var td1 = document.createElement('td')
-																			var input = document.createElement('input')
-																			if (assignTracer.Read == 'false'){
-																				input.type = 'checkbox'
-																				input.id = 'readTask'
-																				input.name = 'read'
-																				input.checked = false
-																				
-																				input.addEventListener('click',function(){
-																					$.post('/assignTracerReadUpd',{
-																					assignTracerId:assignTracer.id,
-																						curUserName:curUser.name
-
-																					}).done(function(Rdata){
-																						if(Rdata.updated==1){
-																						input.checked = true
-																						input.disabled = true
-																						}
-																					})
-																					
-																				})
-																			}else{
-																				var input = document.createElement('span')
-																				input.id = 'readTask'
-																				input.innerHTML = assignTracer.Read
-																			}
-																		td1.appendChild(input)
-																		window['tr' + i].appendChild(td1)
-
-																		var span = document.createElement('span')
-																			span.innerHTML = '';
-																			span.style.color = 'red'
-																			span.className = "glyphicon glyphicon-remove-circle"
-																			span.id = 'delGly';
-																			span.addEventListener('click', function(){
-																				$.post('/assignTracerDel',{
-																						assignTracerId:assignTracer.id
-
-																					}).done(function(Rdata){
-																						if(Rdata.updated==1){
-																						td1.innerHTML = "Deleted"
-																						}
-																					})
-																			})
-																		window['tr' + i].appendChild(span)
-																		
-																		
-																	
-																	table.appendChild(window['tr' + i])
-
-																})
+											})
+										}
+										else
+										{
+											$(this).closest('table').find('td').not(this).removeClass('selectGreen');
+											td.classList.add('selectGreen')
+											if(roleList('B').indexOf(curUser.role) != -1||assign.userId==curUserId){
+												$('#eventAction').html('')
+												
+												var viewMode = document.getElementById('btnViewMode').innerHTML
+												console.log(viewMode)
+												if(viewMode === 'TASK'){
+													//get all TASK changes
+													$.getJSON('/assignTracerReadDay',{
+														type:'TASK',
+														assignId:assign.id
+													}).done(function(Rdata){
+														if(!!Rdata.assign){
+															assignTracers = Rdata.assign.assignTracers
+															var table = document.createElement('table');
+															table.setAttribute('id', 'taskTable');
+															table.draggable = true
+															table.ondragstart = function(ev){
+																ev.dataTransfer.setData("tableId", ev.target.id);
 															}
 
-																
-															table.addEventListener('click',function(){
-																$('#eventAction').stop()
+
+															$('#taskTable').on('mouseleave', function(){
+																$('#delGly').remove()
 															})
-															$('#eventAction').append(table
-															, $('#eventAction').fadeOut(4000, function(){})
-															)
-														})
-													}else if(viewMode === 'SCHEDULE'){
 
 
-
-														$.getJSON('/assignTracerReadDay',{
-															type:'SCHEDULE',
-															assignId:assign.id
-														}).done(function(Rdata){
-															if(!!Rdata.assign){
-
-																assignTracers = Rdata.assign.assignTracers
-																console.log(JSON.stringify(assignTracers, null, 4))
-																var table = document.createElement('table');
-																table.setAttribute('id', 'eventTable');
-																table.draggable = true
-																table.ondragstart = function(ev){
-																	
-																	ev.dataTransfer.setData("tableId", ev.target.id);
-																}
-																table.addEventListener('click',function(){
-																	$('#eventAction').stop()
-																})
-
-																$('#eventAction').on('mouseleave', function(){
-																	$('#delGly').remove()
-																})
-
-																var tr = document.createElement('tr')
-																var arrayField = [" SCHEDULE for "+ assign.datePos, 'Acknowledged']
+															var tr = document.createElement('tr')
+																var arrayField = ["TASKS for "+ assign.datePos, 'Pending TASKS']
 
 																arrayField.forEach(function(field){
 																	
@@ -1107,49 +889,146 @@ append scripts
 																	tr.appendChild(td)
 																})
 																table.appendChild(tr)
+															assignTracers.forEach(function(assignTracer, i){
 																
-																assignTracers.forEach(function(assignTracer, i){
+																var createdAt = moment(assignTracer.createdAt)
+																var tracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Task</u>: "  + assignTracer.Memo:"</b>" )+ "</b>"
+																
 
-
-																	var createdAt = moment(assignTracer.createdAt)
-																	var tracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )+ "</b>"
-																	
-
-																	window['tr' + i] = document.createElement('tr')
-																		var td = document.createElement('td')
-																		td.innerHTML = tracer
-																		window['tr' + i].appendChild(td)
-
-																		var td1 = document.createElement('td')
-																			var input = document.createElement('input')
-																			if (assignTracer.Read == 'false'){
-																				input.type = 'checkbox'
-																				input.id = 'readEvent'
-																				input.name = 'read'
-																				input.checked = false
-																				
-																				input.addEventListener('click',function(){
-																					$.post('/assignTracerReadUpd',{			
-																					assignTracerId:assignTracer.id,
-																						curUserName:curUser.name
-
-																					}).done(function(Rdata){
-																						if(Rdata.updated==1){
-																						input.checked = true
-																						input.disabled = true
-																						}
-																					})
-																					
-																				})
-																			}else{
-																				var input = document.createElement('span')
-																				input.id = 'readEvent'
-																				input.innerHTML = assignTracer.Read
+																window['tr' + i] = document.createElement('tr')
+																	var td = document.createElement('td')
+																	td.innerHTML = tracer
+																	if(assignTracer.Read!=='DELETED'){
+																		td.addEventListener('click', function(){
+																			$('#taskDetailTable').remove()
+																			var table = document.createElement('table');
+																			table.setAttribute('id', 'taskDetailTable');
+																			
+																			table.draggable = true
+																			table.ondragstart = function(ev){
+																				ev.dataTransfer.setData("tableId", ev.target.id);
 																			}
-																		td1.appendChild(input)
-																		window['tr' + i].appendChild(td1)
+																				var trHead = document.createElement('tr')
+																					var tdHead = document.createElement('td')
+																					tdHead.innerHTML = assignTracer.Memo
+																					tdHead.addEventListener('click',function(){
+																						$('#taskTable').show()
+																						$('#taskDetailTable').remove()
+																						
+																					})
+																						var span = document.createElement('span')
+																						span.style.color = 'red'
+																						span.style.float = 'right'
+																						span.className = "glyphicon glyphicon-remove-sign"
+																						tdHead.appendChild(span)
 
-																		var span = document.createElement('span')
+																					trHead.appendChild(tdHead)
+																				table.appendChild(trHead)
+																				var trTitle = document.createElement("tr")
+																					var headerArr = ['Task','Comments', 'Value','Completed', 'Updated']
+																					headerArr.forEach(function(header, i){
+																						var td = document.createElement('td')
+																						td.setAttribute("style", "font-weight:bold");
+																						td.innerHTML = header
+																						trTitle.appendChild(td)
+																					})
+																				table.appendChild(trTitle)
+
+																				assignTracer.assignTracerDetails.forEach(function(assignTracerDetail, j){
+																					var trContent = document.createElement('tr')
+																						console.log(assignTracerDetail)
+																						var contentArr = [assignTracerDetail.Description,assignTracerDetail.Comments, assignTracerDetail.Value,assignTracerDetail.CompletedBy, moment(assignTracerDetail.updatedAt).format('MMM D@HH:m')]
+																						contentArr.forEach(function(content, i){
+																							//- alert(content+'-'+i)
+																							var tdContent = document.createElement('td')
+																							if (content=="" && i==1){
+																								var input = document.createElement('input')
+																								input.id = 'taskComment'+ j
+																								input.type = 'text'
+																								tdContent.appendChild(input)
+																							}else if (content=="" && i==2){
+																								var input = document.createElement('input')
+																								input.id = 'taskValue' + j
+																								input.type = 'text'
+																								tdContent.appendChild(input)
+																							}else if (content==0 && i==3){
+																								var input = document.createElement('input')
+																								input.type = 'checkbox'
+																								input.addEventListener('click', function(){
+
+																									console.log(curUser.name)
+																									if($("#taskValue"+j).val()!=''){
+																										$.post('/assignTracerDetailUpd',{
+																											comments:$("#taskComment"+j).val(),
+																											value:$("#taskValue"+j).val(),
+																											assignTracerDetailId:assignTracerDetail.id,
+																											curUserName:curUser.name
+																										}).done(function(Rdata){
+																											if(Rdata.updated==1){
+																												input.checked = true
+																												input.disabled = true
+																											}
+																										})
+																									}else{
+																										alert('Please enter n/a if value is not applicatble')
+																										input.checked = false
+																									}
+
+																								})
+																								tdContent.appendChild(input)
+
+																							}else {
+																								tdContent.innerHTML = content
+																							}
+																							trContent.appendChild(tdContent)
+																						})
+																					table.appendChild(trContent)
+																				})
+
+
+																				
+																			table.addEventListener('click',function(){
+																				$('#eventAction').stop()
+																			})
+																			
+
+																			$('#eventAction').on('mouseleave', function(){
+																				$('#delGly').remove()
+																			})
+																			$('#eventAction').append(table)
+																		})
+																	}
+																	window['tr' + i].appendChild(td)
+																	var td1 = document.createElement('td')
+																		var input = document.createElement('input')
+																		if (assignTracer.Read == 'false'){
+																			input.type = 'checkbox'
+																			input.id = 'readTask'
+																			input.name = 'read'
+																			input.checked = false
+																			
+																			input.addEventListener('click',function(){
+																				$.post('/assignTracerReadUpd',{
+																				assignTracerId:assignTracer.id,
+																					curUserName:curUser.name
+
+																				}).done(function(Rdata){
+																					if(Rdata.updated==1){
+																					input.checked = true
+																					input.disabled = true
+																					}
+																				})
+																				
+																			})
+																		}else{
+																			var input = document.createElement('span')
+																			input.id = 'readTask'
+																			input.innerHTML = assignTracer.Read
+																		}
+																	td1.appendChild(input)
+																	window['tr' + i].appendChild(td1)
+
+																	var span = document.createElement('span')
 																		span.innerHTML = '';
 																		span.style.color = 'red'
 																		span.className = "glyphicon glyphicon-remove-circle"
@@ -1164,22 +1043,156 @@ append scripts
 																					}
 																				})
 																		})
-																		window['tr' + i].appendChild(span)
+																	window['tr' + i].appendChild(span)
+																	
+																	
+																
+																table.appendChild(window['tr' + i])
 
-																	
-																	table.appendChild(window['tr' + i])
-																})
-																$('#eventAction').append(table
-																, $('#eventAction').fadeOut(3000, function(){
-																	
-																})
-																)
-															}
+															})
+														}
+
+															
+														table.addEventListener('click',function(){
+															$('#eventAction').stop()
 														})
-													}
+														$('#eventAction').append(table
+														, $('#eventAction').fadeOut(4000, function(){})
+														)
+													})
+												}else if(viewMode === 'SCHEDULE'){
 
+
+
+													$.getJSON('/assignTracerReadDay',{
+														type:'SCHEDULE',
+														assignId:assign.id
+													}).done(function(Rdata){
+														if(!!Rdata.assign){
+
+															assignTracers = Rdata.assign.assignTracers
+															console.log(JSON.stringify(assignTracers, null, 4))
+															var table = document.createElement('table');
+															table.setAttribute('id', 'eventTable');
+															table.draggable = true
+															table.ondragstart = function(ev){
+																
+																ev.dataTransfer.setData("tableId", ev.target.id);
+															}
+															table.addEventListener('click',function(){
+																$('#eventAction').stop()
+															})
+
+															$('#eventAction').on('mouseleave', function(){
+																$('#delGly').remove()
+															})
+
+															var tr = document.createElement('tr')
+															var arrayField = [" SCHEDULE for "+ assign.datePos, 'Acknowledged']
+
+															arrayField.forEach(function(field){
+																
+																var td = document.createElement('td')
+																td.appendChild(document.createTextNode(field))
+																tr.appendChild(td)
+															})
+															table.appendChild(tr)
+															
+															assignTracers.forEach(function(assignTracer, i){
+
+
+																var createdAt = moment(assignTracer.createdAt)
+																var tracer = assignTracers[i].user.name+': '+createdAt.format('MMM D @HH:m:s') +' | <b>'+assignTracer.Note + (assignTracer.Memo!=''?" <br>"+ '&nbsp&nbsp&nbsp&nbsp'+"<u>Memo</u>: "  + assignTracer.Memo:"</b>" )+ "</b>"
+																
+
+																window['tr' + i] = document.createElement('tr')
+																	var td = document.createElement('td')
+																	td.innerHTML = tracer
+																	window['tr' + i].appendChild(td)
+
+																	var td1 = document.createElement('td')
+																		var input = document.createElement('input')
+																		if (assignTracer.Read == 'false'){
+																			input.type = 'checkbox'
+																			input.id = 'readEvent'
+																			input.name = 'read'
+																			input.checked = false
+																			
+																			input.addEventListener('click',function(){
+																				$.post('/assignTracerReadUpd',{			
+																				assignTracerId:assignTracer.id,
+																					curUserName:curUser.name
+
+																				}).done(function(Rdata){
+																					if(Rdata.updated==1){
+																					input.checked = true
+																					input.disabled = true
+																					}
+																				})
+																				
+																			})
+																		}else{
+																			var input = document.createElement('span')
+																			input.id = 'readEvent'
+																			input.innerHTML = assignTracer.Read
+																		}
+																	td1.appendChild(input)
+																	window['tr' + i].appendChild(td1)
+
+																	var span = document.createElement('span')
+																	span.innerHTML = '';
+																	span.style.color = 'red'
+																	span.className = "glyphicon glyphicon-remove-circle"
+																	span.id = 'delGly';
+																	span.addEventListener('click', function(){
+																		$.post('/assignTracerDel',{
+																				assignTracerId:assignTracer.id
+
+																			}).done(function(Rdata){
+																				if(Rdata.updated==1){
+																				td1.innerHTML = "Deleted"
+																				}
+																			})
+																	})
+																	window['tr' + i].appendChild(span)
+
+																
+																table.appendChild(window['tr' + i])
+															})
+															$('#eventAction').append(table
+															, 
+															//- $('#eventAction').fadeOut(3000, function(){
+																
+															//- })
+															)
+														}
+													})
 												}
+
 											}
+										}
+									}
+								}(assign[x], userId))
+								
+								td.addEventListener('click', function(assign, userId){
+									//Generate table to list all changes of schedule or task
+									return function(){
+										
+										$('#SCNote').stop()
+										$('#SCNote').fadeIn()
+										//- var Note = assign.Note
+										var dateSC = assign.datePos
+										//- var selDate = moment(dateSC,'MM-DD-YYYY')
+										//- var memo = $('#memo').val()
+										var taskSC = $('input[name=PTO]:checked').attr('value');
+										console.log('clickzzzzzzz')
+										
+
+										
+										//- &&(curUserId==assign.userId || arrayTitle_UserTab.indexOf(curUserTitle) != -1)
+										if (taskSC=='SELECT'){
+											//list changes for the whole week ***NOT in USE****
+
 											
 											
 											
