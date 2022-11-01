@@ -23,7 +23,7 @@
     "express": "^4.13.3",
     "express-validator": "^2.18.0",
     "googleapis": "^23.0.0",
-    "html": "0.0.10",
+    "html": "1.0.0",
     "jquery-typeahead": "2.8.0",
     "jquery.iframetracker": "1.1.0",
     "jsonwebtoken": "^5.4.1",
