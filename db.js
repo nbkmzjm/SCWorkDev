@@ -19,6 +19,12 @@
 		}else{
 			sequelize = new Sequelize(processEnv.DATABASE_URL, {
 				dialect: 'postgres',
+				dialectOption:{
+					ssl:{
+						require: true,
+						rejectUnauthorized:false
+					}
+				},
 				logging:false
 			});
 		}
