@@ -10,16 +10,24 @@
 	console.log(dblog)
 
 	if (env === 'production'){
+		console.log("Production Mode")
 		if(dblog=='true'){
 			console.log('dblog=true')
 			sequelize = new Sequelize(processEnv.DATABASE_URL, {
 				dialect: 'postgres',
+				dialectOptions:{
+					ssl:{
+						require: true,
+						rejectUnauthorized:false
+					}
+				},
 				logging:true
 			});
 		}else{
+			console.log('dblog=false')
 			sequelize = new Sequelize(processEnv.DATABASE_URL, {
 				dialect: 'postgres',
-				dialectOption:{
+				dialectOptions:{
 					ssl:{
 						require: true,
 						rejectUnauthorized:false
@@ -29,7 +37,7 @@
 			});
 		}
 	} else {
-		console.log('xx')
+		console.log('Dev Mode')
 		
 		if(dblog=='true'){
 			console.log('dblog=true')
