@@ -9,7 +9,31 @@
 	var dblog = process.env.dblog||false
 	console.log(dblog)
 
-	if (env === 'production'){
+	if (env === 'dev'){
+		console.log('Dev Mode')
+		
+		if(dblog=='true'){
+			console.log('dblog=true')
+			sequelize = new Sequelize('database_development', 'nbkmzjm', 'fish1ing', {
+			host:"localhost",
+			dialect:'sqlite',
+			storage: __dirname + '/data/dev-todo-api.sqlite',
+			logging:true
+			});
+
+		}else{
+			sequelize = new Sequelize('database_development', 'nbkmzjm', 'fish1ing', {
+			host:"localhost",
+			dialect:'sqlite',
+			storage: __dirname + '/data/dev-todo-api.sqlite',
+			logging:false
+			});
+
+
+		}
+		
+	} else {
+	
 		console.log("Production Mode")
 		if(dblog=='true'){
 			console.log('dblog=true')
@@ -36,29 +60,6 @@
 				logging:false
 			});
 		}
-	} else {
-		console.log('Dev Mode')
-		
-		if(dblog=='true'){
-			console.log('dblog=true')
-			sequelize = new Sequelize('database_development', 'nbkmzjm', 'fish1ing', {
-			host:"localhost",
-			dialect:'sqlite',
-			storage: __dirname + '/data/dev-todo-api.sqlite',
-			logging:true
-			});
-
-		}else{
-			sequelize = new Sequelize('database_development', 'nbkmzjm', 'fish1ing', {
-			host:"localhost",
-			dialect:'sqlite',
-			storage: __dirname + '/data/dev-todo-api.sqlite',
-			logging:false
-			});
-
-
-		}
-		
 	}
 
 
