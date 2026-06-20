@@ -1437,7 +1437,7 @@ var user = require('./server/serverUser.js');
 app.use('/users', user);
 
 var notif = require('./server/serverNotif.js');
-app.use('/notif', notif);
+//app.use('/notif', notif);
 
 var admin = require('./server/serverAdmin.js');
 app.use('/admin', admin);
