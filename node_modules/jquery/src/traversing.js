@@ -1,17 +1,14 @@
-define( [
-	"./core",
-	"./var/indexOf",
-	"./traversing/var/dir",
-	"./traversing/var/siblings",
-	"./traversing/var/rneedsContext",
-	"./core/nodeName",
+import { jQuery } from "./core.js";
+import { getProto } from "./var/getProto.js";
+import { indexOf } from "./var/indexOf.js";
+import { dir } from "./traversing/var/dir.js";
+import { siblings } from "./traversing/var/siblings.js";
+import { rneedsContext } from "./traversing/var/rneedsContext.js";
+import { nodeName } from "./core/nodeName.js";
 
-	"./core/init",
-	"./traversing/findFilter",
-	"./selector"
-], function( jQuery, indexOf, dir, siblings, rneedsContext, nodeName ) {
-
-"use strict";
+import "./core/init.js";
+import "./traversing/findFilter.js";
+import "./selector.js";
 
 var rparentsprev = /^(?:parents|prev(?:Until|All))/,
 
@@ -54,7 +51,7 @@ jQuery.fn.extend( {
 					if ( cur.nodeType < 11 && ( targets ?
 						targets.index( cur ) > -1 :
 
-						// Don't pass non-elements to Sizzle
+						// Don't pass non-elements to jQuery#find
 						cur.nodeType === 1 &&
 							jQuery.find.matchesSelector( cur, selectors ) ) ) {
 
@@ -117,7 +114,7 @@ jQuery.each( {
 	parents: function( elem ) {
 		return dir( elem, "parentNode" );
 	},
-	parentsUntil: function( elem, i, until ) {
+	parentsUntil: function( elem, _i, until ) {
 		return dir( elem, "parentNode", until );
 	},
 	next: function( elem ) {
@@ -132,10 +129,10 @@ jQuery.each( {
 	prevAll: function( elem ) {
 		return dir( elem, "previousSibling" );
 	},
-	nextUntil: function( elem, i, until ) {
+	nextUntil: function( elem, _i, until ) {
 		return dir( elem, "nextSibling", until );
 	},
-	prevUntil: function( elem, i, until ) {
+	prevUntil: function( elem, _i, until ) {
 		return dir( elem, "previousSibling", until );
 	},
 	siblings: function( elem ) {
@@ -145,18 +142,24 @@ jQuery.each( {
 		return siblings( elem.firstChild );
 	},
 	contents: function( elem ) {
-        if ( nodeName( elem, "iframe" ) ) {
-            return elem.contentDocument;
-        }
+		if ( elem.contentDocument != null &&
 
-        // Support: IE 9 - 11 only, iOS 7 only, Android Browser <=4.3 only
-        // Treat the template element as a regular one in browsers that
-        // don't support it.
-        if ( nodeName( elem, "template" ) ) {
-            elem = elem.content || elem;
-        }
+			// Support: IE 11+
+			// <object> elements with no `data` attribute has an object
+			// `contentDocument` with a `null` prototype.
+			getProto( elem.contentDocument ) ) {
 
-        return jQuery.merge( [], elem.childNodes );
+			return elem.contentDocument;
+		}
+
+		// Support: IE 9 - 11+
+		// Treat the template element as a regular one in browsers that
+		// don't support it.
+		if ( nodeName( elem, "template" ) ) {
+			elem = elem.content || elem;
+		}
+
+		return jQuery.merge( [], elem.childNodes );
 	}
 }, function( name, fn ) {
 	jQuery.fn[ name ] = function( until, selector ) {
@@ -187,5 +190,4 @@ jQuery.each( {
 	};
 } );
 
-return jQuery;
-} );
+export { jQuery, jQuery as $ };

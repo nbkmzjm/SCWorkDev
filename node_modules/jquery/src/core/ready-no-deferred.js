@@ -1,9 +1,5 @@
-define( [
-	"../core",
-	"../var/document"
-], function( jQuery, document ) {
-
-"use strict";
+import { jQuery } from "../core.js";
+import { document } from "../var/document.js";
 
 var readyCallbacks = [],
 	whenReady = function( fn ) {
@@ -29,7 +25,7 @@ jQuery.extend( {
 	isReady: false,
 
 	// A counter to track how many items to wait for before
-	// the ready event fires. See #6781
+	// the ready event fires. See trac-6781
 	readyWait: 1,
 
 	ready: function( wait ) {
@@ -52,7 +48,7 @@ jQuery.extend( {
 
 			while ( readyCallbacks.length ) {
 				fn = readyCallbacks.shift();
-				if ( jQuery.isFunction( fn ) ) {
+				if ( typeof fn === "function" ) {
 					executeReady( fn );
 				}
 			}
@@ -76,10 +72,7 @@ function completed() {
 
 // Catch cases where $(document).ready() is called
 // after the browser event has already occurred.
-// Support: IE9-10 only
-// Older IE sometimes signals "interactive" too soon
-if ( document.readyState === "complete" ||
-	( document.readyState !== "loading" && !document.documentElement.doScroll ) ) {
+if ( document.readyState !== "loading" ) {
 
 	// Handle it asynchronously to allow scripts the opportunity to delay ready
 	window.setTimeout( jQuery.ready );
@@ -92,5 +85,3 @@ if ( document.readyState === "complete" ||
 	// A fallback to window.onload, that will always work
 	window.addEventListener( "load", completed );
 }
-
-} );

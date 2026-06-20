@@ -1,24 +1,21 @@
 // Initialize a jQuery object
-define( [
-	"../core",
-	"../var/document",
-	"./var/rsingleTag",
+import { jQuery } from "../core.js";
+import { document } from "../var/document.js";
+import { rsingleTag } from "./var/rsingleTag.js";
+import { isObviousHtml } from "./isObviousHtml.js";
 
-	"../traversing/findFilter"
-], function( jQuery, document, rsingleTag ) {
-
-"use strict";
+import "../traversing/findFilter.js";
 
 // A central reference to the root jQuery(document)
 var rootjQuery,
 
 	// A simple way to check for HTML strings
-	// Prioritize #id over <tag> to avoid XSS via location.hash (#9521)
-	// Strict HTML recognition (#11290: must start with <)
+	// Prioritize #id over <tag> to avoid XSS via location.hash (trac-9521)
+	// Strict HTML recognition (trac-11290: must start with <)
 	// Shortcut simple #id case for speed
 	rquickExpr = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]+))$/,
 
-	init = jQuery.fn.init = function( selector, context, root ) {
+	init = jQuery.fn.init = function( selector, context ) {
 		var match, elem;
 
 		// HANDLE: $(""), $(null), $(undefined), $(false)
@@ -26,24 +23,41 @@ var rootjQuery,
 			return this;
 		}
 
-		// Method init() accepts an alternate rootjQuery
-		// so migrate can support jQuery.sub (gh-2101)
-		root = root || rootjQuery;
+		// HANDLE: $(DOMElement)
+		if ( selector.nodeType ) {
+			this[ 0 ] = selector;
+			this.length = 1;
+			return this;
 
-		// Handle HTML strings
-		if ( typeof selector === "string" ) {
-			if ( selector[ 0 ] === "<" &&
-				selector[ selector.length - 1 ] === ">" &&
-				selector.length >= 3 ) {
+		// HANDLE: $(function)
+		// Shortcut for document ready
+		} else if ( typeof selector === "function" ) {
+			return rootjQuery.ready !== undefined ?
+				rootjQuery.ready( selector ) :
 
-				// Assume that strings that start and end with <> are HTML and skip the regex check
+				// Execute immediately if ready is not present
+				selector( jQuery );
+
+		} else {
+
+			// Handle obvious HTML strings
+			match = selector + "";
+			if ( isObviousHtml( match ) ) {
+
+				// Assume that strings that start and end with <> are HTML and skip
+				// the regex check. This also handles browser-supported HTML wrappers
+				// like TrustedHTML.
 				match = [ null, selector, null ];
 
-			} else {
+			// Handle HTML strings or selectors
+			} else if ( typeof selector === "string" ) {
 				match = rquickExpr.exec( selector );
+			} else {
+				return jQuery.makeArray( selector, this );
 			}
 
 			// Match html or make sure no context is specified for #id
+			// Note: match[1] may be a string or a TrustedHTML wrapper
 			if ( match && ( match[ 1 ] || !context ) ) {
 
 				// HANDLE: $(html) -> $(array)
@@ -63,7 +77,7 @@ var rootjQuery,
 						for ( match in context ) {
 
 							// Properties of context are called as methods if possible
-							if ( jQuery.isFunction( this[ match ] ) ) {
+							if ( typeof this[ match ] === "function" ) {
 								this[ match ]( context[ match ] );
 
 							// ...and otherwise set as attributes
@@ -88,33 +102,17 @@ var rootjQuery,
 					return this;
 				}
 
-			// HANDLE: $(expr, $(...))
+			// HANDLE: $(expr) & $(expr, $(...))
 			} else if ( !context || context.jquery ) {
-				return ( context || root ).find( selector );
+				return ( context || rootjQuery ).find( selector );
 
 			// HANDLE: $(expr, context)
 			// (which is just equivalent to: $(context).find(expr)
 			} else {
 				return this.constructor( context ).find( selector );
 			}
-
-		// HANDLE: $(DOMElement)
-		} else if ( selector.nodeType ) {
-			this[ 0 ] = selector;
-			this.length = 1;
-			return this;
-
-		// HANDLE: $(function)
-		// Shortcut for document ready
-		} else if ( jQuery.isFunction( selector ) ) {
-			return root.ready !== undefined ?
-				root.ready( selector ) :
-
-				// Execute immediately if ready is not present
-				selector( jQuery );
 		}
 
-		return jQuery.makeArray( selector, this );
 	};
 
 // Give the init function the jQuery prototype for later instantiation
@@ -122,7 +120,3 @@ init.prototype = jQuery.fn;
 
 // Initialize central reference
 rootjQuery = jQuery( document );
-
-return init;
-
-} );

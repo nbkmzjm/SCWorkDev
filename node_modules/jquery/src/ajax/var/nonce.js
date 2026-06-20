@@ -1,7 +1,1 @@
-define( [
-	"../../core"
-], function( jQuery ) {
-	"use strict";
-
-	return jQuery.now();
-} );
+export var nonce = { guid: Date.now() };

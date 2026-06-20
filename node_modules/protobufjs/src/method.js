@@ -19,8 +19,10 @@ var util = require("./util");
  * @param {boolean|Object.<string,*>} [requestStream] Whether the request is streamed
  * @param {boolean|Object.<string,*>} [responseStream] Whether the response is streamed
  * @param {Object.<string,*>} [options] Declared options
+ * @param {string} [comment] The comment for this method
+ * @param {Object.<string,*>} [parsedOptions] Declared options, properly parsed into an object
  */
-function Method(name, type, requestType, responseType, requestStream, responseStream, options) {
+function Method(name, type, requestType, responseType, requestStream, responseStream, options, comment, parsedOptions) {
 
     /* istanbul ignore next */
     if (util.isObject(requestStream)) {
@@ -86,6 +88,17 @@ function Method(name, type, requestType, responseType, requestStream, responseSt
      * @type {Type|null}
      */
     this.resolvedResponseType = null;
+
+    /**
+     * Comment for this method
+     * @type {string|null}
+     */
+    this.comment = comment;
+
+    /**
+     * Options properly parsed into an object
+     */
+    this.parsedOptions = parsedOptions;
 }
 
 /**
@@ -97,6 +110,8 @@ function Method(name, type, requestType, responseType, requestStream, responseSt
  * @property {boolean} [requestStream=false] Whether requests are streamed
  * @property {boolean} [responseStream=false] Whether responses are streamed
  * @property {Object.<string,*>} [options] Method options
+ * @property {string} comment Method comments
+ * @property {Object.<string,*>} [parsedOptions] Method options properly parsed into an object
  */
 
 /**
@@ -107,21 +122,25 @@ function Method(name, type, requestType, responseType, requestStream, responseSt
  * @throws {TypeError} If arguments are invalid
  */
 Method.fromJSON = function fromJSON(name, json) {
-    return new Method(name, json.type, json.requestType, json.responseType, json.requestStream, json.responseStream, json.options);
+    return new Method(name, json.type, json.requestType, json.responseType, json.requestStream, json.responseStream, json.options, json.comment, json.parsedOptions);
 };
 
 /**
  * Converts this method to a method descriptor.
+ * @param {IToJSONOptions} [toJSONOptions] JSON conversion options
  * @returns {IMethod} Method descriptor
  */
-Method.prototype.toJSON = function toJSON() {
+Method.prototype.toJSON = function toJSON(toJSONOptions) {
+    var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
     return util.toObject([
         "type"           , this.type !== "rpc" && /* istanbul ignore next */ this.type || undefined,
         "requestType"    , this.requestType,
         "requestStream"  , this.requestStream,
         "responseType"   , this.responseType,
         "responseStream" , this.responseStream,
-        "options"        , this.options
+        "options"        , this.options,
+        "comment"        , keepComments ? this.comment : undefined,
+        "parsedOptions"  , this.parsedOptions,
     ]);
 };
 

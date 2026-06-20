@@ -1,9 +1,6 @@
-define( [
-	"./core",
-	"./var/rnothtmlwhite"
-], function( jQuery, rnothtmlwhite ) {
-
-"use strict";
+import { jQuery } from "./core.js";
+import { toType } from "./core/toType.js";
+import { rnothtmlwhite } from "./var/rnothtmlwhite.js";
 
 // Convert String-formatted options into Object-formatted ones
 function createOptions( options ) {
@@ -125,11 +122,11 @@ jQuery.Callbacks = function( options ) {
 
 					( function add( args ) {
 						jQuery.each( args, function( _, arg ) {
-							if ( jQuery.isFunction( arg ) ) {
+							if ( typeof arg === "function" ) {
 								if ( !options.unique || !self.has( arg ) ) {
 									list.push( arg );
 								}
-							} else if ( arg && arg.length && jQuery.type( arg ) !== "string" ) {
+							} else if ( arg && arg.length && toType( arg ) !== "string" ) {
 
 								// Inspect recursively
 								add( arg );
@@ -230,5 +227,4 @@ jQuery.Callbacks = function( options ) {
 	return self;
 };
 
-return jQuery;
-} );
+export { jQuery, jQuery as $ };
