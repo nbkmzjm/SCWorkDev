@@ -106,10 +106,10 @@ router.get('/test', function(req, res){
 	
 })
 
-getOauth2Client(iniGmaiWatch)
-setInterval(() => {
-	getOauth2Client(iniGmaiWatch)
-	}, 124 * 36000);
+// getOauth2Client(iniGmaiWatch)
+// setInterval(() => {
+// 	getOauth2Client(iniGmaiWatch)
+// 	}, 124 * 36000);
 
 function iniGmaiWatch(auth){
 	request = {
